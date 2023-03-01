@@ -104,7 +104,7 @@ h1 {
 	padding: 0 28px 0 12px;
 	cursor: pointer;
 	color: inherit;
-	max-width: 100%;
+	width: 100%;
 }
 #dictionary-search-type svg {
 	position: absolute;
@@ -127,6 +127,7 @@ h1 {
 	border-top-right-radius: 15px;
 	border-bottom-right-radius: 15px;
 	border: none;
+	min-width: 0;
 }
 #dictionary-search-key::placeholder {
 	font-style: italic;
@@ -461,9 +462,9 @@ ol.dictionary-list.has-pronunciations .dictionary-list-label {
 		display: inline;
 	}
 	#dictionary-search-type {
-		max-width: calc( 30% - 46px );
+		
 	}
 	#dictionary-search-key {
-		max-width: calc( 70% - 46px );
+		
 	}
 }
