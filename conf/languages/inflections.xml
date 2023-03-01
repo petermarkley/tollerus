@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	
+	<language name="myconlang">
+		<group><list><class name="adjective" inflected="no"/></list></group>
+		<group><list><class name="adverb" inflected="no"/></list></group>
+		<group>
+			<list>
+				<class name="auxiliary verb" inflected="yes"/>
+				<class name="verb" inflected="yes"/>
+			</list>
+			<layout>
+				<table label="finite verb" stack="yes" align_on_stack="no" fold="no">
+					<filter><inflect dimension="verb_role" value="finite"/></filter>
+					<rows fold="no">
+						<row label="past tense" brief="past"><filter><inflect dimension="tense" value="past"/></filter></row>
+						<row label="present tense" brief="pres."><filter><inflect dimension="tense" value="present"/></filter></row>
+					</rows>
+				</table>
+				<table label="participle" stack="yes" align_on_stack="no" fold="no">
+					<filter><inflect dimension="verb_role" value="participle"/></filter>
+					<rows fold="no">
+						<row label="perfect aspect" brief="perf."><filter><inflect dimension="aspect" value="perfect"/></filter></row>
+						<row label="progressive aspect" brief="prog."><filter><inflect dimension="aspect" value="progressive"/></filter></row>
+					</rows>
+				</table>
+			</layout>
+		</group>
+		<group><list><class name="combining form" inflected="no"/></list></group>
+		<group><list><class name="contraction" inflected="no"/></list></group>
+		<group><list><class name="conjunction" inflected="no"/></list></group>
+		<group><list><class name="determiner" inflected="no"/></list></group>
+		<group>
+			<list>
+				<class name="noun" inflected="no"/>
+				<class name="pronoun" inflected="no"/>
+				<class name="proper noun" inflected="no"/>
+			</list>
+		</group>
+		<group><list><class name="preposition" inflected="no"/></list></group>
+	</language>
+	
+</config>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE world [
+<!ENTITY hellip "&#8230;">
+<!ENTITY mdash "&#8211;">
+<!ENTITY ndash "&#8211;">
+<!ENTITY ldquo "&#8220;">
+<!ENTITY rdquo "&#8221;">
+<!ENTITY lsquo "&#8216;">
+<!ENTITY rsquo "&#8217;">
+]>
+<dictionary language="myconlang" lang_human="My Conlang" title_long="English Dictionary of My Conlang" title_short="My Conlang Dictionary" author="John Doe">
+	<intro>
+		<div>
+			<p>I made this language up for fun. But it works like a real language! I think I'll speak it to my children so they grow up as native speakers, and we will start a new country that speaks My Conlang.</p>
+			<p>Just kidding, that would be absurd. This is for recreational purposes, you sicko.</p>
+		</div>
+	</intro>
+	<scripts>
+		<script name="myneography" human="My Neography" primary="yes" svg="/asset-src/languages/fonts/myneography_standard_medium.svg" ttf="/html/assets/font/myneography_standard_medium.ttf">
+			<section type="alphabet" title="My Neography&rsquo;s Alphabet" sort="yes">
+				<intro>
+					<div>
+						<p>My Conlang uses a script called My Neography.</p>
+					</div>
+				</intro>
+				<data>
+					<symbols>
+						<entry id="AAAA" order="1">
+							<glyph>&#xE000;</glyph>
+							<roman>w</roman>
+							<phonemic>w</phonemic>
+						</entry>
+						<entry id="AAAB" order="2">
+							<glyph>&#xE001;</glyph>
+							<roman>u</roman>
+							<phonemic>ʌ, u</phonemic>
+						</entry>
+						<entry id="AAAC" order="3">
+							<glyph>&#xE002;</glyph>
+							<roman>m</roman>
+							<phonemic>m</phonemic>
+						</entry>
+						<entry id="AAAD" order="4">
+							<glyph>&#xE003;</glyph>
+							<roman>p</roman>
+							<phonemic>p</phonemic>
+						</entry>
+						<entry id="AAAE" order="5">
+							<glyph>&#xE004;</glyph>
+							<roman>s</roman>
+							<phonemic>s</phonemic>
+						</entry>
+						<entry id="AAAF" order="6">
+							<glyph>&#xE005;</glyph>
+							<roman>a</roman>
+							<phonemic>æ</phonemic>
+						</entry>
+					</symbols>
+				</data>
+			</section>
+		</script>
+	</scripts>
+	<data>
+		<entry id="AAAG">
+			<class type="noun" id="AAAH">
+				<morph>
+					<form primary="yes" id="AAAI">
+						<roman>wumpus</roman>
+						<phonemic>ˈwʌmˌpəs</phonemic>
+						<myneography>&#xE000;&#xE001;&#xE002;&#xE003;&#xE001;&#xE004;</myneography>
+					</form>
+				</morph>
+				<def>
+					<sense num="1"><p>A kind of animal native to My Country.</p></sense>
+				</def>
+			</class>
+			<etym>Imitative of the sound made by a wumpus.</etym>
+		</entry>
+		<entry id="AAAJ">
+			<class type="verb" id="AAAK">
+				<morph>
+					<form primary="yes" role="infinitive" id="AAAL">
+						<roman>wampoo</roman>
+						<phonemic>ˈwæmˌpu</phonemic>
+						<myneography>&#xE000;&#xE005;&#xE002;&#xE003;&#xE001;</myneography>
+					</form>
+					<form primary="no" role="finite" tense="past" irregular="no" id="AAAM">
+						<roman></roman>
+						<phonemic></phonemic>
+						<myneography></myneography>
+					</form>
+					<form primary="no" role="finite" tense="present" irregular="no" id="AAAN">
+						<roman></roman>
+						<phonemic></phonemic>
+						<myneography></myneography>
+					</form>
+					<form primary="no" role="participle" aspect="perfect" irregular="no" id="AAAO">
+						<roman></roman>
+						<phonemic></phonemic>
+						<myneography></myneography>
+					</form>
+					<form primary="no" role="participle" aspect="progressive" irregular="no" id="AAAP">
+						<roman></roman>
+						<phonemic></phonemic>
+						<myneography></myneography>
+					</form>
+				</morph>
+				<def>
+					<sense num="1"><p>to hunt wumpus.</p></sense>
+					<sense num="2"><p use="informal">to sell wumpus pelts.</p><subsense><p>to earn a living this way.</p></subsense></sense>
+				</def>
+			</class>
+			<class type="noun" id="AAAQ">
+				<def>
+					<sense num="1"><p>an excursion for hunting wumpus.</p></sense>
+				</def>
+			</class>
+		</entry>
+	</data>
+</dictionary>

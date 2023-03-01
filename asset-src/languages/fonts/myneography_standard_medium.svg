@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   height="1000"
+   width="1000"
+   sodipodi:docname="myneography_standard_medium.svg"
+   version="1.1"
+   id="svg166"
+   viewBox="0 0 1000 1000"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.3"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.5"
+     inkscape:cx="390"
+     inkscape:cy="500"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     showborder="true"
+     inkscape:showpageshadow="false"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1">
+    <sodipodi:guide
+       position="0,950"
+       orientation="0,1000"
+       id="ink-font-guide-ascender"
+       inkscape:label="ascender"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="0,800"
+       orientation="0,1000"
+       id="ink-font-guide-caps"
+       inkscape:label="caps"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="0,600"
+       orientation="0,1000"
+       id="ink-font-guide-x-height"
+       inkscape:label="x-height"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="0,200"
+       orientation="0,1000"
+       id="ink-font-guide-baseline"
+       inkscape:label="baseline"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="0,0"
+       orientation="0,1000"
+       id="ink-font-guide-descender"
+       inkscape:label="descender"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <defs
+     id="defs4">
+    <font
+       horiz-adv-x="1000"
+       id="font404"
+       inkscape:label="myneography"
+       horiz-origin-x="0"
+       horiz-origin-y="0"
+       vert-origin-x="512"
+       vert-origin-y="768"
+       vert-adv-y="1024">
+      <font-face
+         units-per-em="1000"
+         ascent="750"
+         cap-height="600"
+         x-height="400"
+         descent="200"
+         id="font-face406"
+         font-family="My Neography" />
+      <missing-glyph
+         d="M0,0h1000v1000h-1000z"
+         id="missing-glyph408" />
+      <glyph
+         glyph-name="myneography letter W"
+         unicode=""
+         id="glyph1180"
+         horiz-adv-x="1000"
+         d="M 866.54687,952.35742 A 75,75 0 0 1 825.24805,931.3125 l -424.7793,-424.7793 -145.50781,145.50586 96.14453,96.14453 a 75,75 0 0 1 0,106.06641 75,75 0 0 1 -106.06641,0 L 95.863281,705.07227 a 75.0075,75.0075 0 0 1 0,-106.06446 L 294.40234,400.4668 68.6875,174.75195 a 75,75 0 0 1 0,-106.06445 75,75 0 0 1 106.06445,0 L 931.3125,825.24805 a 75,75 0 0 1 0,106.06445 75,75 0 0 1 -64.76563,21.04492 z" />
+      <glyph
+         glyph-name="myneography letter U"
+         unicode=""
+         id="glyph1192"
+         d="m 136.95312,961.55273 a 75,75 0 0 1 -74.999995,-75 75,75 0 0 1 74.999995,-75 H 680.18164 L 446.9668,578.33789 A 75.0075,75.0075 0 0 1 425,525.30469 V 118.2793 a 75,75 0 0 1 75,-75 75,75 0 0 1 75,75 v 375.95898 l 339.28125,339.28125 a 75.0075,75.0075 0 0 1 -53.0332,128.0332 z"
+         horiz-adv-x="1000" />
+      <glyph
+         glyph-name="myneography letter M"
+         unicode=""
+         id="glyph1196"
+         d="m 508.45117,973.4375 a 75,75 0 0 1 -75,-75 75,75 0 0 1 75,-75 c 47.86254,0 92.51746,-8.7966 116.45117,-23.06055 23.93371,-14.26394 35.52735,-25.10371 35.52735,-74.63281 0,-51.13855 -14.79773,-73.5267 -39.38867,-92.28516 -24.59095,-18.75845 -65.5639,-31.125 -113.9043,-31.125 H 135.07617 a 75.0075,75.0075 0 0 1 -74.999998,-75 V 133.36523 a 75.0075,75.0075 0 0 1 74.999998,-75 h 728.78516 a 75,75 0 0 1 75,75 75,75 0 0 1 -75,75 H 210.07617 v 243.96875 h 297.06055 c 72.31219,0 145.48676,16.55585 204.8789,61.86133 59.39215,45.30548 98.41407,122.12209 98.41407,211.54883 0,91.03619 -46.75106,166.54373 -108.73438,203.48438 -61.98332,36.94065 -130.81699,44.20898 -193.24414,44.20898 z"
+         horiz-adv-x="1000" />
+      <glyph
+         glyph-name="myneography letter P"
+         unicode=""
+         id="glyph1332"
+         d="m 151.68555,943.24805 a 75,75 0 0 1 -75.000003,-75 V 162.96289 a 75.0075,75.0075 0 0 1 128.037113,-53.0293 l 530.5,530.59961 c 36.07897,-39.76369 80.89453,-110.65586 80.89453,-218.52148 0,-88.12287 -30.78107,-138.00565 -82.60157,-175.7793 -51.82049,-37.77365 -130.41821,-59.16406 -217.55664,-59.16406 a 75,75 0 0 1 -75,-75 75,75 0 0 1 75,-75 c 110.61218,0 219.59374,25.02947 305.91407,87.95117 86.32032,62.9217 144.24414,168.01177 144.24414,296.99219 0,253.85527 -193.6836,383.78125 -193.6836,383.78125 A 75.0075,75.0075 0 0 1 678.5,795.95313 L 226.68555,344.05273 v 524.19532 a 75,75 0 0 1 -75,75 z"
+         horiz-adv-x="1000" />
+      <glyph
+         glyph-name="myneography letter S"
+         unicode=""
+         id="glyph1340"
+         horiz-adv-x="1000"
+         d="m 357.13281,966.60352 a 75,75 0 0 1 -75,-75 V 575 H 118.20703 A 75,75 0 0 1 43.207031,500 75,75 0 0 1 118.20703,425 H 598.55469 V 114.70313 a 75,75 0 0 1 75,-75 75,75 0 0 1 75,75 V 425 h 133.23828 a 75,75 0 0 1 75,75 75,75 0 0 1 -75,75 H 432.13281 v 316.60352 a 75,75 0 0 1 -75,75 z" />
+      <glyph
+         glyph-name="myneography letter A"
+         unicode=""
+         id="glyph1405"
+         horiz-adv-x="1000"
+         d="m 679.11719,959.10937 c -151.14893,0 -275.17578,-124.0249 -275.17578,-275.17382 V 576.45508 H 205.21289 v 82.8789 a 75,75 0 0 1 -75,75 75,75 0 0 1 -74.999999,-75 V 346.16602 a 75,75 0 0 1 74.999999,-75 75,75 0 0 1 75,75 v 80.28906 h 198.72852 v -107.5332 c 0,-151.14893 124.02685,-275.17579 275.17578,-275.17579 151.14892,0 275.17383,124.02686 275.17383,275.17579 v 365.01367 c 0,151.14892 -124.02491,275.17382 -275.17383,275.17382 z m 0,-149.99999 c 70.64359,0 125.17383,-54.53024 125.17383,-125.17383 V 318.92188 c 0,-70.6436 -54.53024,-125.17579 -125.17383,-125.17579 -70.6436,0 -125.17578,54.53219 -125.17578,125.17579 v 365.01367 c 0,70.64359 54.53218,125.17382 125.17578,125.17383 z" />
+    </font>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1" />
+</svg>

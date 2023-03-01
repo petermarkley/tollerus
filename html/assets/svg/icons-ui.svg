@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="chevron_down" viewBox="0 0 26 26">
+      <path
+       style="fill:none;stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       d="M 24.013117,9.2485149 13,20.033347 1.9868824,9.2485149" />
+    </symbol>
+    <symbol id="magnifier" viewBox="0 0 26 26">
+      <path
+       style="fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       d="m 16.84833,10.967834 c 0,3.247708 -2.632788,5.880495 -5.880496,5.880495 -3.2477079,0 -5.8804953,-2.632787 -5.8804952,-5.880495 2e-7,-3.2477079 2.6327875,-5.8804952 5.8804952,-5.8804953 3.247708,-1e-7 5.880496,2.6327873 5.880496,5.8804953 z m -1.633132,4.247364 4.70899,4.708989" />
+    </symbol>
+  </defs>
+</svg>
