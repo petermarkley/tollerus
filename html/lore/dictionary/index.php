@@ -80,6 +80,7 @@ if (isset($dictionary)) {
 
       echo $prefix; ?>	</div>
 <?php echo $prefix; ?></div>
+<?php echo $prefix; ?><p>This page powered by the <a href="https://github.com/petermarkley/tollerus">Tollerus Conlang System</a>.</p>
 <?php echo $prefix; ?><script src="/assets/js/dictionary.js" type="text/javascript"></script>
 <?php
 
