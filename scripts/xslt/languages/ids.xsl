@@ -1,4 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+//                         Tollerus
+//                Conlang Dictionary System
+//      < https://github.com/petermarkley/tollerus >
+// 
+// Copyright 2023 by Peter Markley <peter@petermarkley.com>.
+// Distributed under the terms of the Lesser GNU General Public License.
+// 
+// This file is part of Tollerus.
+// 
+// Tollerus is free software: you can redistribute it and/or modify it
+// under the terms of the Lesser GNU General Public License as
+// published by the Free Software Foundation, either version 2.1 of the
+// License, or (at your option) any later version.
+// 
+// Tollerus is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// Lesser GNU General Public License for more details.
+// 
+// You should have received a copy of the Lesser GNU General Public
+// License along with Tollerus.  If not, see
+// < http://www.gnu.org/licenses/ >.
+// 
+-->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xhtml="http://www.w3.org/1999/xhtml" exclude-result-prefixes="xhtml">
 	<xsl:import href="../util/pow.xsl"/>
 	<xsl:output method="text" encoding="UTF-8" indent="no"/>
