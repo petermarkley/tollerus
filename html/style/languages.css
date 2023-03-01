@@ -79,6 +79,9 @@ h1 {
 	flex-direction: row;
 	gap: 4px;
 	height: 30px;
+	min-width: 0;
+	max-width: 100%;
+	justify-content: stretch;
 }
 #dictionary-search-type {
 	position: relative;
@@ -101,6 +104,7 @@ h1 {
 	padding: 0 28px 0 12px;
 	cursor: pointer;
 	color: inherit;
+	max-width: 100%;
 }
 #dictionary-search-type svg {
 	position: absolute;
@@ -137,7 +141,7 @@ h1 {
 	appearance: none;
 	font-size: 19px;
 	line-height: normal;
-	width: 2em;
+	width: 38px;
 	height: 30px;
 	border: 2px solid #888;
 	box-sizing: border-box;
@@ -375,6 +379,10 @@ ol.dictionary-list.has-pronunciations .dictionary-list-label {
 }
 
 @media (max-width: 1200px) {
+	#dictionary {
+		margin-left: 0;
+		margin-right: 0;
+	}
 	#dictionary-search-results {
 		grid-column: 1 / 3;
 		grid-row: 2 / 3;
@@ -451,5 +459,11 @@ ol.dictionary-list.has-pronunciations .dictionary-list-label {
 	}
 	span.dictionary-inflect-mob, abbr.dictionary-inflect-mob {
 		display: inline;
+	}
+	#dictionary-search-type {
+		max-width: calc( 30% - 46px );
+	}
+	#dictionary-search-key {
+		max-width: calc( 70% - 46px );
 	}
 }
