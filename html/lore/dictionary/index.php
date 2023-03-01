@@ -24,7 +24,7 @@ echo "<!DOCTYPE html>\n";
 <html lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<title>Eithalica Languages - Dictionary</title>
+		<title>Tollerus Conlang Tracking System</title>
 		<meta name="author" content="Peter Markley"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<link href="/style/languages.css" rel="stylesheet" type="text/css"/>
@@ -33,7 +33,7 @@ echo "<!DOCTYPE html>\n";
 	<body>
 <?php $prefix = "\t\t";
 
-      echo $prefix; ?><h1>Eithalica Languages - Dictionary</h1>
+      echo $prefix; ?><h1>Tollerus Conlang Tracking System</h1>
 <?php echo $prefix; ?><div id="dictionary">
 <?php echo $prefix; ?>	<div id="dictionary-search">
 <?php echo $prefix; ?>		<form action="">
