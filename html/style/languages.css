@@ -37,11 +37,14 @@ h1 {
 	font-variant: small-caps;
 	letter-spacing: 0.3em;
 	text-align: center;
-	}
+}
+#dictionary td, #dictionary th {
+	padding: 0 0.2em;
+}
 
 #dictionary {
 	display: grid;
-	grid-template-columns: 15rem 1fr;
+	grid-template-columns: 15rem minmax(0, 1fr);
 	background-color: #eee;
 	border-bottom-left-radius: 9px;
 	border-bottom-right-radius: 9px;
@@ -299,7 +302,7 @@ span.dictionary-inflect-lrg {
 	color: #aa0000;
 }
 td.dictionary-inflect-spacer {
-	min-width: 2em;
+	min-width: 0.5em;
 }
 abbr {
 	text-decoration: none;
@@ -419,7 +422,7 @@ ol.dictionary-list.has-pronunciations .dictionary-list-label {
 		display: inline;
 	}
 	td.dictionary-inflect-spacer {
-		min-width: 1em;
+		min-width: 0;
 	}
 }
 @media (max-width: 1000px) {
