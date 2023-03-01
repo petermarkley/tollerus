@@ -108,8 +108,6 @@ function dictionary_highlight() {
 	e.style.display = "block";
 	e.style.position = "absolute";
 	let rect = container.getBoundingClientRect();
-	console.log(container);
-	console.log(rect);
 	e.style.width = (rect.width+margin*2).toString()+"px";
 	e.style.height = (rect.height+margin*2).toString()+"px";
 	e.style.zIndex = "10";

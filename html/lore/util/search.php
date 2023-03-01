@@ -7,7 +7,7 @@ if(!empty($_SERVER["HTTP_X_REQUESTED_WITH"]) && strtolower($_SERVER["HTTP_X_REQU
 		http_response_code(400);
 		exit();
 	}
-	$dictionary->search($_GET["type"],$_GET["key"],$_GET["id"],$_GET["fr"],"\t\t\t\t");
+	$dictionary->search($_GET["type"],$_GET["key"],(isset($_GET["id"])?$_GET["id"]:null),(isset($_GET["fr"])?$_GET["fr"]:null),"\t\t\t\t");
 }
 else {
 	http_response_code(303);

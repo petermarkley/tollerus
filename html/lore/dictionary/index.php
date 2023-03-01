@@ -59,7 +59,7 @@ echo "<!DOCTYPE html>\n";
 <?php
 
 if (isset($_GET["type"]) && isset($_GET["key"]) && isset($dictionary)) {
-	$dictionary->search($_GET["type"],$_GET["key"],$_GET["id"],$_GET["fr"],$prefix."\t\t");
+	$dictionary->search($_GET["type"],$_GET["key"],(isset($_GET["id"])?$_GET["id"]:null),(isset($_GET["fr"])?$_GET["fr"]:null),$prefix."\t\t");
 }
 
 ?>
