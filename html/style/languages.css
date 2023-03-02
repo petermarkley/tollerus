@@ -433,6 +433,9 @@ ol.dictionary-list.has-pronunciations .dictionary-list-label {
 	td.dictionary-inflect-spacer {
 		min-width: 0;
 	}
+	#dictionary-display {
+		padding: 1rem;
+	}
 }
 @media (max-width: 1000px) {
 	ol.dictionary-list {
@@ -505,5 +508,8 @@ ol.dictionary-list.has-pronunciations .dictionary-list-label {
 		height: 16px;
 		left: calc( 50% - 8px );
 		top: calc( 50% - 8px );
+	}
+	#dictionary-display {
+		padding: 0.5rem;
 	}
 }
