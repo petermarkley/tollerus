@@ -29,6 +29,7 @@
 	font-family: myneography;
 	font-weight: normal;
 	font-size: 1.5em;
+	line-height: normal;
 	vertical-align: middle;
 }
 
@@ -37,6 +38,9 @@ h1 {
 	font-variant: small-caps;
 	letter-spacing: 0.3em;
 	text-align: center;
+}
+h3 {
+	padding-top: 0.5em;
 }
 #dictionary td, #dictionary th {
 	padding: 0 0.2em;
