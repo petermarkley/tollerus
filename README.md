@@ -9,7 +9,7 @@ Made for use on [https://eithalica.world](https://eithalica.world/lore/dictionar
 - MySQL
 - PHP 8 with `mbstrings` extension
 
-This is a rough-hewn tool that I'm sharing as-is; I haven't invested much time in user-friendliness. It may also be somewhat Anglo-centric, and I don't know how well it accommodates more creative or exotic conlang features.
+This is a rough-hewn tool that I'm sharing as-is; I haven't invested much time in user-friendliness. It may also be somewhat Anglo-centric, so I don't know how well it accommodates more creative or exotic conlang features.
 
 That said, when it works it is a beautiful dictionary system with a powerful word entry interface.
 
