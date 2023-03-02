@@ -33,11 +33,13 @@ When you're done, export a TTF to `/html/assets/font/` just like the example fil
 
 For this step, you need to alter the contents of `/conf/languages/inflections.xml`. Observe the schema and add a description of the class types and inflections in your conlang.
 
-There are some presentation attributes that may be confusing, e.g. `stack` and `align_on_stack`. These have to do with the behavior of your inflection tables across responsive CSS breakpoints, when displayed in the dictionary view.
+There are some presentation attributes that may be confusing. These have to do with the behavior of your inflection tables across responsive CSS breakpoints, when displayed in the dictionary view:
 
-- `fold`: On either tables or rows, the label is hidden when the tables are stacked.
 - `stack`: A value of `yes` means that on wide displays, this table is permitted to have other tables beside it, sharing the vertical space.
-- `align_on_stack`: For table labels, align left when stacked. (These are centered otherwise.)
+- `fold`:
+  - On tables, `yes` means the label is hidden when the table is NOT stacked horizontally (to avoid redundancy if it's the same as the label for the table directly above it).
+  - On rows, `yes` means the label is hidden when the table IS stacked horizontally (to avoid redundancy if it's the same as the label for the row directly across from it).
+- `align_on_stack`: For table labels, align left when stacked horizontally. (These are centered otherwise.)
 
 ### Step 3: Begin Main XML File
 
