@@ -37,13 +37,29 @@ There are some presentation attributes that may be confusing, e.g. `stack` and `
 
 This dictionary system is designed to accommodate multiple concurrent conlangs in the same conworld. Each dictionary entry in each language may have one or more word classes, which may have one or more morphologies.
 
-Observe the contents of `/private/languages/data/myconlang.xml` to learn the schema for your conlang's main XML data source. Each conlang belongs in a separate file in this folder, with a file name that matches the machine-readable identifier in `inflections.xml` in Step 2 above and in the root level `language` attribute of the XML file.
+Observe the contents of `/private/languages/data/myconlang.xml` to learn the schema for your conlang's main XML data source. Each conlang belongs in a separate file in this folder, with a file name that matches the machine-friendly identifier in `inflections.xml` in [Step 2 above](#step-2-write-inflection-schema) and in the root level `language` attribute of the XML file.
 
-When you write your own, focus on the alphabet and metadata, and only enter about one word for each class type. This will allow the data entry system to scrub for precedents in the data and bootstrap your data entry process. Then you can use the graphical interface for the rest of your words.
+When you write your own, focus on the alphabet and metadata (including the `svg=""` and `ttf=""` attributes which should match the files you created in [Step 1](#step-1-create-svg-font)), and only enter about one word for each class type. This will allow the data entry system to scrub for precedents in the data and bootstrap your data entry process. Then you can use the graphical interface for the rest of your words.
 
 Pay special attention to the `id=""` attributes and make sure they accord with what's described under [Base64 Unit IDs](#base64-unit-ids) below.
 
-### Step 4: Get it Running
+### Step 4: Define Neography CSS
+
+There are two files with CSS that you want to modify to point to your new TTF file that you created in [Step 1 above](#step-1-create-svg-font):
+
+- `/html/style/languages.css` starting at line 27
+- `/scripts/php/languages/add_word.php` starting at line 229
+
+You'll notice a difference in the paths given to the same TTF file in these two places:
+
+- `/assets/font/myneography_standard_medium.ttf` vs.
+- `/html/assets/font/myneography_standard_medium.ttf`
+
+(This is due to the fact that these two files are expected to be served from different web server contexts and have different definitions of the docroot. Data entry is considered a private process that's purposely inaccessible from the public docroot. See [Data Entry System](#data-entry-system) below.)
+
+Note: It's important that you change not only the file path to match your TTF file, but the neography class name `myneography` to match the machine-friendly identifier of your neography. HTML will be generated from the `name=""` attribute of the primary script in your XML source, and is expected to match the CSS selector here.
+
+### Step 5: Get it Running
 
 #### Dictionary View
 
