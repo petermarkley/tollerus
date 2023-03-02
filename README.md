@@ -3,7 +3,13 @@ _Conlang Dictionary System_
 
 Made for use on [https://eithalica.world](https://eithalica.world/lore/dictionary/?lang=chetnum). Named after good ol' "Tollers," the 20th-century conlanger legend.
 
-This is a rough-hewn tool that I'm sharing as-is. If you want to use it for your conlang, it may require some developer skills to get started and maintain it because I haven't invested much time in user-friendliness for the conlanger. It may also be somewhat Anglo-centric, and I don't know how well it accommodates more creative or exotic conlang features.
+## Requirements
+
+- Your own website with root admin access
+- MySQL
+- PHP 8 with `mbtrings` extension
+
+This is a rough-hewn tool that I'm sharing as-is; I haven't invested much time in user-friendliness. It may also be somewhat Anglo-centric, and I don't know how well it accommodates more creative or exotic conlang features.
 
 That said, when it works it is a beautiful dictionary system with a powerful word entry interface.
 
@@ -64,7 +70,7 @@ direction: rtl;
 unicode-bidi: bidi-override;
 ```
 
-Note: It's important that you change not only the file path to match your TTF file, but also the neography class name `myneography` to match the machine-friendly identifier of your neography. HTML will be generated from the `name=""` attribute of the primary script in your XML source, and is expected to match the CSS selector here.
+Note: It's important that you change not only the file path to match your TTF file, but also the neography class name `myneography` to match the machine-friendly identifier of your neography. HTML will be generated using the `name=""` attribute of the primary script in your XML source, and needs to match the CSS selector here.
 
 ### Step 5: Get it Running
 
