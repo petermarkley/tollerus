@@ -461,10 +461,49 @@ ol.dictionary-list.has-pronunciations .dictionary-list-label {
 	span.dictionary-inflect-mob, abbr.dictionary-inflect-mob {
 		display: inline;
 	}
+	#dictionary {
+		border-top-left-radius: 13px;
+		border-top-right-radius: 13px;
+	}
+	#dictionary-search fieldset {
+		height: 18px;
+		margin-bottom: 2px;
+	}
 	#dictionary-search-type {
-		
+		border-top-left-radius: 9px;
+		border-bottom-left-radius: 9px;
+	}
+	#dictionary-search-type select {
+		font-size: 10px;
+		height: 18px;
+		border-top-left-radius: 9px;
+		border-bottom-left-radius: 9px;
+	}
+	#dictionary-search-type svg {
+		right: 5px;
+		top: 5px;
+		width: 8px;
+		height: 8px;
 	}
 	#dictionary-search-key {
-		
+		font-size: 10px;
+		height: 16px;
+		border-top-right-radius: 8px;
+		border-bottom-right-radius: 8px;
+	}
+	#dictionary-search-submit {
+		border-radius: 9px;
+	}
+	#dictionary-search-submit input {
+		font-size: 10px;
+		width: 23px;
+		height: 18px;
+		border-radius: 9px;
+	}
+	#dictionary-search-submit svg {
+		width: 16px;
+		height: 16px;
+		left: calc( 50% - 8px );
+		top: calc( 50% - 8px );
 	}
 }
