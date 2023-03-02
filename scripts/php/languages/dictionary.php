@@ -106,7 +106,7 @@ class dictionary {
 	public function id_valid($in) {
 		//sanity check
 		$ok = true;
-		if (strlen($in) > self::SIZE)
+		if (strlen($in) > self::SIZE || strlen($in) < 1)
 			$ok = false;
 		for ($i=0; $i<strlen($in) && $ok == true; $i++) {
 			if (strpos(self::SAFE,$in[$i]) === false)
@@ -164,7 +164,7 @@ class dictionary {
 	public function intro_read($lang) {
 		//sanity check
 		$ok = true;
-		if (strlen($lang) > self::SIZE)
+		if (strlen($lang) > self::SIZE || strlen($lang) < 1)
 			$ok = false;
 		for ($i=0; $i<strlen($lang) && $ok == true; $i++) {
 			if (strpos(self::SAFE,$lang[$i]) === false)
