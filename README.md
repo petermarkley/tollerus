@@ -57,7 +57,14 @@ You'll notice a difference in the paths given to the same TTF file in these two 
 
 (This is due to the fact that these two files are expected to be served from different web server contexts and have different definitions of the docroot. Data entry is considered a private process that's purposely inaccessible from the public docroot. See [Data Entry System](#data-entry-system) below.)
 
-Note: It's important that you change not only the file path to match your TTF file, but the neography class name `myneography` to match the machine-friendly identifier of your neography. HTML will be generated from the `name=""` attribute of the primary script in your XML source, and is expected to match the CSS selector here.
+The system supports scripts that run either left-to-right, or right-to-left. If your neography reads right-to-left, add these properties to the CSS rule:
+
+```
+direction: rtl;
+unicode-bidi: bidi-override;
+```
+
+Note: It's important that you change not only the file path to match your TTF file, but also the neography class name `myneography` to match the machine-friendly identifier of your neography. HTML will be generated from the `name=""` attribute of the primary script in your XML source, and is expected to match the CSS selector here.
 
 ### Step 5: Get it Running
 
