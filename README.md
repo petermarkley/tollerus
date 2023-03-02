@@ -1,7 +1,7 @@
 # Tollerus
 _Conlang Dictionary System_
 
-Made for use on https://eithalica.world. Named after good ol' "Tollers," the 20th-century conlanger legend.
+Made for use on [https://eithalica.world](https://eithalica.world/lore/dictionary/?lang=chetnum). Named after good ol' "Tollers," the 20th-century conlanger legend.
 
 This is a rough-hewn tool that I'm sharing as-is. If you want to use it for your conlang, it may require some developer skills to get started and maintain it because I haven't invested much time in user-friendliness for the conlanger. It may also be somewhat Anglo-centric, and I don't know how well it accommodates more creative or exotic conlang features.
 
