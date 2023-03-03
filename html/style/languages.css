@@ -378,6 +378,25 @@ ol.dictionary-list.has-pronunciations .dictionary-list-label {
 .dictionary-list-pronunciation .dictionary-list-phonemic {
 	min-width: 3em;
 }
+.dictionary-class-label {
+	font-family: mono;
+	letter-spacing: 0.1em;
+	font-weight: bold;
+	opacity: 0.5;
+}
+.dictionary-def-use {
+	font-variant: all-small-caps;
+	font-size: 0.8em;
+	background-color: #eee;
+	padding: 0.2em;
+	border-radius: 3px;
+}
+.dictionary-etym-label {
+	margin-right: 0.5em;
+}
+.languages-word {
+	font-weight: bold;
+}
 
 .languages-smallcaps {
 	font-variant: small-caps;
