@@ -226,7 +226,7 @@ h3 {
 	padding-right: 1em;
 }
 .dictionary-header-phonemic, .dictionary-inflect-phonemic, .dictionary-list-phonemic, .phonemic {
-	font-family: 'Gentium Book Plus', serif;
+	font-family: 'Gentium Book Plus', "Palatino", "Times New Roman", serif;
 	font-weight: normal;
 	font-style: italic;
 }

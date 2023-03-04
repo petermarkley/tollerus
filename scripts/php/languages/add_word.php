@@ -227,7 +227,7 @@ echo "<!DOCTYPE html>\n";
 		<!--<link href="/html/style/languages.css" rel="stylesheet" type="text/css"/>-->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital@1&display=swap&text=<?php echo urlencode(implode($phonemes)); ?>" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital@0;1&display=swap&text=<?php echo urlencode(implode($phonemes)); ?>" rel="stylesheet">
 		<style>
 			@font-face {font-family: myneography; src: url("/html/assets/font/myneography_standard_medium.ttf");}
 			.myneography {
@@ -276,15 +276,13 @@ echo "<!DOCTYPE html>\n";
 			.keyboard span.label {
 				font-size: 8px;
 				line-height: 8px;
-				font-family: "Helvetica","Arial","sans serif";
+				font-family: "Helvetica", "Arial", sans-serif;
 				max-width: 40px;
 				overflow: visible;
 				overflow-wrap: break-word;
 			}
 			.phonemic {
-				font-family: 'Gentium Book Plus', serif;
-				font-weight: normal;
-				font-style: italic;
+				font-family: 'Gentium Book Plus', "Palatino", "Times New Roman", serif;
 			}
 			
 			h1 {
