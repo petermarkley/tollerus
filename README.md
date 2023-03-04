@@ -56,7 +56,7 @@ Pay special attention to the `id=""` attributes and make sure they accord with w
 There are two files with CSS that you want to modify to point to your new TTF file that you created in [Step 1 above](#step-1-create-svg-font):
 
 - `/html/style/languages.css` starting at line 27
-- `/scripts/php/languages/add_word.php` starting at line 229
+- `/scripts/php/languages/add_word.php` starting at line 232
 
 You'll notice a difference in the paths given to the same TTF file in these two places:
 
@@ -109,6 +109,8 @@ If you perform this action in another environment, make sure to synchronize chan
 Inflection dimensions are hard-coded into the schema. If you need to add a new kind of word inflection, you'll need to edit the database schema in `/scripts/sql/languages/schema.sql`.
 
 Editing this file is also necessary if you find the need to add a new type of word class, etc.
+
+If you have issues with IPA characters not rendering, add the missing characters to the string in `/html/lore/dictionary/index.php` on line 59.
 
 ### Base64 Unit IDs
 
