@@ -167,8 +167,8 @@ foreach ($sections as $sect) {
 			}
 		}
 	}
-	if (isset($sect->data->symbols)) {
-		foreach ($sect->data->symbols->entry as $entry) {
+	foreach ($sect->data->symbols as $symbols) {
+		foreach ($symbols->entry as $entry) {
 			foreach (mb_str_split($entry->phonemic) as $char) {
 				track_phonemes($char);
 			}
