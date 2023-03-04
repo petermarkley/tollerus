@@ -404,6 +404,9 @@
 		<xsl:apply-templates/>
 		<xsl:text>&lt;/span&gt;</xsl:text>
 	</xsl:template>
+	<xsl:template match="phonemic">
+		<xsl:text>&lt;span class=&quot;phonemic&quot;&gt;</xsl:text><xsl:apply-templates/><xsl:text>&lt;/span&gt;</xsl:text>
+	</xsl:template>
 	<xsl:template match="word">
 		<xsl:text>&lt;a class=&quot;languages-word&quot; href=&quot;?id=</xsl:text>
 		<xsl:value-of select="@href"/>

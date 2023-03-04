@@ -26,7 +26,7 @@
 
 @font-face {font-family: myneography; src: url("/assets/font/myneography_standard_medium.ttf");}
 .myneography {
-	font-family: myneography;
+	font-family: myneography, 'Gentium Book Plus', serif;
 	font-weight: normal;
 	font-size: 1.5em;
 	line-height: normal;
@@ -225,7 +225,8 @@ h3 {
 	padding-left: 1em;
 	padding-right: 1em;
 }
-.dictionary-header-phonemic, .dictionary-inflect-phonemic, .dictionary-list-phonemic {
+.dictionary-header-phonemic, .dictionary-inflect-phonemic, .dictionary-list-phonemic, .phonemic {
+	font-family: 'Gentium Book Plus', serif;
 	font-weight: normal;
 	font-style: italic;
 }
