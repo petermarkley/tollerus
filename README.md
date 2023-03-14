@@ -102,7 +102,7 @@ Then access the data entry interface at `http://127.0.0.1:4000/scripts/php/langu
 
 Use it to fill out a new dictionary entry. When you hit "save" at the bottom, it will write the new entry to your main XML file, and update the `next_id` file as appropriate.
 
-If you perform this action in another environment, make sure to synchronize changes to your live server and rerun `/scripts/sh/languages/db_reset.sh`.
+If you perform this action in another environment, make sure to synchronize changes to your live server. In either case, you will need to rerun `/scripts/sh/languages/db_reset.sh` to update the database from the new XML data.
 
 ### Caveats 
 
