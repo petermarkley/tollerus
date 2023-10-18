@@ -72,7 +72,8 @@ direction: rtl;
 unicode-bidi: bidi-override;
 ```
 
-Note: It's important that you change not only the file path to match your TTF file, but also the neography class name `myneography` to match the machine-friendly identifier of your neography. HTML will be generated using the `name=""` attribute of the primary script in your XML source, and needs to match the CSS selector here.
+> **Note**
+> It's important that you change not only the file path to match your TTF file, but also the neography class name `myneography` to match the machine-friendly identifier of your neography. HTML will be generated using the `name=""` attribute of the primary script in your XML source, and needs to match the CSS selector here.
 
 ### Step 5: Get it Running
 
