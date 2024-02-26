@@ -25,7 +25,8 @@ Follow the instructions [here](https://inkscape-manuals.readthedocs.io/en/latest
 
 This Inkscape SVG file is important because the data entry interface reads it to dynamically create a keyboard.
 
-Consider mapping your conlang glyphs to a [Unicode Private Use Area](https://en.wikipedia.org/wiki/Private_Use_Areas) to avoid ambiguity with other languages/content when copied from your application. If you want to avoid ambiguity even among conlangs, take a look at the [Conscript Unicode Registry](https://www.evertype.com/standards/csur/).
+> [!Tip]
+> Consider mapping your conlang glyphs to a [Unicode Private Use Area](https://en.wikipedia.org/wiki/Private_Use_Areas) to avoid ambiguity with other languages/content when copied from your application. If you want to avoid ambiguity even among conlangs, take a look at the [Conscript Unicode Registry](https://www.evertype.com/standards/csur/).
 
 When you're done, export a TTF to `/html/assets/font/` just like the example file `myneography_standard_medium.ttf`.
 
@@ -33,13 +34,14 @@ When you're done, export a TTF to `/html/assets/font/` just like the example fil
 
 For this step, you need to alter the contents of `/conf/languages/inflections.xml`. Observe the schema and add a description of the class types and inflections in your conlang.
 
-There are some presentation attributes that may be confusing. These have to do with the behavior of your inflection tables across responsive CSS breakpoints, when displayed in the dictionary view:
-
-- `stack`: A value of `yes` means that on wide displays, this table is permitted to have other tables beside it, sharing the vertical space.
-- `fold`:
-  - On tables, `yes` means the label is hidden when the table is NOT stacked horizontally (to avoid redundancy if it's the same as the label for the table directly above it).
-  - On rows, `yes` means the label is hidden when the table IS stacked horizontally (to avoid redundancy if it's the same as the label for the row directly across from it).
-- `align_on_stack`: For table labels, align left when stacked horizontally. (These are centered otherwise.)
+> [!Note]
+> There are some presentation attributes that may be confusing. These have to do with the behavior of your inflection tables across responsive CSS breakpoints, when displayed in the dictionary view:
+> 
+> - `stack`: A value of `yes` means that on wide displays, this table is permitted to have other tables beside it, sharing the vertical space.
+> - `fold`:
+>   - On tables, `yes` means the label is hidden when the table is NOT stacked horizontally (to avoid redundancy if it's the same as the label for the table directly above it).
+>   - On rows, `yes` means the label is hidden when the table IS stacked horizontally (to avoid redundancy if it's the same as the label for the row directly across from it).
+> - `align_on_stack`: For table labels, align left when stacked horizontally. (These are centered otherwise.)
 
 ### Step 3: Begin Main XML File
 
@@ -63,7 +65,8 @@ You'll notice a difference in the paths given to the same TTF file in these two 
 - `/assets/font/myneography_standard_medium.ttf` vs.
 - `/html/assets/font/myneography_standard_medium.ttf`
 
-(This is due to the fact that these two files are expected to be served from different web server contexts and have different definitions of the docroot. Data entry is considered a private process that's purposely inaccessible from the public docroot. See [Data Entry System](#data-entry-system) below.)
+> [!Tip]
+> The path difference is due to the fact that these two files are expected to be served from different web server contexts and have different definitions of the docroot. Data entry is considered a private process that's purposely inaccessible from the public docroot. See [Data Entry System](#data-entry-system) below.
 
 The system supports scripts that run either left-to-right, or right-to-left. If your neography reads right-to-left, add these properties to the CSS rule:
 
@@ -72,8 +75,8 @@ direction: rtl;
 unicode-bidi: bidi-override;
 ```
 
-> **Note**
-> It's important that you change not only the file path to match your TTF file, but also the neography class name `myneography` to match the machine-friendly identifier of your neography. HTML will be generated using the `name=""` attribute of the primary script in your XML source, and needs to match the CSS selector here.
+> [!Important]
+> You must change not only the file path to match your TTF file, but also the neography class name `myneography` to match the machine-friendly identifier of your neography. HTML will be generated using the `name=""` attribute of the primary script in your XML source, and needs to match the CSS selector here.
 
 ### Step 5: Get it Running
 
@@ -103,21 +106,23 @@ Then access the data entry interface at `http://127.0.0.1:4000/scripts/php/langu
 
 Use it to fill out a new dictionary entry. When you hit "save" at the bottom, it will write the new entry to your main XML file, and update the `next_id` file as appropriate.
 
-If you perform this action in another environment, make sure to synchronize changes to your live server. In either case, you will need to rerun `/scripts/sh/languages/db_reset.sh` to update the database from the new XML data.
+> [!Note]
+> If you perform this action in another environment, make sure to synchronize changes to your live server. In either case, you will need to rerun `/scripts/sh/languages/db_reset.sh` to update the database from the new XML data.
 
 ### Caveats 
 
-Inflection dimensions are hard-coded into the schema. If you need to add a new kind of word inflection, you'll need to edit the database schema in `/scripts/sql/languages/schema.sql`.
+- Inflection dimensions are hard-coded into the schema. If you need to add a new kind of word inflection, you'll need to edit the database schema in `/scripts/sql/languages/schema.sql`.
+  
+  Editing this file is also necessary if you find the need to add a new type of word class, etc.
 
-Editing this file is also necessary if you find the need to add a new type of word class, etc.
-
-If you have issues with IPA characters not rendering, add the missing characters to the string in `/html/lore/dictionary/index.php` on line 59.
+- If you have issues with IPA characters not rendering, add the missing characters to the string in `/html/lore/dictionary/index.php` on line 59.
 
 ### Base64 Unit IDs
 
 The `entry`, `class`, and `form` data units in this sytem are all tracked using IDs encoded in URL-safe Base64 ([RFC 4648 §5](https://www.rfc-editor.org/rfc/rfc4648#section-5)). A handful of helpful scripts and library functions are provided for handling them.
 
-Importantly, each ID must be unique **across all conlangs** in the system, so that they can cohere and be retrieved inside a single database. To that end, the next ID is tracked globally in a single file `/private/languages/next_id`.
+> [!Important]
+> Each ID must be unique **across all conlangs** in the system, so that they can cohere and be retrieved inside a single database. To that end, the next ID is tracked globally in a single file `/private/languages/next_id`.
 
 If you are starting from scratch, edit `next_id` to say `AAAA`. Any time you need a new ID, from a command line run the `/scripts/php/languages/increment_id.php` script:
 
@@ -128,4 +133,5 @@ AAAA -> AAAB
 
 In the example output above, `next_id` has been incremented from `AAAA` to `AAAB`. This will be accurate if you copy/paste the left ID for immediate use inside your XML data. If you are simply editing a pre-existing data unit, for example from the sample data provided, leave the ID intact and skip this step (unless you add a new class or word form).
 
-There is no need for IDs to be consecutive in your data. The most important thing is simply that they are globally unique, and that you can grow the data without fear of IDs colliding.
+> [!Tip]
+> There is no need for IDs to be consecutive in your data. The most important thing is simply that they are globally unique, and that you can grow the data without fear of IDs colliding.
