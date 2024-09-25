@@ -1,0 +1,12 @@
+{
+    "name": "petermarkley/tollerus",
+    "description": "A conlang dictionary system for Laravel",
+    "license": "LGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Peter Markley",
+            "email": "peter@petermarkley.com"
+        }
+    ],
+    "require": {}
+}
