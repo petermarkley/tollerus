@@ -8,5 +8,19 @@
             "email": "peter@petermarkley.com"
         }
     ],
-    "require": {}
+    "autoload": {
+        "psr-4": {
+            "PeterMarkley\\Tollerus\\": "src/"
+        }
+    },
+    "require": {
+        "illuminate/support": "^12.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PeterMarkley\\Tollerus\\Providers\\TollerusServiceProvider"
+            ]
+        }
+    }
 }
