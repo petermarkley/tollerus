@@ -4,8 +4,10 @@ return [
     'connection' => 'tollerus', // name your package uses
     'table_prefix' => 'tollerus_', // '' to disable
     
-    /* advanced: use this if you want the tollerus DB connection
-       to differ from your default DB connection. */
+    /*
+     * Advanced: use this if you want the Tollerus DB connection
+     * to differ from your default DB connection.
+     */
     'connection_overrides' => [
         /*
         'driver' => 'mysql',
