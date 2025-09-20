@@ -1,0 +1,209 @@
+// DBML docs: https://dbml.dbdiagram.io/docs
+
+enum writing_direction {
+  ltr [note: 'Left to right (like most Western and Romance languages)']
+  rtl [note: 'Right to left (like Hebrew/Arabic)']
+  ttb [note: 'Top to bottom (like Chinese)']
+  btt [note: 'Bottom to top']
+}
+
+/*
+ * ===========================================================
+ *                 TOP-LEVEL LANGUAGE CONFIG
+ * These tables are expected to be mostly set-and-forget, i.e.
+ * they're not expected to change much after initial setup.
+ * ===========================================================
+ */
+
+Table neographies {
+  id integer [primary key]
+  name varchar
+  font blob
+  direction_primary writing_direction
+  direction_secondary writing_direction [note: 'Must be perpendicular to primary direction.']
+  boustrophedon bool [default: false, note: '"As the ox plows," meaning the primary direction flips each time the line is filled and the script increments in the secondary direction.']
+}
+
+Table languages {
+  id integer [primary key]
+  title varchar
+  primary_neography integer [null]
+}
+
+Table language_neography {
+  id integer [primary key]
+  language_id integer
+  neography_id integer
+}
+
+Ref: language_neography.language_id > languages.id
+Ref: language_neography.neography_id > neographies.id
+Ref: languages.primary_neography > neographies.id
+
+Table word_class_groups {
+  id integer [primary key]
+  language_id integer
+  inflected bool
+}
+
+Ref: word_class_groups.language_id > languages.id
+
+Table word_classes {
+  id integer [primary key]
+  group_id integer
+  name varchar
+}
+
+Ref: word_classes.group_id > word_class_groups.id
+
+Table features {
+  id integer [primary key]
+  word_class_group_id integer
+  name varchar
+  name_brief varchar [null]
+}
+
+Ref: features.word_class_group_id > word_class_groups.id
+
+Table feature_values {
+  id integer [primary key]
+  feature_id integer
+  name varchar
+  name_brief varchar [null]
+}
+
+Ref: feature_values.feature_id > features.id
+
+/*
+ * ===========================================================
+ *                 MAIN LEXICAL DATA
+ * These tables are where the main body of the dictionary data
+ * is stored, expected to be growing and evolving a lot.
+ * ===========================================================
+ */
+
+Table entries {
+  id integer [primary key, note: 'Globally unique & canonical! Exposed to user in base64']
+  language_id integer
+  primary_form integer [null]
+  etym text
+}
+
+Ref: entries.language_id > languages.id
+Ref: entries.primary_form > forms.id
+
+Table lexemes {
+  id integer [primary key, note: 'Globally unique & canonical! Exposed to user in base64']
+  language_id integer
+  entry_id integer
+  word_class_id integer
+}
+
+Ref: lexemes.language_id > languages.id
+Ref: lexemes.entry_id > entries.id
+Ref: lexemes.word_class_id > word_classes.id
+
+Table senses {
+  id integer [primary key]
+  lexeme_id integer
+  num integer
+  body text
+}
+
+Ref: senses.lexeme_id > lexemes.id
+
+Table subsenses {
+  id integer [primary key]
+  sense_id integer
+  num integer
+  body text
+}
+
+Ref: subsenses.sense_id > senses.id
+
+Table forms {
+  id integer [primary key, note: 'Globally unique & canonical! Exposed to user in base64']
+  language_id integer
+  lexeme_id integer
+  roman varchar
+  phonemic varchar
+}
+
+Ref: forms.language_id > languages.id
+Ref: forms.lexeme_id > lexemes.id
+
+Table native_spellings {
+  id integer [primary key]
+  form_id integer
+  neography_id integer
+  spelling varchar
+}
+
+Ref: native_spellings.form_id > forms.id
+Ref: native_spellings.neography_id > neographies.id
+
+Table form_feature_values {
+  id integer [primary key]
+  form_id integer
+  feature_id integer
+  value_id integer
+}
+
+Ref: form_feature_values.form_id > forms.id
+Ref: form_feature_values.feature_id > features.id
+Ref: form_feature_values.value_id > feature_values.id
+
+/*
+ * ===========================================================
+ *                 INFLECTION TABLES CONFIG
+ * These DB tables define how inflection tables are displayed.
+ * Shouldn't change much after initial setup unless you alter
+ * or augment the fundamental grammar of your conlang.
+ * ===========================================================
+ */
+
+Table disp_tables {
+  id integer [primary key]
+  word_class_group_id integer
+  label varchar
+  position integer
+  stack bool [note: 'A value of true means that on wide displays, this table is permitted to have other tables beside it, sharing the vertical space.']
+  align_on_stack bool [note: 'Set the table\'s label to align left when the table is stacked horizontally. (It\'s centered otherwise.)']
+  table_fold bool [note: 'Here, true means the table\'s label is hidden when the table is NOT stacked horizontally (to avoid redundancy if it\'s the same as the label for the table directly above it).']
+  rows_fold bool [note: 'Here, true means the row labels are hidden when the table IS stacked horizontally (to avoid redundancy if it\'s the same as the label for the row directly across from it).']
+}
+
+Ref: disp_tables.word_class_group_id > word_class_groups.id
+
+Table disp_table_filters {
+  id integer [primary key]
+  disp_table_id integer
+  feature_id integer
+  value_id integer
+}
+
+Ref: disp_table_filters.disp_table_id > disp_tables.id
+Ref: disp_table_filters.feature_id > features.id
+Ref: disp_table_filters.value_id > feature_values.id
+
+Table disp_table_rows {
+  id integer [primary key]
+  disp_table_id integer
+  label varchar
+  brief varchar [note: 'Abbreviated form of label (for when screen space is very tight)']
+  position integer
+}
+
+Ref: disp_table_rows.disp_table_id > disp_tables.id
+
+Table disp_table_row_filters {
+  id integer [primary key]
+  disp_table_row_id integer
+  feature_id integer
+  value_id integer
+}
+
+Ref: disp_table_row_filters.disp_table_row_id > disp_table_rows.id
+Ref: disp_table_row_filters.feature_id > features.id
+Ref: disp_table_row_filters.value_id > feature_values.id
+
