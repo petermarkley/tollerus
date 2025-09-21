@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
+use PeterMarkley\Tollerus\Enums\NeographySectionType;
+use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
 
 return new class extends Migration
 {
@@ -26,7 +28,8 @@ return new class extends Migration
         
         $connection->create('neographies', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
+            $table->string('machine_name')->unique();
             $table->binary('font');
             $table->enum('direction_primary', WritingDirection::values())
                 ->default(WritingDirection::LeftToRight->value);
@@ -43,7 +46,8 @@ return new class extends Migration
         
         $connection->create('languages', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
+            $table->string('machine_name')->unique();
             $table->string('dict_title');
             $table->string('dict_title_full');
             $table->string('dict_author');
@@ -119,6 +123,19 @@ return new class extends Migration
             $table->unique(['feature_id', 'name_brief'], 'feature_name_brief_unique');
         });
 
+        $connection->create('neography_sections', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('neography_id');
+            $table->foreign('neography_id')
+                ->references('id')->on('neographies')
+                ->cascadeOnDelete();
+            $table->enum('type', NeographySectionType::values())->nullable();
+            $table->string('name');
+            $table->text('intro')->charset('utf8mb4');
+            // ensure only one of each section name per neography
+            $table->unique(['neography_id', 'name'], 'neography_name_unique');
+        });
+
         /**
          * ===========================================================
          *                 MAIN LEXICAL DATA
@@ -136,6 +153,60 @@ return new class extends Migration
         });
         $global_ids = $prefix . 'global_ids';
 
+        $connection->create('neography_glyphs', function (Blueprint $table) {
+            $table->unsignedBigInteger('id');
+            $table->primary('id');
+            $table->foreign('id')
+                ->references('id')->on('global_ids')
+                ->cascadeOnDelete();
+            $table->foreignId('language_id');
+            $table->foreign('language_id')
+                ->references('id')->on('languages')
+                ->cascadeOnDelete();
+            $table->foreignId('section_id');
+            $table->foreign('section_id')
+                ->references('id')->on('neography_sections')
+                ->cascadeOnDelete();
+            $table->enum('type', NeographyGlyphType::values())->nullable();
+            $table->integer('position');
+            $table->boolean('render_base'); // If true, glyph will render on a Unicode dotted circle
+            $table->string('glyph')->charset('utf8mb4');
+            $table->string('roman')->nullable();
+            $table->string('phonemic')->charset('utf8mb4')->nullable();
+            $table->string('pronunciation_roman')->nullable();
+            $table->string('pronunciation_phonemic')->charset('utf8mb4')->nullable();
+            $table->string('pronunciation_native')->charset('utf8mb4')->nullable();
+            $table->string('note')->charset('utf8mb4')->nullable();
+            // ensure only one of each glyph per section
+            $table->unique(['section_id', 'glyph'], 'section_glyph_unique');
+            // ensure only one of each position per type in a section
+            $table->unique(['section_id', 'type', 'position'], 'section_type_position_unique');
+        });
+        /**
+         * We need a database trigger to help maintain our global IDs.
+         */
+        $neography_glyphs = $prefix . 'neography_glyphs';
+        $rawConnection->unprepared(<<<SQL
+        CREATE TRIGGER bi_tollerus_neography_glyphs_reserve_id
+        BEFORE INSERT ON {$neography_glyphs} FOR EACH ROW
+        BEGIN
+          IF NEW.id IS NULL THEN
+            INSERT INTO {$global_ids} () VALUES();
+            SET NEW.id = LAST_INSERT_ID();
+          ELSE
+            -- Allow explicit ID; ensure a registry row exists (fail if taken)
+            INSERT INTO {$global_ids} (id) VALUES (NEW.id);
+          END IF;
+        END;
+        SQL);
+        $rawConnection->unprepared(<<<SQL
+        CREATE TRIGGER ad_tollerus_neography_glyphs_delete_gid
+        AFTER DELETE ON {$neography_glyphs} FOR EACH ROW
+        BEGIN
+          DELETE FROM {$global_ids} WHERE id = OLD.id;
+        END;
+        SQL);
+
         $connection->create('entries', function (Blueprint $table) {
             $table->unsignedBigInteger('id');
             $table->primary('id');
@@ -147,7 +218,7 @@ return new class extends Migration
                 ->references('id')->on('languages')
                 ->cascadeOnDelete();
             $table->foreignId('primary_form')->nullable(); // Relationship defined after `forms` table
-            $table->text('etym')->nullable();
+            $table->text('etym')->charset('utf8mb4')->nullable();
         });
         /**
          * We need a database trigger to help maintain our global IDs.
@@ -277,7 +348,7 @@ return new class extends Migration
                 ->references('id')->on('lexemes')
                 ->cascadeOnDelete();
             $table->integer('num');
-            $table->text('body');
+            $table->text('body')->charset('utf8mb4');
             // ensure only one of each num per sense
             $table->unique(['lexeme_id', 'num'], 'lexeme_num_unique');
         });
@@ -289,7 +360,7 @@ return new class extends Migration
                 ->references('id')->on('senses')
                 ->cascadeOnDelete();
             $table->integer('num');
-            $table->text('body');
+            $table->text('body')->charset('utf8mb4');
             // ensure only one of each num per sense
             $table->unique(['sense_id', 'num'], 'num_sense_unique');
         });
@@ -441,14 +512,11 @@ return new class extends Migration
         $connection = Schema::connection(config('tollerus.connection'));
         $connection->disableForeignKeyConstraints();
         
-        // top-level language config
-        $connection->dropIfExists('feature_values');
-        $connection->dropIfExists('features');
-        $connection->dropIfExists('word_classes');
-        $connection->dropIfExists('word_class_groups');
-        $connection->dropIfExists('language_neography');
-        $connection->dropIfExists('languages');
-        $connection->dropIfExists('neographies');
+        // inflection tables config
+        $connection->dropIfExists('disp_table_row_filters');
+        $connection->dropIfExists('disp_table_rows');
+        $connection->dropIfExists('disp_table_filters');
+        $connection->dropIfExists('disp_tables');
         // main lexical data
         $connection->dropIfExists('form_feature_values');
         $connection->dropIfExists('native_spellings');
@@ -457,12 +525,17 @@ return new class extends Migration
         $connection->dropIfExists('forms');
         $connection->dropIfExists('lexemes');
         $connection->dropIfExists('entries');
+        $connection->dropIfExists('neography_glyphs');
         $connection->dropIfExists('global_ids');
-        // inflection tables config
-        $connection->dropIfExists('disp_table_row_filters');
-        $connection->dropIfExists('disp_table_rows');
-        $connection->dropIfExists('disp_table_filters');
-        $connection->dropIfExists('disp_tables');
+        // top-level language config
+        $connection->dropIfExists('neography_sections');
+        $connection->dropIfExists('feature_values');
+        $connection->dropIfExists('features');
+        $connection->dropIfExists('word_classes');
+        $connection->dropIfExists('word_class_groups');
+        $connection->dropIfExists('language_neography');
+        $connection->dropIfExists('languages');
+        $connection->dropIfExists('neographies');
         
         $connection->enableForeignKeyConstraints();
     }
