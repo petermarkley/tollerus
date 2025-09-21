@@ -21,9 +21,7 @@ class TollerusServiceProvider extends ServiceProvider
 			__DIR__.'/../../config/tollerus.php' => config_path('tollerus.php'),
 		]);
 		$this->ensureTollerusConnection();
-        $this->publishesMigrations([
-            __DIR__.'/../../database/migrations' => database_path('migrations'),
-        ]);
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 	}
 
 	private function ensureTollerusConnection(): void
