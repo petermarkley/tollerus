@@ -17,9 +17,6 @@ trait HasGlobalId
             $model->appends = array_unique(
                 array_merge($model->appends, ['global_id'])
             );
-            $model->fillable = array_unique(
-                array_merge($model->fillable, ['id'])
-            );
         });
     }
 
