@@ -4,6 +4,19 @@ namespace PeterMarkley\Tollerus\Traits;
 
 trait HasGlobalId
 {
+    protected static function bootHasGlobalId(): void
+    {
+        /**
+         * We would use `$appends = ['global_id']`, except we don't want
+         * to overwrite any pre-existing contents.
+         */
+        static::retrieved(function ($model) {
+            $model->appends = array_unique(
+                array_merge($model->appends, ['global_id'])
+            );
+        });
+    }
+
     public static function isValidGlobalId(string $str): bool
     {
         /**
@@ -23,7 +36,7 @@ trait HasGlobalId
         return true;
     }
 
-    private static function GlobalIdEncode(int $num): string
+    private static function EncodeGlobalId(int $num): string
     {
         /**
          * PHP's normal (signed) integer type has a maximum value of
@@ -68,7 +81,7 @@ trait HasGlobalId
         return $converted;
     }
     
-    private static function GlobalIdDecode(string $input): int
+    private static function DecodeGlobalId(string $input): int
     {
         /**
          * Just as above, we need to inflate to 48 bits then trim
@@ -101,6 +114,19 @@ trait HasGlobalId
         $num = unpack("Nint",$binary32)["int"];
 
         return $num;
+    }
+
+    /**
+     * Use encode/decode methods to expose mutated ID as an attribute.
+     */
+    protected function globalId(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, array $attributes) =>
+                isset($attributes['id']) ? self::EncodeGlobalId((int) $attributes['id']) : null,
+
+            set: fn ($value) => ['id' => self::DecodeGlobalId($value)]
+        );
     }
 }
 
