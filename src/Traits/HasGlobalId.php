@@ -4,15 +4,21 @@ namespace PeterMarkley\Tollerus\Traits;
 
 trait HasGlobalId
 {
+    public $incrementing = false;
+    protected $keyType = 'int';
+
     protected static function bootHasGlobalId(): void
     {
         /**
-         * We would use `$appends = ['global_id']`, except we don't want
-         * to overwrite any pre-existing contents.
+         * We would use directly assign these, except we don't want to
+         * overwrite any pre-existing contents.
          */
         static::retrieved(function ($model) {
             $model->appends = array_unique(
                 array_merge($model->appends, ['global_id'])
+            );
+            $model->fillable = array_unique(
+                array_merge($model->fillable, ['id'])
             );
         });
     }
