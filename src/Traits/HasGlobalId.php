@@ -39,7 +39,7 @@ trait HasGlobalId
         return true;
     }
 
-    private static function EncodeGlobalId(int $num): string
+    private static function encodeGlobalId(int $num): string
     {
         /**
          * PHP's normal (signed) integer type has a maximum value of
@@ -84,7 +84,7 @@ trait HasGlobalId
         return $converted;
     }
     
-    private static function DecodeGlobalId(string $input): int
+    private static function decodeGlobalId(string $input): int
     {
         /**
          * Just as above, we need to inflate to 48 bits then trim
@@ -126,9 +126,9 @@ trait HasGlobalId
     {
         return Attribute::make(
             get: fn ($value, array $attributes) =>
-                isset($attributes['id']) ? self::EncodeGlobalId((int) $attributes['id']) : null,
+                isset($attributes['id']) ? self::encodeGlobalId((int) $attributes['id']) : null,
 
-            set: fn ($value) => ['id' => self::DecodeGlobalId($value)]
+            set: fn ($value) => ['id' => self::decodeGlobalId($value)]
         );
     }
 }

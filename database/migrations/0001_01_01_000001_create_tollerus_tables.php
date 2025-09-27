@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
 use PeterMarkley\Tollerus\Enums\NeographySectionType;
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
+use PeterMarkley\Tollerus\Enums\GlobalIdKind;
 
 return new class extends Migration
 {
@@ -150,6 +151,8 @@ return new class extends Migration
          */
         $connection->create('global_ids', function (Blueprint $table) {
             $table->id();
+            $table->enum('kind', GlobalIdKind::values())
+                ->nullable(false);
         });
         $global_ids = $prefix . 'global_ids';
 
@@ -186,16 +189,17 @@ return new class extends Migration
          * We need a database trigger to help maintain our global IDs.
          */
         $neography_glyphs = $prefix . 'neography_glyphs';
+        $kind = GlobalIdKind::Glyph->value;
         $rawConnection->unprepared(<<<SQL
         CREATE TRIGGER bi_tollerus_neography_glyphs_reserve_id
         BEFORE INSERT ON {$neography_glyphs} FOR EACH ROW
         BEGIN
           IF NEW.id IS NULL THEN
-            INSERT INTO {$global_ids} () VALUES();
+            INSERT INTO {$global_ids} (kind) VALUES('{$kind}');
             SET NEW.id = LAST_INSERT_ID();
           ELSE
             -- Allow explicit ID; ensure a registry row exists (fail if taken)
-            INSERT INTO {$global_ids} (id) VALUES (NEW.id);
+            INSERT INTO {$global_ids} (id, kind) VALUES (NEW.id, '{$kind}');
           END IF;
         END;
         SQL);
@@ -224,16 +228,17 @@ return new class extends Migration
          * We need a database trigger to help maintain our global IDs.
          */
         $entries = $prefix . 'entries';
+        $kind = GlobalIdKind::Entry->value;
         $rawConnection->unprepared(<<<SQL
         CREATE TRIGGER bi_tollerus_entries_reserve_id
         BEFORE INSERT ON {$entries} FOR EACH ROW
         BEGIN
           IF NEW.id IS NULL THEN
-            INSERT INTO {$global_ids} () VALUES();
+            INSERT INTO {$global_ids} (kind) VALUES('{$kind}');
             SET NEW.id = LAST_INSERT_ID();
           ELSE
             -- Allow explicit ID; ensure a registry row exists (fail if taken)
-            INSERT INTO {$global_ids} (id) VALUES (NEW.id);
+            INSERT INTO {$global_ids} (id, kind) VALUES (NEW.id, '{$kind}');
           END IF;
         END;
         SQL);
@@ -268,16 +273,17 @@ return new class extends Migration
          * We need a database trigger to help maintain our global IDs.
          */
         $lexemes = $prefix . 'lexemes';
+        $kind = GlobalIdKind::Lexeme->value;
         $rawConnection->unprepared(<<<SQL
         CREATE TRIGGER bi_tollerus_lexemes_reserve_id
         BEFORE INSERT ON {$lexemes} FOR EACH ROW
         BEGIN
           IF NEW.id IS NULL THEN
-            INSERT INTO {$global_ids} () VALUES();
+            INSERT INTO {$global_ids} (kind) VALUES('{$kind}');
             SET NEW.id = LAST_INSERT_ID();
           ELSE
             -- Allow explicit ID; ensure a registry row exists (fail if taken)
-            INSERT INTO {$global_ids} (id) VALUES (NEW.id);
+            INSERT INTO {$global_ids} (id, kind) VALUES (NEW.id, '{$kind}');
           END IF;
         END;
         SQL);
@@ -310,16 +316,17 @@ return new class extends Migration
          * We need a database trigger to help maintain our global IDs.
          */
         $forms = $prefix . 'forms';
+        $kind = GlobalIdKind::Form->value;
         $rawConnection->unprepared(<<<SQL
         CREATE TRIGGER bi_tollerus_forms_reserve_id
         BEFORE INSERT ON {$forms} FOR EACH ROW
         BEGIN
           IF NEW.id IS NULL THEN
-            INSERT INTO {$global_ids} () VALUES();
+            INSERT INTO {$global_ids} (kind) VALUES('{$kind}');
             SET NEW.id = LAST_INSERT_ID();
           ELSE
             -- Allow explicit ID; ensure a registry row exists (fail if taken)
-            INSERT INTO {$global_ids} (id) VALUES (NEW.id);
+            INSERT INTO {$global_ids} (id, kind) VALUES (NEW.id, '$kind');
           END IF;
         END;
         SQL);
