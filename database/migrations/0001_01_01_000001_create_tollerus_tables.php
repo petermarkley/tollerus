@@ -159,9 +159,9 @@ return new class extends Migration
             $table->foreign('id')
                 ->references('id')->on('global_ids')
                 ->cascadeOnDelete();
-            $table->foreignId('language_id');
-            $table->foreign('language_id')
-                ->references('id')->on('languages')
+            $table->foreignId('neography_id');
+            $table->foreign('neography_id')
+                ->references('id')->on('neographies')
                 ->cascadeOnDelete();
             $table->foreignId('section_id');
             $table->foreign('section_id')
