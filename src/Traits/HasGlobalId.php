@@ -65,18 +65,16 @@ trait HasGlobalId
         // Encode
         $encoded = base64_encode($binary48);
 
-        /**
-         * Trim leading 'A's to a minimum of 1. This can be re-padded
-         * later to any desired length.
-         */
-        $trimmed = str_pad(ltrim($encoded, "A"), 1, "A");
+        // Normalize leading 'A's.
+        $digits = Config::get('tollerus.global_id_digits', 4);
+        $normalized = str_pad(ltrim($encoded, "A"), $digits, "A");
 
         /**
          * The PHP function outputs §4 format, but we are
          * using §5 format. So we convert.
          */
         $converted = strtr(
-            rtrim($trimmed, '='),
+            rtrim($normalized, '='),
             '+/',
             '-_'
         );
@@ -125,8 +123,15 @@ trait HasGlobalId
     protected function globalId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, array $attributes) =>
-                isset($attributes['id']) ? self::encodeGlobalId((int) $attributes['id']) : null,
+            get: function ($value, array $attributes) {
+                if (!isset($attributes['id'])) {
+                    return null;
+                }
+                $globalId = self::encodeGlobalId((int) $attributes['id']));
+                $digits = Config::get('tollerus.global_id_digits', 4);
+                $padded = str_pad($globalId, $digits, "A", STR_PAD_LEFT);
+                return $padded;
+            }
 
             set: fn ($value) => ['id' => self::decodeGlobalId($value)]
         );

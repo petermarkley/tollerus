@@ -3,6 +3,13 @@
 return [
     'connection' => 'tollerus', // name your package uses
     'table_prefix' => 'tollerus_', // '' to disable
+    /**
+     * This should be between 1 and 5. If number of IDs overflows
+     * this width, everything will still function but you'll have
+     * a cosmetic problem of inconsistent ID lengths. 5 is the
+     * hard maximum because after that it overflows a PHP int.
+     */
+    'global_id_digits' => 4,
     
     /*
      * Advanced: use this if you want the Tollerus DB connection
