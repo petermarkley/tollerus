@@ -82,7 +82,7 @@ final class GlobalId extends Model
 
         // fetch list of kinds
         $rows = self::query()->whereIn('id', $ids)->get(['id','kind']);
-        $byKind = $rows->groupBy(fn($item) => $item->kind);
+        $byKind = $rows->groupBy('kind');
 
         // run only one query for each kind
         $out = $byKind->map(function ($subset, $kind) {
