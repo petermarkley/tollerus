@@ -2,6 +2,8 @@
 
 namespace PeterMarkley\Tollerus\Traits;
 
+use InvalidArgumentException;
+
 trait HasGlobalId
 {
     public $incrementing = false;

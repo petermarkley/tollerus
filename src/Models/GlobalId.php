@@ -2,6 +2,8 @@
 
 namespace PeterMarkley\Tollerus\Models;
 
+use InvalidArgumentException;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -26,12 +28,8 @@ final class GlobalId extends Model
      */
     public function resolve(): ?Model
     {
-        return match ($this->kind) {
-            GlobalIdKind::Glyph  => NeographyGlyph::query()->find($this->id),
-            GlobalIdKind::Entry  => Entry::query()->find($this->id),
-            GlobalIdKind::Lexeme => Lexeme::query()->find($this->id),
-            GlobalIdKind::Form   => Form::query()->find($this->id),
-        };
+        $class = $this->kind->model();
+        return $class::query()->find($this->id);
     }
 
     /**
@@ -39,31 +37,67 @@ final class GlobalId extends Model
      */
     public static function resolveId(string $globalId): ?Model
     {
-        $id = self::decodeGlobalId($globalId);
-        $Object = self::query()->find($id);
-        return $Object?->resolve();
+        try {
+            $id = self::decodeGlobalId($globalId);
+        } catch (InvalidArgumentException) {
+            return null;
+        }
+        $object = self::query()->find($id);
+        return $object?->resolve();
     }
 
     /**
      * Batch resolve, more efficient than repeated single calls to `resolveId()`.
+     *
+     * Returns a nested collection shaped like:
+     *   Collection{
+     *     GlobalIdKind::Entry  => Collection{ global_id(string) => Model },
+     *     GlobalIdKind::Lexeme => Collection{ global_id(string) => Model },
+     *     ...
+     *   }
+     *
+     * @param  array<string> $globalIds
+     * @return Collection<GlobalIdKind, Collection<string, Model>>
      */
-    /*public static function resolveMany(array $globalIds): array
+    public static function resolveMany(array $globalIds): Collection
     {
-        $ids = collect($globalIds)->map(fn($item) => self::decodeGlobalId($item));
-        $rows = static::query()->whereIn('id', $ids)->get(['id','kind']);
-        $byKind = $rows->groupBy(fn($item) => $item->kind->value);
+        // decode IDs
+        $ids = collect($globalIds)
+            ->map(function ($item) {
+                try {
+                    $id = self::decodeGlobalId($item);
+                } catch (InvalidArgumentException) {
+                    return null;
+                }
+                return $id;
+            })
+            ->filter(fn ($id) => $id !== null)
+            ->unique()
+            ->values();
 
+        // no-op if empty
+        if ($ids->isEmpty()) {
+            return collect();
+        }
+
+        // fetch list of kinds
+        $rows = self::query()->whereIn('id', $ids)->get(['id','kind']);
+        $byKind = $rows->groupBy(fn($item) => $item->kind);
+
+        // run only one query for each kind
         $out = $byKind->map(function ($subset, $kind) {
-            // FIXME
+            // fetch the appropriate model class
+            $class = $kind->model();
+
+            // flat array of IDs that belong to this kind
+            $subsetIds = $subset->pluck('id');
+
+            // run the query, save results to output collection
+            return $class::query()
+                ->whereIn('id', $subsetIds)
+                ->get()->keyBy('global_id');
         });
 
-        //$out = [];
-        //foreach ($byKind as $kind => $subset) {
-        //    $class = config("tollerus.kind_model_map.$kind");
-        //    if (! $class) continue;
-        //    $models = $class::query()->whereIn('id', $subset->pluck('id'))->get()->keyBy('id');
-        //    foreach ($subset as $r) { $out[$r->id] = $models->get($r->id); }
-        //}
-        return $out; // [id => Model|null]
-    }*/
+        return $out;
+    }
 }
