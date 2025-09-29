@@ -10,18 +10,14 @@ use Illuminate\Support\Collection;
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 use PeterMarkley\Tollerus\Traits\HasGlobalId;
 use PeterMarkley\Tollerus\Enums\GlobalIdKind;
-use PeterMarkley\Tollerus\Models\NeographyGlyph;
-use PeterMarkley\Tollerus\Models\Entry;
-use PeterMarkley\Tollerus\Models\Lexeme;
-use PeterMarkley\Tollerus\Models\Form;
 
 final class GlobalId extends Model
 {
     use HasTablePrefix;
     use HasGlobalId;
     protected $table = 'global_ids';
-    protected $casts = ['kind' => GlobalIdKind::class];
     public $timestamps = false;
+    protected $casts = ['kind' => GlobalIdKind::class];
 
     /**
      * Check 'kind' column and dereference

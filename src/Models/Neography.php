@@ -5,31 +5,43 @@ namespace PeterMarkley\Tollerus\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use PeterMarkley\Tollerus\Enums\WritingDirection;
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 
 class Neography extends Model
 {
     use HasTablePrefix;
+    protected $table = 'neographies';
+    public $timestamps = false;
     protected $casts = [
         'direction_primary' => WritingDirection::class,
         'direction_secondary' => WritingDirection::class,
     ];
 
     /**
-     * The languages that belong to this neography.
+     * Model relations
      */
     public function languages(): BelongsToMany
     {
         return $this
             ->belongsToMany(Language::class, 'language_neography')
-            ->using(\PeterMarkley\Tollerus\Models\Pivots\LanguageNeography::class);
+            ->using(Pivots\LanguageNeography::class);
     }
-
-    /**
-     * Get the sections for this neography.
-     */
-    public function neographySections(): HasMany
+    // languages whose primary neography is this one
+    public function languagesWherePrimary(): HasMany
+    {
+        return $this->hasMany(Language::class, 'primary_neography');
+    }
+    public function sections(): HasMany
     {
         return $this->hasMany(NeographySection::class);
+    }
+    public function glyphs(): HasMany
+    {
+        return $this->hasMany(NeographyGlyph::class);
+    }
+    public function nativeSpellings(): HasMany
+    {
+        return $this->hasMany(NativeSpellings::class);
     }
 }
