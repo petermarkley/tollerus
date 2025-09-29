@@ -191,7 +191,7 @@ return new class extends Migration
         $neography_glyphs = $prefix . 'neography_glyphs';
         $kind = GlobalIdKind::Glyph->value;
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER bi_tollerus_neography_glyphs_reserve_id
+        CREATE TRIGGER bi_{$prefix}neography_glyphs_reserve_id
         BEFORE INSERT ON {$neography_glyphs} FOR EACH ROW
         BEGIN
           IF NEW.id IS NULL THEN
@@ -204,7 +204,7 @@ return new class extends Migration
         END;
         SQL);
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER ad_tollerus_neography_glyphs_delete_gid
+        CREATE TRIGGER ad_{$prefix}neography_glyphs_delete_gid
         AFTER DELETE ON {$neography_glyphs} FOR EACH ROW
         BEGIN
           DELETE FROM {$global_ids} WHERE id = OLD.id;
@@ -230,7 +230,7 @@ return new class extends Migration
         $entries = $prefix . 'entries';
         $kind = GlobalIdKind::Entry->value;
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER bi_tollerus_entries_reserve_id
+        CREATE TRIGGER bi_{$prefix}entries_reserve_id
         BEFORE INSERT ON {$entries} FOR EACH ROW
         BEGIN
           IF NEW.id IS NULL THEN
@@ -243,7 +243,7 @@ return new class extends Migration
         END;
         SQL);
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER ad_tollerus_entries_delete_gid
+        CREATE TRIGGER ad_{$prefix}entries_delete_gid
         AFTER DELETE ON {$entries} FOR EACH ROW
         BEGIN
           DELETE FROM {$global_ids} WHERE id = OLD.id;
@@ -275,7 +275,7 @@ return new class extends Migration
         $lexemes = $prefix . 'lexemes';
         $kind = GlobalIdKind::Lexeme->value;
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER bi_tollerus_lexemes_reserve_id
+        CREATE TRIGGER bi_{$prefix}lexemes_reserve_id
         BEFORE INSERT ON {$lexemes} FOR EACH ROW
         BEGIN
           IF NEW.id IS NULL THEN
@@ -288,7 +288,7 @@ return new class extends Migration
         END;
         SQL);
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER ad_tollerus_lexemes_delete_gid
+        CREATE TRIGGER ad_{$prefix}lexemes_delete_gid
         AFTER DELETE ON {$lexemes} FOR EACH ROW
         BEGIN
           DELETE FROM {$global_ids} WHERE id = OLD.id;
@@ -318,7 +318,7 @@ return new class extends Migration
         $forms = $prefix . 'forms';
         $kind = GlobalIdKind::Form->value;
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER bi_tollerus_forms_reserve_id
+        CREATE TRIGGER bi_{$prefix}forms_reserve_id
         BEFORE INSERT ON {$forms} FOR EACH ROW
         BEGIN
           IF NEW.id IS NULL THEN
@@ -326,12 +326,12 @@ return new class extends Migration
             SET NEW.id = LAST_INSERT_ID();
           ELSE
             -- Allow explicit ID; ensure a registry row exists (fail if taken)
-            INSERT INTO {$global_ids} (id, kind) VALUES (NEW.id, '$kind');
+            INSERT INTO {$global_ids} (id, kind) VALUES (NEW.id, '{$kind}');
           END IF;
         END;
         SQL);
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER ad_tollerus_forms_delete_gid
+        CREATE TRIGGER ad_{$prefix}forms_delete_gid
         AFTER DELETE ON {$forms} FOR EACH ROW
         BEGIN
           DELETE FROM {$global_ids} WHERE id = OLD.id;
@@ -517,8 +517,19 @@ return new class extends Migration
     public function down(): void
     {
         $connection = Schema::connection(config('tollerus.connection'));
+        $rawConnection = DB::connection(config('tollerus.connection'));
+        $prefix = $rawConnection->getTablePrefix();
         $connection->disableForeignKeyConstraints();
-        
+
+        // triggers
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}neography_glyphs_reserve_id;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}neography_glyphs_delete_gid;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}entries_reserve_id;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}entries_delete_gid;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}lexemes_reserve_id;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}lexemes_delete_gid;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}forms_reserve_id;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}forms_delete_gid;");
         // inflection tables config
         $connection->dropIfExists('disp_table_row_filters');
         $connection->dropIfExists('disp_table_rows');
@@ -543,7 +554,7 @@ return new class extends Migration
         $connection->dropIfExists('language_neography');
         $connection->dropIfExists('languages');
         $connection->dropIfExists('neographies');
-        
+
         $connection->enableForeignKeyConstraints();
     }
 };
