@@ -129,11 +129,11 @@ trait HasGlobalId
                 if (!isset($attributes['id'])) {
                     return null;
                 }
-                $globalId = self::encodeGlobalId((int) $attributes['id']));
+                $globalId = self::encodeGlobalId((int) $attributes['id']);
                 $digits = Config::get('tollerus.global_id_digits', 4);
                 $padded = str_pad($globalId, $digits, "A", STR_PAD_LEFT);
                 return $padded;
-            }
+            },
 
             set: fn ($value) => ['id' => self::decodeGlobalId($value)]
         );
