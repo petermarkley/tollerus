@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 
+use PeterMarkley\Tollerus\Console\Commands\TollerusImport;
+
 class TollerusServiceProvider extends ServiceProvider
 {
 	public function register()
@@ -17,11 +19,19 @@ class TollerusServiceProvider extends ServiceProvider
 
 	public function boot()
 	{
+		// Publish config so the host app can change it
 		$this->publishes([
 			__DIR__.'/../../config/tollerus.php' => config_path('tollerus.php'),
 		]);
+		// Set up database stuff
 		$this->ensureTollerusConnection();
-        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
+		$this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
+		// Register artisan command
+		if ($this->app->runningInConsole()) {
+			$this->commands([
+				TollerusImport::class,
+			]);
+		}
 	}
 
 	private function ensureTollerusConnection(): void

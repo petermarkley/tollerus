@@ -28,14 +28,11 @@ class FileImportSeeder extends Seeder
         string $inflectionsFilePath = null
     )
     {
-        if (!$mainFilePath) {
+        if (!$mainFilePath && !$inflectionsFilePath) {
             $this->mainFilePath = __DIR__.'/data/myconlang.xml';
-        } else {
-            $this->mainFilePath = $mainFilePath;
-        }
-        if (!$inflectionsFilePath) {
             $this->inflectionsFilePath = __DIR__.'/data/myconlang-inflections.xml';
         } else {
+            $this->mainFilePath = $mainFilePath;
             $this->inflectionsFilePath = $inflectionsFilePath;
         }
     }
