@@ -3,45 +3,58 @@
 namespace PeterMarkley\Tollerus\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 
 /**
  * This seeder imports data from the legacy Tollerus XML file format.
  *
  * To specify a file, run using:
  *
- *   php artisan tollerus:import <FILE_1> <FILE_2>
+ *   php artisan tollerus:import [--infl=<FILE_1>] <FILE_2> ...
  *
- * where FILE_1 is the main language XML, and FILE_2 is the
- * inflections XML. If no file is specified, it defaults to
+ * where FILE_1 is the inflections XML, and subsequent files are the
+ * main dictionary files. If no files are specified, it defaults to
  * "My Conlang" demo data.
  */
 class FileImportSeeder extends Seeder
 {
-    protected string $mainFilePath;
     protected string $inflectionsFilePath;
+    protected array $mainFilePaths;
 
     /**
      * Accept file paths when creating the seeder manually.
      */
     public function __construct(
-        string $mainFilePath = null,
-        string $inflectionsFilePath = null
+        string $inflectionsFilePath = null,
+        array $mainFilePaths = []
     )
     {
-        if (!$mainFilePath && !$inflectionsFilePath) {
-            $this->mainFilePath = __DIR__.'/data/myconlang.xml';
+        /**
+         * Only if no arguments are provided will it revert to the demo data
+         */
+        if (!$inflectionsFilePath && count($mainFilePaths) < 1) {
             $this->inflectionsFilePath = __DIR__.'/data/myconlang-inflections.xml';
+            $this->mainFilePaths = [__DIR__.'/data/myconlang.xml'];
         } else {
-            $this->mainFilePath = $mainFilePath;
             $this->inflectionsFilePath = $inflectionsFilePath;
+            $this->mainFilePaths = $mainFilePaths;
         }
     }
 
     public function run(): void
     {
-        $mainFile = simplexml_load_file($this->mainFilePath);
-        $inflectionsFile = simplexml_load_file($this->inflectionsFilePath);
-        
-        var_dump($mainFile['title_long']);
+        // Check for & read inflections file
+        if ($this->inflectionsFilePath) {
+            $inflectionsFile = simplexml_load_file($this->inflectionsFilePath);
+        } else {
+            $inflectionsFile = null;
+        }
+        // Check for & read main dictionary files
+        $mainFiles = collect($this->mainFilePaths)
+            ->map(
+                fn($item) => simplexml_load_file($item)
+            );
+
+        var_dump($mainFiles->first()['title_long']);
     }
 }

@@ -14,8 +14,8 @@ class TollerusImport extends Command
      * @var string
      */
     protected $signature = 'tollerus:import
-        {main_file : Path to your main dictionary XML file}
-        {inflections_file : Path to your inflections XML file}';
+        {--infl= : Path to your inflections XML file}
+        {main?* : Paths to your main dictionary XML files}';
 
     /**
      * The console command description.
@@ -29,11 +29,11 @@ class TollerusImport extends Command
      */
     public function handle()
     {
-        $mainFilePath = $this->argument('main_file');
-        $inflectionsFilePath = $this->argument('inflections_file');
+        $inflectionsFilePath = $this->option('infl');
+        $mainFilePaths = $this->argument('main');
         (new FileImportSeeder(
-            $mainFilePath,
-            $inflectionsFilePath
+            $inflectionsFilePath,
+            $mainFilePaths
         ))->run();
     }
 }
