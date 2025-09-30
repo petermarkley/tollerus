@@ -56,6 +56,8 @@ return new class extends Migration
             $table->foreign('primary_neography')
                 ->references('id')->on('neographies')
                 ->nullOnDelete();
+            $table->text('intro')->charset('utf8mb4');
+            $table->boolean('visible');
         });
 
         $connection->create('language_neography', function (Blueprint $table) {
