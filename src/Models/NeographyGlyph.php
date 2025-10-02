@@ -19,9 +19,9 @@ class NeographyGlyph extends Model
     /**
      * Model relations
      */
-    public function section(): BelongsTo
+    public function group(): BelongsTo
     {
-        return $this->belongsTo(NeographySection::class, 'section_id');
+        return $this->belongsTo(NeographyGlyphGroup::class, 'group_id');
     }
     public function neography(): BelongsTo
     {
@@ -32,8 +32,25 @@ class NeographyGlyph extends Model
     {
         // Validate extended model relations
         static::saving(function (self $model) {
-            if ($model->section && ($model->neography_id !== $model->section->neography_id)) {
-                throw new \LogicException('NeographyGlyph.neography_id must match its section.neography_id');
+            // Run only when relevant keys changed (or on create)
+            if (! $model->isDirty(['group_id', 'neography_id'])) {
+                return;
+            }
+            // If any FK is missing, let DB FKs/uniques handle it.
+            if (is_null($model->group_id) || is_null($model->neography_id)) {
+                return;
+            }
+            // Get the neography_id via a minimal scalar lookup
+            $sectionId = NeographyGlyphGroup::query()
+                ->whereKey($model->group_id)
+                ->value('section_id');
+            $groupBelongsToNeography = NeographySection::query()
+                ->whereKey($sectionId)
+                ->where('neography_id', $model->neography_id)
+                ->exists();
+
+            if (!$groupBelongsToNeography) {
+                throw new \LogicException('NeographyGlyph.neography_id must match its group\'s NeographySection.neography_id');
             }
         });
     }

@@ -22,8 +22,8 @@ class NeographySection extends Model
     {
         return $this->belongsTo(Neography::class);
     }
-    public function glyphs(): HasMany
+    public function glyphGroups(): HasMany
     {
-        return $this->hasMany(NeographyGlyph::class, 'section_id');
+        return $this->hasMany(NeographyGlyphGroup::class, 'section_id');
     }
 }

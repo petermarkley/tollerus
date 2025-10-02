@@ -144,6 +144,18 @@ return new class extends Migration
             $table->unique(['neography_id', 'position'], 'neography_position_unique');
         });
 
+        $connection->create('neography_glyph_groups', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('section_id');
+            $table->foreign('section_id')
+                ->references('id')->on('neography_sections')
+                ->cascadeOnDelete();
+            $table->enum('type', NeographyGlyphType::values())->nullable();
+            $table->integer('position');
+            // ensure only one of each position per section
+            $table->unique(['section_id', 'position'], 'section_position_unique');
+        });
+
         /**
          * ===========================================================
          *                 MAIN LEXICAL DATA
@@ -173,11 +185,10 @@ return new class extends Migration
             $table->foreign('neography_id')
                 ->references('id')->on('neographies')
                 ->cascadeOnDelete();
-            $table->foreignId('section_id');
-            $table->foreign('section_id')
-                ->references('id')->on('neography_sections')
+            $table->foreignId('group_id');
+            $table->foreign('group_id')
+                ->references('id')->on('neography_glyph_groups')
                 ->cascadeOnDelete();
-            $table->enum('type', NeographyGlyphType::values())->nullable();
             $table->integer('position');
             $table->boolean('render_base'); // If true, glyph will render on a Unicode dotted circle
             $table->string('glyph')->charset('utf8mb4');
@@ -187,10 +198,10 @@ return new class extends Migration
             $table->string('pronunciation_phonemic')->charset('utf8mb4')->nullable();
             $table->string('pronunciation_native')->charset('utf8mb4')->nullable();
             $table->string('note')->charset('utf8mb4')->nullable();
-            // ensure only one of each glyph per section
-            $table->unique(['section_id', 'glyph'], 'section_glyph_unique');
-            // ensure only one of each position per type in a section
-            $table->unique(['section_id', 'type', 'position'], 'section_type_position_unique');
+            // ensure only one of each glyph per group
+            $table->unique(['group_id', 'glyph'], 'group_glyph_unique');
+            // ensure only one of each position per group
+            $table->unique(['group_id', 'position'], 'group_position_unique');
         });
         /**
          * We need a database trigger to help maintain our global IDs.
