@@ -14,7 +14,6 @@ class NeographyGlyph extends Model
     use HasGlobalId;
     protected $table = 'neography_glyphs';
     public $timestamps = false;
-    protected $casts = ['type' => NeographyGlyphType::class];
 
     /**
      * Model relations
