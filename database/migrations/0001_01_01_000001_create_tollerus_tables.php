@@ -564,6 +564,7 @@ return new class extends Migration
         $connection->dropIfExists('neography_glyphs');
         $connection->dropIfExists('global_ids');
         // top-level language config
+        $connection->dropIfExists('neography_glyph_groups');
         $connection->dropIfExists('neography_sections');
         $connection->dropIfExists('feature_values');
         $connection->dropIfExists('features');
