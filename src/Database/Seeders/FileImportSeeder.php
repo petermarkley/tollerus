@@ -46,6 +46,9 @@ class FileImportSeeder extends Seeder
     protected string $inflectionsFilePath;
     protected array $mainFilePaths;
 
+    protected Language $currentLang;
+    protected int $currentFileKey;
+
     /**
      * Accept file paths when creating the seeder manually.
      */
@@ -64,6 +67,18 @@ class FileImportSeeder extends Seeder
             $this->inflectionsFilePath = $inflectionsFilePath;
             $this->mainFilePaths = $mainFilePaths;
         }
+    }
+
+    /**
+     * Retrieve a font file
+     */
+    protected static function readFontFile(string $fontFilePath): string
+    {
+        $fontFile = file_get_contents($fontFilePath);
+        if ($fontFile === false) {
+            throw new \RuntimeException("file_get_contents() failed on " . $fontFile);
+        }
+        return $fontFile;
     }
 
     /**
@@ -91,78 +106,53 @@ class FileImportSeeder extends Seeder
             });
         // Parse each dictionary file
         foreach ($mainFiles as $key => $langXML) {
+            $this->currentFileKey = $key;
             var_dump(isset($langXML->scripts->script->section->data->symbols->entry[1]->glyph->base));
             return;
-            self::readLanguage(
-                langXML: $langXML,
-                mainFileKey: $key
-            );
+            $this->readLanguage($langXML);
         }
     }
 
     /**
      * Parse a <dictionary/> XML element into a Language model
      */
-    protected static function readLanguage(
-        SimpleXMLElement $langXML,
-        string $mainFileKey = ''
-    ): void
+    protected function readLanguage(SimpleXMLElement $langXML): void
     {
-        $langModel = new Language();
+        $this->currentLang = new Language();
         if (!isset($langXML['language']) || empty($langXML['language'])) {
-            throw new \RuntimeException("No machine-friendly dictionary name in file '${this->mainFilePaths[$mainFileKey]}'");
+            throw new \RuntimeException("No machine-friendly dictionary name in file '${this->mainFilePaths[$this->currentFileKey]}'");
         }
-        $langModel->machine_name = $langXML['language'];
+        $this->currentLang->machine_name = $langXML['language'];
         if (isset($langXML['lang_human'])) {
-            $langModel->name = $langXML['lang_human'];
+            $this->currentLang->name = $langXML['lang_human'];
         }
         if (isset($langXML['title_short'])) {
-            $langModel->dict_title = $langXML['title_short'];
+            $this->currentLang->dict_title = $langXML['title_short'];
         }
         if (isset($langXML['title_long'])) {
-            $langModel->dict_title_full = $langXML['title_long'];
+            $this->currentLang->dict_title_full = $langXML['title_long'];
         }
         if (isset($langXML['author'])) {
-            $langModel->dict_author = $langXML['author'];
+            $this->currentLang->dict_author = $langXML['author'];
         }
         if (isset($langXML->intro)) {
-            $langModel->intro = collect($langXML->intro->children())
+            $this->currentLang->intro = collect($langXML->intro->children())
                 ->map(fn($item) => $item->asXML())
                 ->implode('');
         }
-        $langModel->save();
+        $this->currentLang->save();
         foreach ($langXML->scripts->script as $neoXML) {
-            self::readNeography(
-                langModel: $langModel,
-                neoXML: $neoXML,
-                mainFileKey: $mainFileKey
-            );
+            $this->readNeography($neoXML);
         }
-    }
-
-    /**
-     * Retrieve a font file
-     */
-    protected static function readFontFile(string $fontFilePath): string
-    {
-        $fontFile = file_get_contents($fontFilePath);
-        if ($fontFile === false) {
-            throw new \RuntimeException("file_get_contents() failed on " . $fontFile);
-        }
-        return $fontFile;
     }
 
     /**
      * Parse a <script/> XML element into a Neography model
      */
-    protected static function readNeography(
-        Language $langModel,
-        SimpleXMLElement $neoXML,
-        string $mainFileKey = ''
-    ): void
+    protected function readNeography(SimpleXMLElement $neoXML): void
     {
         if (!isset($neoXML['name']) || empty($neoXML['name'])) {
-            throw new \RuntimeException("There's a script/neography with no machine-friendly name in file '${this->mainFilePaths[$mainFileKey]}'");
+            throw new \RuntimeException("There's a script/neography with no machine-friendly name in file '${this->mainFilePaths[$this->currentFileKey]}'");
         }
         $neoName = $neoXML['name'];
         // Check for existing neography by this name
@@ -187,19 +177,18 @@ class FileImportSeeder extends Seeder
                 self::readNeographySection(
                     neoModel: $neoModel,
                     neoSectXML: $neoSectXML,
-                    position: $position,
-                    mainFileKey: $mainFileKey
+                    position: $position
                 );
             }
         }
         // Check if this neography is the language's primary one
         if (isset($neoXML['primary']) && filter_var($neoXML['primary'], FILTER_VALIDATE_BOOLEAN)) {
-            $langModel->primary_neography = $neoModel->id;
-            $langModel->save();
+            $this->currentLang->primary_neography = $neoModel->id;
+            $this->currentLang->save();
         }
         // Add connection between neography and language
         $pivot = new LanguageNeography([
-            'language_id' => $langModel->id,
+            'language_id' => $this->currentLang->id,
             'neography_id' => $neoModel->id,
         ]);
         $pivot->save();
@@ -211,8 +200,7 @@ class FileImportSeeder extends Seeder
     protected static function readNeographySection(
         Neography $neoModel,
         SimpleXMLElement $neoSectXML,
-        int $position,
-        string $mainFileKey = ''
+        int $position
     ): void
     {
         $neoSectModel = new NeographySection();
@@ -233,8 +221,7 @@ class FileImportSeeder extends Seeder
         self::readNeographyGlyphGroup(
             neoSectModel: $neoSectModel,
             neoModel: $neoModel,
-            dataXML: $neoSectXML->data,
-            mainFileKey: $mainFileKey
+            dataXML: $neoSectXML->data
         );
     }
 
@@ -244,8 +231,7 @@ class FileImportSeeder extends Seeder
     protected static function readNeographyGlyphGroup(
         NeographySection $neoSectModel,
         Neography $neoModel,
-        SimpleXMLElement $dataXML,
-        string $mainFileKey = ''
+        SimpleXMLElement $dataXML
     ): void
     {
         if (isset($dataXML->entry)) {
@@ -263,8 +249,7 @@ class FileImportSeeder extends Seeder
                     glyphGroupModel: $glyphGroupModel,
                     neoModel: $neoModel,
                     glyphXML: $glyphXML,
-                    position: $position,
-                    mainFileKey: $mainFileKey
+                    position: $position
                 );
             }
         } else {
@@ -288,8 +273,7 @@ class FileImportSeeder extends Seeder
                         glyphGroupModel: $glyphGroupModel,
                         neoModel: $neoModel,
                         glyphXML: $glyphXML,
-                        position: $position,
-                        mainFileKey: $mainFileKey
+                        position: $position
                     );
                 }
             }
@@ -303,8 +287,7 @@ class FileImportSeeder extends Seeder
         NeographyGlyphGroup $glyphGroupModel,
         Neography $neoModel,
         SimpleXMLElement $glyphXML,
-        int $position,
-        string $mainFileKey = ''
+        int $position
     ): void
     {
         $glyphModel = new NeographyGlyph();
