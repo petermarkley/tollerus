@@ -41,7 +41,7 @@
 		</div>
 	</intro>
 	<scripts>
-		<script name="myneography" human="My Neography" primary="yes" svg="/asset-src/languages/fonts/myneography_standard_medium.svg" ttf="/html/assets/font/myneography_standard_medium.ttf">
+		<script name="myneography" human="My Neography" primary="yes" svg="myneography_standard_medium.svg" ttf="myneography_standard_medium.ttf">
 			<section type="alphabet" title="My Neography&rsquo;s Alphabet" sort="yes">
 				<intro>
 					<div>

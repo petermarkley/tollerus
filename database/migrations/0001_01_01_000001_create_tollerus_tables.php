@@ -31,7 +31,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('machine_name')->unique();
-            $table->binary('font');
+            $table->binary('font_svg');
+            $table->binary('font_ttf');
             $table->enum('direction_primary', WritingDirection::values())
                 ->default(WritingDirection::LeftToRight->value);
             // This should always be perpendicular to the primary direction
@@ -57,7 +58,8 @@ return new class extends Migration
                 ->references('id')->on('neographies')
                 ->nullOnDelete();
             $table->text('intro')->charset('utf8mb4');
-            $table->boolean('visible');
+            $table->boolean('visible')
+                ->default(true);
         });
 
         $connection->create('language_neography', function (Blueprint $table) {
@@ -135,8 +137,11 @@ return new class extends Migration
             $table->enum('type', NeographySectionType::values())->nullable();
             $table->string('name');
             $table->text('intro')->charset('utf8mb4');
+            $table->integer('position');
             // ensure only one of each section name per neography
             $table->unique(['neography_id', 'name'], 'neography_name_unique');
+            // ensure only one of each position per neography
+            $table->unique(['neography_id', 'position'], 'neography_position_unique');
         });
 
         /**
