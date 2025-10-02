@@ -18,6 +18,7 @@ use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
 use PeterMarkley\Tollerus\Models\NativeSpelling;
 use PeterMarkley\Tollerus\Models\NeographyGlyph;
+use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Models\Sense;
@@ -90,7 +91,12 @@ class FileImportSeeder extends Seeder
             });
         // Parse each dictionary file
         foreach ($mainFiles as $key => $langXML) {
-            self::readLanguage($langXML, $key);
+            var_dump(isset($langXML->scripts->script->section->data->symbols->entry[1]->glyph->base));
+            return;
+            self::readLanguage(
+                langXML: $langXML,
+                mainFileKey: $key
+            );
         }
     }
 
@@ -126,7 +132,11 @@ class FileImportSeeder extends Seeder
         }
         $langModel->save();
         foreach ($langXML->scripts->script as $neoXML) {
-            self::readNeography($langModel, $langXML, $mainFileKey);
+            self::readNeography(
+                langModel: $langModel,
+                neoXML: $neoXML,
+                mainFileKey: $mainFileKey
+            );
         }
     }
 
@@ -158,7 +168,7 @@ class FileImportSeeder extends Seeder
         // Check for existing neography by this name
         $neoModel = Neography::where('machine_name', $neoName)->first();
         // If none found, create one
-        if (!($neoModel instanceof Neography::class)) {
+        if (!($neoModel instanceof Neography)) {
             $neoModel = new Neography();
             $neoModel->machine_name = $neoName;
             if (isset($neoXML['human'])) {
@@ -174,9 +184,20 @@ class FileImportSeeder extends Seeder
             }
             $neoModel->save();
             foreach ($neoXML->section as $position => $neoSectXML) {
-                self::readNeographySection($neoModel, $neoSectXML, $position, $mainFileKey);
+                self::readNeographySection(
+                    neoModel: $neoModel,
+                    neoSectXML: $neoSectXML,
+                    position: $position,
+                    mainFileKey: $mainFileKey
+                );
             }
         }
+        // Check if this neography is the language's primary one
+        if (isset($neoXML['primary']) && filter_var($neoXML['primary'], FILTER_VALIDATE_BOOLEAN)) {
+            $langModel->primary_neography = $neoModel->id;
+            $langModel->save();
+        }
+        // Add connection between neography and language
         $pivot = new LanguageNeography([
             'language_id' => $langModel->id,
             'neography_id' => $neoModel->id,
@@ -208,19 +229,115 @@ class FileImportSeeder extends Seeder
                 ->implode('');
         }
         $neoSectModel->position = $position;
-        if (isset($neoSectXML->data->)) {}
+        $neoSectModel->save();
+        self::readNeographyGlyphGroup(
+            neoSectModel: $neoSectModel,
+            neoModel: $neoModel,
+            dataXML: $neoSectXML->data,
+            mainFileKey: $mainFileKey
+        );
+    }
+
+    /**
+     * Parse a child of the neography <data/> XML element into a NeographyGlyphGroup model
+     */
+    protected static function readNeographyGlyphGroup(
+        NeographySection $neoSectModel,
+        Neography $neoModel,
+        SimpleXMLElement $dataXML,
+        string $mainFileKey = ''
+    ): void
+    {
+        if (isset($dataXML->entry)) {
+            /**
+             * If we have <entry/> elements directly under the <data/> element, that means
+             * there's basically no group in the source XML and we need a dummy group
+             */
+            $glyphGroupModel = new NeographyGlyphGroup();
+            $glyphGroupModel->section_id = $neoSectModel->id;
+            $glyphGroupModel->type = null;
+            $glyphGroupModel->position = 0;
+            $glyphGroupModel->save();
+            foreach ($dataXML->entry as $position => $glyphXML) {
+                self::readNeographyGlyph(
+                    glyphGroupModel: $glyphGroupModel,
+                    neoModel: $neoModel,
+                    glyphXML: $glyphXML,
+                    position: $position,
+                    mainFileKey: $mainFileKey
+                );
+            }
+        } else {
+            /**
+             * However if we do NOT have <entry/> elements directly under the <data/> element,
+             * that means we could have any number / combo of <symbols/> and <marks/> elements
+             * which are explicit glyph groups in the source XML and must be handled thus.
+             */
+            foreach ($dataXML->children() as $groupPosition => $glyphGroupXML) {
+                $glyphGroupModel = new NeographyGlyphGroup();
+                $glyphGroupModel->section_id = $neoSectModel->id;
+                $glyphGroupModel->type = match ($glyphGroupXML->getName()) {
+                    'symbols' => NeographyGlyphType::from('symbol'),
+                    'marks' => NeographyGlyphType::from('mark'),
+                    default => null
+                };
+                $glyphGroupModel->position = $groupPosition;
+                $glyphGroupModel->save();
+                foreach ($glyphGroupXML->entry as $position => $glyphXML) {
+                    self::readNeographyGlyph(
+                        glyphGroupModel: $glyphGroupModel,
+                        neoModel: $neoModel,
+                        glyphXML: $glyphXML,
+                        position: $position,
+                        mainFileKey: $mainFileKey
+                    );
+                }
+            }
+        }
     }
 
     /**
      * Parse a neography <entry/> XML element into a NeographyGlyph model
      */
     protected static function readNeographyGlyph(
-        NeographySection $neoSectModel,
+        NeographyGlyphGroup $glyphGroupModel,
+        Neography $neoModel,
         SimpleXMLElement $glyphXML,
-        NeographyGlyphType $type,
         int $position,
         string $mainFileKey = ''
     ): void
     {
+        $glyphModel = new NeographyGlyph();
+        if (isset($glyphXML['id'])) {
+            $glyphModel->global_id = $glyphXML['id'];
+        }
+        $glyphModel->group_id = $glyphGroupModel->id;
+        $glyphModel->neography_id = $neoModel->id;
+        if (isset($glyphXML['order'])) {
+            $glyphModel->position = (int)$glyphXML['order'];
+        } else {
+            $glyphModel->position = $position;
+        }
+        $glyphModel->render_base = isset($glyphXML->glyph->base);
+        $glyphModel->glyph = $glyphXML->glyph->__toString();
+        if (isset($glyphXML->roman)) {
+            $glyphModel->roman = $glyphXML->roman->__toString();
+        }
+        if (isset($glyphXML->phonemic)) {
+            $glyphModel->phonemic = $glyphXML->phonemic->__toString();
+        }
+        if (isset($glyphXML->pronunciation->roman)) {
+            $glyphModel->pronunciation_roman = $glyphXML->pronunciation->roman->__toString();
+        }
+        if (isset($glyphXML->pronunciation->phonemic)) {
+            $glyphModel->pronunciation_phonemic = $glyphXML->pronunciation->phonemic->__toString();
+        }
+        if (isset($glyphXML->pronunciation->{$neoModel->machine_name})) {
+            $glyphModel->pronunciation_native = $glyphXML->pronunciation->{$neoModel->machine_name}->__toString();
+        }
+        if (isset($glyphXML->note)) {
+            $glyphModel->note = $glyphXML->note->__toString();
+        }
+        $glyphModel->save();
     }
 }
