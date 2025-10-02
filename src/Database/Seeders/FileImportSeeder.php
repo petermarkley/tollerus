@@ -45,7 +45,9 @@ class FileImportSeeder extends Seeder
 {
     protected string $inflectionsFilePath;
     protected array $mainFilePaths;
+    protected \SimpleXMLElement $inflectionsFile;
 
+    protected \SimpleXMLElement $currentConfXML;
     protected Language $currentLang;
     protected int $currentFileKey;
 
@@ -88,12 +90,12 @@ class FileImportSeeder extends Seeder
     {
         // Check for & read inflections file
         if ($this->inflectionsFilePath) {
-            $inflectionsFile = simplexml_load_file($this->inflectionsFilePath);
-            if ($inflectionsFile === false) {
+            $this->inflectionsFile = simplexml_load_file($this->inflectionsFilePath);
+            if ($this->inflectionsFile === false) {
                 throw new \RuntimeException("simplexml_load_file() failed on " . $this->inflectionsFilePath);
             }
         } else {
-            $inflectionsFile = null;
+            $this->inflectionsFile = null;
         }
         // Check for & read main dictionary files
         $mainFiles = collect($this->mainFilePaths)
@@ -107,7 +109,7 @@ class FileImportSeeder extends Seeder
         // Parse each dictionary file
         foreach ($mainFiles as $key => $langXML) {
             $this->currentFileKey = $key;
-            var_dump(isset($langXML->scripts->script->section->data->symbols->entry[1]->glyph->base));
+            var_dump($this->inflectionsFile->language[0]->group[0]->list->class[0]['inflected']);
             return;
             $this->readLanguage($langXML);
         }
@@ -119,10 +121,22 @@ class FileImportSeeder extends Seeder
     protected function readLanguage(SimpleXMLElement $langXML): void
     {
         $this->currentLang = new Language();
+        // Find machine-friendly name for this language
         if (!isset($langXML['language']) || empty($langXML['language'])) {
             throw new \RuntimeException("No machine-friendly dictionary name in file '${this->mainFilePaths[$this->currentFileKey]}'");
         }
         $this->currentLang->machine_name = $langXML['language'];
+        // Find the inflection config for this language
+        $this->currentConfXML = null;
+        if ($this->inflectionsFile !== null) {
+            foreach ($this->inflectionsFile->language as $langConfXML) {
+                if ($langConfXML['name'] == $this->currentLang->machine_name) {
+                    $this->currentConfXML = $langConfXML;
+                    break;
+                }
+            }
+        }
+        // Copy language properties
         if (isset($langXML['lang_human'])) {
             $this->currentLang->name = $langXML['lang_human'];
         }
@@ -140,9 +154,34 @@ class FileImportSeeder extends Seeder
                 ->map(fn($item) => $item->asXML())
                 ->implode('');
         }
+        // Save model
         $this->currentLang->save();
+        // Read neographies in this dictionary file
         foreach ($langXML->scripts->script as $neoXML) {
             $this->readNeography($neoXML);
+        }
+        // Read through word class groups in the conf file
+        if ($this->currentConfXML !== null) {
+            foreach ($this->currentConfXML->group as $groupXML) {
+                $groupModel = new WordClassGroup();
+                $groupModel->language_id = $this->currentLang->id;
+                $groupModel->inflected = (
+                    isset($groupXML->list->class[0]['inflected']) &&
+                    filter_var($groupXML->list->class[0]['inflected'], FILTER_VALIDATE_BOOLEAN)
+                );
+                $groupModel->save();
+                // Read through word classes in this group
+                foreach ($groupXML->list->class as $classXML) {
+                    $classModel = new WordClass();
+                    $classModel->group_id = $groupModel->id;
+                    $classModel->language_id = $this->currentLang->id;
+                    if (!isset($classXML['name']) || empty($classXML['name'])) {
+                        throw new \RuntimeException("There's a word class with no name in file '${this->inflectionsFilePath}'");
+                    }
+                    $classModel->name = $classXML['name'];
+                    $classModel->save();
+                }
+            }
         }
     }
 
