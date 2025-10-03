@@ -31,8 +31,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('machine_name')->unique();
-            $table->binary('font_svg');
-            $table->binary('font_ttf');
+            $table->binary('font_svg')->nullable();
+            $table->binary('font_ttf')->nullable();
             $table->enum('direction_primary', WritingDirection::values())
                 ->default(WritingDirection::LeftToRight->value);
             // This should always be perpendicular to the primary direction

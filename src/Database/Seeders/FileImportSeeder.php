@@ -127,7 +127,7 @@ class FileImportSeeder extends Seeder
         // Parse each dictionary file
         foreach ($mainFiles as $key => $langXML) {
             $this->currentFileKey = $key;
-            var_dump($langXML->data->entry[1]->class[0]->morph->form[1]->attributes());
+            // var_dump(count($langXML->scripts->script[1]->children())>0);
             return;
             $this->readLanguage($langXML);
         }
@@ -251,8 +251,30 @@ class FileImportSeeder extends Seeder
         $neoName = $neoXML['name'];
         // Check for existing neography by this name
         $this->currentNeo = Neography::where('machine_name', $neoName)->first();
-        // If none found, create one
-        if (!($this->currentNeo instanceof Neography)) {
+        if ($this->currentNeo instanceof Neography) {
+            // Check if we have more info about it now
+            if (!$this->currentNeo->sections()->exists() && isset($neoXML->section)) {
+                if (empty($this->currentNeo->name) && isset($neoXML['human'])) {
+                    $this->currentNeo->name = $neoXML['human'];
+                }
+                if (empty($this->currentNeo->font_svg) && isset($neoXML['svg'])) {
+                    $fontFile = self::readFontFile(dirname($this->mainFilePaths[$mainFileKey]) . $neoXML['svg']);
+                    $this->currentNeo->font_svg = $fontFile;
+                }
+                if (empty($this->currentNeo->font_ttf) && isset($neoXML['ttf'])) {
+                    $fontFile = self::readFontFile(dirname($this->mainFilePaths[$mainFileKey]) . $neoXML['ttf']);
+                    $this->currentNeo->font_ttf = $fontFile;
+                }
+                $this->currentNeo->save();
+                foreach ($neoXML->section as $position => $neoSectXML) {
+                    $this->readNeographySection(
+                        neoSectXML: $neoSectXML,
+                        position: $position
+                    );
+                }
+            }
+        } else {
+            // If none found, create one
             $this->currentNeo = new Neography();
             $this->currentNeo->machine_name = $neoName;
             if (isset($neoXML['human'])) {
