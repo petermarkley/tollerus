@@ -67,6 +67,7 @@ class FileImportSeeder extends Seeder
      */
     protected array $currentFeatures;
     protected array $currentClasses;
+    protected array $validNeos;
 
     /**
      * Accept file paths when creating the seeder manually.
@@ -126,7 +127,7 @@ class FileImportSeeder extends Seeder
         // Parse each dictionary file
         foreach ($mainFiles as $key => $langXML) {
             $this->currentFileKey = $key;
-            var_dump($this->inflectionsFile->language[0]->group[0]->list->class[0]['inflected']);
+            var_dump($langXML->data->entry[0]->class[0]->morph->form[0]->children());
             return;
             $this->readLanguage($langXML);
         }
@@ -185,7 +186,7 @@ class FileImportSeeder extends Seeder
         $this->currentFeatures = [];
         // Find machine-friendly name for this language
         if (!isset($langXML['language']) || empty($langXML['language'])) {
-            throw new \RuntimeException("No machine-friendly dictionary name in file '${this->mainFilePaths[$this->currentFileKey]}'");
+            throw new \RuntimeException("No machine-friendly dictionary name in file '{$this->mainFilePaths[$this->currentFileKey]}'");
         }
         $this->currentLang->machine_name = $langXML['language'];
         // Find the inflection config for this language
@@ -219,9 +220,11 @@ class FileImportSeeder extends Seeder
         // Save model
         $this->currentLang->save();
         // Read neographies in this dictionary file
+        $this->validNeos = [];
         foreach ($langXML->scripts->script as $neoXML) {
             $this->readNeography($neoXML);
         }
+        $this->currentNeo = null;
         // Initialize caches
         $this->currentFeatures = [];
         $this->currentClasses = [];
@@ -243,7 +246,7 @@ class FileImportSeeder extends Seeder
     protected function readNeography(SimpleXMLElement $neoXML): void
     {
         if (!isset($neoXML['name']) || empty($neoXML['name'])) {
-            throw new \RuntimeException("There's a script/neography with no machine-friendly name in file '${this->mainFilePaths[$this->currentFileKey]}'");
+            throw new \RuntimeException("There's a script/neography with no machine-friendly name in file '{$this->mainFilePaths[$this->currentFileKey]}'");
         }
         $neoName = $neoXML['name'];
         // Check for existing neography by this name
@@ -271,6 +274,8 @@ class FileImportSeeder extends Seeder
                 );
             }
         }
+        // Save in cache
+        $this->validNeos[$this->currentNeo->machine_name] = $this->currentNeo;
         // Check if this neography is the language's primary one
         if (isset($neoXML['primary']) && filter_var($neoXML['primary'], FILTER_VALIDATE_BOOLEAN)) {
             $this->currentLang->primary_neography = $this->currentNeo->id;
@@ -449,7 +454,7 @@ class FileImportSeeder extends Seeder
         $classModel->group_id = $groupModel->id;
         $classModel->language_id = $this->currentLang->id;
         if (!isset($classXML['name']) || empty($classXML['name'])) {
-            throw new \RuntimeException("There's a word class with no name in file '${this->inflectionsFilePath}'");
+            throw new \RuntimeException("There's a word class with no name in file '{$this->inflectionsFilePath}'");
         }
         $classModel->name = $classXML['name'];
         $classModel->save();
@@ -552,7 +557,7 @@ class FileImportSeeder extends Seeder
         $rowModel = new DisplayTableRow();
         $rowModel->disp_table_id = $tableModel->id;
         if (!isset($rowXML['label']) || empty($rowXML['label'])) {
-            throw new \RuntimeException("There's a table row with no label in file '${this->inflectionsFilePath}'");
+            throw new \RuntimeException("There's a table row with no label in file '{$this->inflectionsFilePath}'");
         }
         $rowModel->label = $rowXML['label'];
         $rowModel->label_brief = $rowXML['brief'];
@@ -616,5 +621,109 @@ class FileImportSeeder extends Seeder
         SimpleXMLElement $lexemeXML,
         int $position
     ): void
-    {}
+    {
+        $lexemeModel = new Entry();
+        if (isset($lexemeXML['id'])) {
+            $lexemeModel->global_id = $lexemeXML['id'];
+        }
+        $lexemeModel->entry_id = $entryModel->id;
+        $lexemeModel->language_id = $this->currentLang->id;
+        // Check if we have a word class already, if not add one
+        if (!isset($lexemeXML['type']) || empty($lexemeXML['type'])) {
+            throw new \RuntimeException("There's an entry class with no type in file '{$this->mainFilePaths[$this->currentFileKey]}'");
+        }
+        if (isset($this->currentClasses[$lexemeXML['type']])) {
+            // Already in cache, just read from there
+            $groupModel = $this->currentClasses[$lexemeXML['type']]['group'];
+            $classModel = $this->currentClasses[$lexemeXML['type']]['class'];
+        } else {
+            // Not in cache, create group
+            $groupModel = new WordClassGroup();
+            $groupModel->language_id = $this->currentLang->id;
+            $groupModel->save();
+            // Now create class
+            $classModel = new WordClass();
+            $classModel->group_id = $groupModel->id;
+            $classModel->language_id = $this->currentLang->id;
+            $classModel->name = $lexemeXML['type'];
+            $classModel->save();
+            // Save both to cache
+            $this->currentClasses[$lexemeXML['type']] = [
+                'group' => $groupModel,
+                'class' => $classModel
+            ];
+        }
+        // Save model
+        $lexemeModel->save();
+        // Read through inflection forms
+        foreach ($lexemeXML->morph->form as $formXML) {
+            $this->readForm(
+                entryModel: $entryModel,
+                lexemeModel: $lexemeModel,
+                formXML: $formXML
+            );
+        }
+    }
+
+    /**
+     * Parse a dictionary <form/> XML element into a Form model
+     */
+    protected function readForm(
+        Entry $entryModel,
+        Lexeme $lexemeModel,
+        SimpleXMLElement $lexemeXML
+    ): void
+    {
+        $formModel = new Form();
+        if (isset($formXML['id'])) {
+            $formModel->global_id = $formXML['id'];
+        }
+        $formModel->lexeme_id = $lexemeModel->id;
+        $formModel->language_id = $this->currentLang->id;
+        if (isset($formXML->roman)) {
+            $formModel->roman = $formXML->roman->__toString();
+        }
+        if (isset($formXML->phonemic)) {
+            $formModel->phonemic = $formXML->phonemic->__toString();
+        }
+        // Save model
+        $formModel->save();
+        // Check if this is the primary word form
+        if (isset($formXML['primary']) && filter_var($formXML['primary'], FILTER_VALIDATE_BOOLEAN)) {
+            $entryModel->primary_form = $formModel->id;
+            $entryModel->save();
+        }
+        // Read through native spellings
+        foreach ($formXML->children() as $childXML) {
+            $childName = $childXML->getName();
+            if ($childName == 'roman' || $childName == 'phonemic') {
+                continue;
+            }
+            $this->readNativeSpelling(
+                formModel: $formModel,
+                nodeName: $childName,
+                nodeXML: $childXML
+            );
+        }
+    }
+
+    /**
+     * Parse a native spelling XML element (such as '<myneography/>') into a NativeSpelling model
+     */
+    protected function readNativeSpelling(
+        Form $formModel,
+        string $nodeName,
+        SimpleXMLElement $nodeXML
+    ): void
+    {
+        if (!isset($this->validNeos[$nodeName])) {
+            throw new \RuntimeException("Neography '{$nodeName}' not recognized for this language, in file '{$this->mainFilePaths[$this->currentFileKey]}'");
+        }
+        $neoModel = $this->validNeos[$nodeName];
+        $spellingModel = new NativeSpelling();
+        $spellingModel->form_id = $formModel->id;
+        $spellingModel->neography_id = $neoModel->id;
+        $spellingModel->spelling = $nodeXML->__toString();
+        $spellingModel->save();
+    }
 }
