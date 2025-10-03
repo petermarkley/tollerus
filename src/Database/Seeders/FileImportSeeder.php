@@ -228,8 +228,12 @@ class FileImportSeeder extends Seeder
         // Read through word class groups in the conf file
         if ($this->currentConfXML !== null) {
             foreach ($this->currentConfXML->group as $groupXML) {
-                $this->readWordClassGroup(groupXML: $groupXML);
+                $this->readWordClassGroup($groupXML);
             }
+        }
+        // Read through main dictionary
+        foreach ($langXML->data->entry as $entryXML) {
+            $this->readEntry($entryXML);
         }
     }
 
@@ -574,4 +578,43 @@ class FileImportSeeder extends Seeder
             $pivot->save();
         }
     }
+
+    /**
+     * Parse a dictionary <entry/> XML element into an Entry model
+     */
+    protected function readEntry(SimpleXMLElement $entryXML): void
+    {
+        $entryModel = new Entry();
+        if (isset($entryXML['id'])) {
+            $entryModel->global_id = $entryXML['id'];
+        }
+        $entryModel->language_id = $this->currentLang->id;
+        if (isset($entryXML->etym)) {
+            $domNode = dom_import_simplexml($entryXML->etym);
+            $entryModel->etym = collect($domNode->childNodes)
+                ->map(function ($item) use ($domNode) {
+                    return $domNode->ownerDocument->saveXML($item);
+                })
+                ->implode('');
+        }
+        $entryModel->save();
+        // Read through lexemes
+        foreach ($entryXML->class as $position => $lexemeXML) {
+            $this->readLexeme(
+                entryModel: $entryModel,
+                lexemeXML: $lexemeXML,
+                position: $position
+            );
+        }
+    }
+
+    /**
+     * Parse a dictionary <class/> XML element into a Lexeme model
+     */
+    protected function readLexeme(
+        Entry $entryModel,
+        SimpleXMLElement $lexemeXML,
+        int $position
+    ): void
+    {}
 }

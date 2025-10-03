@@ -286,6 +286,9 @@ return new class extends Migration
             $table->foreign('word_class_id')
                 ->references('id')->on('word_classes')
                 ->cascadeOnDelete();
+            $table->integer('position');
+            // ensure only one of each position per entry
+            $table->unique(['entry_id', 'position'], 'entry_position_unique');
         });
         /**
          * We need a database trigger to help maintain our global IDs.
