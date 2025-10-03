@@ -127,7 +127,7 @@ class FileImportSeeder extends Seeder
         // Parse each dictionary file
         foreach ($mainFiles as $key => $langXML) {
             $this->currentFileKey = $key;
-            var_dump($langXML->data->entry[0]->class[0]->morph->form[0]->children());
+            var_dump($langXML->data->entry[1]->class[0]->morph->form[1]->attributes());
             return;
             $this->readLanguage($langXML);
         }
@@ -659,8 +659,17 @@ class FileImportSeeder extends Seeder
         foreach ($lexemeXML->morph->form as $formXML) {
             $this->readForm(
                 entryModel: $entryModel,
+                groupModel: $groupModel,
                 lexemeModel: $lexemeModel,
                 formXML: $formXML
+            );
+        }
+        // Read through definition data
+        foreach ($lexemeXML->def->sense as $position => $senseXML) {
+            $this->readSense(
+                lexemeModel: $lexemeModel,
+                senseXML: $senseXML,
+                position: $position
             );
         }
     }
@@ -670,6 +679,7 @@ class FileImportSeeder extends Seeder
      */
     protected function readForm(
         Entry $entryModel,
+        WordClassGroup $groupModel,
         Lexeme $lexemeModel,
         SimpleXMLElement $lexemeXML
     ): void
@@ -705,6 +715,28 @@ class FileImportSeeder extends Seeder
                 nodeXML: $childXML
             );
         }
+        // Read through inflection features
+        foreach ($formXML->attributes() as $key => $item) {
+            if ($key == 'primary' || $key == 'id') {
+                continue;
+            }
+            $array = $this->addFeatureIfNew(
+                wordClassGroup: $groupModel,
+                featureName: $key,
+                valueName: $item
+            );
+            [
+                'feature' => $featureModel,
+                'value' => $valueModel
+            ] = $array;
+            // Add connection between word form and feature value
+            $pivot = new FormFeatureValue([
+                'form_id' => $formModel->id,
+                'feature_id' => $featureModel->id,
+                'value_id' => $valueModel->id,
+            ]);
+            $pivot->save();
+        }
     }
 
     /**
@@ -725,5 +757,61 @@ class FileImportSeeder extends Seeder
         $spellingModel->neography_id = $neoModel->id;
         $spellingModel->spelling = $nodeXML->__toString();
         $spellingModel->save();
+    }
+
+    /**
+     * Parse a dictionary <sense/> XML element into a Sense model
+     */
+    protected function readSense(
+        Lexeme $lexemeModel,
+        SimpleXMLElement $senseXML,
+        int $position
+    ): void
+    {
+        $senseModel = new Sense();
+        $senseModel->lexeme_id = $lexemeModel->id;
+        if (isset($senseXML['num'])) {
+            $senseModel->num = $senseXML['num'];
+        } else {
+            $senseModel->num = $position;
+        }
+        if (isset($senseXML->p)) {
+            $senseModel->body = $senseXML->p->asXML();
+        } else {
+            $senseModel->body = $senseXML->__toString();
+        }
+        $senseModel->save();
+        // Read through subsenses
+        foreach ($senseXML->subsense as $subPosition => $subsenseXML) {
+            $this->readSubsense(
+                senseModel: $senseModel,
+                subsenseXML: $subsenseXML,
+                position: $subPosition
+            );
+        }
+    }
+
+    /**
+     * Parse a dictionary <subsense/> XML element into a Subsense model
+     */
+    protected function readSubsense(
+        Sense $senseModel,
+        SimpleXMLElement $subsenseXML,
+        int $position
+    ): void
+    {
+        $subsenseModel = new Subsense();
+        $subsenseModel->sense_id = $senseModel->id;
+        if (isset($subsenseXML['num'])) {
+            $subsenseModel->num = $subsenseXML['num'];
+        } else {
+            $subsenseModel->num = $position;
+        }
+        if (isset($subsenseXML->p)) {
+            $subsenseModel->body = $subsenseXML->p->asXML();
+        } else {
+            $subsenseModel->body = $subsenseXML->__toString();
+        }
+        $subsenseModel->save();
     }
 }
