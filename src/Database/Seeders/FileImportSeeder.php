@@ -43,13 +43,30 @@ use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
  */
 class FileImportSeeder extends Seeder
 {
+    /**
+     * This is the file input; it won't change throughout
+     * the seeder's lifespan.
+     */
     protected string $inflectionsFilePath;
     protected array $mainFilePaths;
     protected \SimpleXMLElement $inflectionsFile;
 
+    /**
+     * These are basically bookmarks to keep our place as
+     * we go, without having to re-query and re-parse
+     * things.
+     */
     protected \SimpleXMLElement $currentConfXML;
     protected Language $currentLang;
     protected int $currentFileKey;
+    protected Neography $currentNeo;
+
+    /**
+     * These are caches used to signal whether something
+     * exists or needs to be created.
+     */
+    protected array $currentFeatures;
+    protected array $currentClasses;
 
     /**
      * Accept file paths when creating the seeder manually.
@@ -116,11 +133,56 @@ class FileImportSeeder extends Seeder
     }
 
     /**
+     * One of the most fundamental differences between the old and new schemas
+     * is that the old one hard-coded an exhaustive list of grammatical features
+     * into the database, from ALL languages in the system. Consequently, there
+     * was no authoritative list of grammar features inside the language data.
+     *
+     * Therefore we now need to reconstruct that list by registering each feature
+     * as we encounter it, whether in the inflection config or in the dictionary
+     * entries.
+     */
+    protected function addFeatureIfNew(
+        WordClassGroup $wordClassGroup,
+        string $featureName,
+        string $valueName
+    ): array
+    {
+        // Does this feature exist yet?
+        if (!isset($this->currentFeatures[$featureName])) {
+            // No, we need to add it
+            $featureModel = new Feature();
+            $featureModel->word_class_group_id = $wordClassGroup->id;
+            $featureModel->name = $featureName;
+            $featureModel->save();
+            $this->currentFeature[$featureName] = [
+                'model' => $featureModel,
+                'featureValues' => []
+            ];
+        }
+        // Does this feature value exist yet?
+        if (!isset($this->currentFeatures[$featureName]['featureValues'][$valueName])) {
+            // No, we need to add it
+            $valueModel = new Value();
+            $valueModel->feature_id = $this->currentFeatures[$featureName]['model']->id;
+            $valueModel->name = $valueName;
+            $valueModel->save();
+            $this->currentFeatures[$featureName]['featureValues'][$valueName] = $valueModel;
+        }
+        // Bundle the models for use by the calling method
+        return [
+            'feature' => $this->currentFeatures[$featureName]['model'],
+            'value' => $this->currentFeatures[$featureName]['featureValues'][$valueName]
+        ];
+    }
+
+    /**
      * Parse a <dictionary/> XML element into a Language model
      */
     protected function readLanguage(SimpleXMLElement $langXML): void
     {
         $this->currentLang = new Language();
+        $this->currentFeatures = [];
         // Find machine-friendly name for this language
         if (!isset($langXML['language']) || empty($langXML['language'])) {
             throw new \RuntimeException("No machine-friendly dictionary name in file '${this->mainFilePaths[$this->currentFileKey]}'");
@@ -160,27 +222,13 @@ class FileImportSeeder extends Seeder
         foreach ($langXML->scripts->script as $neoXML) {
             $this->readNeography($neoXML);
         }
+        // Initialize caches
+        $this->currentFeatures = [];
+        $this->currentClasses = [];
         // Read through word class groups in the conf file
         if ($this->currentConfXML !== null) {
             foreach ($this->currentConfXML->group as $groupXML) {
-                $groupModel = new WordClassGroup();
-                $groupModel->language_id = $this->currentLang->id;
-                $groupModel->inflected = (
-                    isset($groupXML->list->class[0]['inflected']) &&
-                    filter_var($groupXML->list->class[0]['inflected'], FILTER_VALIDATE_BOOLEAN)
-                );
-                $groupModel->save();
-                // Read through word classes in this group
-                foreach ($groupXML->list->class as $classXML) {
-                    $classModel = new WordClass();
-                    $classModel->group_id = $groupModel->id;
-                    $classModel->language_id = $this->currentLang->id;
-                    if (!isset($classXML['name']) || empty($classXML['name'])) {
-                        throw new \RuntimeException("There's a word class with no name in file '${this->inflectionsFilePath}'");
-                    }
-                    $classModel->name = $classXML['name'];
-                    $classModel->save();
-                }
+                $this->readWordClassGroup(groupXML: $groupXML);
             }
         }
     }
@@ -195,26 +243,25 @@ class FileImportSeeder extends Seeder
         }
         $neoName = $neoXML['name'];
         // Check for existing neography by this name
-        $neoModel = Neography::where('machine_name', $neoName)->first();
+        $this->currentNeo = Neography::where('machine_name', $neoName)->first();
         // If none found, create one
-        if (!($neoModel instanceof Neography)) {
-            $neoModel = new Neography();
-            $neoModel->machine_name = $neoName;
+        if (!($this->currentNeo instanceof Neography)) {
+            $this->currentNeo = new Neography();
+            $this->currentNeo->machine_name = $neoName;
             if (isset($neoXML['human'])) {
-                $neoModel->name = $neoXML['human'];
+                $this->currentNeo->name = $neoXML['human'];
             }
             if (isset($neoXML['svg'])) {
                 $fontFile = self::readFontFile(dirname($this->mainFilePaths[$mainFileKey]) . $neoXML['svg']);
-                $neoModel->font_svg = $fontFile;
+                $this->currentNeo->font_svg = $fontFile;
             }
             if (isset($neoXML['ttf'])) {
                 $fontFile = self::readFontFile(dirname($this->mainFilePaths[$mainFileKey]) . $neoXML['ttf']);
-                $neoModel->font_ttf = $fontFile;
+                $this->currentNeo->font_ttf = $fontFile;
             }
-            $neoModel->save();
+            $this->currentNeo->save();
             foreach ($neoXML->section as $position => $neoSectXML) {
-                self::readNeographySection(
-                    neoModel: $neoModel,
+                $this->readNeographySection(
                     neoSectXML: $neoSectXML,
                     position: $position
                 );
@@ -222,13 +269,13 @@ class FileImportSeeder extends Seeder
         }
         // Check if this neography is the language's primary one
         if (isset($neoXML['primary']) && filter_var($neoXML['primary'], FILTER_VALIDATE_BOOLEAN)) {
-            $this->currentLang->primary_neography = $neoModel->id;
+            $this->currentLang->primary_neography = $this->currentNeo->id;
             $this->currentLang->save();
         }
         // Add connection between neography and language
         $pivot = new LanguageNeography([
             'language_id' => $this->currentLang->id,
-            'neography_id' => $neoModel->id,
+            'neography_id' => $this->currentNeo->id,
         ]);
         $pivot->save();
     }
@@ -236,14 +283,13 @@ class FileImportSeeder extends Seeder
     /**
      * Parse a <section/> XML element into a NeographySection model
      */
-    protected static function readNeographySection(
-        Neography $neoModel,
+    protected function readNeographySection(
         SimpleXMLElement $neoSectXML,
         int $position
     ): void
     {
         $neoSectModel = new NeographySection();
-        $neoSectModel->neography_id = $neoModel->id;
+        $neoSectModel->neography_id = $this->currentNeo->id;
         if (isset($neoSectXML['type'])) {
             $neoSectModel->type = NeographySectionType::tryFrom($neoSectXML['type']);
         }
@@ -257,9 +303,8 @@ class FileImportSeeder extends Seeder
         }
         $neoSectModel->position = $position;
         $neoSectModel->save();
-        self::readNeographyGlyphGroup(
+        $this->readNeographyGlyphGroup(
             neoSectModel: $neoSectModel,
-            neoModel: $neoModel,
             dataXML: $neoSectXML->data
         );
     }
@@ -267,9 +312,8 @@ class FileImportSeeder extends Seeder
     /**
      * Parse a child of the neography <data/> XML element into a NeographyGlyphGroup model
      */
-    protected static function readNeographyGlyphGroup(
+    protected function readNeographyGlyphGroup(
         NeographySection $neoSectModel,
-        Neography $neoModel,
         SimpleXMLElement $dataXML
     ): void
     {
@@ -284,9 +328,8 @@ class FileImportSeeder extends Seeder
             $glyphGroupModel->position = 0;
             $glyphGroupModel->save();
             foreach ($dataXML->entry as $position => $glyphXML) {
-                self::readNeographyGlyph(
+                $this->readNeographyGlyph(
                     glyphGroupModel: $glyphGroupModel,
-                    neoModel: $neoModel,
                     glyphXML: $glyphXML,
                     position: $position
                 );
@@ -308,9 +351,8 @@ class FileImportSeeder extends Seeder
                 $glyphGroupModel->position = $groupPosition;
                 $glyphGroupModel->save();
                 foreach ($glyphGroupXML->entry as $position => $glyphXML) {
-                    self::readNeographyGlyph(
+                    $this->readNeographyGlyph(
                         glyphGroupModel: $glyphGroupModel,
-                        neoModel: $neoModel,
                         glyphXML: $glyphXML,
                         position: $position
                     );
@@ -322,9 +364,8 @@ class FileImportSeeder extends Seeder
     /**
      * Parse a neography <entry/> XML element into a NeographyGlyph model
      */
-    protected static function readNeographyGlyph(
+    protected function readNeographyGlyph(
         NeographyGlyphGroup $glyphGroupModel,
-        Neography $neoModel,
         SimpleXMLElement $glyphXML,
         int $position
     ): void
@@ -334,7 +375,7 @@ class FileImportSeeder extends Seeder
             $glyphModel->global_id = $glyphXML['id'];
         }
         $glyphModel->group_id = $glyphGroupModel->id;
-        $glyphModel->neography_id = $neoModel->id;
+        $glyphModel->neography_id = $this->currentNeo->id;
         if (isset($glyphXML['order'])) {
             $glyphModel->position = (int)$glyphXML['order'];
         } else {
@@ -354,12 +395,183 @@ class FileImportSeeder extends Seeder
         if (isset($glyphXML->pronunciation->phonemic)) {
             $glyphModel->pronunciation_phonemic = $glyphXML->pronunciation->phonemic->__toString();
         }
-        if (isset($glyphXML->pronunciation->{$neoModel->machine_name})) {
-            $glyphModel->pronunciation_native = $glyphXML->pronunciation->{$neoModel->machine_name}->__toString();
+        if (isset($glyphXML->pronunciation->{$this->currentNeo->machine_name})) {
+            $glyphModel->pronunciation_native = $glyphXML->pronunciation->{$this->currentNeo->machine_name}->__toString();
         }
         if (isset($glyphXML->note)) {
             $glyphModel->note = $glyphXML->note->__toString();
         }
         $glyphModel->save();
+    }
+
+    /**
+     * Parse a <group/> XML element in the inflections config into a WordClassGroup model
+     */
+    protected function readWordClassGroup(SimpleXMLElement $groupXML): void
+    {
+        $groupModel = new WordClassGroup();
+        $groupModel->language_id = $this->currentLang->id;
+        $groupModel->inflected = (
+            isset($groupXML->list->class[0]['inflected']) &&
+            filter_var($groupXML->list->class[0]['inflected'], FILTER_VALIDATE_BOOLEAN)
+        );
+        $groupModel->save();
+        // Read through word classes in this group
+        foreach ($groupXML->list->class as $classXML) {
+            $this->readWordClass(
+                groupModel: $groupModel,
+                classXML: $classXML
+            );
+        }
+        // Read through display tables in this group
+        foreach ($groupXML->layout->table as $position => $tableXML) {
+            $this->readDisplayTable(
+                groupModel: $groupModel,
+                tableXML: $tableXML,
+                position: $position
+            );
+        }
+    }
+
+    /**
+     * Parse a <class/> XML element in the inflections config into a WordClass model
+     */
+    protected function readWordClass(
+        WordClassGroup $groupModel,
+        SimpleXMLElement $classXML
+    ): void
+    {
+        $classModel = new WordClass();
+        $classModel->group_id = $groupModel->id;
+        $classModel->language_id = $this->currentLang->id;
+        if (!isset($classXML['name']) || empty($classXML['name'])) {
+            throw new \RuntimeException("There's a word class with no name in file '${this->inflectionsFilePath}'");
+        }
+        $classModel->name = $classXML['name'];
+        $classModel->save();
+        /**
+         * Later when we're reading word entries from the dictionary,
+         * we can't assume that there was an inflections file provided
+         * or therefore word classes already registered. We will need
+         * some way to tell if a given word class exists or must be
+         * created (preferrably without querying the database every
+         * time).
+         *
+         * Keeping this record is how we'll know.
+         */
+        $this->currentClasses[$classModel->name] = [
+            'group' => $groupModel,
+            'class' => $classModel
+        ];
+    }
+
+    /**
+     * Parse a <table/> XML element in the inflections config into a DisplayTable model
+     */
+    protected function readDisplayTable(
+        WordClassGroup $groupModel,
+        SimpleXMLElement $tableXML,
+        int $position
+    ): void
+    {
+        $tableModel = new DisplayTable();
+        $tableModel->word_class_group_id = $groupModel->id;
+        $tableModel->position = $position;
+        if (isset($tableXML['label'])) {
+            $tableModel->label = $tableXML['label'];
+        }
+        if (isset($tableXML['stack'])) {
+            $tableModel->stack = filter_var(
+                $tableXML['stack'],
+                FILTER_VALIDATE_BOOLEAN
+            );
+        }
+        if (isset($tableXML['align_on_stack'])) {
+            $tableModel->align_on_stack = filter_var(
+                $tableXML['align_on_stack'],
+                FILTER_VALIDATE_BOOLEAN
+            );
+        }
+        if (isset($tableXML['fold'])) {
+            $tableModel->table_fold = filter_var(
+                $tableXML['fold'],
+                FILTER_VALIDATE_BOOLEAN
+            );
+        }
+        if (isset($tableXML->rows['fold'])) {
+            $tableModel->rows_fold = filter_var(
+                $tableXML->rows['fold'],
+                FILTER_VALIDATE_BOOLEAN
+            );
+        }
+        $tableModel->save();
+        // Read through filters for this display table
+        foreach ($tableXML->filter->inflect as $filterXML) {
+            $array = $this->addFeatureIfNew(
+                wordClassGroup: $groupModel,
+                featureName: $filterXML['dimension'],
+                valueName: $filterXML['value']
+            );
+            [
+                'feature' => $featureModel,
+                'value' => $valueModel
+            ] = $array;
+            // Add connection between disp table and feature values
+            $pivot = new DisplayTableFilter([
+                'disp_table_id' => $tableModel->id,
+                'feature_id' => $featureModel->id,
+                'value_id' => $valueModel->id,
+            ]);
+            $pivot->save();
+        }
+        // Read through rows for this display table
+        foreach ($tableXML->rows->row as $rowPosition => $rowXML) {
+            $this->readDisplayTableRow(
+                groupModel: $groupModel,
+                tableModel: $tableModel,
+                rowXML: $rowXML,
+                position: $rowPosition
+            );
+        }
+    }
+
+    /**
+     * Parse a <row/> XML element in the inflections config into a DisplayTableRow model
+     */
+    protected function readDisplayTableRow(
+        WordClassGroup $groupModel,
+        DisplayTable $tableModel,
+        SimpleXMLElement $rowXML,
+        int $position
+    ): void
+    {
+        $rowModel = new DisplayTableRow();
+        $rowModel->disp_table_id = $tableModel->id;
+        if (!isset($rowXML['label']) || empty($rowXML['label'])) {
+            throw new \RuntimeException("There's a table row with no label in file '${this->inflectionsFilePath}'");
+        }
+        $rowModel->label = $rowXML['label'];
+        $rowModel->label_brief = $rowXML['brief'];
+        $rowModel->position = $position;
+        $rowModel->save();
+        // Read through filters for this table row
+        foreach ($rowXML->filter->inflect as $filterXML) {
+            $array = $this->addFeatureIfNew(
+                wordClassGroup: $groupModel,
+                featureName: $filterXML['dimension'],
+                valueName: $filterXML['value']
+            );
+            [
+                'feature' => $featureModel,
+                'value' => $valueModel
+            ] = $array;
+            // Add connection between disp table and feature values
+            $pivot = new DisplayTableRowFilter([
+                'disp_table_row_id' => $rowModel->id,
+                'feature_id' => $featureModel->id,
+                'value_id' => $valueModel->id,
+            ]);
+            $pivot->save();
+        }
     }
 }
