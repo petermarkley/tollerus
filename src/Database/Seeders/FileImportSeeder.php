@@ -47,9 +47,10 @@ class FileImportSeeder extends Seeder
      * This is the file input; it won't change throughout
      * the seeder's lifespan.
      */
-    protected string $inflectionsFilePath;
+    protected string|null $inflectionsFilePath;
     protected array $mainFilePaths;
     protected $inflectionsFile;
+    protected string|null $rootPath;
 
     /**
      * These are basically bookmarks to keep our place as
@@ -73,8 +74,9 @@ class FileImportSeeder extends Seeder
      * Accept file paths when creating the seeder manually.
      */
     public function __construct(
-        string $inflectionsFilePath = null,
-        array $mainFilePaths = []
+        string|null $inflectionsFilePath = '',
+        array $mainFilePaths = [],
+        string|null $rootPath = ''
     )
     {
         /**
@@ -87,6 +89,7 @@ class FileImportSeeder extends Seeder
             $this->inflectionsFilePath = $inflectionsFilePath;
             $this->mainFilePaths = $mainFilePaths;
         }
+        $this->rootPath = $rootPath;
     }
 
     /**
@@ -107,7 +110,7 @@ class FileImportSeeder extends Seeder
     public function run(): void
     {
         // Check for & read inflections file
-        if ($this->inflectionsFilePath) {
+        if (!empty($this->inflectionsFilePath)) {
             $this->inflectionsFile = simplexml_load_file($this->inflectionsFilePath);
             if ($this->inflectionsFile === false) {
                 throw new \RuntimeException("simplexml_load_file() failed on " . $this->inflectionsFilePath);
@@ -256,11 +259,19 @@ class FileImportSeeder extends Seeder
                     $this->currentNeo->name = $neoXML['human']->__toString();
                 }
                 if (empty($this->currentNeo->font_svg) && isset($neoXML['svg'])) {
-                    $fontFile = self::readFontFile(dirname($this->mainFilePaths[$this->currentFileKey]) . "/" . $neoXML['svg']);
+                    if (empty($this->rootPath)) {
+                        $fontFile = self::readFontFile(dirname($this->mainFilePaths[$this->currentFileKey]) . "/" . $neoXML['svg']);
+                    } else {
+                        $fontFile = self::readFontFile(rtrim($this->rootPath,"/") . "/" . $neoXML['svg']);
+                    }
                     $this->currentNeo->font_svg = $fontFile;
                 }
                 if (empty($this->currentNeo->font_ttf) && isset($neoXML['ttf'])) {
-                    $fontFile = self::readFontFile(dirname($this->mainFilePaths[$this->currentFileKey]) . "/" . $neoXML['ttf']);
+                    if (empty($this->rootPath)) {
+                        $fontFile = self::readFontFile(dirname($this->mainFilePaths[$this->currentFileKey]) . "/" . $neoXML['ttf']);
+                    } else {
+                        $fontFile = self::readFontFile(rtrim($this->rootPath,"/") . "/" . $neoXML['ttf']);
+                    }
                     $this->currentNeo->font_ttf = $fontFile;
                 }
                 $this->currentNeo->save();
@@ -281,11 +292,19 @@ class FileImportSeeder extends Seeder
                 $this->currentNeo->name = $neoXML['human']->__toString();
             }
             if (isset($neoXML['svg'])) {
-                $fontFile = self::readFontFile(dirname($this->mainFilePaths[$this->currentFileKey]) . "/" . $neoXML['svg']);
+                if (empty($this->rootPath)) {
+                    $fontFile = self::readFontFile(dirname($this->mainFilePaths[$this->currentFileKey]) . "/" . $neoXML['svg']);
+                } else {
+                    $fontFile = self::readFontFile(rtrim($this->rootPath,"/") . "/" . $neoXML['svg']);
+                }
                 $this->currentNeo->font_svg = $fontFile;
             }
             if (isset($neoXML['ttf'])) {
-                $fontFile = self::readFontFile(dirname($this->mainFilePaths[$this->currentFileKey]) . "/" . $neoXML['ttf']);
+                if (empty($this->rootPath)) {
+                    $fontFile = self::readFontFile(dirname($this->mainFilePaths[$this->currentFileKey]) . "/" . $neoXML['ttf']);
+                } else {
+                    $fontFile = self::readFontFile(rtrim($this->rootPath,"/") . "/" . $neoXML['ttf']);
+                }
                 $this->currentNeo->font_ttf = $fontFile;
             }
             $this->currentNeo->save();
@@ -594,7 +613,9 @@ class FileImportSeeder extends Seeder
             throw new \RuntimeException("There's a table row with no label in file '{$this->inflectionsFilePath}'");
         }
         $rowModel->label = $rowXML['label']->__toString();
-        $rowModel->label_brief = $rowXML['brief']->__toString();
+        if (isset($rowXML['brief'])) {
+            $rowModel->label_brief = $rowXML['brief']->__toString();
+        }
         $rowModel->position = $position;
         $rowModel->save();
         // Read through filters for this table row

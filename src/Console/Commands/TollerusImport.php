@@ -15,7 +15,8 @@ class TollerusImport extends Command
      */
     protected $signature = 'tollerus:import
         {--infl= : Path to your inflections XML file}
-        {main?* : Paths to your main dictionary XML files}';
+        {main?* : Paths to your main dictionary XML files}
+        {--root= : Path to folder that your XML files consider to be the root folder (for finding font files)}';
 
     /**
      * The console command description.
@@ -31,9 +32,11 @@ class TollerusImport extends Command
     {
         $inflectionsFilePath = $this->option('infl');
         $mainFilePaths = $this->argument('main');
+        $rootPath = $this->option('root');
         (new FileImportSeeder(
             $inflectionsFilePath,
-            $mainFilePaths
+            $mainFilePaths,
+            $rootPath
         ))->run();
     }
 }

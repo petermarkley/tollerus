@@ -502,7 +502,7 @@ return new class extends Migration
                 ->references('id')->on('disp_tables')
                 ->cascadeOnDelete();
             $table->string('label');
-            $table->string('label_brief');
+            $table->string('label_brief')->nullable();
             $table->integer('position');
             // ensure only one of each label per display table
             $table->unique(['disp_table_id', 'label'], 'disp_table_label_unique');
