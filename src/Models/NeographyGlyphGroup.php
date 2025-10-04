@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 
-class NeographyGylphGroup extends Model
+class NeographyGlyphGroup extends Model
 {
     use HasTablePrefix;
     protected $table = 'neography_glyph_groups';

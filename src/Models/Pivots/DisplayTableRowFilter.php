@@ -31,7 +31,7 @@ class DisplayTableRowFilter extends Pivot
              * Rule 1: value_id must belong to feature_id
              */
 
-            $valueMatchesFeature = FeatureValue::query()
+            $valueMatchesFeature = \PeterMarkley\Tollerus\Models\FeatureValue::query()
                 ->whereKey($model->value_id)
                 ->where('feature_id', $model->feature_id)
                 ->exists();
@@ -45,13 +45,13 @@ class DisplayTableRowFilter extends Pivot
              */
 
             // Get the two `word_class_group_id`s via minimal scalar lookups
-            $dispTableId = DisplayTableRow::query()
+            $dispTableId = \PeterMarkley\Tollerus\Models\DisplayTableRow::query()
                 ->whereKey($model->disp_table_row_id)
                 ->value('disp_table_id');
-            $groupIdOfTable = DisplayTable::query()
+            $groupIdOfTable = \PeterMarkley\Tollerus\Models\DisplayTable::query()
                 ->whereKey($dispTableId)
                 ->value('word_class_group_id');
-            $groupIdOfFeature = Feature::query()
+            $groupIdOfFeature = \PeterMarkley\Tollerus\Models\Feature::query()
                 ->whereKey($model->feature_id)
                 ->value('word_class_group_id');
 

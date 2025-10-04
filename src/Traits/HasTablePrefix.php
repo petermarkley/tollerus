@@ -9,7 +9,7 @@ trait HasTablePrefix
      */
     public function getConnectionName()
     {
-        return Config::get('tollerus.connection', 'tollerus');
+        return \Config::get('tollerus.connection', 'tollerus');
     }
 }
 

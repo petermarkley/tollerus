@@ -16,6 +16,7 @@ return [
      * to differ from your default DB connection.
      */
     'connection_overrides' => [
+        'modes' => ['NO_AUTO_VALUE_ON_ZERO'],
         /*
         'driver' => 'mysql',
         'url' => env('DB_URL'),

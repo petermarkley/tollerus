@@ -31,7 +31,7 @@ class FormFeatureValue extends Pivot
              * Rule 1: value_id must belong to feature_id
              */
 
-            $valueMatchesFeature = FeatureValue::query()
+            $valueMatchesFeature = \PeterMarkley\Tollerus\Models\FeatureValue::query()
                 ->whereKey($model->value_id)
                 ->where('feature_id', $model->feature_id)
                 ->exists();
@@ -45,16 +45,16 @@ class FormFeatureValue extends Pivot
              */
 
             // Get the two `group_id`s via minimal scalar lookups
-            $lexemeId = Form::query()
+            $lexemeId = \PeterMarkley\Tollerus\Models\Form::query()
                 ->whereKey($model->form_id)
                 ->value('lexeme_id');
-            $wordClassId = Lexeme::query()
+            $wordClassId = \PeterMarkley\Tollerus\Models\Lexeme::query()
                 ->whereKey($lexemeId)
                 ->value('word_class_id');
-            $groupIdOfForm = WordClass::query()
+            $groupIdOfForm = \PeterMarkley\Tollerus\Models\WordClass::query()
                 ->whereKey($wordClassId)
                 ->value('group_id');
-            $groupIdOfFeature = Feature::query()
+            $groupIdOfFeature = \PeterMarkley\Tollerus\Models\Feature::query()
                 ->whereKey($model->feature_id)
                 ->value('word_class_group_id');
 

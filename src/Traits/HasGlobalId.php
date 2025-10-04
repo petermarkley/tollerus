@@ -3,16 +3,14 @@
 namespace PeterMarkley\Tollerus\Traits;
 
 use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 trait HasGlobalId
 {
-    public $incrementing = false;
-    protected $keyType = 'int';
-
     protected static function bootHasGlobalId(): void
     {
         /**
-         * We would use directly assign these, except we don't want to
+         * We would directly assign these, except we don't want to
          * overwrite any pre-existing contents.
          */
         static::retrieved(function ($model) {
@@ -20,6 +18,12 @@ trait HasGlobalId
                 array_merge($model->appends, ['global_id'])
             );
         });
+    }
+
+    protected function initializeHasGlobalId(): void
+    {
+        $this->incrementing = false;
+        $this->keyType = 'int';
     }
 
     public static function isValidGlobalId(string $str): bool
@@ -68,7 +72,7 @@ trait HasGlobalId
         $encoded = base64_encode($binary48);
 
         // Normalize leading 'A's.
-        $digits = Config::get('tollerus.global_id_digits', 4);
+        $digits = \Config::get('tollerus.global_id_digits', 4);
         $normalized = str_pad(ltrim($encoded, "A"), $digits, "A");
 
         /**
@@ -130,7 +134,7 @@ trait HasGlobalId
                     return null;
                 }
                 $globalId = self::encodeGlobalId((int) $attributes['id']);
-                $digits = Config::get('tollerus.global_id_digits', 4);
+                $digits = \Config::get('tollerus.global_id_digits', 4);
                 $padded = str_pad($globalId, $digits, "A", STR_PAD_LEFT);
                 return $padded;
             },
