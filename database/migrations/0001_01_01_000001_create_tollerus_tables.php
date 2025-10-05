@@ -156,6 +156,32 @@ return new class extends Migration
             $table->unique(['section_id', 'position'], 'section_position_unique');
         });
 
+        $connection->create('neography_input_keyboards', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('neography_id');
+            $table->foreign('neography_id')
+                ->references('id')->on('neographies')
+                ->cascadeOnDelete();
+            $table->integer('position');
+            $table->integer('width');
+            // ensure only one of each position per neography
+            $table->unique(['neography_id', 'position'], 'neography_position_unique');
+        });
+
+        $connection->create('neography_input_keys', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('keyboard_id');
+            $table->foreign('keyboard_id')
+                ->references('id')->on('neography_input_keyboards')
+                ->cascadeOnDelete();
+            $table->string('label')->nullable();
+            $table->string('glyph')->charset('utf8mb4')->nullable();
+            $table->integer('position');
+            $table->boolean('render_base'); // If true, glyph will render on a Unicode dotted circle
+            // ensure only one of each position per neography
+            $table->unique(['keyboard_id', 'position'], 'keyboard_position_unique');
+        });
+
         /**
          * ===========================================================
          *                 MAIN LEXICAL DATA
@@ -567,6 +593,8 @@ return new class extends Migration
         $connection->dropIfExists('neography_glyphs');
         $connection->dropIfExists('global_ids');
         // top-level language config
+        $connection->dropIfExists('neography_input_keys');
+        $connection->dropIfExists('neography_input_keyboards');
         $connection->dropIfExists('neography_glyph_groups');
         $connection->dropIfExists('neography_sections');
         $connection->dropIfExists('feature_values');
