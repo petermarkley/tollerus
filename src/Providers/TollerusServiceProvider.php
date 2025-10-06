@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 
 use PeterMarkley\Tollerus\Console\Commands\TollerusImport;
+use PeterMarkley\Tollerus\Console\Commands\TollerusPopulate;
 
 class TollerusServiceProvider extends ServiceProvider
 {
@@ -26,10 +27,11 @@ class TollerusServiceProvider extends ServiceProvider
 		// Set up database stuff
 		$this->ensureTollerusConnection();
 		$this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
-		// Register artisan command
+		// Register artisan commands
 		if ($this->app->runningInConsole()) {
 			$this->commands([
 				TollerusImport::class,
+				TollerusPopulate::class,
 			]);
 		}
 	}

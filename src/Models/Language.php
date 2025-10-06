@@ -3,14 +3,18 @@
 namespace PeterMarkley\Tollerus\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
+use PeterMarkley\Tollerus\Database\Factories\LanguageFactory;
 
 class Language extends Model
 {
     use HasTablePrefix;
+    use HasFactory;
     protected $table = 'languages';
     public $timestamps = false;
 
@@ -46,5 +50,13 @@ class Language extends Model
     public function forms(): HasMany
     {
         return $this->hasMany(Form::class);
+    }
+
+    /**
+     * Factory override
+     */
+    protected static function newFactory()
+    {
+        return LanguageFactory::new();
     }
 }
