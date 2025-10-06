@@ -3,6 +3,7 @@
 namespace PeterMarkley\Tollerus\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -33,6 +34,9 @@ class LanguageFactory extends Factory
             ['truncate' => false, 'suffix' => 'ian'],
             ['truncate' => false, 'suffix' => 'ese'],
             ['truncate' => false, 'suffix' => 'ish'],
+            ['truncate' => true, 'suffix' => 'ian'],
+            ['truncate' => true, 'suffix' => 'ese'],
+            ['truncate' => true, 'suffix' => 'ish'],
             ['truncate' => true, 'suffix' => 'ench'],
             ['truncate' => true, 'suffix' => 'oonch'],
         ];
@@ -67,11 +71,23 @@ class LanguageFactory extends Factory
 
     public function definition(): array
     {
+        // Generate language name
         $name = self::generateName();
+
+        // Generate language intro text
+        $intro = collect($this->faker->paragraphs(3))
+            ->map(function ($item) {
+                return "\t<p>" . $item . "</p>\n";
+            })
+            ->implode("");
+        $intro = "<div>\n" . $intro . "</div>\n";
 
         return [
             'machine_name' => $name['machine'],
             'name' => $name['human'],
+            'dict_title' => $name['human'] . " Dictionary",
+            'dict_title_full' => "English Dictionary of the " . $name['human'] . " Language",
+            'intro' => $intro,
         ];
     }
 }
