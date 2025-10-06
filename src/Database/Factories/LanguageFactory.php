@@ -14,9 +14,54 @@ class LanguageFactory extends Factory
 
     protected static function generateName(): array
     {
+        $prefixArray = [
+            'con', 'ben', 'rap', 'bud', 'tak',
+            'lop', 'kran', 'sop', 'bid', 'wag',
+            'gas', 'his', 'drip', 'dis', 'val',
+            'yup',
+        ];
+        $middleArray = [
+            'nex', 'soob', 'kran', 'yart', 'rud',
+            'beb', 'fidd', 'blatt', 'jiss', 'frass',
+            'puck', 'bart', 'goy', 'flep', 'sitt',
+            'foy', 'lurt', 'hoy', 'roy', 'lov',
+            'vonn', 'vegg', 'varch', 'cratch', 'gloob',
+            'darf', 'sov', 'tar', 'yem', 'yuss',
+            'vass', 'boos', 'soos', 'biss',
+        ];
+        $suffixArray = [
+            ['truncate' => false, 'suffix' => 'ian'],
+            ['truncate' => false, 'suffix' => 'ese'],
+            ['truncate' => false, 'suffix' => 'ish'],
+            ['truncate' => true, 'suffix' => 'ench'],
+            ['truncate' => true, 'suffix' => 'oonch'],
+        ];
+        $suffix = $suffixArray[array_rand($suffixArray)];
+        $middle = $middleArray[array_rand($middleArray)];
+        $prefix = $prefixArray[array_rand($prefixArray)];
+
+        /**
+         * If the suffix says to truncate, we are going to remove
+         * the coda and nucleus of the middle syllable, so it
+         * just becomes the beginning of the suffix.
+         */
+        if ($suffix['truncate']) {
+            /**
+             * Our nuclei never have more than 2 consonants at the beginning,
+             * so we can just test the 2nd character to see what length we
+             * need to cut to.
+             */
+            $c = $middle[1];
+            $isVowel = ($c=='a' || $c=='e' || $c=='i' || $c=='o' || $c=='u');
+            $len = ($isVowel? 1 : 2);
+            $middle = substr($middle,0,$len);
+        }
+
+        $name = $prefix . $middle . $suffix['suffix'];
+
         return [
-            'machine' => 'myconlang',
-            'human' => 'My Conglang'
+            'machine' => strtolower($name),
+            'human' => ucfirst($name)
         ];
     }
 
