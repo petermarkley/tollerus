@@ -358,6 +358,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('roman');
             $table->string('phonemic')->charset('utf8mb4');
+            $table->boolean('irregular')->default(false);
         });
         /**
          * We need a database trigger to help maintain our global IDs.

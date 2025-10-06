@@ -760,6 +760,9 @@ class FileImportSeeder extends Seeder
         if (isset($formXML->phonemic)) {
             $formModel->phonemic = $formXML->phonemic->__toString();
         }
+        if (isset($formXML['irregular'])) {
+            $formModel->irregular = filter_var($formXML['irregular'], FILTER_VALIDATE_BOOLEAN);
+        }
         // Save model
         $formModel->save();
         // Check if this is the primary word form
@@ -781,7 +784,7 @@ class FileImportSeeder extends Seeder
         }
         // Read through inflection features
         foreach ($formXML->attributes() as $key => $item) {
-            if ($key == 'primary' || $key == 'id') {
+            if ($key == 'primary' || $key == 'id' || $key == 'irregular') {
                 continue;
             }
             $array = $this->addFeatureIfNew(
