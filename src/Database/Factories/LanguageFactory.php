@@ -47,9 +47,9 @@ class LanguageFactory extends Factory
          */
         if ($suffix['truncate']) {
             /**
-             * Our nuclei never have more than 2 consonants at the beginning,
-             * so we can just test the 2nd character to see what length we
-             * need to cut to.
+             * Our middle syllables never have more than 2 consonants at the
+             * beginning, and they always have at least 1. So we can just test
+             * the 2nd character to see what length we need to cut to.
              */
             $c = $middle[1];
             $isVowel = ($c=='a' || $c=='e' || $c=='i' || $c=='o' || $c=='u');
