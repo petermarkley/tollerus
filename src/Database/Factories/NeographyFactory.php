@@ -8,15 +8,23 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 use PeterMarkley\Tollerus\Models\Neography;
+use PeterMarkley\Tollerus\Models\NeographySection;
+use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
+use PeterMarkley\Tollerus\Models\NeographyGlyph;
 
 class NeographyFactory extends Factory
 {
     protected $model = Neography::class;
+    protected ?array $glyphGroups = null;
 
-    protected static function generateGlyph(): string
+    protected static function generateGlyph(): array
     {
         $vector = "(fixme vector data)";
-        return $vector;
+        $horizAdv = 1000;
+        return [
+            'd' => $vector,
+            'horizAdv' => $horizAdv,
+        ];
     }
 
     protected function generateGlyphs(
@@ -28,7 +36,7 @@ class NeographyFactory extends Factory
          * Decide the list of codepoints
          */
         $first = 0xF2C00;
-        $last = $first + $num;
+        $last = $first + $num - 1;
         $codepoints = collect(range($first, $last))
             ->map(
                 fn($ch) => mb_chr($ch,'UTF-8')
@@ -38,10 +46,8 @@ class NeographyFactory extends Factory
         /**
          * Generate vectors
          */
-        $vectors = [];
-        for ($i=0; $i < $num; $i++) {
-            $vectors[$i] = self::generateGlyph();
-        }
+        $vectors = collect($codepoints)
+            ->map(fn() => self::generateGlyph());
         
         /**
          * Decide the list of sounds
@@ -171,15 +177,61 @@ class NeographyFactory extends Factory
                     return $item;
                 })->toArray();
         }
-        var_dump($glyphGroups);
+        $this->glyphGroups = $glyphGroups;
     }
 
+    /**
+     * Generate SVG <glyph/> element
+     */
+    protected function formatGlyph(array $data): string
+    {
+        $output = '<glyph glyph-name="myneography letter ' . strtoupper($data['roman']) . '" unicode="' . $data['codepoint'] . '" d="' . $data['vector']['d'] . '" horiz-adv-x="' . $data['vector']['horizAdv'] . '"/>';
+        return $output;
+    }
+
+    /**
+     * Generate SVG font file from glyphs
+     */
+    protected function formatGlyphs(): string
+    {
+        $head = "<svg>\n<font>\n";
+        $body = collect($this->glyphGroups)
+            ->flatten(1)
+            ->map(function ($item) {
+                return $this->formatGlyph($item);
+            })->implode("\n");
+        $foot = "</font>\n</svg>\n";
+        $output = $head . $body . "\n" . $foot;
+        var_dump($output);
+        return $output;
+    }
+
+    /**
+     * Define model values
+     */
     public function definition(): array
     {
-        self::generateGlyphs();
+        if ($this->glyphGroups===null) {
+            $this->generateGlyphs();
+        }
         return [
             'machine_name' => 'myneography',
             'name' => 'My Neography',
+            'font_svg' => $this->formatGlyphs(),
         ];
+    }
+
+    /**
+     * Add some event hooks
+     */
+    public function configure()
+    {
+        if ($this->glyphGroups===null) {
+            $this->generateGlyphs();
+        }
+        $glyphGroups ??= $this->glyphGroups;
+        return $this->afterCreating(function (Neography $neoModel) use ($glyphGroups) {
+            //
+        });
     }
 }
