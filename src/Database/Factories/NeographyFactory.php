@@ -185,7 +185,14 @@ class NeographyFactory extends Factory
      */
     protected function formatGlyph(array $data): string
     {
-        $output = '<glyph glyph-name="myneography letter ' . strtoupper($data['roman']) . '" unicode="' . $data['codepoint'] . '" d="' . $data['vector']['d'] . '" horiz-adv-x="' . $data['vector']['horizAdv'] . '"/>';
+        $glyphName = 'myneography letter ' . strtoupper($data['roman']);
+        $unicode = $data['codepoint'];
+        $d = $data['vector']['d'];
+        $horizAdv = $data['vector']['horizAdv'];
+
+        $output = <<<EOT
+        <glyph glyph-name="$glyphName" unicode="$unicode" d="$d" horiz-adv-x="$horizAdv"/>
+        EOT;
         return $output;
     }
 
@@ -194,13 +201,22 @@ class NeographyFactory extends Factory
      */
     protected function formatGlyphs(): string
     {
-        $head = "<svg>\n<font>\n";
+        $head = <<<EOT
+        <svg>
+        <font horiz-adv-x="1000">
+        <font-face units-per-em="1000" font-family="My Neography"/>
+
+        EOT;
         $body = collect($this->glyphGroups)
             ->flatten(1)
             ->map(function ($item) {
                 return $this->formatGlyph($item);
             })->implode("\n");
-        $foot = "</font>\n</svg>\n";
+        $foot = <<<EOT
+        </font>
+        </svg>
+
+        EOT;
         $output = $head . $body . "\n" . $foot;
         var_dump($output);
         return $output;
