@@ -3,14 +3,18 @@
 namespace PeterMarkley\Tollerus\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 use PeterMarkley\Tollerus\Enums\WritingDirection;
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
+use PeterMarkley\Tollerus\Database\Factories\NeographyFactory;
 
 class Neography extends Model
 {
     use HasTablePrefix;
+    use HasFactory;
     protected $table = 'neographies';
     public $timestamps = false;
     protected $casts = [
@@ -43,5 +47,13 @@ class Neography extends Model
     public function nativeSpellings(): HasMany
     {
         return $this->hasMany(NativeSpellings::class);
+    }
+
+    /**
+     * Factory override
+     */
+    protected static function newFactory()
+    {
+        return NeographyFactory::new();
     }
 }
