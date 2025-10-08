@@ -3,15 +3,19 @@
 namespace PeterMarkley\Tollerus\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 use PeterMarkley\Tollerus\Traits\HasGlobalId;
+use PeterMarkley\Tollerus\Database\Factories\NeographyGlyphFactory;
 
 class NeographyGlyph extends Model
 {
     use HasTablePrefix;
     use HasGlobalId;
+    use HasFactory;
     protected $table = 'neography_glyphs';
     public $timestamps = false;
 
@@ -52,5 +56,13 @@ class NeographyGlyph extends Model
                 throw new \LogicException('NeographyGlyph.neography_id must match its group\'s NeographySection.neography_id');
             }
         });
+    }
+
+    /**
+     * Factory override
+     */
+    protected static function newFactory()
+    {
+        return NeographyGlyphFactory::new();
     }
 }

@@ -7,6 +7,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+use PeterMarkley\Tollerus\Enums\NeographySectionType;
+use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
@@ -15,8 +17,82 @@ use PeterMarkley\Tollerus\Models\NeographyGlyph;
 class NeographyFactory extends Factory
 {
     protected $model = Neography::class;
-    protected ?array $glyphGroups = null;
 
+    /**
+     * Define model values
+     */
+    public function definition(): array
+    {
+        return [
+            'machine_name' => 'myneography',
+            'name' => 'My Neography',
+        ];
+    }
+
+    /**
+     * If the calling context passes us a name, that unlocks the ability
+     * to create a full, richly coordinated dataset of child objects.
+     */
+    public function withExtra(string $machineName, string $name): static
+    {
+        // Step 1: Use the neography name to generate a glyph set and font.
+        $glyphGroups = self::generateGlyphs($machineName, $name);
+        $fontSVG = self::formatGlyphs(
+            machineName: $machineName,
+            name: $name,
+            glyphGroups: $glyphGroups
+        );
+        // Step 2: Save appropriate parts of this to the Neography model.
+        $factory = $this->state([
+            'machine_name' => $machineName,
+            'name' => $name,
+            'font_svg' => $fontSVG,
+        ]);
+        // Step 3: Set hook to make child factories.
+        return $factory->afterCreating(
+            function (Neography $neoModel)
+            use (
+                $machineName,
+                $name,
+                $glyphGroups,
+            ) {
+                // Make section
+                $neoSectModel = NeographySection::factory()
+                    ->for($neoModel, 'neography')
+                    ->create([
+                        'type' => NeographySectionType::Alphabet,
+                        'name' => $name . " Alphabet",
+                        'position' => 0,
+                    ]);
+                // Make glyph groups
+                foreach ($glyphGroups as $key => $glyphs) {
+                    $groupModel = NeographyGlyphGroup::factory()
+                        ->for($neoSectModel, 'section')
+                        ->create([
+                            'type' => NeographyGlyphType::Symbol,
+                            'position' => $key,
+                        ]);
+                    // Make glyphs
+                    foreach ($glyphs as $key => $glyph) {
+                        $glyph = NeographyGlyph::factory()
+                            ->for($neoModel, 'neography')
+                            ->for($groupModel, 'group')
+                            ->create([
+                                'position' => $key,
+                                'glyph' => $glyph['codepoint'],
+                                'roman' => $glyph['roman'],
+                                'phonemic' => $glyph['phonemic'],
+                            ]);
+                    };
+                };
+            }
+        );
+    }
+
+    /**
+     * This algorithm generates a semi-realistic set of glyphs
+     * with no duplicates.
+     */
     protected static function generateGlyph(): array
     {
         $vector = "(fixme vector data)";
@@ -26,11 +102,12 @@ class NeographyFactory extends Factory
             'horizAdv' => $horizAdv,
         ];
     }
-
-    protected function generateGlyphs(
+    protected static function generateGlyphs(
+        string $machineName,
+        string $name,
         int $num = 20,
         bool $mix = false
-    ): void
+    ): array
     {
         /**
          * Decide the list of codepoints
@@ -177,40 +254,36 @@ class NeographyFactory extends Factory
                     return $item;
                 })->toArray();
         }
-        $this->glyphGroups = $glyphGroups;
+        return $glyphGroups;
     }
 
     /**
-     * Generate SVG <glyph/> element
+     * Format glyph set as SVG <glyph/> elements and compile into an SVG font file.
      */
-    protected function formatGlyph(array $data): string
+    protected static function formatGlyph(string $machineName, array $glyphData): string
     {
-        $glyphName = 'myneography letter ' . strtoupper($data['roman']);
-        $unicode = $data['codepoint'];
-        $d = $data['vector']['d'];
-        $horizAdv = $data['vector']['horizAdv'];
+        $glyphName = $machineName . ' letter ' . strtoupper($glyphData['roman']);
+        $unicode = $glyphData['codepoint'];
+        $d = $glyphData['vector']['d'];
+        $horizAdv = $glyphData['vector']['horizAdv'];
 
         $output = <<<EOT
         <glyph glyph-name="$glyphName" unicode="$unicode" d="$d" horiz-adv-x="$horizAdv"/>
         EOT;
         return $output;
     }
-
-    /**
-     * Generate SVG font file from glyphs
-     */
-    protected function formatGlyphs(): string
+    protected static function formatGlyphs(string $machineName, string $name, array $glyphGroups): string
     {
         $head = <<<EOT
         <svg>
         <font horiz-adv-x="1000">
-        <font-face units-per-em="1000" font-family="My Neography"/>
+        <font-face units-per-em="1000" font-family="$name"/>
 
         EOT;
-        $body = collect($this->glyphGroups)
+        $body = collect($glyphGroups)
             ->flatten(1)
-            ->map(function ($item) {
-                return $this->formatGlyph($item);
+            ->map(function ($glyph) use ($machineName) {
+                return self::formatGlyph($machineName, $glyph);
             })->implode("\n");
         $foot = <<<EOT
         </font>
@@ -218,36 +291,6 @@ class NeographyFactory extends Factory
 
         EOT;
         $output = $head . $body . "\n" . $foot;
-        var_dump($output);
         return $output;
-    }
-
-    /**
-     * Define model values
-     */
-    public function definition(): array
-    {
-        if ($this->glyphGroups===null) {
-            $this->generateGlyphs();
-        }
-        return [
-            'machine_name' => 'myneography',
-            'name' => 'My Neography',
-            'font_svg' => $this->formatGlyphs(),
-        ];
-    }
-
-    /**
-     * Add some event hooks
-     */
-    public function configure()
-    {
-        if ($this->glyphGroups===null) {
-            $this->generateGlyphs();
-        }
-        $glyphGroups ??= $this->glyphGroups;
-        return $this->afterCreating(function (Neography $neoModel) use ($glyphGroups) {
-            //
-        });
     }
 }

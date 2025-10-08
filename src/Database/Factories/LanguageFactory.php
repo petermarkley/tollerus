@@ -8,10 +8,36 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 use PeterMarkley\Tollerus\Models\Language;
+use PeterMarkley\Tollerus\Models\Neography;
+use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 
 class LanguageFactory extends Factory
 {
     protected $model = Language::class;
+
+    /**
+     * This will allow easily passing the Language name to the Neography
+     */
+    public function withNeography(): static
+    {
+        return $this->afterCreating(function (Language $langModel) {
+            // Create the Neography, with custom name
+            $neoModel = Neography::factory()
+                ->withExtra(
+                    machineName: $langModel->machine_name,
+                    name: $langModel->name
+                )->create();
+            // Add connection between Neography and Language
+            $pivot = new LanguageNeography([
+                'language_id' => $langModel->id,
+                'neography_id' => $neoModel->id,
+            ]);
+            $pivot->save();
+            // Mark Neography as the primary one
+            $langModel->primary_neography = $neoModel->id;
+            $langModel->save();
+        });
+    }
 
     protected static function generateName(): array
     {

@@ -27,6 +27,8 @@ class TollerusPopulate extends Command
      */
     public function handle()
     {
-        $language = Language::factory()->create();
+        $language = Language::factory()
+            ->withNeography()
+            ->create();
     }
 }

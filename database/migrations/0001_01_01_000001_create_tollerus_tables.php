@@ -217,7 +217,9 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->integer('position');
             $table->boolean('render_base'); // If true, glyph will render on a Unicode dotted circle
-            $table->string('glyph')->charset('utf8mb4');
+            $table->string('glyph')
+                ->charset('utf8mb4')
+                ->collation('utf8mb4_bin'); // This is needed for the unique constraint below.
             $table->string('roman')->nullable();
             $table->string('phonemic')->charset('utf8mb4')->nullable();
             $table->string('pronunciation_roman')->nullable();
