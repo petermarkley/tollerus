@@ -23,7 +23,7 @@ class LanguageFactory extends Factory
         return $this->afterCreating(function (Language $langModel) {
             // Create the Neography, with custom name
             $neoModel = Neography::factory()
-                ->withExtra(
+                ->withGlyphSet(
                     machineName: $langModel->machine_name,
                     name: $langModel->name,
                     num: mt_rand(15, 30),

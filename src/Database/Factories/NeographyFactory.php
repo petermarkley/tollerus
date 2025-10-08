@@ -31,13 +31,13 @@ class NeographyFactory extends Factory
 
     /**
      * If the calling context passes us a name, that unlocks the ability
-     * to create a full, richly coordinated dataset of child objects.
+     * to create a full, richly coordinated set of glyphs.
      */
-    public function withExtra(
-        string $machineName,
-        string $name,
-        int $num = 20,
-        bool $mix = false,
+    public function withGlyphSet(
+        string $machineName, // machine-friendly name of neography, used in font
+        string $name, // human-friendly name of neography, used in section name
+        int $num = 20, // number of glyphs to generate
+        bool $mix = false, // should consonants and vowels be mixed together
     ): static
     {
         // Step 1: Use the neography name to generate a glyph set and font.
