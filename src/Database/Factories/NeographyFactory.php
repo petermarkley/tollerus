@@ -33,10 +33,20 @@ class NeographyFactory extends Factory
      * If the calling context passes us a name, that unlocks the ability
      * to create a full, richly coordinated dataset of child objects.
      */
-    public function withExtra(string $machineName, string $name): static
+    public function withExtra(
+        string $machineName,
+        string $name,
+        int $num = 20,
+        bool $mix = false,
+    ): static
     {
         // Step 1: Use the neography name to generate a glyph set and font.
-        $glyphGroups = self::generateGlyphs($machineName, $name);
+        $glyphGroups = self::generateGlyphs(
+            machineName: $machineName,
+            name: $name,
+            num: $num,
+            mix: $mix,
+        );
         $fontSVG = self::formatGlyphs(
             machineName: $machineName,
             name: $name,
@@ -106,7 +116,7 @@ class NeographyFactory extends Factory
         string $machineName,
         string $name,
         int $num = 20,
-        bool $mix = false
+        bool $mix = false,
     ): array
     {
         /**

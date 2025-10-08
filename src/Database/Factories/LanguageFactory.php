@@ -25,7 +25,9 @@ class LanguageFactory extends Factory
             $neoModel = Neography::factory()
                 ->withExtra(
                     machineName: $langModel->machine_name,
-                    name: $langModel->name
+                    name: $langModel->name,
+                    num: mt_rand(15, 30),
+                    mix: ! (bool) mt_rand(0,2), // true 1/3rd of the time
                 )->create();
             // Add connection between Neography and Language
             $pivot = new LanguageNeography([
