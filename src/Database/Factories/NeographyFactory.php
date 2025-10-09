@@ -159,6 +159,8 @@ class NeographyFactory extends Factory
             $x = $path[1][0]; $y = $path[1][1];
             $minX = $x; $minY = $y;
             $maxX = $x; $maxY = $y;
+            $startX = $x; $startY = $y;
+            $startIsDirty = false;
             $command = 'm';
             // Find extrema
             for ($i = 2; $i < count($path); $i++) {
@@ -172,6 +174,9 @@ class NeographyFactory extends Factory
                  * outputs SVG, e.g. use of commas vs. spaces.
                  */
                 if ($path[$i] == 'z') {
+                    $x = $startX; $y = $startY;
+                    $command = 'z';
+                    $startIsDirty = true;
                     continue;
                 }
                 if (in_array($path[$i], ['m','l','h','v','t','c','s','q','a'])) {
@@ -201,6 +206,10 @@ class NeographyFactory extends Factory
                         }
                         $x += (float) ($coord[0]);
                         $y += (float) ($coord[1]);
+                        if ($startIsDirty) {
+                            $startX = $x; $startY = $y;
+                            $startIsDirty = false;
+                        }
                     break;
                 }
                 // Check for new min/max values
