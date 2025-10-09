@@ -286,8 +286,8 @@ class NeographyFactory extends Factory
     {
         $head = <<<EOT
         <svg>
-        <font horiz-adv-x="1000">
-        <font-face units-per-em="1000" font-family="$name"/>
+        <font horiz-adv-x="1000" horiz-origin-x="0" horiz-origin-y="0" vert-origin-x="512" vert-origin-y="768" vert-adv-y="1024">
+        <font-face units-per-em="1000" ascent="750" cap-height="600" x-height="400" descent="200" font-family="$name"/>
 
         EOT;
         $body = collect($glyphGroups)
