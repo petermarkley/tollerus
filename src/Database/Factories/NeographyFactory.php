@@ -106,13 +106,52 @@ class NeographyFactory extends Factory
     }
 
     /**
+     * Convenience wrapper around mt_rand(). Returns random float between 0 and 1
+     */
+    protected static function randFloat(): float
+    {
+        return ((float)mt_rand())/((float)mt_getrandmax());
+    }
+
+    /**
      * This algorithm generates a semi-realistic set of glyphs
      * with no duplicates.
      */
     protected static function generateGlyph(array $strokePalette): array
     {
-        $vector = "(fixme vector data)";
-        $horizAdv = 1000;
+        $horizAdv = ((mt_rand(1,5)<3) ? 600 : 1000);
+        $strokesThatFit = collect($strokePalette)
+            ->filter(function ($stroke) use ($horizAdv) {
+                return ($stroke['w'] <= $horizAdv);
+            })->values()->toArray();
+        // Pick a random number of strokes to use, weighted toward $min
+        $min = 1; $max = 5;
+        $strokeNum = (int)round(pow(self::randFloat(),2)*($max-$min)+$min);
+        // Pick the strokes
+        $strokeIndices = array_rand($strokesThatFit, $strokeNum);
+        $strokes = collect($strokeIndices)
+            ->map(function ($i) use ($strokesThatFit) {
+                return $strokesThatFit[$i];
+            })->toArray();
+        // Position strokes randomly inside glyph area
+        foreach ($strokes as $i => $stroke) {
+            $x = mt_rand($stroke['origX'], $horizAdv - $stroke['w'] + $stroke['origX']);
+            $y = mt_rand($stroke['origY'], 1000 - $stroke['h'] + $stroke['origY']);
+            $strokes[$i]['d'][0] = 'M';
+            $strokes[$i]['d'][1] = [$x,$y];
+        }
+        // Merge and print strokes
+        $vector = collect($strokes)
+            ->pluck('d')
+            ->map(function ($stroke) {
+                return collect($stroke)->map(function ($item) {
+                    if (is_array($item)) {
+                        return implode(',',$item);
+                    } else {
+                        return $item;
+                    }
+                })->implode(' ');
+            })->implode(' ');
         return [
             'd' => $vector,
             'horizAdv' => $horizAdv,
@@ -253,7 +292,6 @@ class NeographyFactory extends Factory
             $glyphGroups[1] = [];
             // Fill consonants
             $offset = ($vowelsFirst ? $vowelNum : 0);
-            $vector = self::generateGlyph();
             $glyphGroups[(int)$vowelsFirst] = $consonantSounds
                 ->map(function ($item, $key) use ($codepoints, $offset, $vectors) {
                     $i = $key+$offset;
@@ -263,7 +301,6 @@ class NeographyFactory extends Factory
                 })->toArray();
             // Fill vowels
             $offset = ($vowelsFirst ? 0 : $consonantNum);
-            $vector = self::generateGlyph();
             $glyphGroups[(int)( ! $vowelsFirst)] = $vowelSounds
                 ->map(function ($item, $key) use ($codepoints, $offset, $vectors) {
                     $i = $key+$offset;
@@ -390,6 +427,8 @@ class NeographyFactory extends Factory
             return [
                 'minX' => $minX, 'minY' => $minY,
                 'maxX' => $maxX, 'maxY' => $maxY,
+                'origX' => $path[1][0] - $minX,
+                'origY' => $path[1][1] - $minY,
                 'w' => $maxX - $minX,
                 'h' => $maxY - $minY,
                 'd' => $path
