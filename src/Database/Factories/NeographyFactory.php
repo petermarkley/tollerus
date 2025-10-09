@@ -19,6 +19,12 @@ class NeographyFactory extends Factory
     protected $model = Neography::class;
 
     /**
+     * This is used by `generateGlyphs()` and its worker function
+     * to build a random glyph shape in SVG vector format.
+     */
+    protected array $strokesParsed = [];
+
+    /**
      * Define model values
      */
     public function definition(): array
@@ -133,6 +139,89 @@ class NeographyFactory extends Factory
         /**
          * Generate vectors
          */
+        $strokePaletteXML = simplexml_load_file(__DIR__.'/data/stroke_palette.svg');
+        $strokePaletteXML->registerXPathNamespace('svg', $strokePaletteXML->getDocNamespaces()['']);
+        // Find <path/> elements
+        $strokesXML = $strokePaletteXML->xpath("//svg:path");
+        // Extract vector coordinates as deep array
+        $strokesExtracted = collect($strokesXML)
+            ->map(function ($path) {
+                $d = $path['d']->__toString();
+                $array = explode(' ',$d);
+                $arrayWithCoords = collect($array)
+                    ->map(fn($str)=>(str_contains($str,',')? explode(',',$str) : $str ))
+                    ->toArray();
+                return $arrayWithCoords;
+            });
+        // Calculate the bounding box for each stroke
+        $strokesBound = $strokesExtracted->map(function ($path) {
+            // Initialize values
+            $x = $path[1][0]; $y = $path[1][1];
+            $minX = $x; $minY = $y;
+            $maxX = $x; $maxY = $y;
+            $command = 'm';
+            // Find extrema
+            for ($i = 2; $i < count($path); $i++) {
+                /**
+                 * I chose to use relative (lowercase) path commands in 'stroke_palette.svg'
+                 * so that we could later translate the path by changing only the first 'm'
+                 * coordinate. The tradeoff is that up-front we need to spend more effort
+                 * calculating the bounding box.
+                 *
+                 * NOTE: a lot of this relies on the specific ways that Inkscape
+                 * outputs SVG, e.g. use of commas vs. spaces.
+                 */
+                if ($path[$i] == 'z') {
+                    continue;
+                }
+                if (in_array($path[$i], ['m','l','h','v','t','c','s','q','a'])) {
+                    $command = $path[$i];
+                    $i++;
+                }
+                $skip = match ($command) {
+                    'c' => 2,
+                    's', 'q' => 1,
+                    'a' => 4,
+                    default => 0,
+                };
+                // Skip over any curve metadata
+                $i += $skip;
+                // Move our pen by the new offset amount
+                $coord = $path[$i];
+                switch ($command) {
+                    case 'v':
+                        $y += (float) ($coord);
+                    break;
+                    case 'h':
+                        $x += (float) ($coord);
+                    break;
+                    default:
+                        if (!is_array($coord)) {
+                            throw new \RuntimeException("unexpected SVG input in 'stroke_palette.svg': '$coord'");
+                        }
+                        $x += (float) ($coord[0]);
+                        $y += (float) ($coord[1]);
+                    break;
+                }
+                // Check for new min/max values
+                $minX = min($minX, $x);
+                $minY = min($minY, $y);
+                $maxX = max($maxX, $x);
+                $maxY = max($maxY, $y);
+            };
+            return [
+                'minX' => $minX, 'minY' => $minY,
+                'maxX' => $maxX, 'maxY' => $maxY,
+                'w' => $maxX - $minX,
+                'h' => $maxY - $minY,
+                'd' => $path
+            ];
+        });
+        // var_dump($strokesBound->toArray());
+        foreach ($strokesBound->toArray() as $stroke) {
+            echo "<rect x=\"{$stroke['minX']}\" y=\"{$stroke['minY']}\" width=\"{$stroke['w']}\" height=\"{$stroke['h']}\" style=\"fill: none;stroke: #ff0000;stroke-width: 2.64583;\"/>\n";
+        }
+        // Build random glyph shapes from stroke palette
         $vectors = collect($codepoints)
             ->map(fn() => self::generateGlyph());
         
