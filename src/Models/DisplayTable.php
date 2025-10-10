@@ -3,14 +3,18 @@
 namespace PeterMarkley\Tollerus\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
+use PeterMarkley\Tollerus\Database\Factories\DisplayTableFactory;
 
 class DisplayTable extends Model
 {
     use HasTablePrefix;
+    use HasFactory;
     protected $table = 'disp_tables';
     public $timestamps = false;
 
@@ -31,5 +35,13 @@ class DisplayTable extends Model
             ->belongsToMany(FeatureValue::class, 'disp_table_filters', 'disp_table_id', 'value_id')
             ->withPivot('feature_id')
             ->using(Pivots\DisplayTableFilter::class);
+    }
+
+    /**
+     * Factory override
+     */
+    protected static function newFactory()
+    {
+        return DisplayTableFactory::new();
     }
 }
