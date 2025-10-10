@@ -567,9 +567,13 @@ class FileImportSeeder extends Seeder
         $tableModel->save();
         // Read through filters for this display table
         foreach ($tableXML->filter->inflect as $filterXML) {
+            $dimension = $filterXML['dimension'];
+            if ($dimension == 'verb_role') {
+                $dimension = 'role';
+            }
             $array = $this->addFeatureIfNew(
                 wordClassGroup: $groupModel,
-                featureName: $filterXML['dimension'],
+                featureName: $dimension,
                 valueName: $filterXML['value']
             );
             [
@@ -620,9 +624,13 @@ class FileImportSeeder extends Seeder
         $rowModel->save();
         // Read through filters for this table row
         foreach ($rowXML->filter->inflect as $filterXML) {
+            $dimension = $filterXML['dimension'];
+            if ($dimension == 'verb_role') {
+                $dimension = 'role';
+            }
             $array = $this->addFeatureIfNew(
                 wordClassGroup: $groupModel,
-                featureName: $filterXML['dimension'],
+                featureName: $dimension,
                 valueName: $filterXML['value']
             );
             [
