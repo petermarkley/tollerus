@@ -4,15 +4,7 @@ namespace PeterMarkley\Tollerus\Console\Commands;
 
 use Illuminate\Console\Command;
 
-use PeterMarkley\Tollerus\Models\DisplayTable;
-use PeterMarkley\Tollerus\Models\DisplayTableRow;
-use PeterMarkley\Tollerus\Models\Feature;
-use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Language;
-use PeterMarkley\Tollerus\Models\WordClass;
-use PeterMarkley\Tollerus\Models\WordClassGroup;
-use PeterMarkley\Tollerus\Models\Pivots\DisplayTableFilter;
-use PeterMarkley\Tollerus\Models\Pivots\DisplayTableRowFilter;
 
 class TollerusPopulate extends Command
 {
