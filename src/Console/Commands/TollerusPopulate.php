@@ -85,11 +85,17 @@ class TollerusPopulate extends Command
         $verbTense = Feature::factory()->for($group,'group')>create(['name' => 'tense']);
         $verbPast    = FeatureValue::factory()->for($verbTense)->create(['name'=>'past']);
         $verbPresent = FeatureValue::factory()->for($verbTense)->create(['name'=>'present', 'name_brief'=>'pres.']);
-        $verbFuture  = FeatureValue::factory()->for($verbTense)->create(['name'=>'future', 'name_brief'=>'fut.']);
         $verbAspect = Feature::factory()->for($group,'group')>create(['name' => 'aspect']);
         $verbPerfect     = FeatureValue::factory()->for($verbAspect)->create(['name'=>'perfect', 'name_brief'=>'perf.']);
+        $verbSimple      = FeatureValue::factory()->for($verbAspect)->create(['name'=>'simple']);
         $verbProgressive = FeatureValue::factory()->for($verbAspect)->create(['name'=>'progressive', 'name_brief'=>'prog.']);
-        $verbProspective = FeatureValue::factory()->for($verbAspect)->create(['name'=>'prospective', 'name_brief'=>'pros.']);
+        $verbNumber = Feature::factory()->for($group,'group')>create(['name' => 'number']);
+        $verbSingular = FeatureValue::factory()->for($verbAspect)->create(['name'=>'singular', 'name_brief'=>'sing.']);
+        $verbPlural   = FeatureValue::factory()->for($verbAspect)->create(['name'=>'plural', 'name_brief'=>'pl.']);
+        $verbPerson = Feature::factory()->for($group,'group')>create(['name' => 'person']);
+        $verbFirst  = FeatureValue::factory()->for($verbAspect)->create(['name'=>'first', 'name_brief'=>"1\u{02E2}\u{1D57}"]);
+        $verbSecond = FeatureValue::factory()->for($verbAspect)->create(['name'=>'second', 'name_brief'=>"2\u{207F}\u{1D48}"]);
+        $verbThird  = FeatureValue::factory()->for($verbAspect)->create(['name'=>'third', 'name_brief'=>"3\u{02B3}\u{1D48}"]);
         // Add verb inflection tables
         $dispTable = DisplayTable::factory()
             ->for($group)
@@ -97,7 +103,7 @@ class TollerusPopulate extends Command
                 'label' => 'finite verb',
                 'position' => 0,
                 'stack' => true,
-                'align_on_stack' => false,
+                'align_on_stack' => true,
                 'table_fold' => false,
                 'rows_fold' => false
             ]);
@@ -107,25 +113,19 @@ class TollerusPopulate extends Command
             'value_id' => $verbFinite->id,
         ]);
         $pivot->save();
-        $dispTableRow = DisplayTableRow::factory()
-            ->for($dispTable)
-            ->create([
-                'label' => 'past tense',
-                'label_brief' => 'past',
-                'position' => 0,
-            ]);
-        $pivot = new DisplayTableRowFilter([
-            'disp_table_row_id' => $dispTableRow->id,
-            'feature_id' => $verbTense->id,
-            'value_id' => $verbPast->id,
+        $pivot = new DisplayTableFilter([
+            'disp_table_id' => $dispTable->id,
+            'feature_id' => $verbAspect->id,
+            'value_id' => $verbSimple->id,
         ]);
         $pivot->save();
         $dispTableRow = DisplayTableRow::factory()
             ->for($dispTable)
             ->create([
-                'label' => 'present tense',
-                'label_brief' => 'pres.',
-                'position' => 1,
+                'label' => '3\u{02B3}\u{1D48} pers. pres. sing.',
+                'label_brief' => '3\u{02B3}\u{1D48} pers. sing.',
+                'label_long' => 'third person, present, singular',
+                'position' => 0,
             ]);
         $pivot = new DisplayTableRowFilter([
             'disp_table_row_id' => $dispTableRow->id,
@@ -133,17 +133,29 @@ class TollerusPopulate extends Command
             'value_id' => $verbPresent->id,
         ]);
         $pivot->save();
+        $pivot = new DisplayTableRowFilter([
+            'disp_table_row_id' => $dispTableRow->id,
+            'feature_id' => $verbPerson->id,
+            'value_id' => $verbThird->id,
+        ]);
+        $pivot->save();
+        $pivot = new DisplayTableRowFilter([
+            'disp_table_row_id' => $dispTableRow->id,
+            'feature_id' => $verbNumber->id,
+            'value_id' => $verbSingular->id,
+        ]);
+        $pivot->save();
         $dispTableRow = DisplayTableRow::factory()
             ->for($dispTable)
             ->create([
-                'label' => 'future tense',
-                'label_brief' => 'fut.',
-                'position' => 2,
+                'label' => 'past tense',
+                'label_brief' => 'past',
+                'position' => 1,
             ]);
         $pivot = new DisplayTableRowFilter([
             'disp_table_row_id' => $dispTableRow->id,
             'feature_id' => $verbTense->id,
-            'value_id' => $verbFuture->id,
+            'value_id' => $verbPast->id,
         ]);
         $pivot->save();
         $dispTable = DisplayTable::factory()
@@ -165,22 +177,9 @@ class TollerusPopulate extends Command
         $dispTableRow = DisplayTableRow::factory()
             ->for($dispTable)
             ->create([
-                'label' => 'perfect aspect',
-                'label_brief' => 'perf.',
+                'label' => 'present',
+                'label_brief' => 'pres.',
                 'position' => 0,
-            ]);
-        $pivot = new DisplayTableRowFilter([
-            'disp_table_row_id' => $dispTableRow->id,
-            'feature_id' => $verbAspect->id,
-            'value_id' => $verbPerfect->id,
-        ]);
-        $pivot->save();
-        $dispTableRow = DisplayTableRow::factory()
-            ->for($dispTable)
-            ->create([
-                'label' => 'progressive aspect',
-                'label_brief' => 'prog.',
-                'position' => 1,
             ]);
         $pivot = new DisplayTableRowFilter([
             'disp_table_row_id' => $dispTableRow->id,
@@ -191,14 +190,13 @@ class TollerusPopulate extends Command
         $dispTableRow = DisplayTableRow::factory()
             ->for($dispTable)
             ->create([
-                'label' => 'prospective aspect',
-                'label_brief' => 'pros.',
-                'position' => 2,
+                'label' => 'past',
+                'position' => 1,
             ]);
         $pivot = new DisplayTableRowFilter([
             'disp_table_row_id' => $dispTableRow->id,
             'feature_id' => $verbAspect->id,
-            'value_id' => $verbProspective->id,
+            'value_id' => $verbPast->id,
         ]);
         $pivot->save();
     }
