@@ -532,10 +532,12 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('label');
             $table->string('label_brief')->nullable();
+            $table->string('label_long')->nullable();
             $table->integer('position');
             // ensure only one of each label per display table
             $table->unique(['disp_table_id', 'label'], 'disp_table_label_unique');
             $table->unique(['disp_table_id', 'label_brief'], 'disp_table_label_brief_unique');
+            $table->unique(['disp_table_id', 'label_long'], 'disp_table_label_long_unique');
             // ensure only one of each position per display table
             $table->unique(['disp_table_id', 'position'], 'disp_table_position_unique');
         });
