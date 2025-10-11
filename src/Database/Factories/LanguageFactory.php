@@ -207,6 +207,214 @@ class LanguageFactory extends Factory
                 'value_id' => $verbPerfect->id,
             ]);
             $pivot->save();
+
+            // Combining Forms
+            // ---------------
+            WordClassGroup::factory()
+                ->for($language)
+                ->has(WordClass::factory()
+                    ->for($language)
+                    ->state(['name'=>'combining form'])
+                )->create();
+
+            // Contractions
+            // ------------
+            WordClassGroup::factory()
+                ->for($language)
+                ->has(WordClass::factory()
+                    ->for($language)
+                    ->state(['name'=>'contraction'])
+                )->create();
+
+            // Conjunctions
+            // ------------
+            WordClassGroup::factory()
+                ->for($language)
+                ->has(WordClass::factory()
+                    ->for($language)
+                    ->state(['name'=>'conjunction'])
+                )->create();
+
+            // Determiners
+            // -----------
+            WordClassGroup::factory()
+                ->for($language)
+                ->has(WordClass::factory()
+                    ->for($language)
+                    ->state(['name'=>'determiner'])
+                )->create();
+
+            // Nouns
+            // -----
+            $group = WordClassGroup::factory()
+                ->for($language)
+                ->has(WordClass::factory()
+                    ->for($language)
+                    ->state(['name'=>'noun'])
+                )->has(WordClass::factory()
+                    ->for($language)
+                    ->state(['name'=>'proper noun'])
+                )->create(['inflected'=>true]);
+            // Add noun inflection features
+            $nounNumber = Feature::factory()->for($group,'group')->create(['name' => 'number']);
+            $nounSingular = FeatureValue::factory()->for($nounNumber)->create(['name'=>'singular', 'name_brief'=>'sing.']);
+            $nounPlural   = FeatureValue::factory()->for($nounNumber)->create(['name'=>'plural', 'name_brief'=>'pl.']);
+            // Add noun inflection tables
+            $dispTable = DisplayTable::factory()
+                ->for($group)
+                ->create([
+                    'label' => 'noun',
+                    'position' => 0,
+                    'show_label' => false,
+                    'stack' => true,
+                    'align_on_stack' => false,
+                    'table_fold' => false,
+                    'rows_fold' => false
+                ]);
+            $dispTableRow = DisplayTableRow::factory()
+                ->for($dispTable)
+                ->create([
+                    'label' => "singular",
+                    'label_brief' => "sing.",
+                    'position' => 0,
+                ]);
+            $pivot = new DisplayTableRowFilter([
+                'disp_table_row_id' => $dispTableRow->id,
+                'feature_id' => $nounNumber->id,
+                'value_id' => $nounSingular->id,
+            ]);
+            $pivot->save();
+            $dispTableRow = DisplayTableRow::factory()
+                ->for($dispTable)
+                ->create([
+                    'label' => "plural",
+                    'label_brief' => "pl.",
+                    'position' => 1,
+                ]);
+            $pivot = new DisplayTableRowFilter([
+                'disp_table_row_id' => $dispTableRow->id,
+                'feature_id' => $nounNumber->id,
+                'value_id' => $nounPlural->id,
+            ]);
+            $pivot->save();
+
+            // Prepositions
+            // ------------
+            WordClassGroup::factory()
+                ->for($language)
+                ->has(WordClass::factory()
+                    ->for($language)
+                    ->state(['name'=>'preposition'])
+                )->create();
+
+            // Pronouns
+            // --------
+            /**
+             * In English, personal pronouns are inflected by not just number, but also
+             * case: subjective vs. objective.
+             *
+             * They also inflect by person and gender, but those inflections don't affect
+             * syntax. So "I" and "you" can be separate entries in the dictionary, whereas
+             * "I" and "me" benefit from sharing an inflection table on one entry.
+             */
+            $group = WordClassGroup::factory()
+                ->for($language)
+                ->has(WordClass::factory()
+                    ->for($language)
+                    ->state(['name'=>'pronoun'])
+                )->create(['inflected'=>true]);
+            // Add pronoun inflection features
+            $pronounNumber = Feature::factory()->for($group,'group')->create(['name' => 'number']);
+            $pronounSingular = FeatureValue::factory()->for($pronounNumber)->create(['name'=>'singular', 'name_brief'=>'sing.']);
+            $pronounPlural   = FeatureValue::factory()->for($pronounNumber)->create(['name'=>'plural', 'name_brief'=>'pl.']);
+            $pronounCase = Feature::factory()->for($group,'group')->create(['name' => 'case']);
+            $pronounSubjective = FeatureValue::factory()->for($pronounCase)->create(['name'=>'subjective', 'name_brief'=>'sub.']);
+            $pronounObjective  = FeatureValue::factory()->for($pronounCase)->create(['name'=>'objective', 'name_brief'=>'obj.']);
+            // Add pronoun inflection tables
+            $dispTable = DisplayTable::factory()
+                ->for($group)
+                ->create([
+                    'label' => 'subjective',
+                    'position' => 0,
+                    'stack' => true,
+                    'align_on_stack' => true,
+                    'table_fold' => false,
+                    'rows_fold' => false
+                ]);
+            $pivot = new DisplayTableFilter([
+                'disp_table_id' => $dispTable->id,
+                'feature_id' => $pronounCase->id,
+                'value_id' => $pronounSubjective->id,
+            ]);
+            $pivot->save();
+            $dispTableRow = DisplayTableRow::factory()
+                ->for($dispTable)
+                ->create([
+                    'label' => "singular",
+                    'label_brief' => "sing.",
+                    'position' => 0,
+                ]);
+            $pivot = new DisplayTableRowFilter([
+                'disp_table_row_id' => $dispTableRow->id,
+                'feature_id' => $pronounNumber->id,
+                'value_id' => $pronounSingular->id,
+            ]);
+            $pivot->save();
+            $dispTableRow = DisplayTableRow::factory()
+                ->for($dispTable)
+                ->create([
+                    'label' => "plural",
+                    'label_brief' => "pl.",
+                    'position' => 1,
+                ]);
+            $pivot = new DisplayTableRowFilter([
+                'disp_table_row_id' => $dispTableRow->id,
+                'feature_id' => $pronounNumber->id,
+                'value_id' => $pronounPlural->id,
+            ]);
+            $pivot->save();
+            $dispTable = DisplayTable::factory()
+                ->for($group)
+                ->create([
+                    'label' => 'objective',
+                    'position' => 1,
+                    'stack' => true,
+                    'align_on_stack' => true,
+                    'table_fold' => false,
+                    'rows_fold' => true
+                ]);
+            $pivot = new DisplayTableFilter([
+                'disp_table_id' => $dispTable->id,
+                'feature_id' => $pronounCase->id,
+                'value_id' => $pronounObjective->id,
+            ]);
+            $pivot->save();
+            $dispTableRow = DisplayTableRow::factory()
+                ->for($dispTable)
+                ->create([
+                    'label' => "singular",
+                    'label_brief' => "sing.",
+                    'position' => 0,
+                ]);
+            $pivot = new DisplayTableRowFilter([
+                'disp_table_row_id' => $dispTableRow->id,
+                'feature_id' => $pronounNumber->id,
+                'value_id' => $pronounSingular->id,
+            ]);
+            $pivot->save();
+            $dispTableRow = DisplayTableRow::factory()
+                ->for($dispTable)
+                ->create([
+                    'label' => "plural",
+                    'label_brief' => "pl.",
+                    'position' => 1,
+                ]);
+            $pivot = new DisplayTableRowFilter([
+                'disp_table_row_id' => $dispTableRow->id,
+                'feature_id' => $pronounNumber->id,
+                'value_id' => $pronounPlural->id,
+            ]);
+            $pivot->save();
         });
     }
 

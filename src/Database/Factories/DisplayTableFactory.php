@@ -18,6 +18,7 @@ class DisplayTableFactory extends Factory
         return [
             'label' => 'noun case',
             'position' => 0,
+            'show_label' => true,
             'stack' => true,
             'align_on_stack' => false,
             'table_fold' => false,

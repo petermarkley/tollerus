@@ -1,5 +1,6 @@
+**This is used as the default grammar in `tollerus:populate` factory**
+
 # English Verb Conjugations
-**Used as default grammar in `tollerus:populate` factory**
 
 We need a way to represent the conjugations of just the non-auxiliary verbs by themselves.
 
@@ -34,3 +35,11 @@ This is how the actual morphologies will look in the `forms` table.
 * giving [participle, progressive]
 * given [participle, perfect]
 
+# English Pronoun Conjugations
+
+In English, personal pronouns are inflected by not just number, but also case: subjective vs. objective. (They also inflect by person and gender, but those inflections don't affect syntax.)
+
+|  | subjective | objective |
+|--|--|--|
+| singular | I, it, this, that | me, it, this, that |
+| plural | we, they, these, those | us, them, these, those |

@@ -472,6 +472,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('label');
             $table->integer('position');
+            $table->boolean('show_label')->default(true);
             /**
              * A 'stack' value of true means that on wide displays,
              * this table is permitted to have other tables beside it,
