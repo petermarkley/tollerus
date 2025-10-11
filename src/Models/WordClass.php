@@ -3,13 +3,17 @@
 namespace PeterMarkley\Tollerus\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
+use PeterMarkley\Tollerus\Database\Factories\WordClassFactory;
 
 class WordClass extends Model
 {
     use HasTablePrefix;
+    use HasFactory;
     protected $table = 'word_classes';
     public $timestamps = false;
 
@@ -41,5 +45,13 @@ class WordClass extends Model
                 throw new \LogicException('WordClass.language_id must match its group.language_id');
             }
         });
+    }
+
+    /**
+     * Factory override
+     */
+    protected static function newFactory()
+    {
+        return WordClassFactory::new();
     }
 }

@@ -86,24 +86,24 @@ class LanguageFactory extends Factory
                     ->state(['name'=>'verb'])
                 )->create(['inflected'=>true]);
             // Add verb inflection features
-            $verbRole = Feature::factory()->for($group,'group')>create(['name' => 'role']);
+            $verbRole = Feature::factory()->for($group,'group')->create(['name' => 'role']);
             $verbInfinitive = FeatureValue::factory()->for($verbRole)->create(['name'=>'infinitive']);
             $verbFinite     = FeatureValue::factory()->for($verbRole)->create(['name'=>'finite']);
             $verbParticiple = FeatureValue::factory()->for($verbRole)->create(['name'=>'participle']);
-            $verbTense = Feature::factory()->for($group,'group')>create(['name' => 'tense']);
+            $verbTense = Feature::factory()->for($group,'group')->create(['name' => 'tense']);
             $verbPast    = FeatureValue::factory()->for($verbTense)->create(['name'=>'past']);
             $verbPresent = FeatureValue::factory()->for($verbTense)->create(['name'=>'present', 'name_brief'=>'pres.']);
-            $verbAspect = Feature::factory()->for($group,'group')>create(['name' => 'aspect']);
+            $verbAspect = Feature::factory()->for($group,'group')->create(['name' => 'aspect']);
             $verbPerfect     = FeatureValue::factory()->for($verbAspect)->create(['name'=>'perfect', 'name_brief'=>'perf.']);
             $verbSimple      = FeatureValue::factory()->for($verbAspect)->create(['name'=>'simple']);
             $verbProgressive = FeatureValue::factory()->for($verbAspect)->create(['name'=>'progressive', 'name_brief'=>'prog.']);
-            $verbNumber = Feature::factory()->for($group,'group')>create(['name' => 'number']);
-            $verbSingular = FeatureValue::factory()->for($verbAspect)->create(['name'=>'singular', 'name_brief'=>'sing.']);
-            $verbPlural   = FeatureValue::factory()->for($verbAspect)->create(['name'=>'plural', 'name_brief'=>'pl.']);
-            $verbPerson = Feature::factory()->for($group,'group')>create(['name' => 'person']);
-            $verbFirst  = FeatureValue::factory()->for($verbAspect)->create(['name'=>'first', 'name_brief'=>"1\u{02E2}\u{1D57}"]);
-            $verbSecond = FeatureValue::factory()->for($verbAspect)->create(['name'=>'second', 'name_brief'=>"2\u{207F}\u{1D48}"]);
-            $verbThird  = FeatureValue::factory()->for($verbAspect)->create(['name'=>'third', 'name_brief'=>"3\u{02B3}\u{1D48}"]);
+            $verbNumber = Feature::factory()->for($group,'group')->create(['name' => 'number']);
+            $verbSingular = FeatureValue::factory()->for($verbNumber)->create(['name'=>'singular', 'name_brief'=>'sing.']);
+            $verbPlural   = FeatureValue::factory()->for($verbNumber)->create(['name'=>'plural', 'name_brief'=>'pl.']);
+            $verbPerson = Feature::factory()->for($group,'group')->create(['name' => 'person']);
+            $verbFirst  = FeatureValue::factory()->for($verbPerson)->create(['name'=>'first', 'name_brief'=>"1\u{02E2}\u{1D57}"]);
+            $verbSecond = FeatureValue::factory()->for($verbPerson)->create(['name'=>'second', 'name_brief'=>"2\u{207F}\u{1D48}"]);
+            $verbThird  = FeatureValue::factory()->for($verbPerson)->create(['name'=>'third', 'name_brief'=>"3\u{02B3}\u{1D48}"]);
             // Add verb inflection tables
             $dispTable = DisplayTable::factory()
                 ->for($group)
@@ -111,7 +111,7 @@ class LanguageFactory extends Factory
                     'label' => 'finite verb',
                     'position' => 0,
                     'stack' => true,
-                    'align_on_stack' => true,
+                    'align_on_stack' => false,
                     'table_fold' => false,
                     'rows_fold' => false
                 ]);
@@ -130,9 +130,9 @@ class LanguageFactory extends Factory
             $dispTableRow = DisplayTableRow::factory()
                 ->for($dispTable)
                 ->create([
-                    'label' => '3\u{02B3}\u{1D48} pers. pres. sing.',
-                    'label_brief' => '3\u{02B3}\u{1D48} pers. sing.',
-                    'label_long' => 'third person, present, singular',
+                    'label' => "3\u{02B3}\u{1D48} pers. pres. sing.",
+                    'label_brief' => "3\u{02B3}\u{1D48} pers. sing.",
+                    'label_long' => 'third person present singular',
                     'position' => 0,
                 ]);
             $pivot = new DisplayTableRowFilter([
@@ -204,7 +204,7 @@ class LanguageFactory extends Factory
             $pivot = new DisplayTableRowFilter([
                 'disp_table_row_id' => $dispTableRow->id,
                 'feature_id' => $verbAspect->id,
-                'value_id' => $verbPast->id,
+                'value_id' => $verbPerfect->id,
             ]);
             $pivot->save();
         });
