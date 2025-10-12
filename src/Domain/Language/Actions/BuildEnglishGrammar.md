@@ -1,5 +1,3 @@
-**This is used as the default grammar in `tollerus:populate` factory**
-
 # English Verb Conjugations
 
 We need a way to represent the conjugations of just the non-auxiliary verbs by themselves.
