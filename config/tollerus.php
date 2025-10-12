@@ -10,6 +10,19 @@ return [
      * hard maximum because after that it overflows a PHP int.
      */
     'global_id_digits' => 4,
+    /**
+     * List of word class names that will be suggested as lexeme
+     * sources when setting up auto-inflection. This list is
+     * assistive, not restrictive, and can be worked around. If
+     * it's not correct or exhaustive, UX is only mildly
+     * degraded.
+     */
+    'word_classes_for_combining' => [
+        'combining form',
+        'prefix',
+        'suffix',
+        'root',
+    ],
     
     /*
      * Advanced: use this if you want the Tollerus DB connection

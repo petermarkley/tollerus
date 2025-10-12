@@ -3,10 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use PeterMarkley\Tollerus\Enums\WritingDirection;
+use PeterMarkley\Tollerus\Enums\GlobalIdKind;
+use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
 use PeterMarkley\Tollerus\Enums\NeographySectionType;
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
-use PeterMarkley\Tollerus\Enums\GlobalIdKind;
+use PeterMarkley\Tollerus\Enums\WritingDirection;
 
 return new class extends Migration
 {
@@ -472,6 +473,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('label');
             $table->integer('position');
+            $table->boolean('visible')->default(true);
             $table->boolean('show_label')->default(true);
             /**
              * A 'stack' value of true means that on wide displays,
@@ -535,6 +537,17 @@ return new class extends Migration
             $table->string('label_brief')->nullable();
             $table->string('label_long')->nullable();
             $table->integer('position');
+            $table->boolean('visible')->default(true);
+            $table->boolean('show_label')->default(true);
+            $table->foreignId('src_lexeme')->nullable();
+            $table->foreign('src_lexeme')
+                ->references('id')->on('lexemes')
+                ->nullOnDelete();
+            $table->foreignId('src_base')->nullable();
+            $table->foreign('src_base')
+                ->references('id')->on('inflect_table_rows')
+                ->nullOnDelete();
+            $table->string('morph_template')->nullable();
             // ensure only one of each label per inflection table
             $table->unique(['inflect_table_id', 'label'], 'inflect_table_label_unique');
             $table->unique(['inflect_table_id', 'label_brief'], 'inflect_table_label_brief_unique');
@@ -561,6 +574,19 @@ return new class extends Migration
             $table->unique(['inflect_table_row_id', 'feature_id'], 'row_feature_unique');
             // ensure only one of each value per feature
             $table->unique(['inflect_table_row_id', 'feature_id', 'value_id'], 'row_feature_value_unique');
+        });
+
+        $connection->create('morph_rules', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('inflect_table_row_id');
+            $table->foreign('inflect_table_row_id')
+                ->references('id')->on('inflect_table_rows')
+                ->cascadeOnDelete();
+            $table->string('pattern')->charset('utf8mb4');
+            $table->enum('target_type', MorphRuleTargetType::values())->nullable();
+            $table->integer('order');
+            // ensure only one of each order per target type for the inflection row
+            $table->unique(['inflect_table_row_id', 'target_type', 'order'], 'row_target_order_unique');
         });
     }
 
