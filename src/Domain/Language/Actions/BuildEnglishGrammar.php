@@ -89,8 +89,32 @@ final class BuildEnglishGrammar
             $inflectionTable = InflectionTable::factory()
                 ->for($group)
                 ->create([
-                    'label' => 'finite verb',
+                    'label' => 'infinitive',
                     'position' => 0,
+                    'visible' => false,
+                    'stack' => false,
+                    'align_on_stack' => false,
+                    'table_fold' => false,
+                    'rows_fold' => false
+                ]);
+            $pivot = new InflectionTableFilter([
+                'inflect_table_id' => $inflectionTable->id,
+                'feature_id' => $verbRole->id,
+                'value_id' => $verbInfinitive->id,
+            ]);
+            $pivot->save();
+            $baseRow = InflectionTableRow::factory()
+                ->for($inflectionTable)
+                ->create([
+                    'label' => "infinitive",
+                    'label_brief' => "inf.",
+                    'position' => 0,
+                ]);
+            $inflectionTable = InflectionTable::factory()
+                ->for($group)
+                ->create([
+                    'label' => 'finite verb',
+                    'position' => 1,
                     'stack' => true,
                     'align_on_stack' => false,
                     'table_fold' => false,
@@ -110,6 +134,7 @@ final class BuildEnglishGrammar
             $pivot->save();
             $inflectionTableRow = InflectionTableRow::factory()
                 ->for($inflectionTable)
+                ->for($baseRow, 'sourceBase')
                 ->create([
                     'label' => "3\u{02B3}\u{1D48} pers. pres. sing.",
                     'label_brief' => "3\u{02B3}\u{1D48} pers. sing.",
@@ -136,6 +161,7 @@ final class BuildEnglishGrammar
             $pivot->save();
             $inflectionTableRow = InflectionTableRow::factory()
                 ->for($inflectionTable)
+                ->for($baseRow, 'sourceBase')
                 ->create([
                     'label' => 'past tense',
                     'label_brief' => 'past',
@@ -151,7 +177,7 @@ final class BuildEnglishGrammar
                 ->for($group)
                 ->create([
                     'label' => 'participle',
-                    'position' => 1,
+                    'position' => 2,
                     'stack' => true,
                     'align_on_stack' => false,
                     'table_fold' => false,
@@ -165,6 +191,7 @@ final class BuildEnglishGrammar
             $pivot->save();
             $inflectionTableRow = InflectionTableRow::factory()
                 ->for($inflectionTable)
+                ->for($baseRow, 'sourceBase')
                 ->create([
                     'label' => 'present',
                     'label_brief' => 'pres.',
@@ -178,6 +205,7 @@ final class BuildEnglishGrammar
             $pivot->save();
             $inflectionTableRow = InflectionTableRow::factory()
                 ->for($inflectionTable)
+                ->for($baseRow, 'sourceBase')
                 ->create([
                     'label' => 'past',
                     'position' => 1,
@@ -252,7 +280,7 @@ final class BuildEnglishGrammar
                     'table_fold' => false,
                     'rows_fold' => false
                 ]);
-            $inflectionTableRow = InflectionTableRow::factory()
+            $baseRow = InflectionTableRow::factory()
                 ->for($inflectionTable)
                 ->create([
                     'label' => "singular",
@@ -260,13 +288,14 @@ final class BuildEnglishGrammar
                     'position' => 0,
                 ]);
             $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+                'inflect_table_row_id' => $baseRow->id,
                 'feature_id' => $nounNumber->id,
                 'value_id' => $nounSingular->id,
             ]);
             $pivot->save();
             $inflectionTableRow = InflectionTableRow::factory()
                 ->for($inflectionTable)
+                ->for($baseRow, 'sourceBase')
                 ->create([
                     'label' => "plural",
                     'label_brief' => "pl.",
@@ -328,7 +357,7 @@ final class BuildEnglishGrammar
                 'value_id' => $pronounSubjective->id,
             ]);
             $pivot->save();
-            $inflectionTableRow = InflectionTableRow::factory()
+            $baseRow = InflectionTableRow::factory()
                 ->for($inflectionTable)
                 ->create([
                     'label' => "singular",
@@ -336,13 +365,14 @@ final class BuildEnglishGrammar
                     'position' => 0,
                 ]);
             $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+                'inflect_table_row_id' => $baseRow->id,
                 'feature_id' => $pronounNumber->id,
                 'value_id' => $pronounSingular->id,
             ]);
             $pivot->save();
             $inflectionTableRow = InflectionTableRow::factory()
                 ->for($inflectionTable)
+                ->for($baseRow, 'sourceBase')
                 ->create([
                     'label' => "plural",
                     'label_brief' => "pl.",
@@ -372,6 +402,7 @@ final class BuildEnglishGrammar
             $pivot->save();
             $inflectionTableRow = InflectionTableRow::factory()
                 ->for($inflectionTable)
+                ->for($baseRow, 'sourceBase')
                 ->create([
                     'label' => "singular",
                     'label_brief' => "sing.",
@@ -385,6 +416,7 @@ final class BuildEnglishGrammar
             $pivot->save();
             $inflectionTableRow = InflectionTableRow::factory()
                 ->for($inflectionTable)
+                ->for($baseRow, 'sourceBase')
                 ->create([
                     'label' => "plural",
                     'label_brief' => "pl.",
