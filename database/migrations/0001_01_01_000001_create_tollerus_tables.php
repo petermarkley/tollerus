@@ -610,6 +610,7 @@ return new class extends Migration
         $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}forms_reserve_id;");
         $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}forms_delete_gid;");
         // inflection tables config
+        $connection->dropIfExists('morph_rules');
         $connection->dropIfExists('inflect_table_row_filters');
         $connection->dropIfExists('inflect_table_rows');
         $connection->dropIfExists('inflect_table_filters');

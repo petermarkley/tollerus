@@ -7,13 +7,13 @@ use Illuminate\Support\Collection;
 
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
 use PeterMarkley\Tollerus\Enums\NeographySectionType;
-use PeterMarkley\Tollerus\Models\InflectionTable;
-use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\GlobalId;
+use PeterMarkley\Tollerus\Models\InflectionTable;
+use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
 use PeterMarkley\Tollerus\Models\NativeSpelling;
@@ -25,9 +25,9 @@ use PeterMarkley\Tollerus\Models\Sense;
 use PeterMarkley\Tollerus\Models\Subsense;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\WordClass;
+use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
 use PeterMarkley\Tollerus\Models\Pivots\InflectionTableFilter;
 use PeterMarkley\Tollerus\Models\Pivots\InflectionTableRowFilter;
-use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
 use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 
 /**
