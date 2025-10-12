@@ -1,3 +1,40 @@
+# `BuildEnglishGrammar` action
+
+This action will take a `Language` model and add `WordClassGroup`s, `Feature`s/`FeatureValue`s, and `DisplayTable`s roughly matching real-life English grammar.
+
+Used for testing/demo purposes, or as a preset for users to modify.
+
+To run:
+```
+$language = Language::find(1);
+$action = new \PeterMarkley\Tollerus\Domain\Language\Actions\BuildEnglishGrammar;
+$action($language)
+```
+
+Structure:
+* (group)
+  * `adjective`
+* (group)
+  * `adverb`
+* (group) - **inflected** by role, tense, aspect, number, person
+  * `auxiliary verb`
+  * `verb`
+* (group)
+  * `combining form`
+* (group)
+  * `contraction`
+* (group)
+  * `conjunction`
+* (group)
+  * `determiner`
+* (group) - **inflected** by number
+  * `noun`
+  * `proper noun`
+* (group)
+  * `preposition`
+* (group) - **inflected** by number, case
+  * `pronoun`
+
 # English Verb Conjugations
 
 We need a way to represent the conjugations of just the non-auxiliary verbs by themselves.
