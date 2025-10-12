@@ -32,9 +32,9 @@ class WordClassGroup extends Model
     {
         return $this->hasMany(Feature::class);
     }
-    public function displayTables(): HasMany
+    public function inflectionTables(): HasMany
     {
-        return $this->hasMany(DisplayTable::class);
+        return $this->hasMany(InflectionTable::class);
     }
 
     /**

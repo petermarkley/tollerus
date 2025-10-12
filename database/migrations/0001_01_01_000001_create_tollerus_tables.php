@@ -464,7 +464,7 @@ return new class extends Migration
          * ===========================================================
          */
 
-        $connection->create('disp_tables', function (Blueprint $table) {
+        $connection->create('inflect_tables', function (Blueprint $table) {
             $table->id();
             $table->foreignId('word_class_group_id');
             $table->foreign('word_class_group_id')
@@ -505,11 +505,11 @@ return new class extends Migration
             $table->unique(['word_class_group_id', 'position'], 'group_position_unique');
         });
 
-        $connection->create('disp_table_filters', function (Blueprint $table) {
+        $connection->create('inflect_table_filters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('disp_table_id');
-            $table->foreign('disp_table_id')
-                ->references('id')->on('disp_tables')
+            $table->foreignId('inflect_table_id');
+            $table->foreign('inflect_table_id')
+                ->references('id')->on('inflect_tables')
                 ->cascadeOnDelete();
             $table->foreignId('feature_id');
             $table->foreign('feature_id')
@@ -519,35 +519,35 @@ return new class extends Migration
             $table->foreign('value_id')
                 ->references('id')->on('feature_values')
                 ->cascadeOnDelete();
-            // ensure only one of each feature per display table
-            $table->unique(['disp_table_id', 'feature_id'], 'disp_table_feature_unique');
+            // ensure only one of each feature per inflection table
+            $table->unique(['inflect_table_id', 'feature_id'], 'inflect_table_feature_unique');
             // ensure only one of each value per feature
-            $table->unique(['disp_table_id', 'feature_id', 'value_id'], 'disp_table_feature_value_unique');
+            $table->unique(['inflect_table_id', 'feature_id', 'value_id'], 'inflect_table_feature_value_unique');
         });
 
-        $connection->create('disp_table_rows', function (Blueprint $table) {
+        $connection->create('inflect_table_rows', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('disp_table_id');
-            $table->foreign('disp_table_id')
-                ->references('id')->on('disp_tables')
+            $table->foreignId('inflect_table_id');
+            $table->foreign('inflect_table_id')
+                ->references('id')->on('inflect_tables')
                 ->cascadeOnDelete();
             $table->string('label');
             $table->string('label_brief')->nullable();
             $table->string('label_long')->nullable();
             $table->integer('position');
-            // ensure only one of each label per display table
-            $table->unique(['disp_table_id', 'label'], 'disp_table_label_unique');
-            $table->unique(['disp_table_id', 'label_brief'], 'disp_table_label_brief_unique');
-            $table->unique(['disp_table_id', 'label_long'], 'disp_table_label_long_unique');
-            // ensure only one of each position per display table
-            $table->unique(['disp_table_id', 'position'], 'disp_table_position_unique');
+            // ensure only one of each label per inflection table
+            $table->unique(['inflect_table_id', 'label'], 'inflect_table_label_unique');
+            $table->unique(['inflect_table_id', 'label_brief'], 'inflect_table_label_brief_unique');
+            $table->unique(['inflect_table_id', 'label_long'], 'inflect_table_label_long_unique');
+            // ensure only one of each position per inflection table
+            $table->unique(['inflect_table_id', 'position'], 'inflect_table_position_unique');
         });
 
-        $connection->create('disp_table_row_filters', function (Blueprint $table) {
+        $connection->create('inflect_table_row_filters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('disp_table_row_id');
-            $table->foreign('disp_table_row_id')
-                ->references('id')->on('disp_table_rows')
+            $table->foreignId('inflect_table_row_id');
+            $table->foreign('inflect_table_row_id')
+                ->references('id')->on('inflect_table_rows')
                 ->cascadeOnDelete();
             $table->foreignId('feature_id');
             $table->foreign('feature_id')
@@ -557,10 +557,10 @@ return new class extends Migration
             $table->foreign('value_id')
                 ->references('id')->on('feature_values')
                 ->cascadeOnDelete();
-            // ensure only one of each feature per display table
-            $table->unique(['disp_table_row_id', 'feature_id'], 'row_feature_unique');
+            // ensure only one of each feature per inflection table
+            $table->unique(['inflect_table_row_id', 'feature_id'], 'row_feature_unique');
             // ensure only one of each value per feature
-            $table->unique(['disp_table_row_id', 'feature_id', 'value_id'], 'row_feature_value_unique');
+            $table->unique(['inflect_table_row_id', 'feature_id', 'value_id'], 'row_feature_value_unique');
         });
     }
 
@@ -584,10 +584,10 @@ return new class extends Migration
         $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}forms_reserve_id;");
         $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}forms_delete_gid;");
         // inflection tables config
-        $connection->dropIfExists('disp_table_row_filters');
-        $connection->dropIfExists('disp_table_rows');
-        $connection->dropIfExists('disp_table_filters');
-        $connection->dropIfExists('disp_tables');
+        $connection->dropIfExists('inflect_table_row_filters');
+        $connection->dropIfExists('inflect_table_rows');
+        $connection->dropIfExists('inflect_table_filters');
+        $connection->dropIfExists('inflect_tables');
         // main lexical data
         $connection->dropIfExists('form_feature_values');
         $connection->dropIfExists('native_spellings');

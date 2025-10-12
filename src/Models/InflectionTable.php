@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
-use PeterMarkley\Tollerus\Database\Factories\DisplayTableFactory;
+use PeterMarkley\Tollerus\Database\Factories\InflectionTableFactory;
 
-class DisplayTable extends Model
+class InflectionTable extends Model
 {
     use HasTablePrefix;
     use HasFactory;
-    protected $table = 'disp_tables';
+    protected $table = 'inflect_tables';
     public $timestamps = false;
 
     /**
@@ -27,14 +27,14 @@ class DisplayTable extends Model
     }
     public function rows(): HasMany
     {
-        return $this->hasMany(DisplayTableRows::class, 'disp_table_id');
+        return $this->hasMany(InflectionTableRows::class, 'inflect_table_id');
     }
     public function filters(): BelongsToMany
     {
         return $this
-            ->belongsToMany(FeatureValue::class, 'disp_table_filters', 'disp_table_id', 'value_id')
+            ->belongsToMany(FeatureValue::class, 'inflect_table_filters', 'inflect_table_id', 'value_id')
             ->withPivot('feature_id')
-            ->using(Pivots\DisplayTableFilter::class);
+            ->using(Pivots\InflectionTableFilter::class);
     }
 
     /**
@@ -42,6 +42,6 @@ class DisplayTable extends Model
      */
     protected static function newFactory()
     {
-        return DisplayTableFactory::new();
+        return InflectionTableFactory::new();
     }
 }

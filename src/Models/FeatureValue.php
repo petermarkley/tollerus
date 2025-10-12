@@ -30,12 +30,12 @@ class FeatureValue extends Model
             ->belongsToMany(Form::class, 'form_feature_values', 'value_id', 'form_id')
             ->using(Pivots\FormFeatureValue::class);
     }
-    public function displayTables(): BelongsToMany
+    public function inflectionTables(): BelongsToMany
     {
         return $this
-            ->belongsToMany(DisplayTable::class, 'form_feature_values', 'value_id', 'disp_table_id')
+            ->belongsToMany(InflectionTable::class, 'form_feature_values', 'value_id', 'inflect_table_id')
             ->withPivot('feature_id')
-            ->using(Pivots\DisplayTableFilter::class);
+            ->using(Pivots\InflectionTableFilter::class);
     }
 
     /**

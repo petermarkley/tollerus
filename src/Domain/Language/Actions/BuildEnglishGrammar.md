@@ -1,6 +1,6 @@
 # `BuildEnglishGrammar` action
 
-This action will take a `Language` model and add `WordClassGroup`s, `Feature`s/`FeatureValue`s, and `DisplayTable`s roughly matching real-life English grammar.
+This action will take a `Language` model and add `WordClassGroup`s, `Feature`s/`FeatureValue`s, and `InflectionTable`s roughly matching real-life English grammar.
 
 Used for testing/demo purposes, or as a preset for users to modify.
 
@@ -39,7 +39,7 @@ Structure:
 
 We need a way to represent the conjugations of just the non-auxiliary verbs by themselves.
 
-## Display Tables
+## Inflection Tables
 
 |  |  |
 |--|--|

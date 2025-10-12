@@ -5,11 +5,11 @@ namespace PeterMarkley\Tollerus\Models\Pivots;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 
-class DisplayTableRowFilter extends Pivot
+class InflectionTableRowFilter extends Pivot
 {
     use HasTablePrefix;
 
-    protected $table = 'disp_table_row_filters';
+    protected $table = 'inflect_table_row_filters';
     public $timestamps = false;
     public $incrementing = true;
 
@@ -18,12 +18,12 @@ class DisplayTableRowFilter extends Pivot
         // Validate extended model relations
         static::saving(function (self $model): void {
             // Run only when relevant keys changed (or on create)
-            if (! $model->isDirty(['disp_table_row_id', 'feature_id', 'value_id'])) {
+            if (! $model->isDirty(['inflect_table_row_id', 'feature_id', 'value_id'])) {
                 return;
             }
 
             // If any FK is missing, let DB FKs/uniques handle it.
-            if (is_null($model->disp_table_row_id) || is_null($model->feature_id) || is_null($model->value_id)) {
+            if (is_null($model->inflect_table_row_id) || is_null($model->feature_id) || is_null($model->value_id)) {
                 return;
             }
 
@@ -37,26 +37,26 @@ class DisplayTableRowFilter extends Pivot
                 ->exists();
 
             if (!$valueMatchesFeature) {
-                throw new \LogicException('DisplayTableRowFilter.value_id must reference a FeatureValue that belongs to feature_id.');
+                throw new \LogicException('InflectionTableRowFilter.value_id must reference a FeatureValue that belongs to feature_id.');
             }
 
             /**
-             * Rule 2: feature must be in the same WordClassGroup as the display table
+             * Rule 2: feature must be in the same WordClassGroup as the inflection table
              */
 
             // Get the two `word_class_group_id`s via minimal scalar lookups
-            $dispTableId = \PeterMarkley\Tollerus\Models\DisplayTableRow::query()
-                ->whereKey($model->disp_table_row_id)
-                ->value('disp_table_id');
-            $groupIdOfTable = \PeterMarkley\Tollerus\Models\DisplayTable::query()
-                ->whereKey($dispTableId)
+            $inflectionTableId = \PeterMarkley\Tollerus\Models\InflectionTableRow::query()
+                ->whereKey($model->inflect_table_row_id)
+                ->value('inflect_table_id');
+            $groupIdOfTable = \PeterMarkley\Tollerus\Models\InflectionTable::query()
+                ->whereKey($inflectionTableId)
                 ->value('word_class_group_id');
             $groupIdOfFeature = \PeterMarkley\Tollerus\Models\Feature::query()
                 ->whereKey($model->feature_id)
                 ->value('word_class_group_id');
 
             if ((int)$groupIdOfTable !== (int)$groupIdOfFeature) {
-                throw new \LogicException('DisplayTableRowFilter.feature must belong to the same WordClassGroup as its DisplayTable.');
+                throw new \LogicException('InflectionTableRowFilter.feature must belong to the same WordClassGroup as its InflectionTable.');
             }
         });
     }

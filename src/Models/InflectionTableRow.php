@@ -8,28 +8,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
-use PeterMarkley\Tollerus\Database\Factories\DisplayTableRowFactory;
+use PeterMarkley\Tollerus\Database\Factories\InflectionTableRowFactory;
 
-class DisplayTableRow extends Model
+class InflectionTableRow extends Model
 {
     use HasTablePrefix;
     use HasFactory;
-    protected $table = 'disp_table_rows';
+    protected $table = 'inflect_table_rows';
     public $timestamps = false;
 
     /**
      * Model relations
      */
-    public function displayTable(): BelongsTo
+    public function inflectionTable(): BelongsTo
     {
-        return $this->belongsTo(DisplayTable::class, 'disp_table_id');
+        return $this->belongsTo(InflectionTable::class, 'inflect_table_id');
     }
     public function filters(): BelongsToMany
     {
         return $this
-            ->belongsToMany(FeatureValue::class, 'disp_table_row_filters', 'disp_table_row_id', 'value_id')
+            ->belongsToMany(FeatureValue::class, 'inflect_table_row_filters', 'inflect_table_row_id', 'value_id')
             ->withPivot('feature_id')
-            ->using(Pivots\DisplayTableFilter::class);
+            ->using(Pivots\InflectionTableFilter::class);
     }
 
     /**
@@ -37,6 +37,6 @@ class DisplayTableRow extends Model
      */
     protected static function newFactory()
     {
-        return DisplayTableRowFactory::new();
+        return InflectionTableRowFactory::new();
     }
 }

@@ -7,8 +7,8 @@ use Illuminate\Support\Collection;
 
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
 use PeterMarkley\Tollerus\Enums\NeographySectionType;
-use PeterMarkley\Tollerus\Models\DisplayTable;
-use PeterMarkley\Tollerus\Models\DisplayTableRow;
+use PeterMarkley\Tollerus\Models\InflectionTable;
+use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
@@ -25,8 +25,8 @@ use PeterMarkley\Tollerus\Models\Sense;
 use PeterMarkley\Tollerus\Models\Subsense;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\WordClass;
-use PeterMarkley\Tollerus\Models\Pivots\DisplayTableFilter;
-use PeterMarkley\Tollerus\Models\Pivots\DisplayTableRowFilter;
+use PeterMarkley\Tollerus\Models\Pivots\InflectionTableFilter;
+use PeterMarkley\Tollerus\Models\Pivots\InflectionTableRowFilter;
 use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
 use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 
@@ -481,10 +481,10 @@ class FileImportSeeder extends Seeder
                 classXML: $classXML
             );
         }
-        // Read through display tables in this group
+        // Read through inflection tables in this group
         if (isset($groupXML->layout->table)) {
             foreach (iterator_to_array($groupXML->layout->table, false) as $position => $tableXML) {
-                $this->readDisplayTable(
+                $this->readInflectionTable(
                     groupModel: $groupModel,
                     tableXML: $tableXML,
                     position: $position
@@ -526,15 +526,15 @@ class FileImportSeeder extends Seeder
     }
 
     /**
-     * Parse a <table/> XML element in the inflections config into a DisplayTable model
+     * Parse a <table/> XML element in the inflections config into an InflectionTable model
      */
-    protected function readDisplayTable(
+    protected function readInflectionTable(
         WordClassGroup $groupModel,
         \SimpleXMLElement $tableXML,
         int $position
     ): void
     {
-        $tableModel = new DisplayTable();
+        $tableModel = new InflectionTable();
         $tableModel->word_class_group_id = $groupModel->id;
         $tableModel->position = $position;
         if (isset($tableXML['label'])) {
@@ -565,7 +565,7 @@ class FileImportSeeder extends Seeder
             );
         }
         $tableModel->save();
-        // Read through filters for this display table
+        // Read through filters for this inflection table
         foreach ($tableXML->filter->inflect as $filterXML) {
             $dimension = $filterXML['dimension'];
             if ($dimension == 'verb_role') {
@@ -580,18 +580,18 @@ class FileImportSeeder extends Seeder
                 'feature' => $featureModel,
                 'value' => $valueModel
             ] = $array;
-            // Add connection between disp table and feature values
-            $pivot = new DisplayTableFilter([
-                'disp_table_id' => $tableModel->id,
+            // Add connection between inflection table and feature values
+            $pivot = new InflectionTableFilter([
+                'inflect_table_id' => $tableModel->id,
                 'feature_id' => $featureModel->id,
                 'value_id' => $valueModel->id,
             ]);
             $pivot->save();
         }
-        // Read through rows for this display table
+        // Read through rows for this inflection table
         if (isset($tableXML->rows->row)) {
             foreach (iterator_to_array($tableXML->rows->row, false) as $rowPosition => $rowXML) {
-                $this->readDisplayTableRow(
+                $this->readInflectionTableRow(
                     groupModel: $groupModel,
                     tableModel: $tableModel,
                     rowXML: $rowXML,
@@ -602,17 +602,17 @@ class FileImportSeeder extends Seeder
     }
 
     /**
-     * Parse a <row/> XML element in the inflections config into a DisplayTableRow model
+     * Parse a <row/> XML element in the inflections config into a InflectionTableRow model
      */
-    protected function readDisplayTableRow(
+    protected function readInflectionTableRow(
         WordClassGroup $groupModel,
-        DisplayTable $tableModel,
+        InflectionTable $tableModel,
         \SimpleXMLElement $rowXML,
         int $position
     ): void
     {
-        $rowModel = new DisplayTableRow();
-        $rowModel->disp_table_id = $tableModel->id;
+        $rowModel = new InflectionTableRow();
+        $rowModel->inflect_table_id = $tableModel->id;
         if (!isset($rowXML['label']) || empty($rowXML['label'])) {
             throw new \RuntimeException("There's a table row with no label in file '{$this->inflectionsFilePath}'");
         }
@@ -637,9 +637,9 @@ class FileImportSeeder extends Seeder
                 'feature' => $featureModel,
                 'value' => $valueModel
             ] = $array;
-            // Add connection between disp table and feature values
-            $pivot = new DisplayTableRowFilter([
-                'disp_table_row_id' => $rowModel->id,
+            // Add connection between inflection table and feature values
+            $pivot = new InflectionTableRowFilter([
+                'inflect_table_row_id' => $rowModel->id,
                 'feature_id' => $featureModel->id,
                 'value_id' => $valueModel->id,
             ]);

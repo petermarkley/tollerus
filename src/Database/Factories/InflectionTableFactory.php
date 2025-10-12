@@ -7,11 +7,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-use PeterMarkley\Tollerus\Models\DisplayTable;
+use PeterMarkley\Tollerus\Models\InflectionTable;
 
-class DisplayTableFactory extends Factory
+class InflectionTableFactory extends Factory
 {
-    protected $model = DisplayTable::class;
+    protected $model = InflectionTable::class;
 
     public function definition(): array
     {
