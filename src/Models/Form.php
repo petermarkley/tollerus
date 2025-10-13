@@ -3,16 +3,20 @@
 namespace PeterMarkley\Tollerus\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 use PeterMarkley\Tollerus\Traits\HasGlobalId;
+use PeterMarkley\Tollerus\Database\Factories\FormFactory;
 
 class Form extends Model
 {
     use HasTablePrefix;
     use HasGlobalId;
+    use HasFactory;
     protected $table = 'forms';
     public $timestamps = false;
 
@@ -47,5 +51,13 @@ class Form extends Model
                 throw new \LogicException('Form.language_id must match its lexeme.language_id');
             }
         });
+    }
+
+    /**
+     * Factory override
+     */
+    protected static function newFactory()
+    {
+        return FormFactory::new();
     }
 }

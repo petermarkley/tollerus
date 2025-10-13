@@ -3,12 +3,16 @@
 namespace PeterMarkley\Tollerus\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
+use PeterMarkley\Tollerus\Database\Factories\NativeSpellingFactory;
 
 class NativeSpelling extends Model
 {
     use HasTablePrefix;
+    use HasFactory;
     protected $table = 'native_spellings';
     public $timestamps = false;
 
@@ -49,5 +53,13 @@ class NativeSpelling extends Model
                 throw new \LogicException('NativeSpelling\'s Form must belong to a Language that matches the NativeSpelling\'s Neography');
             }
         });
+    }
+
+    /**
+     * Factory override
+     */
+    protected static function newFactory()
+    {
+        return NativeSpellingFactory::new();
     }
 }

@@ -10,6 +10,9 @@ use Illuminate\Support\Str;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
+use PeterMarkley\Tollerus\Models\Form;
+use PeterMarkley\Tollerus\Models\NativeSpelling;
+use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
 
 class EntryFactory extends Factory
 {
@@ -43,17 +46,18 @@ class EntryFactory extends Factory
                 ->flatten(1)
                 ->keyBy('name');
             $maxLexemes = min(4, $wordClasses->count());
-            $lexemeNum = mt_rand(1, $maxLexemes);
+            // Make multi-lexeme entries only 50% of the time
+            $lexemeNum = (((bool)mt_rand(0,1)) ? mt_rand(2, $maxLexemes) : 1);
             $wordClassIndices = array_rand($wordClasses->toArray(), $lexemeNum);
 
             // Turn the ones we picked into lexemes
-            foreach ($wordClassIndices as $position => $index) {
+            foreach (collect($wordClassIndices) as $position => $index) {
                 // Let's get some context
                 $wordClass = $wordClasses->get($index);
                 /**
-                 * Which word_class_group is this class from? We want to used the cached
+                 * Which word_class_group is this class from? We want to use the cached
                  * result from $wordClassGroups, not the upward relation $wordClass->group,
-                 * because we are in a batch process now and must not touch the database.
+                 * because we are in a batch process now and should limit DB queries.
                  */
                 $wordClassGroup = $wordClassGroups->filter(function ($group) use ($wordClass) {
                     // Filter by whether the given group contains the given word class
@@ -66,10 +70,96 @@ class EntryFactory extends Factory
                     ->for($entry)
                     ->for($language)
                     ->for($wordClass)
-                    ->withForms(
-                        language: $language,
-                        wordClassGroup: $wordClassGroup
-                    )->create(['position'=>$position]);
+                    ->create(['position'=>$position]);
+                // Find base row(s) first
+                foreach ($wordClassGroup->inflectionTables as $table) {
+                    foreach ($table->rows as $row) {
+                        // Skip any non-base / derived rows
+                        if ($row->src_base !== null) {
+                            continue;
+                        }
+                        // Create form
+                        $baseForm = Form::factory()
+                            ->for($lexeme)
+                            ->for($language)
+                            ->create([
+                                'roman' => '',
+                                'phonemic' => '',
+                            ]);
+                        // Add native spellings
+                        foreach ($language->neographies as $neography) {
+                            NativeSpelling::factory()
+                                ->for($form)
+                                ->for($neography)
+                                ->create(['spelling'=>'']);
+                        }
+                        // Add grammatical features
+                        $filters = $table->filters->concat($row->filters);
+                        foreach ($filters as $filter) {
+                            (new FormFeatureValue([
+                                'form_id' => $baseForm->id,
+                                'feature_id' => $filter->feature_id,
+                                'value_id' => $filter->value_id,
+                            ]))->save();
+                        }
+                        // Mark first one as the entry's primary form
+                        if ($entry->primary_form === null) {
+                            $entry->primary_form = $baseForm->id;
+                            $entry->save();
+                        }
+                    }
+                }
+                // Create inflections
+                foreach ($wordClassGroup->inflectionTables as $table) {
+                    foreach ($table->rows as $row) {
+                        // Skip any base rows
+                        if ($row->src_base === null) {
+                            continue;
+                        }
+                        // Create form
+                        $form = Form::factory()
+                            ->for($lexeme)
+                            ->for($language)
+                            ->create([
+                                'roman' => '',
+                                'phonemic' => '',
+                            ]);
+                        // Add native spellings
+                        foreach ($language->neographies as $neography) {
+                            NativeSpelling::factory()
+                                ->for($form)
+                                ->for($neography)
+                                ->create(['spelling'=>'']);
+                        }
+                        // Add grammatical features
+                        $filters = $table->filters->concat($row->filters);
+                        foreach ($filters as $filter) {
+                            (new FormFeatureValue([
+                                'form_id' => $baseForm->id,
+                                'feature_id' => $filter->feature_id,
+                                'value_id' => $filter->value_id,
+                            ]))->save();
+                        }
+                    }
+                }
+            }
+            // If no inflected lexemes, we still need a primary form
+            if ($entry->primary_form === null) {
+                $form = Form::factory()
+                    ->for($lexeme)
+                    ->for($language)
+                    ->create([
+                        'roman' => '',
+                        'phonemic' => '',
+                    ]);
+                foreach ($language->neographies as $neography) {
+                    NativeSpelling::factory()
+                        ->for($form)
+                        ->for($neography)
+                        ->create(['spelling'=>'']);
+                }
+                $entry->primary_form = $form->id;
+                $entry->save();
             }
         });
     }

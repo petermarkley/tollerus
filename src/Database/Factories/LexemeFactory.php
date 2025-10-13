@@ -8,23 +8,42 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 use PeterMarkley\Tollerus\Models\Lexeme;
-use PeterMarkley\Tollerus\Models\WordClassGroup;
+use PeterMarkley\Tollerus\Models\Sense;
+use PeterMarkley\Tollerus\Models\Subsense;
 
 class LexemeFactory extends Factory
 {
     protected $model = Lexeme::class;
 
-    public function withForms(
-        Language $language,
-        WordClassGroup $wordClassGroup
-    ): static
-    {
-        return $this->afterCreating(function (Lexeme $lexeme) use ($language) {
-        });
-    }
-
     public function definition(): array
     {
         return [];
+    }
+
+    /**
+     * Convenience wrapper around mt_rand(). Returns random float between 0 and 1
+     */
+    protected static function randFloat(): float
+    {
+        return ((float)mt_rand())/((float)mt_getrandmax());
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Lexeme $lexeme) {
+            // Pick a random number of senses, weighted toward $min
+            $min = 1; $max = 5;
+            $senseNum = (int)round(pow(self::randFloat(),2)*($max-$min)+$min);
+
+            // Generate senses
+            Sense::factory()
+                ->for($lexeme)
+                ->count($senseNum)
+                ->state(new Sequence(fn($seq)=>['num'=>$seq->index]))
+                ->has(Subsense::factory()
+                    ->count(( ((bool)mt_rand(0,1)) ? mt_rand(1,4) : 0 ))
+                    ->state(new Sequence(fn($seq)=>['num'=>$seq->index]))
+                )->create();
+        });
     }
 }
