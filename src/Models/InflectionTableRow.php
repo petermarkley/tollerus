@@ -88,14 +88,16 @@ class InflectionTableRow extends Model
             }
 
             if (!is_null($model->src_base)) {
+                // Get some values via a minimal lookup
+                $lookup = InflectionTableRow::select('inflect_table_id', 'src_base')
+                    ->whereKey($model->src_base)
+                    ->first();
+                $tableIdOfBaseRow = $lookup?->inflect_table_id;
+                $srcOfBaseRow = $lookup?->src_base;
+
                 /**
                  * Rule 2: src_base must belong to word_class_group
                  */
-
-                // Get the base row via a minimal scalar lookup
-                $tableIdOfBaseRow = InflectionTableRow::query()
-                    ->whereKey($model->src_base)
-                    ->value('inflect_table_id');
 
                 // If it's in the same table, we're fine
                 if ((int)$model->inflect_table_id !== (int)$tableIdOfBaseRow) {
@@ -107,6 +109,14 @@ class InflectionTableRow extends Model
                     if ((int)$groupIdOfBaseRow !== (int)$groupIdOfInflectionTable) {
                         throw new \LogicException('InflectionTableRow.src_base must belong to the same WordClassGroup as the InflectionTableRow\'s parent InflectionTable.');
                     }
+                }
+
+                /**
+                 * Rule 3: src_base must point to a base row
+                 */
+
+                if (!is_null($srcOfBaseRow)) {
+                    throw new \LogicException('InflectionTableRow.src_base must point to a base row (i.e. a row whose own src_base is NULL).');
                 }
             }
         });
