@@ -3,18 +3,23 @@
 namespace PeterMarkley\Tollerus\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 use PeterMarkley\Tollerus\Traits\HasGlobalId;
+use PeterMarkley\Tollerus\Database\Factories\LexemeFactory;
 
 class Lexeme extends Model
 {
     use HasTablePrefix;
     use HasGlobalId;
+    use HasFactory;
     protected $table = 'lexemes';
     public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * Model relations
@@ -48,5 +53,13 @@ class Lexeme extends Model
                 throw new \LogicException('Lexeme.language_id must match its entry.language_id');
             }
         });
+    }
+
+    /**
+     * Factory override
+     */
+    protected static function newFactory()
+    {
+        return LexemeFactory::new();
     }
 }

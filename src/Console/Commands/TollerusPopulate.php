@@ -5,6 +5,7 @@ namespace PeterMarkley\Tollerus\Console\Commands;
 use Illuminate\Console\Command;
 
 use PeterMarkley\Tollerus\Domain\Language\Actions\BuildEnglishGrammar;
+use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Language;
 
 class TollerusPopulate extends Command
@@ -30,5 +31,9 @@ class TollerusPopulate extends Command
     {
         $language = Language::factory()->withNeography()->create();
         $buildEnglishGrammar($language);
+        Entry::factory()
+            ->for($language)
+            ->withLexemes($language)
+            ->create();
     }
 }
