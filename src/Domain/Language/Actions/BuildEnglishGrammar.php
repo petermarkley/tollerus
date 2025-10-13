@@ -3,12 +3,7 @@
 namespace PeterMarkley\Tollerus\Domain\Language\Actions;
 
 use Illuminate\Support\Facades\DB;
-use PeterMarkley\Tollerus\Models\InflectionTable;
-use PeterMarkley\Tollerus\Models\InflectionTableRow;
-use PeterMarkley\Tollerus\Models\Feature;
-use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Language;
-use PeterMarkley\Tollerus\Models\WordClass;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\Pivots\InflectionTableFilter;
 use PeterMarkley\Tollerus\Models\Pivots\InflectionTableRowFilter;
@@ -39,283 +34,209 @@ final class BuildEnglishGrammar
 
             // Adjectives
             // ----------
-            WordClassGroup::factory()
-                ->for($language)
-                ->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'adjective'])
-                )->create();
+            $wordClassGroup = $language->wordClassGroups()->create();
+            $wordClassGroup->wordClasses()->create(['name'=>'adjective', 'language_id'=>$language->id]);
 
             // Adverbs
             // -------
-            WordClassGroup::factory()
-                ->for($language)
-                ->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'adverb'])
-                )->create();
+            $wordClassGroup = $language->wordClassGroups()->create();
+            $wordClassGroup->wordClasses()->create(['name'=>'adverb', 'language_id'=>$language->id]);
 
             // Verbs
             // -----
-            $group = WordClassGroup::factory()
-                ->for($language)
-                ->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'auxiliary verb'])
-                )->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'verb'])
-                )->create(['inflected'=>true]);
+            $wordClassGroup = $language->wordClassGroups()->create();
+            $wordClassGroup->wordClasses()->create(['name'=>'auxiliary verb', 'language_id'=>$language->id]);
+            $wordClassGroup->wordClasses()->create(['name'=>'verb', 'language_id'=>$language->id]);
             // Add verb inflection features
-            $verbRole = Feature::factory()->for($group,'group')->create(['name' => 'role']);
-            $verbInfinitive = FeatureValue::factory()->for($verbRole)->create(['name'=>'infinitive']);
-            $verbFinite     = FeatureValue::factory()->for($verbRole)->create(['name'=>'finite']);
-            $verbParticiple = FeatureValue::factory()->for($verbRole)->create(['name'=>'participle']);
-            $verbTense = Feature::factory()->for($group,'group')->create(['name' => 'tense']);
-            $verbPast    = FeatureValue::factory()->for($verbTense)->create(['name'=>'past']);
-            $verbPresent = FeatureValue::factory()->for($verbTense)->create(['name'=>'present', 'name_brief'=>'pres.']);
-            $verbAspect = Feature::factory()->for($group,'group')->create(['name' => 'aspect']);
-            $verbPerfect     = FeatureValue::factory()->for($verbAspect)->create(['name'=>'perfect', 'name_brief'=>'perf.']);
-            $verbSimple      = FeatureValue::factory()->for($verbAspect)->create(['name'=>'simple']);
-            $verbProgressive = FeatureValue::factory()->for($verbAspect)->create(['name'=>'progressive', 'name_brief'=>'prog.']);
-            $verbNumber = Feature::factory()->for($group,'group')->create(['name' => 'number']);
-            $verbSingular = FeatureValue::factory()->for($verbNumber)->create(['name'=>'singular', 'name_brief'=>'sing.']);
-            $verbPlural   = FeatureValue::factory()->for($verbNumber)->create(['name'=>'plural', 'name_brief'=>'pl.']);
-            $verbPerson = Feature::factory()->for($group,'group')->create(['name' => 'person']);
-            $verbFirst  = FeatureValue::factory()->for($verbPerson)->create(['name'=>'first', 'name_brief'=>"1\u{02E2}\u{1D57}"]);
-            $verbSecond = FeatureValue::factory()->for($verbPerson)->create(['name'=>'second', 'name_brief'=>"2\u{207F}\u{1D48}"]);
-            $verbThird  = FeatureValue::factory()->for($verbPerson)->create(['name'=>'third', 'name_brief'=>"3\u{02B3}\u{1D48}"]);
+            $verbRole = $wordClassGroup->features()->create(['name' => 'role']);
+            $verbInfinitive = $verbRole->featureValues()->create(['name'=>'infinitive']);
+            $verbFinite     = $verbRole->featureValues()->create(['name'=>'finite']);
+            $verbParticiple = $verbRole->featureValues()->create(['name'=>'participle']);
+            $verbTense = $wordClassGroup->features()->create(['name' => 'tense']);
+            $verbPast    = $verbTense->featureValues()->create(['name'=>'past']);
+            $verbPresent = $verbTense->featureValues()->create(['name'=>'present', 'name_brief'=>'pres.']);
+            $verbAspect = $wordClassGroup->features()->create(['name' => 'aspect']);
+            $verbPerfect     = $verbAspect->featureValues()->create(['name'=>'perfect', 'name_brief'=>'perf.']);
+            $verbSimple      = $verbAspect->featureValues()->create(['name'=>'simple', 'name_brief'=>'sim.']);
+            $verbProgressive = $verbAspect->featureValues()->create(['name'=>'progressive', 'name_brief'=>'prog.']);
+            $verbNumber = $wordClassGroup->features()->create(['name' => 'number']);
+            $verbSingular = $verbNumber->featureValues()->create(['name'=>'singular', 'name_brief'=>'sing.']);
+            $verbPlural   = $verbNumber->featureValues()->create(['name'=>'plural', 'name_brief'=>'pl.']);
+            $verbPerson = $wordClassGroup->features()->create(['name' => 'person']);
+            $verbFirst  = $verbPerson->featureValues()->create(['name'=>'first', 'name_brief'=>"1\u{02E2}\u{1D57}"]);
+            $verbSecond = $verbPerson->featureValues()->create(['name'=>'second', 'name_brief'=>"2\u{207F}\u{1D48}"]);
+            $verbThird  = $verbPerson->featureValues()->create(['name'=>'third', 'name_brief'=>"3\u{02B3}\u{1D48}"]);
             // Add verb inflection tables
-            $inflectionTable = InflectionTable::factory()
-                ->for($group)
-                ->create([
-                    'label' => 'infinitive',
-                    'position' => 0,
-                    'visible' => false,
-                    'stack' => false,
-                    'align_on_stack' => false,
-                    'table_fold' => false,
-                    'rows_fold' => false
-                ]);
-            $pivot = new InflectionTableFilter([
-                'inflect_table_id' => $inflectionTable->id,
+            $table = $wordClassGroup->inflectionTables()->create([
+                'label' => 'infinitive',
+                'position' => 0,
+                'visible' => false,
+                'stack' => false,
+                'align_on_stack' => false,
+                'table_fold' => false,
+                'rows_fold' => false
+            ]);
+            (new InflectionTableFilter([
+                'inflect_table_id' => $table->id,
                 'feature_id' => $verbRole->id,
                 'value_id' => $verbInfinitive->id,
+            ]))->save();
+            $baseRow = $table->rows()->create([
+                'label' => "infinitive",
+                'label_brief' => "inf.",
+                'position' => 0,
             ]);
-            $pivot->save();
-            $baseRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->create([
-                    'label' => "infinitive",
-                    'label_brief' => "inf.",
-                    'position' => 0,
-                ]);
-            $inflectionTable = InflectionTable::factory()
-                ->for($group)
-                ->create([
-                    'label' => 'finite verb',
-                    'position' => 1,
-                    'stack' => true,
-                    'align_on_stack' => false,
-                    'table_fold' => false,
-                    'rows_fold' => false
-                ]);
-            $pivot = new InflectionTableFilter([
-                'inflect_table_id' => $inflectionTable->id,
+            $table = $wordClassGroup->inflectionTables()->create([
+                'label' => 'finite verb',
+                'position' => 1,
+                'stack' => true,
+                'align_on_stack' => false,
+                'table_fold' => false,
+                'rows_fold' => false
+            ]);
+            (new InflectionTableFilter([
+                'inflect_table_id' => $table->id,
                 'feature_id' => $verbRole->id,
                 'value_id' => $verbFinite->id,
-            ]);
-            $pivot->save();
-            $pivot = new InflectionTableFilter([
-                'inflect_table_id' => $inflectionTable->id,
+            ]))->save();
+            (new InflectionTableFilter([
+                'inflect_table_id' => $table->id,
                 'feature_id' => $verbAspect->id,
                 'value_id' => $verbSimple->id,
+            ]))->save();
+            $row = $table->rows()->create([
+                'label' => "3\u{02B3}\u{1D48} pers. pres. sing.",
+                'label_brief' => "3\u{02B3}\u{1D48} pers. sing.",
+                'label_long' => 'third person present singular',
+                'position' => 0,
+                'src_base' => $baseRow->id,
             ]);
-            $pivot->save();
-            $inflectionTableRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->for($baseRow, 'sourceBase')
-                ->create([
-                    'label' => "3\u{02B3}\u{1D48} pers. pres. sing.",
-                    'label_brief' => "3\u{02B3}\u{1D48} pers. sing.",
-                    'label_long' => 'third person present singular',
-                    'position' => 0,
-                ]);
-            $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $row->id,
                 'feature_id' => $verbTense->id,
                 'value_id' => $verbPresent->id,
-            ]);
-            $pivot->save();
-            $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+            ]))->save();
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $row->id,
                 'feature_id' => $verbPerson->id,
                 'value_id' => $verbThird->id,
-            ]);
-            $pivot->save();
-            $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+            ]))->save();
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $row->id,
                 'feature_id' => $verbNumber->id,
                 'value_id' => $verbSingular->id,
+            ]))->save();
+            $row = $table->rows()->create([
+                'label' => 'past tense',
+                'label_brief' => 'past',
+                'position' => 1,
+                'src_base' => $baseRow->id,
             ]);
-            $pivot->save();
-            $inflectionTableRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->for($baseRow, 'sourceBase')
-                ->create([
-                    'label' => 'past tense',
-                    'label_brief' => 'past',
-                    'position' => 1,
-                ]);
-            $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $row->id,
                 'feature_id' => $verbTense->id,
                 'value_id' => $verbPast->id,
+            ]))->save();
+            $table = $wordClassGroup->inflectionTables()->create([
+                'label' => 'participle',
+                'position' => 2,
+                'stack' => true,
+                'align_on_stack' => false,
+                'table_fold' => false,
+                'rows_fold' => false
             ]);
-            $pivot->save();
-            $inflectionTable = InflectionTable::factory()
-                ->for($group)
-                ->create([
-                    'label' => 'participle',
-                    'position' => 2,
-                    'stack' => true,
-                    'align_on_stack' => false,
-                    'table_fold' => false,
-                    'rows_fold' => false
-                ]);
-            $pivot = new InflectionTableFilter([
-                'inflect_table_id' => $inflectionTable->id,
+            (new InflectionTableFilter([
+                'inflect_table_id' => $table->id,
                 'feature_id' => $verbRole->id,
                 'value_id' => $verbParticiple->id,
+            ]))->save();
+            $row = $table->rows()->create([
+                'label' => 'present',
+                'label_brief' => 'pres.',
+                'position' => 0,
+                'src_base' => $baseRow->id,
             ]);
-            $pivot->save();
-            $inflectionTableRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->for($baseRow, 'sourceBase')
-                ->create([
-                    'label' => 'present',
-                    'label_brief' => 'pres.',
-                    'position' => 0,
-                ]);
-            $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $row->id,
                 'feature_id' => $verbAspect->id,
                 'value_id' => $verbProgressive->id,
+            ]))->save();
+            $row = $table->rows()->create([
+                'label' => 'past',
+                'position' => 1,
+                'src_base' => $baseRow->id,
             ]);
-            $pivot->save();
-            $inflectionTableRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->for($baseRow, 'sourceBase')
-                ->create([
-                    'label' => 'past',
-                    'position' => 1,
-                ]);
-            $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $row->id,
                 'feature_id' => $verbAspect->id,
                 'value_id' => $verbPerfect->id,
-            ]);
-            $pivot->save();
+            ]))->save();
 
             // Combining Forms
             // ---------------
-            WordClassGroup::factory()
-                ->for($language)
-                ->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'combining form'])
-                )->create();
+            $wordClassGroup = $language->wordClassGroups()->create();
+            $wordClassGroup->wordClasses()->create(['name'=>'combining form', 'language_id'=>$language->id]);
 
             // Contractions
             // ------------
-            WordClassGroup::factory()
-                ->for($language)
-                ->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'contraction'])
-                )->create();
+            $wordClassGroup = $language->wordClassGroups()->create();
+            $wordClassGroup->wordClasses()->create(['name'=>'contraction', 'language_id'=>$language->id]);
 
             // Conjunctions
             // ------------
-            WordClassGroup::factory()
-                ->for($language)
-                ->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'conjunction'])
-                )->create();
+            $wordClassGroup = $language->wordClassGroups()->create();
+            $wordClassGroup->wordClasses()->create(['name'=>'conjunction', 'language_id'=>$language->id]);
 
             // Determiners
             // -----------
-            WordClassGroup::factory()
-                ->for($language)
-                ->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'determiner'])
-                )->create();
+            $wordClassGroup = $language->wordClassGroups()->create();
+            $wordClassGroup->wordClasses()->create(['name'=>'determiner', 'language_id'=>$language->id]);
 
             // Nouns
             // -----
-            $group = WordClassGroup::factory()
-                ->for($language)
-                ->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'noun'])
-                )->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'proper noun'])
-                )->create(['inflected'=>true]);
+            $wordClassGroup = $language->wordClassGroups()->create();
+            $wordClassGroup->wordClasses()->create(['name'=>'noun', 'language_id'=>$language->id]);
+            $wordClassGroup->wordClasses()->create(['name'=>'proper noun', 'language_id'=>$language->id]);
             // Add noun inflection features
-            $nounNumber = Feature::factory()->for($group,'group')->create(['name' => 'number']);
-            $nounSingular = FeatureValue::factory()->for($nounNumber)->create(['name'=>'singular', 'name_brief'=>'sing.']);
-            $nounPlural   = FeatureValue::factory()->for($nounNumber)->create(['name'=>'plural', 'name_brief'=>'pl.']);
+            $nounNumber = $wordClassGroup->features()->create(['name' => 'number']);
+            $nounSingular = $nounNumber->featureValues()->create(['name'=>'singular', 'name_brief'=>'sing.']);
+            $nounPlural   = $nounNumber->featureValues()->create(['name'=>'plural', 'name_brief'=>'pl.']);
             // Add noun inflection tables
-            $inflectionTable = InflectionTable::factory()
-                ->for($group)
-                ->create([
-                    'label' => 'noun',
-                    'position' => 0,
-                    'show_label' => false,
-                    'stack' => true,
-                    'align_on_stack' => false,
-                    'table_fold' => false,
-                    'rows_fold' => false
-                ]);
-            $baseRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->create([
-                    'label' => "singular",
-                    'label_brief' => "sing.",
-                    'position' => 0,
-                ]);
-            $pivot = new InflectionTableRowFilter([
+            $table = $wordClassGroup->inflectionTables()->create([
+                'label' => 'noun',
+                'position' => 0,
+                'show_label' => false,
+                'stack' => true,
+                'align_on_stack' => false,
+                'table_fold' => false,
+                'rows_fold' => false
+            ]);
+            $baseRow = $table->rows()->create([
+                'label' => "singular",
+                'label_brief' => "sing.",
+                'position' => 0,
+            ]);
+            (new InflectionTableRowFilter([
                 'inflect_table_row_id' => $baseRow->id,
                 'feature_id' => $nounNumber->id,
                 'value_id' => $nounSingular->id,
+            ]))->save();
+            $row = $table->rows()->create([
+                'label' => "plural",
+                'label_brief' => "pl.",
+                'position' => 1,
+                'src_base' => $baseRow->id,
             ]);
-            $pivot->save();
-            $inflectionTableRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->for($baseRow, 'sourceBase')
-                ->create([
-                    'label' => "plural",
-                    'label_brief' => "pl.",
-                    'position' => 1,
-                ]);
-            $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $row->id,
                 'feature_id' => $nounNumber->id,
                 'value_id' => $nounPlural->id,
-            ]);
-            $pivot->save();
+            ]))->save();
 
             // Prepositions
             // ------------
-            WordClassGroup::factory()
-                ->for($language)
-                ->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'preposition'])
-                )->create();
+            $wordClassGroup = $language->wordClassGroups()->create();
+            $wordClassGroup->wordClasses()->create(['name'=>'preposition', 'language_id'=>$language->id]);
 
             // Pronouns
             // --------
@@ -327,107 +248,85 @@ final class BuildEnglishGrammar
              * syntax. So "I" and "you" can be separate entries in the dictionary, whereas
              * "I" and "me" benefit from sharing an inflection table on one entry.
              */
-            $group = WordClassGroup::factory()
-                ->for($language)
-                ->has(WordClass::factory()
-                    ->for($language)
-                    ->state(['name'=>'pronoun'])
-                )->create(['inflected'=>true]);
+            $wordClassGroup = $language->wordClassGroups()->create();
+            $wordClassGroup->wordClasses()->create(['name'=>'pronoun', 'language_id'=>$language->id]);
             // Add pronoun inflection features
-            $pronounNumber = Feature::factory()->for($group,'group')->create(['name' => 'number']);
-            $pronounSingular = FeatureValue::factory()->for($pronounNumber)->create(['name'=>'singular', 'name_brief'=>'sing.']);
-            $pronounPlural   = FeatureValue::factory()->for($pronounNumber)->create(['name'=>'plural', 'name_brief'=>'pl.']);
-            $pronounCase = Feature::factory()->for($group,'group')->create(['name' => 'case']);
-            $pronounSubjective = FeatureValue::factory()->for($pronounCase)->create(['name'=>'subjective', 'name_brief'=>'sub.']);
-            $pronounObjective  = FeatureValue::factory()->for($pronounCase)->create(['name'=>'objective', 'name_brief'=>'obj.']);
+            $pronounNumber = $wordClassGroup->features()->create(['name' => 'number']);
+            $pronounSingular = $pronounNumber->featureValues()->create(['name'=>'singular', 'name_brief'=>'sing.']);
+            $pronounPlural   = $pronounNumber->featureValues()->create(['name'=>'plural', 'name_brief'=>'pl.']);
+            $pronounCase = $wordClassGroup->features()->create(['name' => 'case']);
+            $pronounSubjective = $pronounCase->featureValues()->create(['name'=>'subjective', 'name_brief'=>'sub.']);
+            $pronounObjective  = $pronounCase->featureValues()->create(['name'=>'objective', 'name_brief'=>'obj.']);
             // Add pronoun inflection tables
-            $inflectionTable = InflectionTable::factory()
-                ->for($group)
-                ->create([
-                    'label' => 'subjective',
-                    'position' => 0,
-                    'stack' => true,
-                    'align_on_stack' => true,
-                    'table_fold' => false,
-                    'rows_fold' => false
-                ]);
-            $pivot = new InflectionTableFilter([
-                'inflect_table_id' => $inflectionTable->id,
+            $table = $wordClassGroup->inflectionTables()->create([
+                'label' => 'subjective',
+                'position' => 0,
+                'stack' => true,
+                'align_on_stack' => true,
+                'table_fold' => false,
+                'rows_fold' => false
+            ]);
+            (new InflectionTableFilter([
+                'inflect_table_id' => $table->id,
                 'feature_id' => $pronounCase->id,
                 'value_id' => $pronounSubjective->id,
+            ]))->save();
+            $baseRow = $table->rows()->create([
+                'label' => "singular",
+                'label_brief' => "sing.",
+                'position' => 0,
             ]);
-            $pivot->save();
-            $baseRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->create([
-                    'label' => "singular",
-                    'label_brief' => "sing.",
-                    'position' => 0,
-                ]);
-            $pivot = new InflectionTableRowFilter([
+            (new InflectionTableRowFilter([
                 'inflect_table_row_id' => $baseRow->id,
                 'feature_id' => $pronounNumber->id,
                 'value_id' => $pronounSingular->id,
+            ]))->save();
+            $row = $table->rows()->create([
+                'label' => "plural",
+                'label_brief' => "pl.",
+                'position' => 1,
+                'src_base' => $baseRow->id,
             ]);
-            $pivot->save();
-            $inflectionTableRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->for($baseRow, 'sourceBase')
-                ->create([
-                    'label' => "plural",
-                    'label_brief' => "pl.",
-                    'position' => 1,
-                ]);
-            $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $row->id,
                 'feature_id' => $pronounNumber->id,
                 'value_id' => $pronounPlural->id,
+            ]))->save();
+            $table = $wordClassGroup->inflectionTables()->create([
+                'label' => 'objective',
+                'position' => 1,
+                'stack' => true,
+                'align_on_stack' => true,
+                'table_fold' => false,
+                'rows_fold' => true
             ]);
-            $pivot->save();
-            $inflectionTable = InflectionTable::factory()
-                ->for($group)
-                ->create([
-                    'label' => 'objective',
-                    'position' => 1,
-                    'stack' => true,
-                    'align_on_stack' => true,
-                    'table_fold' => false,
-                    'rows_fold' => true
-                ]);
-            $pivot = new InflectionTableFilter([
-                'inflect_table_id' => $inflectionTable->id,
+            (new InflectionTableFilter([
+                'inflect_table_id' => $table->id,
                 'feature_id' => $pronounCase->id,
                 'value_id' => $pronounObjective->id,
+            ]))->save();
+            $row = $table->rows()->create([
+                'label' => "singular",
+                'label_brief' => "sing.",
+                'position' => 0,
+                'src_base' => $baseRow->id,
             ]);
-            $pivot->save();
-            $inflectionTableRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->for($baseRow, 'sourceBase')
-                ->create([
-                    'label' => "singular",
-                    'label_brief' => "sing.",
-                    'position' => 0,
-                ]);
-            $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $row->id,
                 'feature_id' => $pronounNumber->id,
                 'value_id' => $pronounSingular->id,
+            ]))->save();
+            $row = $table->rows()->create([
+                'label' => "plural",
+                'label_brief' => "pl.",
+                'position' => 1,
+                'src_base' => $baseRow->id,
             ]);
-            $pivot->save();
-            $inflectionTableRow = InflectionTableRow::factory()
-                ->for($inflectionTable)
-                ->for($baseRow, 'sourceBase')
-                ->create([
-                    'label' => "plural",
-                    'label_brief' => "pl.",
-                    'position' => 1,
-                ]);
-            $pivot = new InflectionTableRowFilter([
-                'inflect_table_row_id' => $inflectionTableRow->id,
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $row->id,
                 'feature_id' => $pronounNumber->id,
                 'value_id' => $pronounPlural->id,
-            ]);
-            $pivot->save();
+            ]))->save();
             return 1;
         });
     }
