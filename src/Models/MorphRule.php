@@ -32,11 +32,13 @@ class MorphRule extends Model
     #[Scope]
     protected function onBase(Builder $query): void
     {
-        $query->where('target_type', MorphRuleTargetType::BaseInput);
+        $query->where('target_type', MorphRuleTargetType::BaseInput)
+            ->orderBy('order');
     }
     #[Scope]
     protected function onCombiningForm(Builder $query): void
     {
-        $query->where('target_type', MorphRuleTargetType::CombiningInput);
+        $query->where('target_type', MorphRuleTargetType::CombiningInput)
+            ->orderBy('order');
     }
 }
