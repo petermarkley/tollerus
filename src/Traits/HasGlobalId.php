@@ -67,7 +67,7 @@ trait HasGlobalId
 
         // Normalize leading 'A's.
         $digits = \Config::get('tollerus.global_id_digits', 4);
-        $normalized = str_pad(ltrim($encoded, "A"), $digits, "A");
+        $normalized = str_pad(ltrim($encoded, "A"), $digits, "A", STR_PAD_LEFT);
 
         /**
          * The PHP function outputs §4 format, but we are
