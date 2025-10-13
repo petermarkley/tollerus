@@ -42,6 +42,10 @@ class InflectionTableRow extends Model
     {
         return $this->hasMany(InflectionTableRow::class, 'src_base');
     }
+    public function morphRules(): HasMany
+    {
+        return $this->hasMany(MorphRule::class, 'inflect_table_row_id');
+    }
 
     protected static function booted()
     {
