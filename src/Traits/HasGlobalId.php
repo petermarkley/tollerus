@@ -20,12 +20,6 @@ trait HasGlobalId
         });
     }
 
-    protected function initializeHasGlobalId(): void
-    {
-        $this->incrementing = false;
-        $this->keyType = 'int';
-    }
-
     public static function isValidGlobalId(string $str): bool
     {
         /**
@@ -130,16 +124,16 @@ trait HasGlobalId
     {
         return Attribute::make(
             get: function ($value, array $attributes) {
-                if (!isset($attributes['id'])) {
+                if (!isset($attributes['global_id_raw'])) {
                     return null;
                 }
-                $globalId = self::encodeGlobalId((int) $attributes['id']);
+                $globalId = self::encodeGlobalId((int) $attributes['global_id_raw']);
                 $digits = \Config::get('tollerus.global_id_digits', 4);
                 $padded = str_pad($globalId, $digits, "A", STR_PAD_LEFT);
                 return $padded;
             },
 
-            set: fn ($value) => ['id' => self::decodeGlobalId($value)]
+            set: fn ($value) => ['global_id_raw' => self::decodeGlobalId($value)]
         );
     }
 }

@@ -196,17 +196,17 @@ return new class extends Migration
          * that will be exposed to the user in base64
          */
         $connection->create('global_ids', function (Blueprint $table) {
-            $table->id();
+            $table->id('global_id_raw');
             $table->enum('kind', GlobalIdKind::values())
                 ->nullable(false);
         });
         $global_ids = $prefix . 'global_ids';
 
         $connection->create('neography_glyphs', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
-            $table->primary('id');
-            $table->foreign('id')
-                ->references('id')->on('global_ids')
+            $table->id();
+            $table->foreignId('global_id_raw')->unique();
+            $table->foreign('global_id_raw')
+                ->references('global_id_raw')->on('global_ids')
                 ->cascadeOnDelete();
             $table->foreignId('neography_id');
             $table->foreign('neography_id')
@@ -238,15 +238,16 @@ return new class extends Migration
         $neography_glyphs = $prefix . 'neography_glyphs';
         $kind = GlobalIdKind::Glyph->value;
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER bi_{$prefix}neography_glyphs_reserve_id
+        CREATE TRIGGER bi_{$prefix}neography_glyphs_assign_global_id
         BEFORE INSERT ON {$neography_glyphs} FOR EACH ROW
         BEGIN
-          IF NEW.id IS NULL THEN
+          IF NEW.global_id_raw IS NULL THEN
+            -- No id dictated: allocate one in global_ids and copy it to the row
             INSERT INTO {$global_ids} (kind) VALUES('{$kind}');
-            SET NEW.id = LAST_INSERT_ID();
+            SET NEW.global_id_raw = LAST_INSERT_ID();
           ELSE
-            -- Allow explicit ID; ensure a registry row exists (fail if taken)
-            INSERT INTO {$global_ids} (id, kind) VALUES (NEW.id, '{$kind}');
+            -- Allow explicit ID; ensure a registry row exists (will fail if taken)
+            INSERT INTO {$global_ids} (global_id_raw, kind) VALUES (NEW.global_id_raw, '{$kind}');
           END IF;
         END;
         SQL);
@@ -254,15 +255,15 @@ return new class extends Migration
         CREATE TRIGGER ad_{$prefix}neography_glyphs_delete_gid
         AFTER DELETE ON {$neography_glyphs} FOR EACH ROW
         BEGIN
-          DELETE FROM {$global_ids} WHERE id = OLD.id;
+          DELETE FROM {$global_ids} WHERE global_id_raw = OLD.global_id_raw;
         END;
         SQL);
 
         $connection->create('entries', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
-            $table->primary('id');
-            $table->foreign('id')
-                ->references('id')->on('global_ids')
+            $table->id();
+            $table->foreignId('global_id_raw')->unique();
+            $table->foreign('global_id_raw')
+                ->references('global_id_raw')->on('global_ids')
                 ->cascadeOnDelete();
             $table->foreignId('language_id');
             $table->foreign('language_id')
@@ -277,15 +278,16 @@ return new class extends Migration
         $entries = $prefix . 'entries';
         $kind = GlobalIdKind::Entry->value;
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER bi_{$prefix}entries_reserve_id
+        CREATE TRIGGER bi_{$prefix}entries_assign_global_id
         BEFORE INSERT ON {$entries} FOR EACH ROW
         BEGIN
-          IF NEW.id IS NULL THEN
+          IF NEW.global_id_raw IS NULL THEN
+            -- No id dictated: allocate one in global_ids and copy it to the row
             INSERT INTO {$global_ids} (kind) VALUES('{$kind}');
-            SET NEW.id = LAST_INSERT_ID();
+            SET NEW.global_id_raw = LAST_INSERT_ID();
           ELSE
-            -- Allow explicit ID; ensure a registry row exists (fail if taken)
-            INSERT INTO {$global_ids} (id, kind) VALUES (NEW.id, '{$kind}');
+            -- Allow explicit ID; ensure a registry row exists (will fail if taken)
+            INSERT INTO {$global_ids} (global_id_raw, kind) VALUES (NEW.global_id_raw, '{$kind}');
           END IF;
         END;
         SQL);
@@ -293,15 +295,15 @@ return new class extends Migration
         CREATE TRIGGER ad_{$prefix}entries_delete_gid
         AFTER DELETE ON {$entries} FOR EACH ROW
         BEGIN
-          DELETE FROM {$global_ids} WHERE id = OLD.id;
+          DELETE FROM {$global_ids} WHERE global_id_raw = OLD.global_id_raw;
         END;
         SQL);
 
         $connection->create('lexemes', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
-            $table->primary('id');
-            $table->foreign('id')
-                ->references('id')->on('global_ids')
+            $table->id();
+            $table->foreignId('global_id_raw')->unique();
+            $table->foreign('global_id_raw')
+                ->references('global_id_raw')->on('global_ids')
                 ->cascadeOnDelete();
             $table->foreignId('language_id');
             $table->foreign('language_id')
@@ -325,15 +327,16 @@ return new class extends Migration
         $lexemes = $prefix . 'lexemes';
         $kind = GlobalIdKind::Lexeme->value;
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER bi_{$prefix}lexemes_reserve_id
+        CREATE TRIGGER bi_{$prefix}lexemes_assign_global_id
         BEFORE INSERT ON {$lexemes} FOR EACH ROW
         BEGIN
-          IF NEW.id IS NULL THEN
+          IF NEW.global_id_raw IS NULL THEN
+            -- No id dictated: allocate one in global_ids and copy it to the row
             INSERT INTO {$global_ids} (kind) VALUES('{$kind}');
-            SET NEW.id = LAST_INSERT_ID();
+            SET NEW.global_id_raw = LAST_INSERT_ID();
           ELSE
-            -- Allow explicit ID; ensure a registry row exists (fail if taken)
-            INSERT INTO {$global_ids} (id, kind) VALUES (NEW.id, '{$kind}');
+            -- Allow explicit ID; ensure a registry row exists (will fail if taken)
+            INSERT INTO {$global_ids} (global_id_raw, kind) VALUES (NEW.global_id_raw, '{$kind}');
           END IF;
         END;
         SQL);
@@ -341,15 +344,15 @@ return new class extends Migration
         CREATE TRIGGER ad_{$prefix}lexemes_delete_gid
         AFTER DELETE ON {$lexemes} FOR EACH ROW
         BEGIN
-          DELETE FROM {$global_ids} WHERE id = OLD.id;
+          DELETE FROM {$global_ids} WHERE global_id_raw = OLD.global_id_raw;
         END;
         SQL);
 
         $connection->create('forms', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
-            $table->primary('id');
-            $table->foreign('id')
-                ->references('id')->on('global_ids')
+            $table->id();
+            $table->foreignId('global_id_raw')->unique();
+            $table->foreign('global_id_raw')
+                ->references('global_id_raw')->on('global_ids')
                 ->cascadeOnDelete();
             $table->foreignId('language_id');
             $table->foreign('language_id')
@@ -369,15 +372,16 @@ return new class extends Migration
         $forms = $prefix . 'forms';
         $kind = GlobalIdKind::Form->value;
         $rawConnection->unprepared(<<<SQL
-        CREATE TRIGGER bi_{$prefix}forms_reserve_id
+        CREATE TRIGGER bi_{$prefix}forms_assign_global_id
         BEFORE INSERT ON {$forms} FOR EACH ROW
         BEGIN
-          IF NEW.id IS NULL THEN
+          IF NEW.global_id_raw IS NULL THEN
+            -- No id dictated: allocate one in global_ids and copy it to the row
             INSERT INTO {$global_ids} (kind) VALUES('{$kind}');
-            SET NEW.id = LAST_INSERT_ID();
+            SET NEW.global_id_raw = LAST_INSERT_ID();
           ELSE
-            -- Allow explicit ID; ensure a registry row exists (fail if taken)
-            INSERT INTO {$global_ids} (id, kind) VALUES (NEW.id, '{$kind}');
+            -- Allow explicit ID; ensure a registry row exists (will fail if taken)
+            INSERT INTO {$global_ids} (global_id_raw, kind) VALUES (NEW.global_id_raw, '{$kind}');
           END IF;
         END;
         SQL);
@@ -385,7 +389,7 @@ return new class extends Migration
         CREATE TRIGGER ad_{$prefix}forms_delete_gid
         AFTER DELETE ON {$forms} FOR EACH ROW
         BEGIN
-          DELETE FROM {$global_ids} WHERE id = OLD.id;
+          DELETE FROM {$global_ids} WHERE global_id_raw = OLD.global_id_raw;
         END;
         SQL);
 
@@ -601,13 +605,13 @@ return new class extends Migration
         $connection->disableForeignKeyConstraints();
 
         // triggers
-        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}neography_glyphs_reserve_id;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}neography_glyphs_assign_global_id;");
         $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}neography_glyphs_delete_gid;");
-        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}entries_reserve_id;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}entries_assign_global_id;");
         $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}entries_delete_gid;");
-        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}lexemes_reserve_id;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}lexemes_assign_global_id;");
         $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}lexemes_delete_gid;");
-        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}forms_reserve_id;");
+        $rawConnection->unprepared("DROP TRIGGER IF EXISTS bi_{$prefix}forms_assign_global_id;");
         $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}forms_delete_gid;");
         // inflection tables config
         $connection->dropIfExists('morph_rules');

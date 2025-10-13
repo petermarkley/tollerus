@@ -16,6 +16,8 @@ final class GlobalId extends Model
     use HasTablePrefix;
     use HasGlobalId;
     protected $table = 'global_ids';
+    protected $primaryKey = 'global_id_raw';
+    protected $keyType = 'int';
     public $timestamps = false;
     protected $casts = ['kind' => GlobalIdKind::class];
 
