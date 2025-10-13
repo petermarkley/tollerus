@@ -36,11 +36,11 @@ final class GlobalId extends Model
     public static function resolveId(string $globalId): ?Model
     {
         try {
-            $id = self::decodeGlobalId($globalId);
+            $rawId = self::decodeGlobalId($globalId);
         } catch (InvalidArgumentException) {
             return null;
         }
-        $object = self::query()->find($id);
+        $object = self::query()->find($rawId);
         return $object?->resolve();
     }
 
@@ -60,26 +60,26 @@ final class GlobalId extends Model
     public static function resolveMany(array $globalIds): Collection
     {
         // decode IDs
-        $ids = collect($globalIds)
+        $rawIds = collect($globalIds)
             ->map(function ($item) {
                 try {
-                    $id = self::decodeGlobalId($item);
+                    $rawId = self::decodeGlobalId($item);
                 } catch (InvalidArgumentException) {
                     return null;
                 }
-                return $id;
+                return $rawId;
             })
-            ->filter(fn ($id) => $id !== null)
+            ->filter(fn ($rawId) => $rawId !== null)
             ->unique()
             ->values();
 
         // no-op if empty
-        if ($ids->isEmpty()) {
+        if ($rawIds->isEmpty()) {
             return collect();
         }
 
         // fetch list of kinds
-        $rows = self::query()->whereIn('id', $ids)->get(['id','kind']);
+        $rows = self::query()->whereKey($rawIds)->get(['global_id_raw','kind']);
         $byKind = $rows->groupBy('kind');
 
         // run only one query for each kind
@@ -88,11 +88,11 @@ final class GlobalId extends Model
             $class = $kind->model();
 
             // flat array of IDs that belong to this kind
-            $subsetIds = $subset->pluck('id');
+            $subsetIds = $subset->pluck('global_id_raw');
 
             // run the query, save results to output collection
             return $class::query()
-                ->whereIn('id', $subsetIds)
+                ->whereIn('global_id_raw', $subsetIds)
                 ->get()->keyBy('global_id');
         });
 
