@@ -47,7 +47,7 @@ class NeographyFactory extends Factory
     ): static
     {
         // Step 1: Use the neography name to generate a glyph set and font.
-        $glyphGroups = self::generateGlyphs(
+        $glyphGroups = $this->generateGlyphs(
             machineName: $machineName,
             name: $name,
             num: $num,
@@ -106,18 +106,10 @@ class NeographyFactory extends Factory
     }
 
     /**
-     * Convenience wrapper around mt_rand(). Returns random float between 0 and 1
-     */
-    protected static function randFloat(): float
-    {
-        return ((float)mt_rand())/((float)mt_getrandmax());
-    }
-
-    /**
      * This algorithm generates a semi-realistic set of glyphs
      * with no duplicates.
      */
-    protected static function generateGlyph(array $strokePalette): array
+    protected function generateGlyph(array $strokePalette): array
     {
         $horizAdv = ((mt_rand(1,5)<3) ? 600 : 1000);
         $strokesThatFit = collect($strokePalette)
@@ -126,7 +118,8 @@ class NeographyFactory extends Factory
             })->values()->toArray();
         // Pick a random number of strokes to use, weighted toward $min
         $min = 1; $max = 5;
-        $strokeNum = (int)round(pow(self::randFloat(),2)*($max-$min)+$min);
+        $randFloat = (float)($this->faker->randomFloat(6, 0, 1));
+        $strokeNum = (int)round(pow($randFloat,2)*($max-$min)+$min);
         // Pick the strokes
         $strokeIndices = array_rand($strokesThatFit, $strokeNum);
         $strokes = collect($strokeIndices)
@@ -157,7 +150,7 @@ class NeographyFactory extends Factory
             'horizAdv' => $horizAdv,
         ];
     }
-    protected static function generateGlyphs(
+    protected function generateGlyphs(
         string $machineName,
         string $name,
         int $num = 20,
@@ -181,7 +174,7 @@ class NeographyFactory extends Factory
         $strokePalette = self::readStrokePalette();
         // Build random glyph shapes from stroke palette
         $vectors = collect($codepoints)
-            ->map(fn() => self::generateGlyph($strokePalette));
+            ->map(fn() => $this->generateGlyph($strokePalette));
         
         /**
          * Decide the list of sounds

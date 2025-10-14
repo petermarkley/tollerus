@@ -21,20 +21,13 @@ class LexemeFactory extends Factory
         return [];
     }
 
-    /**
-     * Convenience wrapper around mt_rand(). Returns random float between 0 and 1
-     */
-    protected static function randFloat(): float
-    {
-        return ((float)mt_rand())/((float)mt_getrandmax());
-    }
-
     public function configure(): static
     {
         return $this->afterCreating(function (Lexeme $lexeme) {
             // Pick a random number of senses, weighted toward $min
             $min = 1; $max = 5;
-            $senseNum = (int)round(pow(self::randFloat(),2)*($max-$min)+$min);
+            $randFloat = (float)($this->faker->randomFloat(6, 0, 1));
+            $senseNum = (int)round(pow($randFloat,2)*($max-$min)+$min);
 
             // Generate senses
             Sense::factory()
