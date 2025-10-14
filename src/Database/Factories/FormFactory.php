@@ -15,6 +15,14 @@ class FormFactory extends Factory
 {
     protected $model = Form::class;
 
+    /**
+     * Convenience wrapper around mt_rand(). Returns random float between 0 and 1
+     */
+    protected static function randFloat(): float
+    {
+        return ((float)mt_rand())/((float)mt_getrandmax());
+    }
+
     public function withSpelling(Language $language, int $len = -1): static
     {
         // Eager load the neography glyphs
@@ -23,7 +31,13 @@ class FormFactory extends Factory
         return $this->afterCreating(function (Form $form) use ($language, $len) {
             $neographies = $language->neographies;
             // If not specified, pick a random word length
-            $glyphNum = ($len > 0 ? $len : mt_rand(1,10));
+            if ($len > 0) {
+                $glyphNum = $len;
+            } else {
+                // Pick a random number of senses, with a nonlinear weight
+                $min = 1; $max = 10;
+                $glyphNum = (int)round( pow((acos(1-2*self::randFloat())/pi()),1.7) *($max-$min)+$min);
+            }
             // This language may have multiple neographies. Add a spelling for each one.
             foreach ($neographies as $neography) {
                 $allGlyphs = $neography->glyphs;
