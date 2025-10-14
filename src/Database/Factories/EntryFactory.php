@@ -21,7 +21,7 @@ class EntryFactory extends Factory
     public function withLexemes(Language $language): static
     {
         // Eager load what we'll need just once before running factory in batch
-        $language->load([
+        $language->loadMissing([
             'wordClassGroups.wordClasses',
             'wordClassGroups.features.featureValues',
             'wordClassGroups.inflectionTables.filterValues',
@@ -82,17 +82,8 @@ class EntryFactory extends Factory
                         $baseForm = Form::factory()
                             ->for($lexeme)
                             ->for($language)
-                            ->create([
-                                'roman' => '',
-                                'phonemic' => '',
-                            ]);
-                        // Add native spellings
-                        foreach ($language->neographies as $neography) {
-                            NativeSpelling::factory()
-                                ->for($baseForm)
-                                ->for($neography)
-                                ->create(['spelling'=>'']);
-                        }
+                            ->withSpelling($language)
+                            ->create();
                         // Add grammatical features
                         $filterValues = collect([
                             $table->filterValues,
@@ -123,17 +114,8 @@ class EntryFactory extends Factory
                         $form = Form::factory()
                             ->for($lexeme)
                             ->for($language)
-                            ->create([
-                                'roman' => '',
-                                'phonemic' => '',
-                            ]);
-                        // Add native spellings
-                        foreach ($language->neographies as $neography) {
-                            NativeSpelling::factory()
-                                ->for($form)
-                                ->for($neography)
-                                ->create(['spelling'=>'']);
-                        }
+                            ->withSpelling($language)
+                            ->create();
                         // Add grammatical features
                         $filterValues = collect([
                             $table->filterValues,
@@ -154,16 +136,8 @@ class EntryFactory extends Factory
                 $form = Form::factory()
                     ->for($lexeme)
                     ->for($language)
-                    ->create([
-                        'roman' => '',
-                        'phonemic' => '',
-                    ]);
-                foreach ($language->neographies as $neography) {
-                    NativeSpelling::factory()
-                        ->for($form)
-                        ->for($neography)
-                        ->create(['spelling'=>'']);
-                }
+                    ->withSpelling($language)
+                    ->create();
                 $entry->primary_form = $form->id;
                 $entry->save();
             }
