@@ -24,8 +24,8 @@ class EntryFactory extends Factory
         $language->load([
             'wordClassGroups.wordClasses',
             'wordClassGroups.features.featureValues',
-            'wordClassGroups.inflectionTables.filters',
-            'wordClassGroups.inflectionTables.rows.filters',
+            'wordClassGroups.inflectionTables.filterValues',
+            'wordClassGroups.inflectionTables.rows.filterValues',
             'neographies.glyphs',
         ]);
 
@@ -89,17 +89,20 @@ class EntryFactory extends Factory
                         // Add native spellings
                         foreach ($language->neographies as $neography) {
                             NativeSpelling::factory()
-                                ->for($form)
+                                ->for($baseForm)
                                 ->for($neography)
                                 ->create(['spelling'=>'']);
                         }
                         // Add grammatical features
-                        $filters = $table->filters->concat($row->filters);
-                        foreach ($filters as $filter) {
+                        $filterValues = collect([
+                            $table->filterValues,
+                            $row->filterValues
+                        ])->filter()->collapse();
+                        foreach ($filterValues as $featureValue) {
                             (new FormFeatureValue([
                                 'form_id' => $baseForm->id,
-                                'feature_id' => $filter->feature_id,
-                                'value_id' => $filter->value_id,
+                                'feature_id' => $featureValue->feature_id,
+                                'value_id' => $featureValue->id,
                             ]))->save();
                         }
                         // Mark first one as the entry's primary form
@@ -132,12 +135,15 @@ class EntryFactory extends Factory
                                 ->create(['spelling'=>'']);
                         }
                         // Add grammatical features
-                        $filters = $table->filters->concat($row->filters);
-                        foreach ($filters as $filter) {
+                        $filterValues = collect([
+                            $table->filterValues,
+                            $row->filterValues
+                        ])->filter()->collapse();
+                        foreach ($filterValues as $featureValue) {
                             (new FormFeatureValue([
-                                'form_id' => $baseForm->id,
-                                'feature_id' => $filter->feature_id,
-                                'value_id' => $filter->value_id,
+                                'form_id' => $form->id,
+                                'feature_id' => $featureValue->feature_id,
+                                'value_id' => $featureValue->id,
                             ]))->save();
                         }
                     }

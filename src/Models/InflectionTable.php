@@ -27,7 +27,7 @@ class InflectionTable extends Model
     {
         return $this->hasMany(InflectionTableRow::class, 'inflect_table_id');
     }
-    public function filters(): BelongsToMany
+    public function filterValues(): BelongsToMany
     {
         return $this
             ->belongsToMany(FeatureValue::class, 'inflect_table_filters', 'inflect_table_id', 'value_id')

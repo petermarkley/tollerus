@@ -34,6 +34,7 @@ class TollerusPopulate extends Command
         Entry::factory()
             ->for($language)
             ->withLexemes($language)
+            ->count(150)
             ->create();
     }
 }
