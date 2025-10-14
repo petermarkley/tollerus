@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
+use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 
 class MorphRule extends Model
@@ -15,7 +16,10 @@ class MorphRule extends Model
     use HasTablePrefix;
     protected $table = 'morph_rules';
     public $timestamps = false;
-    protected $casts = ['target_type' => MorphRuleTargetType::class];
+    protected $casts = [
+        'target_type' => MorphRuleTargetType::class,
+        'pattern_type' => MorphRulePatternType::class,
+    ];
     protected $guarded = [];
 
     /**
@@ -24,6 +28,10 @@ class MorphRule extends Model
     public function inflectionTableRow(): BelongsTo
     {
         return $this->belongsTo(InflectionTableRow::class, 'inflect_table_row_id');
+    }
+    public function neography(): BelongsTo
+    {
+        return $this->belongsTo(Neography::class);
     }
 
     /**

@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use PeterMarkley\Tollerus\Enums\GlobalIdKind;
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
+use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Enums\NeographySectionType;
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
@@ -587,10 +588,36 @@ return new class extends Migration
                 ->references('id')->on('inflect_table_rows')
                 ->cascadeOnDelete();
             $table->string('pattern')->charset('utf8mb4');
-            $table->enum('target_type', MorphRuleTargetType::values())->nullable();
+            $table->foreignId('neography_id')->nullable();
+            $table->foreign('neography_id')
+                ->references('id')->on('neographies')
+                ->cascadeOnDelete();
+            $table->enum('target_type', MorphRuleTargetType::values());
+            $table->enum('pattern_type', MorphRulePatternType::values());
             $table->integer('order');
-            // ensure only one of each order per target type for the inflection row
-            $table->unique(['inflect_table_row_id', 'target_type', 'order'], 'row_target_order_unique');
+            /**
+             * Ensure only one of each order per input for the inflection row.
+             *
+             * For each inflection row we have 4+(2*N) possible inputs:
+             * - roman, base
+             * - phonemic, base
+             * - N number of native bases
+             * - roman, combining form
+             * - phonemic, combining form
+             * - N number of native combining forms
+             *
+             * Which one of these inputs we're mutating for the inflection row
+             * depends on the values of these 3 fields:
+             * - target_type (base|comb)
+             * - pattern_type (roman|phonemic|native)
+             * - neography_id
+             *
+             * To avoid a 5-way unique constraint, we will merge these 3 fields
+             * into one computed column to use instead:
+             */
+            $table->string('input_slot')
+                ->storedAs("CONCAT(target_type,'|',pattern_type,'|',COALESCE(CAST(neography_id AS CHAR),'0'))");
+            $table->unique(['inflect_table_row_id', 'input_slot', 'order'], 'row_input_order_unique');
         });
     }
 

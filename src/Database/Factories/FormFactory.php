@@ -23,7 +23,7 @@ class FormFactory extends Factory
         return $this->afterCreating(function (Form $form) use ($language, $len) {
             $neographies = $language->neographies;
             // If not specified, pick a random word length
-            $glyphNum = ($len > 0 ? $len : mt_rand(1,15));
+            $glyphNum = ($len > 0 ? $len : mt_rand(1,10));
             // This language may have multiple neographies. Add a spelling for each one.
             foreach ($neographies as $neography) {
                 $allGlyphs = $neography->glyphs;
