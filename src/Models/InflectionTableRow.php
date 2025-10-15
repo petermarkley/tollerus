@@ -30,9 +30,9 @@ class InflectionTableRow extends Model
             ->withPivot('feature_id')
             ->using(Pivots\InflectionTableFilter::class);
     }
-    public function sourceLexeme(): BelongsTo
+    public function sourceParticle(): BelongsTo
     {
-        return $this->belongsTo(Lexeme::class, 'src_lexeme');
+        return $this->belongsTo(Form::class, 'src_particle');
     }
     public function sourceBase(): BelongsTo
     {
@@ -52,7 +52,7 @@ class InflectionTableRow extends Model
         // Validate extended model relations
         static::saving(function (self $model) {
             // Run only when relevant keys changed (or on create)
-            if (! $model->isDirty(['inflect_table_id', 'src_lexeme', 'src_base'])) {
+            if (! $model->isDirty(['inflect_table_id', 'src_particle', 'src_base'])) {
                 return;
             }
             // src_base must not be this row
@@ -69,21 +69,24 @@ class InflectionTableRow extends Model
                 ->whereKey($model->inflect_table_id)
                 ->value('word_class_group_id');
 
-            if (!is_null($model->src_lexeme)) {
+            if (!is_null($model->src_particle)) {
                 /**
-                 * Rule 1: src_lexeme must belong to word_class_group
+                 * Rule 1: src_particle must belong to word_class_group
                  */
 
-                // Get the lexeme's `group_id` via a minimal scalar lookup
+                // Get the particle's `group_id` via a minimal scalar lookup
+                $lexemeId = Form::query()
+                    ->whereKey($model->src_particle)
+                    ->value('lexeme_id');
                 $wordClassId = Lexeme::query()
-                    ->whereKey($model->src_lexeme)
+                    ->whereKey($lexemeId)
                     ->value('word_class_id');
-                $groupIdOfLexeme = WordClass::query()
+                $groupIdOfParticle = WordClass::query()
                     ->whereKey($wordClassId)
                     ->value('group_id');
 
-                if ((int)$groupIdOfLexeme !== (int)$groupIdOfInflectionTable) {
-                    throw new \LogicException('InflectionTableRow.src_lexeme must belong to the same WordClassGroup as the InflectionTableRow\'s parent InflectionTable.');
+                if ((int)$groupIdOfParticle !== (int)$groupIdOfInflectionTable) {
+                    throw new \LogicException('InflectionTableRow.src_particle must belong to the same WordClassGroup as the InflectionTableRow\'s parent InflectionTable.');
                 }
             }
 

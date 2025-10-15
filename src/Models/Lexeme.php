@@ -40,10 +40,6 @@ class Lexeme extends Model
     {
         return $this->hasMany(Form::class);
     }
-    public function inflectionTableRow(): HasOne
-    {
-        return $this->hasOne(InflectionTableRow::class, 'src_lexeme');
-    }
 
     protected static function booted()
     {

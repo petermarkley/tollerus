@@ -544,9 +544,9 @@ return new class extends Migration
             $table->integer('position');
             $table->boolean('visible')->default(true);
             $table->boolean('show_label')->default(true);
-            $table->foreignId('src_lexeme')->nullable();
-            $table->foreign('src_lexeme')
-                ->references('id')->on('lexemes')
+            $table->foreignId('src_particle')->nullable();
+            $table->foreign('src_particle')
+                ->references('id')->on('forms')
                 ->nullOnDelete();
             $table->foreignId('src_base')->nullable();
             $table->foreign('src_base')

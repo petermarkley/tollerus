@@ -21,7 +21,9 @@ return [
         'combining form',
         'prefix',
         'suffix',
+        'affix',
         'root',
+        'particle',
     ],
     
     /*

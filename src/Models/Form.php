@@ -42,6 +42,10 @@ class Form extends Model
             ->withPivot('feature_id')
             ->using(Pivots\FormFeatureValue::class);
     }
+    public function affectedInflections(): HasMany
+    {
+        return $this->hasMany(InflectionTableRow::class, 'src_particle');
+    }
 
     protected static function booted()
     {
