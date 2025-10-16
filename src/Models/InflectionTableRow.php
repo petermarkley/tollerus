@@ -74,7 +74,7 @@ class InflectionTableRow extends Model
                  * Rule 1: src_particle must belong to word_class_group
                  */
 
-                // Get the particle's `group_id` via a minimal scalar lookup
+                // Get the particle's `group_id` via minimal scalar lookups
                 $lexemeId = Form::query()
                     ->whereKey($model->src_particle)
                     ->value('lexeme_id');

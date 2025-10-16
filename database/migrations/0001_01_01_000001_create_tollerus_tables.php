@@ -602,9 +602,9 @@ return new class extends Migration
              * - roman, base
              * - phonemic, base
              * - N number of native bases
-             * - roman, combining form
-             * - phonemic, combining form
-             * - N number of native combining forms
+             * - roman, particle
+             * - phonemic, particle
+             * - N number of native particles
              *
              * Which one of these inputs we're mutating for the inflection row
              * depends on the values of these 3 fields:

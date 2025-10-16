@@ -40,13 +40,27 @@ class MorphRule extends Model
     #[Scope]
     protected function onBase(Builder $query): void
     {
-        $query->where('target_type', MorphRuleTargetType::BaseInput)
-            ->orderBy('order');
+        $query->where('target_type', MorphRuleTargetType::BaseInput);
     }
     #[Scope]
-    protected function onCombiningForm(Builder $query): void
+    protected function onParticle(Builder $query): void
     {
-        $query->where('target_type', MorphRuleTargetType::CombiningInput)
-            ->orderBy('order');
+        $query->where('target_type', MorphRuleTargetType::ParticleInput);
+    }
+    #[Scope]
+    protected function onRoman(Builder $query): void
+    {
+        $query->where('pattern_type', MorphRulePatternType::Roman);
+    }
+    #[Scope]
+    protected function onPhonemic(Builder $query): void
+    {
+        $query->where('pattern_type', MorphRulePatternType::Phonemic);
+    }
+    #[Scope]
+    protected function onNative(Builder $query, int $neographyId): void
+    {
+        $query->where('pattern_type', MorphRulePatternType::Native)
+            ->where('neography_id', $neographyId);
     }
 }

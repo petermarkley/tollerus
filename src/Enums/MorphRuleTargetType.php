@@ -5,7 +5,7 @@ namespace PeterMarkley\Tollerus\Enums;
 enum MorphRuleTargetType: string
 {
     case BaseInput = 'base_input';
-    case CombiningInput = 'comb_input';
+    case ParticleInput = 'particle_input';
 
     public static function values(): array
     {

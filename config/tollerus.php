@@ -17,7 +17,7 @@ return [
      * it's not correct or exhaustive, UX is only mildly
      * degraded.
      */
-    'word_classes_for_combining' => [
+    'particle_word_classes' => [
         'combining form',
         'prefix',
         'suffix',
