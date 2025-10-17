@@ -34,7 +34,7 @@ final class AutoInflector
                     $carry
                 ) ?? $carry;
             } catch (\Exception $e) {
-                // Errors should pass silently
+                // Errors should pass silently (for now)
                 $output = $carry;
             }
             return $output;
@@ -50,8 +50,14 @@ final class AutoInflector
         string $template,
     ): string
     {
-        // FIXME - this is dumb but works as a placeholder for now
-        return $base . $particle;
+        /**
+         * The template accepts the tokens `{B}` for the base, and
+         * `{P}` for the particle.
+         */
+        return strtr($template, [
+            '{B}' => $base,
+            '{P}' => $particle,
+        ]);
     }
 
     /**
@@ -61,18 +67,15 @@ final class AutoInflector
         InflectionTableRow $row,
         string $base,
         MorphRulePatternType $type,
-        /**
-         * This is only used if $type = MorphRulePatternType::Native
-         */
         int $neographyId = null,
     ): string
     {
-        $dto = AutoInflectorInput::fromRow(
+        $input = AutoInflectorInput::fromRow(
             row: $row,
-            base: 'exhuberate',
-            type: MorphRulePatternType::Native,
-            neographyId: 1,
+            base: $base,
+            type: $type,
+            neographyId: $neographyId,
         );
-        return AutoInflector::suggest($dto);
+        return AutoInflector::suggest($input);
     }
 }

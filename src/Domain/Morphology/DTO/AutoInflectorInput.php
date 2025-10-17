@@ -35,6 +35,27 @@ final class AutoInflectorInput
      * base-particle pair. A single word form is expected to call it
      * 3 or more times, varying MorphRulePatternType and/or
      * neographyId each time.
+     *
+     * The DTO takes this form:
+     * {
+     *     "base" => <string>,
+     *     "particle" => <string>,
+     *     "baseRegExs" => [
+     *         [
+     *             "pattern" => <string>,
+     *             "replacement" => <string>
+     *         ],
+     *         ...
+     *     ],
+     *     "particleRegExs" => [
+     *         [
+     *             "pattern" => <string>,
+     *             "replacement" => <string>
+     *         ],
+     *         ...
+     *     ],
+     *     "template" => <string>
+     * }
      */
     public static function fromRow(
         InflectionTableRow $row,
