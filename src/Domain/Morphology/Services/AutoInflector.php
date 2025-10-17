@@ -8,14 +8,30 @@ use PeterMarkley\Tollerus\Models\InflectionTableRow;
 
 final class AutoInflector
 {
+    private AutoInflectorInput $input;
+
+    public function __construct(
+        InflectionTableRow $row,
+        string $base,
+        MorphRulePatternType $type,
+        int $neographyId = null,
+    ) {
+        $this->input = AutoInflectorInput::fromRow(
+            row: $row,
+            base: $base,
+            type: $type,
+            neographyId: $neographyId,
+        );
+    }
+
     /**
      * Returns an inflected suggestion
      */
-    public static function suggest(AutoInflectorInput $input): string
+    public function suggest(): string
     {
-        $newBase     = self::batchReplace($input->base, $input->baseRegExs);
-        $newParticle = self::batchReplace($input->particle, $input->particleRegExs);
-        return self::applyTemplate($newBase, $newParticle, $input->template);
+        $newBase     = self::batchReplace($this->input->base, $this->input->baseRegExs);
+        $newParticle = self::batchReplace($this->input->particle, $this->input->particleRegExs);
+        return self::applyTemplate($newBase, $newParticle, $this->input->template);
     }
 
     /**
@@ -58,24 +74,5 @@ final class AutoInflector
             '{B}' => $base,
             '{P}' => $particle,
         ]);
-    }
-
-    /**
-     * Convenience function that calls the DTO
-     */
-    public static function suggestFromRow(
-        InflectionTableRow $row,
-        string $base,
-        MorphRulePatternType $type,
-        int $neographyId = null,
-    ): string
-    {
-        $input = AutoInflectorInput::fromRow(
-            row: $row,
-            base: $base,
-            type: $type,
-            neographyId: $neographyId,
-        );
-        return AutoInflector::suggest($input);
     }
 }
