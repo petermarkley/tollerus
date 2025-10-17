@@ -2,7 +2,9 @@
 
 namespace PeterMarkley\Tollerus\Domain\Morphology\Services;
 
+use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Domain\Morphology\DTO\AutoInflectorInput;
+use PeterMarkley\Tollerus\Models\InflectionTableRow;
 
 final class AutoInflector
 {
@@ -50,5 +52,27 @@ final class AutoInflector
     {
         // FIXME - this is dumb but works as a placeholder for now
         return $base . $particle;
+    }
+
+    /**
+     * Convenience function that calls the DTO
+     */
+    public static function suggestFromRow(
+        InflectionTableRow $row,
+        string $base,
+        MorphRulePatternType $type,
+        /**
+         * This is only used if $type = MorphRulePatternType::Native
+         */
+        int $neographyId = null,
+    ): string
+    {
+        $dto = AutoInflectorInput::fromRow(
+            row: $row,
+            base: 'exhuberate',
+            type: MorphRulePatternType::Native,
+            neographyId: 1,
+        );
+        return AutoInflector::suggest($dto);
     }
 }
