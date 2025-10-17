@@ -552,7 +552,8 @@ return new class extends Migration
             $table->foreign('src_base')
                 ->references('id')->on('inflect_table_rows')
                 ->nullOnDelete();
-            $table->string('morph_template')->nullable();
+            $table->string('morph_template')->nullable()
+                ->default('{B}{P}');
             // ensure only one of each label per inflection table
             $table->unique(['inflect_table_id', 'label'], 'inflect_table_label_unique');
             $table->unique(['inflect_table_id', 'label_brief'], 'inflect_table_label_brief_unique');
