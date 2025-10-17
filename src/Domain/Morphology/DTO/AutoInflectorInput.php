@@ -67,6 +67,9 @@ final class AutoInflectorInput
         int $neographyId = null,
     ): self
     {
+        if ($row->src_particle === null) {
+            throw new \LogicException('Can\'t auto-inflect with a null source particle.');
+        }
         $row->loadMissing([
             'sourceParticle.nativeSpellings',
             'morphRules',
@@ -78,8 +81,11 @@ final class AutoInflectorInput
             MorphRulePatternType::Native => $form
                 ->nativeSpellings
                 ->first(fn($t)=>$t->neography_id==$neographyId)
-                ->spelling,
+                ->spelling ?? null,
         };
+        if ($particleString === null) {
+            throw new \LogicException('The particle `Form` object has no native spelling!');
+        }
         $baseRegExs = $row->morphRules
             ->filter(fn($t) =>
                 $t->pattern_type == $type &&
