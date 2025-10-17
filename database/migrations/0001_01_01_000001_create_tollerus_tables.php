@@ -587,13 +587,26 @@ return new class extends Migration
             $table->foreign('inflect_table_row_id')
                 ->references('id')->on('inflect_table_rows')
                 ->cascadeOnDelete();
+            /**
+             * Each morph rule is a call to preg_replace(). These values will
+             * be directly passed as arguments.
+             */
             $table->string('pattern')->charset('utf8mb4');
+            $table->string('replacement')->charset('utf8mb4');
+            /**
+             * These values define where to find the `subject` argument for
+             * preg_replace().
+             */
             $table->foreignId('neography_id')->nullable();
             $table->foreign('neography_id')
                 ->references('id')->on('neographies')
                 ->cascadeOnDelete();
             $table->enum('target_type', MorphRuleTargetType::values());
             $table->enum('pattern_type', MorphRulePatternType::values());
+            /**
+             * This defines the order in which the calls to preg_replace()
+             * should happen on a given inflection row.
+             */
             $table->integer('order');
             /**
              * Ensure only one of each order per input for the inflection row.

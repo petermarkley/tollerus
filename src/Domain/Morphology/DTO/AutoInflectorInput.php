@@ -11,8 +11,8 @@ final class AutoInflectorInput
     public function __construct(
         public string $base,
         public string $particle,
-        public array $basePatterns,
-        public array $particlePatterns,
+        public array $baseRegExs,
+        public array $particleRegExs,
         public string $template,
     ) {}
 
@@ -22,14 +22,19 @@ final class AutoInflectorInput
      * means that the actual base string(s) to be inflected may not
      * exist yet in the database anywhere, and must be passed in from
      * the calling context.
-     * 
-     * A situation where it does pre-exist in the DB implies a
+     *
+     * A situation where it does pre-exist in the database implies a
      * partial/incomplete word entry, which is not supposed to happen
      * normally.
-     * 
-     * Each auto-inflected word form is expected to need 3 or more
-     * calls to this DTO class: 1 each for the roman, phonemic, and
-     * native representations of the word form.
+     *
+     * Each `MorphRule` object represents one call to preg_replace().
+     * The input for these calls can be either a base or particle,
+     * and either the roman, phonemic, or native spelling of it.
+     *
+     * Each call to this DTO class collects the morph rules for one
+     * base-particle pair. A single word form is expected to call it
+     * 3 or more times, varying MorphRulePatternType and/or
+     * neographyId each time.
      */
     public static function fromRow(
         InflectionTableRow $row,
@@ -54,25 +59,25 @@ final class AutoInflectorInput
                 ->first(fn($t)=>$t->neography_id==$neographyId)
                 ->spelling,
         };
-        $basePatterns = $row->morphRules
+        $baseRegExs = $row->morphRules
             ->filter(fn($t) =>
                 $t->pattern_type == $type &&
                 $t->target_type == MorphRuleTargetType::BaseInput
             )->sortBy('order')
-            ->pluck('pattern')
+            ->map->only(['pattern', 'replacement'])
             ->toArray();
-        $particlePatterns = $row->morphRules
+        $particleRegExs = $row->morphRules
             ->filter(fn($t) =>
                 $t->pattern_type == $type &&
                 $t->target_type == MorphRuleTargetType::ParticleInput
             )->sortBy('order')
-            ->pluck('pattern')
+            ->map->only(['pattern', 'replacement'])
             ->toArray();
         return new self(
             base: $base,
             particle: $particleString,
-            basePatterns: $basePatterns,
-            particlePatterns: $particlePatterns,
+            baseRegExs: $baseRegExs,
+            particleRegExs: $particleRegExs,
             template: $row->morph_template,
         );
     }
