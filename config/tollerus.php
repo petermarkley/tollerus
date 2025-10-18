@@ -1,15 +1,38 @@
 <?php
 
 return [
-    'connection' => 'tollerus', // name your package uses
-    'table_prefix' => 'tollerus_', // '' to disable
     /**
-     * This should be between 1 and 5. If number of IDs overflows
-     * this width, everything will still function but you'll have
-     * a cosmetic problem of inconsistent ID lengths. 5 is the
-     * hard maximum because after that it overflows a PHP int.
+     * =========================================================
+     *                  END-USER-FACING CONFIG
+     * =========================================================
      */
-    'global_id_digits' => 4,
+
+    /**
+     * URLs will start with this, e.g.:
+     * https://example.com/tollerus/?&id=AAA4
+     */
+    'route_prefix' => 'tollerus',
+
+    /**
+     * Laravel middleware applied to all Tollerus routes,
+     * including those for viewing/browsing.
+     *
+     * If your project is private but hosted on a public
+     * website, you can for example add 'auth' to this list.
+     */
+    'middleware' => ['web'],
+
+    /**
+     * Laravel middleware applied to only admin Tollerus routes,
+     * i.e. those for editing or inputting data.
+     *
+     * If you have no user authentication, remove 'auth'.
+     * Conversely, if you have many users and want only admins
+     * to edit, you can for example change to 'auth:admin',
+     * or whatever fits your needs.
+     */
+    'admin_middleware' => ['web','auth'],
+
     /**
      * List of word class names that will be suggested as lexeme
      * sources when setting up auto-inflection. This list is
@@ -25,12 +48,48 @@ return [
         'root',
         'particle',
     ],
-    
+
+    /**
+     * This should be between 1 and 5. If number of IDs overflows
+     * this width, everything will still function but you'll have
+     * a cosmetic problem of inconsistent ID lengths in output
+     * (input doesn't care and trims leading 'A's anyway).
+     *
+     * 5 is the hard maximum because after that it overflows a
+     * PHP int.
+     */
+    'global_id_digits' => 4,
+
+    /**
+     * =========================================================
+     *                    DATABASE CONFIG
+     * =========================================================
+     */
+
+    /**
+     * The service provider takes your default DB config array,
+     * and builds a new one under this `connection` name that
+     * includes the `table_prefix` and `connection_overrides`.
+     */
+    'connection' => 'tollerus',
+
+    /**
+     * The actual database tables for Tollerus will all have
+     * names prefixed with this. Set to an empty string '' if
+     * you want no prefix.
+     */
+    'table_prefix' => 'tollerus_',
+
     /*
      * Advanced: use this if you want the Tollerus DB connection
      * to differ from your default DB connection.
      */
     'connection_overrides' => [
+        /**
+         * NO_AUTO_VALUE_ON_ZERO allows a language object to
+         * exist under ID 'AAAA'. (This is especially important
+         * for imported legacy data.)
+         */
         'modes' => ['NO_AUTO_VALUE_ON_ZERO'],
         /*
         'driver' => 'mysql',
