@@ -35,18 +35,24 @@ final class BuildEnglishGrammar
             // Adjectives
             // ----------
             $wordClassGroup = $language->wordClassGroups()->create();
-            $wordClassGroup->wordClasses()->create(['name'=>'adjective', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'adjective', 'language_id'=>$language->id]);
+            $wordClassGroup->primary_class = $primaryClass->id;
+            $wordClassGroup->save();
 
             // Adverbs
             // -------
             $wordClassGroup = $language->wordClassGroups()->create();
-            $wordClassGroup->wordClasses()->create(['name'=>'adverb', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'adverb', 'language_id'=>$language->id]);
+            $wordClassGroup->primary_class = $primaryClass->id;
+            $wordClassGroup->save();
 
             // Verbs
             // -----
             $wordClassGroup = $language->wordClassGroups()->create();
             $wordClassGroup->wordClasses()->create(['name'=>'auxiliary verb', 'language_id'=>$language->id]);
-            $wordClassGroup->wordClasses()->create(['name'=>'verb', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'verb', 'language_id'=>$language->id]);
+            $wordClassGroup->primary_class = $primaryClass->id;
+            $wordClassGroup->save();
             // Add verb inflection features
             $verbRole = $wordClassGroup->features()->create(['name' => 'role']);
             $verbInfinitive = $verbRole->featureValues()->create(['name'=>'infinitive']);
@@ -175,27 +181,37 @@ final class BuildEnglishGrammar
             // Combining Forms
             // ---------------
             $wordClassGroup = $language->wordClassGroups()->create();
-            $wordClassGroup->wordClasses()->create(['name'=>'combining form', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'combining form', 'language_id'=>$language->id]);
+            $wordClassGroup->primary_class = $primaryClass->id;
+            $wordClassGroup->save();
 
             // Contractions
             // ------------
             $wordClassGroup = $language->wordClassGroups()->create();
-            $wordClassGroup->wordClasses()->create(['name'=>'contraction', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'contraction', 'language_id'=>$language->id]);
+            $wordClassGroup->primary_class = $primaryClass->id;
+            $wordClassGroup->save();
 
             // Conjunctions
             // ------------
             $wordClassGroup = $language->wordClassGroups()->create();
-            $wordClassGroup->wordClasses()->create(['name'=>'conjunction', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'conjunction', 'language_id'=>$language->id]);
+            $wordClassGroup->primary_class = $primaryClass->id;
+            $wordClassGroup->save();
 
             // Determiners
             // -----------
             $wordClassGroup = $language->wordClassGroups()->create();
-            $wordClassGroup->wordClasses()->create(['name'=>'determiner', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'determiner', 'language_id'=>$language->id]);
+            $wordClassGroup->primary_class = $primaryClass->id;
+            $wordClassGroup->save();
 
             // Nouns
             // -----
             $wordClassGroup = $language->wordClassGroups()->create();
-            $wordClassGroup->wordClasses()->create(['name'=>'noun', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'noun', 'language_id'=>$language->id]);
+            $wordClassGroup->primary_class = $primaryClass->id;
+            $wordClassGroup->save();
             $wordClassGroup->wordClasses()->create(['name'=>'proper noun', 'language_id'=>$language->id]);
             // Add noun inflection features
             $nounNumber = $wordClassGroup->features()->create(['name' => 'number']);
@@ -236,7 +252,9 @@ final class BuildEnglishGrammar
             // Prepositions
             // ------------
             $wordClassGroup = $language->wordClassGroups()->create();
-            $wordClassGroup->wordClasses()->create(['name'=>'preposition', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'preposition', 'language_id'=>$language->id]);
+            $wordClassGroup->primary_class = $primaryClass->id;
+            $wordClassGroup->save();
 
             // Pronouns
             // --------
@@ -249,7 +267,9 @@ final class BuildEnglishGrammar
              * "I" and "me" benefit from sharing an inflection table on one entry.
              */
             $wordClassGroup = $language->wordClassGroups()->create();
-            $wordClassGroup->wordClasses()->create(['name'=>'pronoun', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'pronoun', 'language_id'=>$language->id]);
+            $wordClassGroup->primary_class = $primaryClass->id;
+            $wordClassGroup->save();
             // Add pronoun inflection features
             $pronounNumber = $wordClassGroup->features()->create(['name' => 'number']);
             $pronounSingular = $pronounNumber->featureValues()->create(['name'=>'singular', 'name_brief'=>'sing.']);

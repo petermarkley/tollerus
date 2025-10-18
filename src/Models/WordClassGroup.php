@@ -26,6 +26,10 @@ class WordClassGroup extends Model
     {
         return $this->hasMany(WordClass::class, 'group_id');
     }
+    public function primaryClass(): BelongsTo
+    {
+        return $this->belongsTo(WordClass::class, 'primary_class');
+    }
     public function features(): HasMany
     {
         return $this->hasMany(Feature::class);
