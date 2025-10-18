@@ -84,6 +84,7 @@ return new class extends Migration
             $table->foreign('language_id')
                 ->references('id')->on('languages')
                 ->cascadeOnDelete();
+            $table->foreignId('primary_class')->nullable(); // Relationship defined after `word_classes` table
             $table->boolean('inflected')->default(false); // FIXME not sure if we need this, can be derived
         });
 
@@ -102,6 +103,11 @@ return new class extends Migration
             // ensure only one of each word class name per language
             $table->unique(['language_id', 'name'], 'language_name_unique');
             $table->unique(['language_id', 'name_brief'], 'language_name_brief_unique');
+        });
+        $connection->table('word_class_groups', function (Blueprint $table) {
+            $table->foreign('primary_class')
+                ->references('id')->on('word_classes')
+                ->nullOnDelete();
         });
 
         $connection->create('features', function (Blueprint $table) {
