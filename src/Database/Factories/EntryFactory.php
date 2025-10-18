@@ -7,6 +7,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+use PeterMarkley\Tollerus\Domain\Morphology\Services\AutoInflector;
+use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
@@ -110,12 +112,48 @@ class EntryFactory extends Factory
                         if ($row->src_base === null) {
                             continue;
                         }
-                        // Create form
-                        $form = Form::factory()
-                            ->for($lexeme)
-                            ->for($language)
-                            ->withSpelling($language)
-                            ->create();
+                        // Create form, irregular 1/20th of the time
+                        if ((bool)mt_rand(0,20)) {
+                            // Regular forms must follow inflection rules
+                            $roman = new AutoInflector(
+                                row: $row,
+                                base: $baseForm->roman,
+                                type: MorphRulePatternType::Roman,
+                            )->inflect();
+                            $phonemic = new AutoInflector(
+                                row: $row,
+                                base: $baseForm->phonemic,
+                                type: MorphRulePatternType::Phonemic,
+                            )->inflect();
+                            $form = Form::factory()
+                                ->for($lexeme)
+                                ->for($language)
+                                ->create([
+                                    'roman' => $roman,
+                                    'phonemic' => $phonemic,
+                                ]);
+                            foreach ($language->neographies as $neography) {
+                                $native = new AutoInflector(
+                                    row: $row,
+                                    base: $baseForm->nativeSpellings
+                                        ->first(fn($t)=>$t->neography_id===$neography->id)
+                                        ->spelling,
+                                    type: MorphRulePatternType::Native,
+                                    neographyId: $neography->id,
+                                )->inflect();
+                                NativeSpelling::factory()
+                                    ->for($form)
+                                    ->for($neography)
+                                    ->create(['spelling'=>$native]);
+                            }
+                        } else {
+                            // Irregular forms can be whatever
+                            $form = Form::factory()
+                                ->for($lexeme)
+                                ->for($language)
+                                ->withSpelling($language)
+                                ->create(['irregular'=>true]);
+                        }
                         // Add grammatical features
                         $filterValues = collect([
                             $table->filterValues,

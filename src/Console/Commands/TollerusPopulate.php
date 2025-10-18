@@ -110,7 +110,7 @@ class TollerusPopulate extends Command
             $row->save();
 
             // Also drop a few morph rules
-            $pattern = '/(?<=.).\$/';
+            $pattern = "(?<=.).\$";
             $row->morphRules()->create([
                 'pattern' => $pattern,
                 'target_type' => MorphRuleTargetType::BaseInput,

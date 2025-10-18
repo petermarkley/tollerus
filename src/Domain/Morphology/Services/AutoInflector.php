@@ -27,7 +27,7 @@ final class AutoInflector
     /**
      * Returns an inflected suggestion
      */
-    public function suggest(): string
+    public function inflect(): string
     {
         $newBase     = self::batchReplace($this->input->base, $this->input->baseRegExs);
         $newParticle = self::batchReplace($this->input->particle, $this->input->particleRegExs);
@@ -44,7 +44,7 @@ final class AutoInflector
     {
         return collect($regExArgs)->reduce(function ($carry, $args) {
             try {
-                $output = preg_replace(
+                $output = mb_ereg_replace(
                     $args['pattern'],
                     $args['replacement'],
                     $carry

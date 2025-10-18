@@ -70,6 +70,9 @@ final class AutoInflectorInput
         if ($row->src_particle === null) {
             throw new \LogicException('Can\'t auto-inflect with a null source particle.');
         }
+        if ($type == MorphRulePatternType::Native && $neographyId === null) {
+            throw new \InvalidArgumentException('AutoInflector called in Native mode with a null neographyId.');
+        }
         $row->loadMissing([
             'sourceParticle.nativeSpellings',
             'morphRules',
