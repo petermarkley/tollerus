@@ -16,6 +16,7 @@ class Sense extends Model
     use HasFactory;
     protected $table = 'senses';
     public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * Model relations

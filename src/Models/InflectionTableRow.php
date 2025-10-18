@@ -64,34 +64,31 @@ class InflectionTableRow extends Model
                 return;
             }
 
-            // Both rules below need this
+            // All the rules below need this
             $groupIdOfInflectionTable = InflectionTable::query()
                 ->whereKey($model->inflect_table_id)
                 ->value('word_class_group_id');
 
             if (!is_null($model->src_particle)) {
                 /**
-                 * Rule 1: src_particle must belong to word_class_group
+                 * Rule 1: src_particle must belong to language
                  */
 
-                // Get the particle's `group_id` via minimal scalar lookups
-                $lexemeId = Form::query()
+                // Get the two `language_id`s via minimal scalar lookups
+                $languageIdOfParticle = Form::query()
                     ->whereKey($model->src_particle)
-                    ->value('lexeme_id');
-                $wordClassId = Lexeme::query()
-                    ->whereKey($lexemeId)
-                    ->value('word_class_id');
-                $groupIdOfParticle = WordClass::query()
-                    ->whereKey($wordClassId)
-                    ->value('group_id');
+                    ->value('language_id');
+                $languageIdOfInflectionTable = WordClassGroup::query()
+                    ->whereKey($groupIdOfInflectionTable)
+                    ->value('language_id');
 
-                if ((int)$groupIdOfParticle !== (int)$groupIdOfInflectionTable) {
-                    throw new \LogicException('InflectionTableRow.src_particle must belong to the same WordClassGroup as the InflectionTableRow\'s parent InflectionTable.');
+                if ((int)$languageIdOfParticle !== (int)$languageIdOfInflectionTable) {
+                    throw new \LogicException('InflectionTableRow.src_particle must belong to the same language as the InflectionTableRow.');
                 }
             }
 
             if (!is_null($model->src_base)) {
-                // Get some values via a minimal lookup
+                // Get some values via minimal lookups
                 $lookup = InflectionTableRow::select('inflect_table_id', 'src_base')
                     ->whereKey($model->src_base)
                     ->first();

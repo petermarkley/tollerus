@@ -40,6 +40,10 @@ class Lexeme extends Model
     {
         return $this->hasMany(Form::class);
     }
+    public function senses(): HasMany
+    {
+        return $this->hasMany(Sense::class);
+    }
 
     protected static function booted()
     {
