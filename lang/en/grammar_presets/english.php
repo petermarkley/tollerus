@@ -180,6 +180,10 @@ return [
      */
     'inflection_tables' => [
         'infinitive' => [
+            /**
+             * This row label doubles as the label for the table itself,
+             * hence no `_label` key.
+             */
             'label' => 'infinitive',
             'label_brief' => 'inf.',
             'label_long' => '', // none needed, because the default is fully clear
@@ -238,6 +242,10 @@ return [
                 'label_long' => '', // none needed because the default is fully clear
             ],
         ],
+        /**
+         * These three tables all re-use the row labels under 'number',
+         * so all we need for them is a label for the table itself.
+         */
         'noun' => ['_label' => 'noun'],
         'subjective' => ['_label' => 'subjective'],
         'objective' => ['_label' => 'objective'],
