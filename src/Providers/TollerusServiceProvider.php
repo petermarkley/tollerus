@@ -46,6 +46,8 @@ class TollerusServiceProvider extends ServiceProvider
 		$this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
 		$this->loadViewsFrom(__DIR__.'/../../resources/views', 'tollerus');
 		Blade::anonymousComponentNamespace('tollerus::components', 'tollerus');
+		// UI localization
+		$this->loadTranslationsFrom(__DIR__.'/../../lang', 'tollerus');
 	}
 
 	private function ensureTollerusConnection(): void
