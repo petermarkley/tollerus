@@ -32,49 +32,143 @@ final class BuildEnglishGrammar
                 throw new \DomainException('Grammar already initialized for this language.');
             }
 
-            // Adjectives
-            // ----------
+            /**
+             * ============================
+             *         ADJECTIVES
+             * ============================
+             */
             $wordClassGroup = $language->wordClassGroups()->create();
-            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'adjective', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.adjective.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.adjective.name_brief'),
+                'language_id' => $language->id
+            ]);
             $wordClassGroup->primary_class = $primaryClass->id;
             $wordClassGroup->save();
 
-            // Adverbs
-            // -------
+            /**
+             * ============================
+             *           ADVERBS
+             * ============================
+             */
             $wordClassGroup = $language->wordClassGroups()->create();
-            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'adverb', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.adverb.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.adverb.name_brief'),
+                'language_id' => $language->id
+            ]);
             $wordClassGroup->primary_class = $primaryClass->id;
             $wordClassGroup->save();
 
-            // Verbs
-            // -----
+            /**
+             * ============================
+             *           VERBS
+             * ============================
+             */
+
             $wordClassGroup = $language->wordClassGroups()->create();
-            $wordClassGroup->wordClasses()->create(['name'=>'auxiliary verb', 'language_id'=>$language->id]);
-            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'verb', 'language_id'=>$language->id]);
+            $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.auxiliary_verb.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.auxiliary_verb.name_brief'),
+                'language_id' => $language->id
+            ]);
+            $primaryClass = $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.verb.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.verb.name_brief'),
+                'language_id' => $language->id
+            ]);
             $wordClassGroup->primary_class = $primaryClass->id;
             $wordClassGroup->save();
-            // Add verb inflection features
-            $verbRole = $wordClassGroup->features()->create(['name' => 'role']);
-            $verbInfinitive = $verbRole->featureValues()->create(['name'=>'infinitive']);
-            $verbFinite     = $verbRole->featureValues()->create(['name'=>'finite']);
-            $verbParticiple = $verbRole->featureValues()->create(['name'=>'participle']);
-            $verbTense = $wordClassGroup->features()->create(['name' => 'tense']);
-            $verbPast    = $verbTense->featureValues()->create(['name'=>'past']);
-            $verbPresent = $verbTense->featureValues()->create(['name'=>'present', 'name_brief'=>'pres.']);
-            $verbAspect = $wordClassGroup->features()->create(['name' => 'aspect']);
-            $verbPerfect     = $verbAspect->featureValues()->create(['name'=>'perfect', 'name_brief'=>'perf.']);
-            $verbSimple      = $verbAspect->featureValues()->create(['name'=>'simple', 'name_brief'=>'sim.']);
-            $verbProgressive = $verbAspect->featureValues()->create(['name'=>'progressive', 'name_brief'=>'prog.']);
-            $verbNumber = $wordClassGroup->features()->create(['name' => 'number']);
-            $verbSingular = $verbNumber->featureValues()->create(['name'=>'singular', 'name_brief'=>'sing.']);
-            $verbPlural   = $verbNumber->featureValues()->create(['name'=>'plural', 'name_brief'=>'pl.']);
-            $verbPerson = $wordClassGroup->features()->create(['name' => 'person']);
-            $verbFirst  = $verbPerson->featureValues()->create(['name'=>'first', 'name_brief'=>"1\u{02E2}\u{1D57}"]);
-            $verbSecond = $verbPerson->featureValues()->create(['name'=>'second', 'name_brief'=>"2\u{207F}\u{1D48}"]);
-            $verbThird  = $verbPerson->featureValues()->create(['name'=>'third', 'name_brief'=>"3\u{02B3}\u{1D48}"]);
-            // Add verb inflection tables
+
+            /**
+             * Add verb inflection features
+             * ----------------------------
+             */
+            // Role -----------------------
+            $verbRole = $wordClassGroup->features()->create([
+                'name' => __('tollerus::grammar_presets/english.verb_role._name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.verb_role._name_brief'),
+            ]);
+            $verbInfinitive = $verbRole->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.verb_role.infinitive.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.verb_role.infinitive.name_brief'),
+            ]);
+            $verbFinite = $verbRole->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.verb_role.finite.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.verb_role.finite.name_brief'),
+            ]);
+            $verbParticiple = $verbRole->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.verb_role.participle.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.verb_role.participle.name_brief'),
+            ]);
+            // Tense -----------------------
+            $verbTense = $wordClassGroup->features()->create([
+                'name' => __('tollerus::grammar_presets/english.tense._name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.tense._name_brief'),
+            ]);
+            $verbPast = $verbTense->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.tense.past.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.tense.past.name_brief'),
+            ]);
+            $verbPresent = $verbTense->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.tense.present.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.tense.present.name_brief'),
+            ]);
+            // Aspect -----------------------
+            $verbAspect = $wordClassGroup->features()->create([
+                'name' => __('tollerus::grammar_presets/english.aspect._name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.aspect._name_brief'),
+            ]);
+            $verbPerfect = $verbAspect->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.aspect.perfect.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.aspect.perfect.name_brief'),
+            ]);
+            $verbSimple = $verbAspect->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.aspect.simple.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.aspect.simple.name_brief'),
+            ]);
+            $verbProgressive = $verbAspect->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.aspect.progressive.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.aspect.progressive.name_brief'),
+            ]);
+            // Number -----------------------
+            $verbNumber = $wordClassGroup->features()->create([
+                'name' => __('tollerus::grammar_presets/english.number._name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.number._name_brief'),
+            ]);
+            $verbSingular = $verbNumber->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.number.singular.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.number.singular.name_brief'),
+            ]);
+            $verbPlural = $verbNumber->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.number.plural.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.number.plural.name_brief'),
+            ]);
+            // Person -----------------------
+            $verbPerson = $wordClassGroup->features()->create([
+                'name' => __('tollerus::grammar_presets/english.person._name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.person._name_brief'),
+            ]);
+            $verbFirst = $verbPerson->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.person.first.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.person.first.name_brief'),
+            ]);
+            $verbSecond = $verbPerson->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.person.second.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.person.second.name_brief'),
+            ]);
+            $verbThird = $verbPerson->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.person.third.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.person.third.name_brief'),
+            ]);
+
+            /**
+             * Add verb inflection tables
+             * --------------------------
+             */
+            // Infinitive (hidden from UI)
             $table = $wordClassGroup->inflectionTables()->create([
-                'label' => 'infinitive',
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.infinitive.label'),
                 'position' => 0,
                 'visible' => false,
                 'stack' => false,
@@ -88,12 +182,14 @@ final class BuildEnglishGrammar
                 'value_id' => $verbInfinitive->id,
             ]))->save();
             $baseRow = $table->rows()->create([
-                'label' => "infinitive",
-                'label_brief' => "inf.",
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.infinitive.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.infinitive.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.infinitive.label_long'),
                 'position' => 0,
             ]);
+            // Finite verb -----------------------
             $table = $wordClassGroup->inflectionTables()->create([
-                'label' => 'finite verb',
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.finite_verb._label'),
                 'position' => 1,
                 'stack' => true,
                 'align_on_stack' => false,
@@ -111,9 +207,9 @@ final class BuildEnglishGrammar
                 'value_id' => $verbSimple->id,
             ]))->save();
             $row = $table->rows()->create([
-                'label' => "3\u{02B3}\u{1D48} pers. pres. sing.",
-                'label_brief' => "3\u{02B3}\u{1D48} pers. sing.",
-                'label_long' => 'third person present singular',
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.finite_verb.third_person_singular.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.finite_verb.third_person_singular.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.finite_verb.third_person_singular.label_long'),
                 'position' => 0,
                 'src_base' => $baseRow->id,
             ]);
@@ -133,8 +229,9 @@ final class BuildEnglishGrammar
                 'value_id' => $verbSingular->id,
             ]))->save();
             $row = $table->rows()->create([
-                'label' => 'past tense',
-                'label_brief' => 'past',
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.finite_verb.past_tense.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.finite_verb.past_tense.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.finite_verb.past_tense.label_long'),
                 'position' => 1,
                 'src_base' => $baseRow->id,
             ]);
@@ -143,8 +240,9 @@ final class BuildEnglishGrammar
                 'feature_id' => $verbTense->id,
                 'value_id' => $verbPast->id,
             ]))->save();
+            // Participle -----------------------
             $table = $wordClassGroup->inflectionTables()->create([
-                'label' => 'participle',
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.participle._label'),
                 'position' => 2,
                 'stack' => true,
                 'align_on_stack' => false,
@@ -157,8 +255,9 @@ final class BuildEnglishGrammar
                 'value_id' => $verbParticiple->id,
             ]))->save();
             $row = $table->rows()->create([
-                'label' => 'present',
-                'label_brief' => 'pres.',
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.participle.present.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.participle.present.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.participle.present.label_long'),
                 'position' => 0,
                 'src_base' => $baseRow->id,
             ]);
@@ -168,7 +267,9 @@ final class BuildEnglishGrammar
                 'value_id' => $verbProgressive->id,
             ]))->save();
             $row = $table->rows()->create([
-                'label' => 'past',
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.participle.past.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.participle.past.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.participle.past.label_long'),
                 'position' => 1,
                 'src_base' => $baseRow->id,
             ]);
@@ -178,48 +279,99 @@ final class BuildEnglishGrammar
                 'value_id' => $verbPerfect->id,
             ]))->save();
 
-            // Combining Forms
-            // ---------------
+            /**
+             * ============================
+             *       COMBINING FORMS
+             * ============================
+             */
             $wordClassGroup = $language->wordClassGroups()->create();
-            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'combining form', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.combining_form.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.combining_form.name_brief'),
+                'language_id' => $language->id
+            ]);
             $wordClassGroup->primary_class = $primaryClass->id;
             $wordClassGroup->save();
 
-            // Contractions
-            // ------------
+            /**
+             * ============================
+             *         CONTRACTIONS
+             * ============================
+             */
             $wordClassGroup = $language->wordClassGroups()->create();
-            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'contraction', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.contraction.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.contraction.name_brief'),
+                'language_id' => $language->id
+            ]);
             $wordClassGroup->primary_class = $primaryClass->id;
             $wordClassGroup->save();
 
-            // Conjunctions
-            // ------------
+            /**
+             * ============================
+             *         CONJUNCTIONS
+             * ============================
+             */
             $wordClassGroup = $language->wordClassGroups()->create();
-            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'conjunction', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.conjunction.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.conjunction.name_brief'),
+                'language_id' => $language->id
+            ]);
             $wordClassGroup->primary_class = $primaryClass->id;
             $wordClassGroup->save();
 
-            // Determiners
-            // -----------
+            /**
+             * ============================
+             *         DETERMINERS
+             * ============================
+             */
             $wordClassGroup = $language->wordClassGroups()->create();
-            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'determiner', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.determiner.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.determiner.name_brief'),
+                'language_id' => $language->id
+            ]);
             $wordClassGroup->primary_class = $primaryClass->id;
             $wordClassGroup->save();
 
-            // Nouns
-            // -----
+            /**
+             * ============================
+             *           NOUNS
+             * ============================
+             */
+
             $wordClassGroup = $language->wordClassGroups()->create();
-            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'noun', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.noun.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.noun.name_brief'),
+                'language_id' => $language->id
+            ]);
             $wordClassGroup->primary_class = $primaryClass->id;
             $wordClassGroup->save();
-            $wordClassGroup->wordClasses()->create(['name'=>'proper noun', 'language_id'=>$language->id]);
+            $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.proper_noun.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.proper_noun.name_brief'),
+                'language_id' => $language->id
+            ]);
+
             // Add noun inflection features
-            $nounNumber = $wordClassGroup->features()->create(['name' => 'number']);
-            $nounSingular = $nounNumber->featureValues()->create(['name'=>'singular', 'name_brief'=>'sing.']);
-            $nounPlural   = $nounNumber->featureValues()->create(['name'=>'plural', 'name_brief'=>'pl.']);
+            $nounNumber = $wordClassGroup->features()->create([
+                'name' => __('tollerus::grammar_presets/english.number._name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.number._name_brief'),
+            ]);
+            $nounSingular = $nounNumber->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.number.singular.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.number.singular.name_brief'),
+            ]);
+            $nounPlural = $nounNumber->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.number.plural.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.number.plural.name_brief'),
+            ]);
+
             // Add noun inflection tables
             $table = $wordClassGroup->inflectionTables()->create([
-                'label' => 'noun',
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.noun._label'),
                 'position' => 0,
                 'show_label' => false,
                 'stack' => true,
@@ -228,8 +380,9 @@ final class BuildEnglishGrammar
                 'rows_fold' => false
             ]);
             $baseRow = $table->rows()->create([
-                'label' => "singular",
-                'label_brief' => "sing.",
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.number.singular.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.singular.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.singular.label_long'),
                 'position' => 0,
             ]);
             (new InflectionTableRowFilter([
@@ -238,8 +391,9 @@ final class BuildEnglishGrammar
                 'value_id' => $nounSingular->id,
             ]))->save();
             $row = $table->rows()->create([
-                'label' => "plural",
-                'label_brief' => "pl.",
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.number.plural.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.plural.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.plural.label_long'),
                 'position' => 1,
                 'src_base' => $baseRow->id,
             ]);
@@ -249,16 +403,25 @@ final class BuildEnglishGrammar
                 'value_id' => $nounPlural->id,
             ]))->save();
 
-            // Prepositions
-            // ------------
+            /**
+             * ============================
+             *        PREPOSITIONS
+             * ============================
+             */
             $wordClassGroup = $language->wordClassGroups()->create();
-            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'preposition', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.preposition.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.preposition.name_brief'),
+                'language_id' => $language->id
+            ]);
             $wordClassGroup->primary_class = $primaryClass->id;
             $wordClassGroup->save();
 
-            // Pronouns
-            // --------
             /**
+             * ============================
+             *          PRONOUNS
+             * ============================
+             *
              * In English, personal pronouns are inflected by not just number, but also
              * case: subjective vs. objective.
              *
@@ -266,20 +429,45 @@ final class BuildEnglishGrammar
              * syntax. So "I" and "you" can be separate entries in the dictionary, whereas
              * "I" and "me" benefit from sharing an inflection table on one entry.
              */
+
             $wordClassGroup = $language->wordClassGroups()->create();
-            $primaryClass = $wordClassGroup->wordClasses()->create(['name'=>'pronoun', 'language_id'=>$language->id]);
+            $primaryClass = $wordClassGroup->wordClasses()->create([
+                'name' => __('tollerus::grammar_presets/english.word_classes.pronoun.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.word_classes.pronoun.name_brief'),
+                'language_id' => $language->id
+            ]);
             $wordClassGroup->primary_class = $primaryClass->id;
             $wordClassGroup->save();
+
             // Add pronoun inflection features
-            $pronounNumber = $wordClassGroup->features()->create(['name' => 'number']);
-            $pronounSingular = $pronounNumber->featureValues()->create(['name'=>'singular', 'name_brief'=>'sing.']);
-            $pronounPlural   = $pronounNumber->featureValues()->create(['name'=>'plural', 'name_brief'=>'pl.']);
-            $pronounCase = $wordClassGroup->features()->create(['name' => 'case']);
-            $pronounSubjective = $pronounCase->featureValues()->create(['name'=>'subjective', 'name_brief'=>'sub.']);
-            $pronounObjective  = $pronounCase->featureValues()->create(['name'=>'objective', 'name_brief'=>'obj.']);
+            $pronounNumber = $wordClassGroup->features()->create([
+                'name' => __('tollerus::grammar_presets/english.number._name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.number._name_brief'),
+            ]);
+            $pronounSingular = $pronounNumber->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.number.singular.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.number.singular.name_brief'),
+            ]);
+            $pronounPlural   = $pronounNumber->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.number.plural.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.number.plural.name_brief'),
+            ]);
+            $pronounCase = $wordClassGroup->features()->create([
+                'name' => __('tollerus::grammar_presets/english.case._name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.case._name_brief'),
+            ]);
+            $pronounSubjective = $pronounCase->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.case.subjective.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.case.subjective.name_brief'),
+            ]);
+            $pronounObjective  = $pronounCase->featureValues()->create([
+                'name' => __('tollerus::grammar_presets/english.case.objective.name'),
+                'name_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.case.objective.name_brief'),
+            ]);
+
             // Add pronoun inflection tables
             $table = $wordClassGroup->inflectionTables()->create([
-                'label' => 'subjective',
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.subjective._label'),
                 'position' => 0,
                 'stack' => true,
                 'align_on_stack' => true,
@@ -292,8 +480,9 @@ final class BuildEnglishGrammar
                 'value_id' => $pronounSubjective->id,
             ]))->save();
             $baseRow = $table->rows()->create([
-                'label' => "singular",
-                'label_brief' => "sing.",
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.number.singular.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.singular.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.singular.label_long'),
                 'position' => 0,
             ]);
             (new InflectionTableRowFilter([
@@ -302,8 +491,9 @@ final class BuildEnglishGrammar
                 'value_id' => $pronounSingular->id,
             ]))->save();
             $row = $table->rows()->create([
-                'label' => "plural",
-                'label_brief' => "pl.",
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.number.plural.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.plural.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.plural.label_long'),
                 'position' => 1,
                 'src_base' => $baseRow->id,
             ]);
@@ -313,7 +503,7 @@ final class BuildEnglishGrammar
                 'value_id' => $pronounPlural->id,
             ]))->save();
             $table = $wordClassGroup->inflectionTables()->create([
-                'label' => 'objective',
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.objective._label'),
                 'position' => 1,
                 'stack' => true,
                 'align_on_stack' => true,
@@ -326,8 +516,9 @@ final class BuildEnglishGrammar
                 'value_id' => $pronounObjective->id,
             ]))->save();
             $row = $table->rows()->create([
-                'label' => "singular",
-                'label_brief' => "sing.",
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.number.singular.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.singular.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.singular.label_long'),
                 'position' => 0,
                 'src_base' => $baseRow->id,
             ]);
@@ -337,8 +528,9 @@ final class BuildEnglishGrammar
                 'value_id' => $pronounSingular->id,
             ]))->save();
             $row = $table->rows()->create([
-                'label' => "plural",
-                'label_brief' => "pl.",
+                'label' => __('tollerus::grammar_presets/english.inflection_tables.number.plural.label'),
+                'label_brief' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.plural.label_brief'),
+                'label_long' => tollerus_tr_optional('tollerus::grammar_presets/english.inflection_tables.number.plural.label_long'),
                 'position' => 1,
                 'src_base' => $baseRow->id,
             ]);

@@ -20,6 +20,11 @@ class TollerusServiceProvider extends ServiceProvider
 		);
 		// Set up database stuff
 		$this->ensureTollerusConnection();
+		// Load package helpers
+		$helpers = __DIR__.'/../Support/helpers.php';
+		if (file_exists($helpers)) {
+			require_once $helpers;
+		}
 	}
 
 	public function boot()
