@@ -93,7 +93,12 @@
          id="stop34" /><stop
          style="stop-color:#76838c;stop-opacity:1;"
          offset="1"
-         id="stop35" /></linearGradient><radialGradient
+         id="stop35" /></linearGradient><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath52"><path
+         style="stroke-width:0.888315;stroke-linejoin:round"
+         d="m 264.55392,230.6561 c -34.2223,0 -65.29467,7.99763 -88.23801,21.33811 -22.94334,13.34047 -38.09696,32.50044 -38.09696,54.27129 v 34.61827 c 0,28.2223 25.45925,52.916 64.16064,65.90813 38.70138,12.99214 85.64726,12.99214 124.34865,0 38.70138,-12.99213 64.16245,-37.68583 64.16244,-65.90813 V 306.2655 c 0,-21.77085 -15.15362,-40.93082 -38.09696,-54.27129 -22.94334,-13.34048 -54.01751,-21.33811 -88.2398,-21.33811 z"
+         id="path52" /></clipPath><radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient34"
        id="radialGradient49"
