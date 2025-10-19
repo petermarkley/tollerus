@@ -14,6 +14,13 @@ return [
     'route_prefix' => 'tollerus',
 
     /**
+     * Locale-specific words for transliteration (the process,
+     * and the target writing system). Used in some UI elements.
+     */
+    'local_transliteration_word' => 'romanization',
+    'local_transliteration_target' => 'Roman',
+
+    /**
      * Laravel middleware applied to all Tollerus routes,
      * including those for viewing/browsing.
      *

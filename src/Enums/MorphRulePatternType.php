@@ -4,7 +4,7 @@ namespace PeterMarkley\Tollerus\Enums;
 
 enum MorphRulePatternType: string
 {
-    case Roman = 'roman';
+    case Transliterated = 'transliterated';
     case Phonemic = 'phonemic';
     case Native = 'native';
 

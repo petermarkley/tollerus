@@ -442,13 +442,13 @@ class FileImportSeeder extends Seeder
         $glyphModel->render_base = isset($glyphXML->glyph->base);
         $glyphModel->glyph = $glyphXML->glyph->__toString();
         if (isset($glyphXML->roman)) {
-            $glyphModel->roman = $glyphXML->roman->__toString();
+            $glyphModel->transliterated = $glyphXML->roman->__toString();
         }
         if (isset($glyphXML->phonemic)) {
             $glyphModel->phonemic = $glyphXML->phonemic->__toString();
         }
         if (isset($glyphXML->pronunciation->roman)) {
-            $glyphModel->pronunciation_roman = $glyphXML->pronunciation->roman->__toString();
+            $glyphModel->pronunciation_transliterated = $glyphXML->pronunciation->roman->__toString();
         }
         if (isset($glyphXML->pronunciation->phonemic)) {
             $glyphModel->pronunciation_phonemic = $glyphXML->pronunciation->phonemic->__toString();
@@ -763,7 +763,7 @@ class FileImportSeeder extends Seeder
         $formModel->lexeme_id = $lexemeModel->id;
         $formModel->language_id = $this->currentLang->id;
         if (isset($formXML->roman)) {
-            $formModel->roman = $formXML->roman->__toString();
+            $formModel->transliterated = $formXML->roman->__toString();
         }
         if (isset($formXML->phonemic)) {
             $formModel->phonemic = $formXML->phonemic->__toString();

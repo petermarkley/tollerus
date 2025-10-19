@@ -29,7 +29,7 @@ final class AutoInflectorInput
      *
      * Each `MorphRule` object represents one call to preg_replace().
      * The input for these calls can be either a base or particle,
-     * and either the roman, phonemic, or native spelling of it.
+     * and either its transliterated, phonemic, or native spelling.
      *
      * Each call to this DTO class collects the morph rules for one
      * base-particle pair. A single word form is expected to call it
@@ -79,7 +79,7 @@ final class AutoInflectorInput
         ]);
         $form = $row->sourceParticle;
         $particleString = match($type) {
-            MorphRulePatternType::Roman => $form->roman,
+            MorphRulePatternType::Transliterated => $form->transliterated,
             MorphRulePatternType::Phonemic => $form->phonemic,
             MorphRulePatternType::Native => $form
                 ->nativeSpellings

@@ -96,7 +96,7 @@ class NeographyFactory extends Factory
                             ->create([
                                 'position' => $key,
                                 'glyph' => $glyph['codepoint'],
-                                'roman' => $glyph['roman'],
+                                'transliterated' => $glyph['roman'],
                                 'phonemic' => $glyph['phonemic'],
                             ]);
                     };

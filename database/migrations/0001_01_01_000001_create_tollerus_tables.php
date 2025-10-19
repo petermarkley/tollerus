@@ -228,9 +228,9 @@ return new class extends Migration
             $table->string('glyph')
                 ->charset('utf8mb4')
                 ->collation('utf8mb4_bin'); // This is needed for the unique constraint below.
-            $table->string('roman')->nullable();
+            $table->string('transliterated')->nullable();
             $table->string('phonemic')->charset('utf8mb4')->nullable();
-            $table->string('pronunciation_roman')->nullable();
+            $table->string('pronunciation_transliterated')->nullable();
             $table->string('pronunciation_phonemic')->charset('utf8mb4')->nullable();
             $table->string('pronunciation_native')->charset('utf8mb4')->nullable();
             $table->string('note')->charset('utf8mb4')->nullable();
@@ -369,7 +369,7 @@ return new class extends Migration
             $table->foreign('lexeme_id')
                 ->references('id')->on('lexemes')
                 ->cascadeOnDelete();
-            $table->string('roman');
+            $table->string('transliterated');
             $table->string('phonemic')->charset('utf8mb4');
             $table->boolean('irregular')->default(false);
         });
@@ -619,17 +619,17 @@ return new class extends Migration
              * Ensure only one of each order per input for the inflection row.
              *
              * For each inflection row we have 4+(2*N) possible inputs:
-             * - roman, base
+             * - transliterated, base
              * - phonemic, base
              * - N number of native bases
-             * - roman, particle
+             * - transliterated, particle
              * - phonemic, particle
              * - N number of native particles
              *
              * Which one of these inputs we're mutating for the inflection row
              * depends on the values of these 3 fields:
              * - target_type (base|comb)
-             * - pattern_type (roman|phonemic|native)
+             * - pattern_type (transliterated|phonemic|native)
              * - neography_id
              *
              * To avoid a 5-way unique constraint, we will merge these 3 fields

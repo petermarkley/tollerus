@@ -114,7 +114,7 @@ class TollerusPopulate extends Command
             $row->morphRules()->create([
                 'pattern' => $pattern,
                 'target_type' => MorphRuleTargetType::BaseInput,
-                'pattern_type' => MorphRulePatternType::Roman,
+                'pattern_type' => MorphRulePatternType::Transliterated,
                 'order' => 1,
             ]);
             $row->morphRules()->create([

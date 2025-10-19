@@ -51,9 +51,9 @@ class FormFactory extends Factory
                     ->for($form)
                     ->for($neography)
                     ->create(['spelling'=>$native]);
-                // If this neography is primary, use these glyphs for the form's roman/phonemic
+                // If this neography is primary, use these glyphs for the form's transliterated/phonemic
                 if ($neography->id === $language->primary_neography) {
-                    $form->roman = $selectedGlyphs->pluck('roman')->implode('');
+                    $form->transliterated = $selectedGlyphs->pluck('transliterated')->implode('');
                     $form->phonemic = $selectedGlyphs->pluck('phonemic')->implode('');
                     $form->save();
                 }

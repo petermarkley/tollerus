@@ -115,10 +115,10 @@ class EntryFactory extends Factory
                         // Create form, irregular 1/20th of the time
                         if ((bool)mt_rand(0,20)) {
                             // Regular forms must follow inflection rules
-                            $roman = new AutoInflector(
+                            $transliterated = new AutoInflector(
                                 row: $row,
-                                base: $baseForm->roman,
-                                type: MorphRulePatternType::Roman,
+                                base: $baseForm->transliterated,
+                                type: MorphRulePatternType::Transliterated,
                             )->inflect();
                             $phonemic = new AutoInflector(
                                 row: $row,
@@ -129,7 +129,7 @@ class EntryFactory extends Factory
                                 ->for($lexeme)
                                 ->for($language)
                                 ->create([
-                                    'roman' => $roman,
+                                    'transliterated' => $transliterated,
                                     'phonemic' => $phonemic,
                                 ]);
                             foreach ($language->neographies as $neography) {

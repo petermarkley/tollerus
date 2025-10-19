@@ -48,9 +48,9 @@ class MorphRule extends Model
         $query->where('target_type', MorphRuleTargetType::ParticleInput);
     }
     #[Scope]
-    protected function onRoman(Builder $query): void
+    protected function onTransliterated(Builder $query): void
     {
-        $query->where('pattern_type', MorphRulePatternType::Roman);
+        $query->where('pattern_type', MorphRulePatternType::Transliterated);
     }
     #[Scope]
     protected function onPhonemic(Builder $query): void
