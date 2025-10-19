@@ -4,6 +4,7 @@ namespace PeterMarkley\Tollerus\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 
 use PeterMarkley\Tollerus\Console\Commands\TollerusImport;
@@ -44,6 +45,7 @@ class TollerusServiceProvider extends ServiceProvider
 		// Expose routes and views
 		$this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
 		$this->loadViewsFrom(__DIR__.'/../../resources/views', 'tollerus');
+		Blade::anonymousComponentNamespace('tollerus::components', 'tollerus');
 	}
 
 	private function ensureTollerusConnection(): void
