@@ -1,17 +1,6 @@
-# `BuildEnglishGrammar` action
+# English Grammar Preset
 
-This action will take a `Language` model and add `WordClassGroup`s, `Feature`s/`FeatureValue`s, and `InflectionTable`s roughly matching real-life English grammar.
-
-Used for testing/demo purposes, or as a preset for users to modify.
-
-To run:
-```
-$language = Language::find(1);
-$action = new \PeterMarkley\Tollerus\Domain\Language\Actions\BuildEnglishGrammar;
-$action($language)
-```
-
-Structure:
+Word class structure:
 * (group)
   * `adjective`
 * (group)

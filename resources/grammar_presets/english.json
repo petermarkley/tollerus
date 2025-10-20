@@ -1,0 +1,239 @@
+{
+    "i18n_file": "english",
+    "groups": [
+        {
+            "classes": [
+                {"i18n_key": "adjective", "primary": true}
+            ]
+        },
+        {
+            "classes": [
+                {"i18n_key": "adverb", "primary": true}
+            ]
+        },
+        {
+            "classes": [
+                {"i18n_key": "auxiliary_verb", "primary": false},
+                {"i18n_key": "verb", "primary": true}
+            ],
+            "features": [
+                {
+                    "i18n_key": "verb_role",
+                    "values": ["infinitive", "finite", "participle"]
+                },
+                {
+                    "i18n_key": "tense",
+                    "values": ["past", "present"]
+                },
+                {
+                    "i18n_key": "aspect",
+                    "values": ["perfect", "simple", "progressive"]
+                },
+                {
+                    "i18n_key": "number",
+                    "values": ["singular", "plural"]
+                },
+                {
+                    "i18n_key": "person",
+                    "values": ["first", "second", "third"]
+                }
+            ],
+            "inflection_tables": [
+                {
+                    "i18n_key": "infinitive",
+                    "i18n_subkey": "label",
+                    "visible": false,
+                    "stack": false,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "infinitive"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "infinitive",
+                            "filters": [],
+                            "base": true
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "finite_verb",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "aspect", "value": "simple"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "finite_verb.third_person_singular",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "person", "value": "third"},
+                                {"feature": "number", "value": "singular"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "finite_verb.past_tense",
+                            "filters": [
+                                {"feature": "tense", "value": "past"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "participle",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "participle"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "participle.present",
+                            "filters": [
+                                {"feature": "aspect", "value": "progressive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "participle.past",
+                            "filters": [
+                                {"feature": "aspect", "value": "perfect"}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "classes": [
+                {"i18n_key": "combining_form", "primary": true}
+            ]
+        },
+        {
+            "classes": [
+                {"i18n_key": "contraction", "primary": true}
+            ]
+        },
+        {
+            "classes": [
+                {"i18n_key": "determiner", "primary": true}
+            ]
+        },
+        {
+            "classes": [
+                {"i18n_key": "noun", "primary": true},
+                {"i18n_key": "proper_noun", "primary": false}
+            ],
+            "features": [
+                {
+                    "i18n_key": "number",
+                    "values": ["singular", "plural"]
+                }
+            ],
+            "inflection_tables": [
+                {
+                    "i18n_key": "noun",
+                    "show_label": false,
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [],
+                    "rows": [
+                        {
+                            "i18n_key": "number.singular",
+                            "filters": [
+                                {"feature": "number", "value": "singular"}
+                            ],
+                            "base": true
+                        },
+                        {
+                            "i18n_key": "number.plural",
+                            "filters": [
+                                {"feature": "number", "value": "plural"}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "classes": [
+                {"i18n_key": "preposition", "primary": true}
+            ]
+        },
+        {
+            "classes": [
+                {"i18n_key": "pronoun", "primary": true}
+            ],
+            "features": [
+                {
+                    "i18n_key": "number",
+                    "values": ["singular", "plural"]
+                },
+                {
+                    "i18n_key": "case",
+                    "values": ["subjective", "objective"]
+                }
+            ],
+            "inflection_tables": [
+                {
+                    "i18n_key": "subjective",
+                    "stack": true,
+                    "align_on_stack": true,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "case", "value": "subjective"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "number.singular",
+                            "filters": [
+                                {"feature": "number", "value": "singular"}
+                            ],
+                            "base": true
+                        },
+                        {
+                            "i18n_key": "number.plural",
+                            "filters": [
+                                {"feature": "number", "value": "plural"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "objective",
+                    "stack": true,
+                    "align_on_stack": true,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "case", "value": "objective"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "number.singular",
+                            "filters": [
+                                {"feature": "number", "value": "singular"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "number.plural",
+                            "filters": [
+                                {"feature": "number", "value": "plural"}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

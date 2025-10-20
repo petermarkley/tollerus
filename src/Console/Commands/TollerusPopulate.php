@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
 use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
-use PeterMarkley\Tollerus\Domain\Language\Actions\BuildEnglishGrammar;
+use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\Language;
@@ -33,13 +33,13 @@ class TollerusPopulate extends Command
     /**
      * Execute the console command.
      */
-    public function handle(BuildEnglishGrammar $buildEnglishGrammar)
+    public function handle(LoadGrammarPreset $loadGrammarPreset)
     {
         /**
          * Step 1: Generate language, neography, and grammar
          */
         $language = Language::factory()->withNeography()->create();
-        $buildEnglishGrammar($language);
+        $loadGrammarPreset($language, 'english');
 
         /**
          * Step 2: Define particles for auto-inflection
