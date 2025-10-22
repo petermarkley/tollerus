@@ -40,7 +40,7 @@ final class BackgroundImg
         $width = 10000;
         $scale = 0.8;
         $height = $y_ratio*$width;
-        $output = ["<svg width=\"$width\" height=\"$height\" viewBox=\"0 0 $width $height\">"];
+        $output = ["<svg width=\"$width\" height=\"$height\" viewBox=\"0 0 $width $height\" xmlns=\"http://www.w3.org/2000/svg\">"];
         for ($y=0; $y < $y_num; $y++) {
             $y_val = ($height/$y_num)*($y+0.5);
             for ($x=0; $x < $x_num; $x++) {
