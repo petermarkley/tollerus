@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Config;
 
 use PeterMarkley\Tollerus\Console\Commands\TollerusImport;
 use PeterMarkley\Tollerus\Console\Commands\TollerusPopulate;
+use PeterMarkley\Tollerus\Console\Commands\TollerusAssetsGenerate;
 
 class TollerusServiceProvider extends ServiceProvider
 {
@@ -43,6 +44,7 @@ class TollerusServiceProvider extends ServiceProvider
 			$this->commands([
 				TollerusImport::class,
 				TollerusPopulate::class,
+				TollerusAssetsGenerate::class,
 			]);
 			// Make `php artisan migrate` aware of our DB migrations
 			$this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
