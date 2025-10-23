@@ -17,11 +17,23 @@ class LanguageController extends Controller
     {
         $languages = Language::orderBy('machine_name')
             ->get();
-        // $languages->loadMissing([
-        //     'neographies',
-        // ]);
+        $languages->loadMissing([
+            'primaryNeography',
+        ]);
+        $primaryGlyphs = $languages->mapWithKeys(function ($l) {
+            if ($l->primaryNeography !== null) {
+                $glyphs = $l->primaryNeography->glyphs()
+                    ->where('render_base', false)
+                    ->limit(2)
+                    ->get();
+            } else {
+                $glyphs = null;
+            }
+            return [$l->machine_name => $glyphs];
+        })->all();
         return view('tollerus::admin.languages.index', [
             'languages' => $languages,
+            'primaryGlyphs' => $primaryGlyphs,
         ]);
     }
 }

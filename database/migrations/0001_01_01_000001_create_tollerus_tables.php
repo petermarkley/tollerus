@@ -52,14 +52,14 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('machine_name')->unique();
-            $table->string('dict_title');
-            $table->string('dict_title_full');
-            $table->string('dict_author');
+            $table->string('dict_title')->nullable();
+            $table->string('dict_title_full')->nullable();
+            $table->string('dict_author')->nullable();
             $table->foreignId('primary_neography')->nullable();
             $table->foreign('primary_neography')
                 ->references('id')->on('neographies')
                 ->nullOnDelete();
-            $table->text('intro')->charset('utf8mb4');
+            $table->text('intro')->charset('utf8mb4')->nullable();
             $table->boolean('visible')
                 ->default(true);
         });
