@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 
+use PeterMarkley\Tollerus\Models\Language;
+
 class LanguageController extends Controller
 {
     /**
@@ -13,6 +15,13 @@ class LanguageController extends Controller
      */
     public function index()
     {
-        return view('tollerus::admin.languages.index');
+        $languages = Language::orderBy('machine_name')
+            ->get();
+        // $languages->loadMissing([
+        //     'neographies',
+        // ]);
+        return view('tollerus::admin.languages.index', [
+            'languages' => $languages,
+        ]);
     }
 }

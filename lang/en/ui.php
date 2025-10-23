@@ -1,7 +1,16 @@
 <?php
 
 return [
-  'hello' => 'Hellow, whorld',
+  'languages' => 'Languages',
+  /**
+   * A "neography" is a fictional writing system. ("Neo-"
+   * because someone thought of it as a "new" idea.) The
+   * more familiar English term is "script," but script
+   * can have many more meanings depending on context
+   * (like a movie script, or a computer script) and the
+   * phrase "writing system" is too clumsy.
+   */
+  'neographies' => 'Neographies',
   /**
    * This website footer uses Markdown syntax for a couple of
    * hyperlinks. It works like this:
