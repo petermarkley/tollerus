@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 
 use PeterMarkley\Tollerus\Http\Controllers\HelloController;
+use PeterMarkley\Tollerus\Http\Controllers\LanguageController;
 
 $baseMiddleware = Config::get('tollerus.middleware', ['web']);
 $adminMiddleware = collect(Config::get('tollerus.admin_middleware', []))
@@ -13,16 +14,14 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
     ->as('tollerus.')
     ->middleware($baseMiddleware)
     ->group(function () use ($adminMiddleware) {
+
         Route::get('/', [HelloController::class, 'index'])->name('hello');
 
-        // public/browse UI
-        // Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-        // write/manage UI behind stronger middleware
-        Route::middleware($adminMiddleware)
+        // Routes for the admin area of the app
+        Route::prefix('admin')
+            ->as('admin.')
+            ->middleware($adminMiddleware)
             ->group(function () {
-                // Route::get('/entries/create', [EntriesController::class, 'create'])->name('entries.create');
-                // Route::post('/entries', [EntriesController::class, 'store'])->name('entries.store');
-                // …other edit/delete routes
+                Route::get('/languages', [LanguageController::class, 'index'])->name('languages.index');
             });
     });
