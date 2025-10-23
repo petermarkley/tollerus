@@ -18,7 +18,7 @@ return [
    *
    * The final English text that the browser will show says:
    *
-   *     "The Tollerus software is copyright © <year> by
+   *     "The Tollerus software is copyright © 2025 by
    *     Peter Markley. Licensed via LGPL v2.1"
    */
   'copyright_footer' => 'The [Tollerus software](:github_url) is copyright &copy; :year by Peter Markley.<br>Licensed via [LGPL v2.1](:lgpl_url)',
