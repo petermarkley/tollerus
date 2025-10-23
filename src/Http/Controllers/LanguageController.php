@@ -26,10 +26,15 @@ class LanguageController extends Controller
                     ->where('render_base', false)
                     ->limit(2)
                     ->get();
+                $svg = null; // FIXME - pull from neography->font_svg field
+                $output = [
+                    'models' => $glyphs,
+                    'svg' => $svg,
+                ];
             } else {
-                $glyphs = null;
+                $output = null;
             }
-            return [$l->machine_name => $glyphs];
+            return [$l->machine_name => $output];
         })->all();
         return view('tollerus::admin.languages.index', [
             'languages' => $languages,
