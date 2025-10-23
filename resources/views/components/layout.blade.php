@@ -17,7 +17,7 @@
                 {{ $slot }}
             </main>
             <footer class="w-full md:max-w-[1200px] mx-auto px-6 md:px-0 text-center text-zinc-800 dark:text-zinc-500 pb-8">
-                <p>The <a href="https://github.com/petermarkley/tollerus" class="text-cyan-800 dark:text-cyan-500 opacity-75 saturate-80 dark:saturate-20">Tollerus software</a> is copyright &copy; {{ date('Y') }} by Peter Markley.<br>Licensed via <a href="https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html" class="text-cyan-800 dark:text-cyan-500 opacity-75 saturate-80 dark:saturate-20">LGPL v2.1</a></p>
+                <p>{!! Str::markdown(__('tollerus::ui.copyright_footer', ['year' => date('Y'), 'github_url' => 'https://github.com/petermarkley/tollerus', 'lgpl_url' => 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html'])) !!}</p>
             </footer>
         </div>
     </body>
