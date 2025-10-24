@@ -447,7 +447,8 @@ class NeographyFactory extends Factory
     protected static function formatGlyphs(string $machineName, string $name, array $glyphGroups): string
     {
         $head = <<<EOT
-        <svg>
+        <svg width="1000" height="1000" viewBox="0 0 1000 1000">
+        <defs>
         <font horiz-adv-x="1000" horiz-origin-x="0" horiz-origin-y="0" vert-origin-x="512" vert-origin-y="768" vert-adv-y="1024">
         <font-face units-per-em="1000" ascent="750" cap-height="600" x-height="400" descent="200" font-family="$name"/>
 
@@ -459,6 +460,7 @@ class NeographyFactory extends Factory
             })->implode("\n");
         $foot = <<<EOT
         </font>
+        </defs>
         </svg>
 
         EOT;
