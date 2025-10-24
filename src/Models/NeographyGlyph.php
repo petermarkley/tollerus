@@ -46,6 +46,7 @@ class NeographyGlyph extends Model
         if ($svg === false) {
             return null;
         }
+        $height = $svg['height'];
         if (!isset($svg->defs->font)) {
             return null;
         }
@@ -55,7 +56,19 @@ class NeographyGlyph extends Model
         foreach ($font->glyph as $glyph) {
             if ($glyph['unicode'] == $this->glyph) {
                 $d = $glyph['d'];
-                $path = "<path fill=\"currentColor\" d=\"$d\"/>";
+                /**
+                 * The reason for having transform="translate(0,$height),scale(1,-1)" is
+                 * to translate between font and canvas coordinates:
+                 *
+                 *   "Unlike standard graphics in SVG, where the initial coordinate
+                 *    system has the y-axis pointing downward (see The initial coordinate
+                 *    system), the design grid for SVG fonts, along with the initial
+                 *    coordinate system for the glyphs, has the y-axis pointing upward for
+                 *    consistency with accepted industry practice for many popular font
+                 *    formats."
+                 *   https://www.w3.org/TR/2000/CR-SVG-20000802/fonts.html#SVGFontsOverview
+                 */
+                $path = "<path fill=\"currentColor\" d=\"$d\" transform=\"translate(0,$height),scale(1,-1)\"/>";
                 $width = $glyph['horiz-adv-x'];
                 break;
             }
@@ -75,7 +88,6 @@ class NeographyGlyph extends Model
              */
             $width = $svg['width'];
         }
-        $height = $svg['height'];
         $viewBox = "0 0 $width $height";
         if ($classes === null) {
             $output[] = "<svg width=\"$width\" height=\"$height\" viewBox=\"$viewBox\">";
