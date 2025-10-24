@@ -19,7 +19,9 @@ class LanguageController extends Controller
             ->get();
         $languages->loadMissing([
             'primaryNeography',
+            'wordClassGroups.primaryClass',
         ]);
+        // Preview of neography data
         $primaryGlyphs = $languages->mapWithKeys(function ($l) {
             if ($l->primaryNeography !== null) {
                 $glyphs = $l->primaryNeography->glyphs()
@@ -37,9 +39,31 @@ class LanguageController extends Controller
             }
             return [$l->machine_name => $output];
         })->all();
+        // Preview of grammar data
+        $wordClassGroups = $languages->mapWithKeys(function ($l) {
+            $groups = $l->wordClassGroups->map(function ($item) {
+                $class = $item->primaryClass ?? $item->wordClasses()->first();
+                if ($class !== null) {
+                    return [
+                        'class' => $class,
+                        'nameBrief' => $class->name_brief ?? mb_substr($class->name,0,3),
+                        'featureCount' => $item->features()->count(),
+                    ];
+                } else {
+                    return [
+                        'class' => null,
+                        'nameBrief' => null,
+                        'featureCount' => 0,
+                    ];
+                }
+            });
+            return [$l->machine_name => $groups];
+        })->all();
+        // Pass data to view
         return view('tollerus::admin.languages.index', [
             'languages' => $languages,
             'primaryGlyphs' => $primaryGlyphs,
+            'wordClassGroups' => $wordClassGroups,
         ]);
     }
 }

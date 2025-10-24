@@ -8,7 +8,9 @@
                     <x-tollerus::icons.language class="h-8"/>
                     <span>{{ $language->name }}</span>
                 </h2>
-                <div class="flex flex-row justify-start">
+                <div class="flex flex-row justify-start gap-4">
+
+                    {{-- Neography preview --}}
                     @if ($primaryGlyphs[$language->machine_name] !== null)
                         @if ($primaryGlyphs[$language->machine_name]['allSvgFound'])
                             <div class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900 flex flex-row" role="img" aria-label="{{ __('tollerus::ui.primary_neography', ['name' => $language->primaryNeography->name]) }}">
@@ -23,10 +25,35 @@
                             </div>
                         @endif
                     @else
-                        <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500" role="img" aria-label="{{ __('tollerus::ui.primary_neography', ['name' => __('tollerus::ui.none')]) }}">
-                            <p class="text-5xl text-zinc-300 dark:text-zinc-500">+</p>
+                        <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500">
+                            <p class="text-sm text-zinc-300 dark:text-zinc-500 italic text-center max-w-40">{{ __('tollerus::ui.no_neographies') }}</p>
                         </div>
                     @endif
+
+                    {{-- Grammar preview --}}
+                    @if (count($wordClassGroups[$language->machine_name]) > 0)
+                        <ul class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900 flex flex-row gap-2 flex-wrap justify-start items-start" role="img" aria-label="{{ __('tollerus::ui.grammar') }}">
+                            @foreach ($wordClassGroups[$language->machine_name] as $wordClassGroup)
+                                @if ($wordClassGroup['class'] !== null)
+                                    @if ($wordClassGroup['featureCount'] == 0)
+                                        <li class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm flex flex-row gap-1 items-center p-1">
+                                            <span>{{ $wordClassGroup['nameBrief'] }}</span>
+                                        </li>
+                                    @else
+                                        <li class="border-cyan-400 text-cyan-700 dark:border-cyan-700 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-950 rounded-lg shadow-sm flex flex-row gap-1 items-center p-1 border-2 font-bold">
+                                            <span>{{ $wordClassGroup['nameBrief'] }}</span>
+                                            <span class="block text-white dark:text-cyan-950 bg-cyan-700 dark:bg-cyan-300 rounded-full w-6 h-6 flex justify-center items-center text-center text-sm">{{ $wordClassGroup['featureCount'] }}</span>
+                                        </li>
+                                    @endif
+                                @endif
+                            @endforeach
+                        </ul>
+                    @else
+                        <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500">
+                            <p class="text-sm text-zinc-300 dark:text-zinc-500 italic text-center max-w-40">{{ __('tollerus::ui.no_grammar') }}</p>
+                        </div>
+                    @endif
+
                 </div>
             </x-tollerus::panel>
         @endforeach

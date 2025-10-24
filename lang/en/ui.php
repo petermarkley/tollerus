@@ -4,7 +4,7 @@ return [
   'languages' => 'Languages',
   /**
    * A "neography" is a fictional writing system. ("Neo-"
-   * because someone thought of it as a "new" idea.) The
+   * because someone made it up as a "new" idea.) The
    * more familiar English term is "script," but script
    * can have many more meanings depending on context
    * (like a movie script, or a computer script) and the
@@ -12,7 +12,9 @@ return [
    */
   'neographies' => 'Neographies',
   'primary_neography' => 'Primary neography: :name',
-  'none' => '(None)',
+  'no_neographies' => '(No Neographies)',
+  'grammar' => 'Grammar',
+  'no_grammar' => '(No Grammar)',
   /**
    * This website footer uses Markdown syntax for a couple of
    * hyperlinks. It works like this:
