@@ -11,19 +11,19 @@
                 <div class="flex flex-row justify-start">
                     @if ($primaryGlyphs[$language->machine_name] !== null)
                         @if ($primaryGlyphs[$language->machine_name]['allSvgFound'])
-                            <div class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900 flex flex-row">
+                            <div class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900 flex flex-row" role="img" aria-label="{{ __('tollerus::ui.primary_neography', ['name' => $language->primaryNeography->name]) }}">
                                 @foreach ($primaryGlyphs[$language->machine_name]['svg'] as $svg)
                                     {{-- Controller generates these with classes: 'h-12 w-auto' --}}
                                     {!! $svg !!}
                                 @endforeach
                             </div>
                         @else
-                            <div class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900">
+                            <div class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900" role="img" aria-label="{{ __('tollerus::ui.primary_neography', ['name' => $language->primaryNeography->name]) }}">
                                 <p class="text-5xl" style="font-family:{{ $language->primaryNeography->machine_name }};">{{ $primaryGlyphs[$language->machine_name]['models']->pluck('glyph')->implode('') }}</p>
                             </div>
                         @endif
                     @else
-                        <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500">
+                        <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500" role="img" aria-label="{{ __('tollerus::ui.primary_neography', ['name' => __('tollerus::ui.none')]) }}">
                             <p class="text-5xl text-zinc-300 dark:text-zinc-500">+</p>
                         </div>
                     @endif

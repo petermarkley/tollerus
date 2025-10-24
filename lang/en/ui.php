@@ -11,6 +11,8 @@ return [
    * phrase "writing system" is too clumsy.
    */
   'neographies' => 'Neographies',
+  'primary_neography' => 'Primary neography: :name',
+  'none' => '(None)',
   /**
    * This website footer uses Markdown syntax for a couple of
    * hyperlinks. It works like this:
