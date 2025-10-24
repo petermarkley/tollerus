@@ -13,14 +13,14 @@
                     {{-- Neography preview --}}
                     @if ($primaryGlyphs[$language->machine_name] !== null)
                         @if ($primaryGlyphs[$language->machine_name]['allSvgFound'])
-                            <div class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900 flex flex-row" role="img" aria-label="{{ __('tollerus::ui.primary_neography', ['name' => $language->primaryNeography->name]) }}">
+                            <div class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 flex flex-row" role="img" aria-label="{{ __('tollerus::ui.primary_neography', ['name' => $language->primaryNeography->name]) }}">
                                 @foreach ($primaryGlyphs[$language->machine_name]['svg'] as $svg)
                                     {{-- Controller generates these with classes: 'h-12 w-auto' --}}
                                     {!! $svg !!}
                                 @endforeach
                             </div>
                         @else
-                            <div class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900" role="img" aria-label="{{ __('tollerus::ui.primary_neography', ['name' => $language->primaryNeography->name]) }}">
+                            <div class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30" role="img" aria-label="{{ __('tollerus::ui.primary_neography', ['name' => $language->primaryNeography->name]) }}">
                                 <p class="text-5xl" style="font-family:{{ $language->primaryNeography->machine_name }};">{{ $primaryGlyphs[$language->machine_name]['models']->pluck('glyph')->implode('') }}</p>
                             </div>
                         @endif
@@ -32,7 +32,7 @@
 
                     {{-- Grammar preview --}}
                     @if (count($wordClassGroups[$language->machine_name]) > 0)
-                        <ul class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900 flex flex-row gap-2 flex-wrap justify-start items-start" role="img" aria-label="{{ __('tollerus::ui.grammar') }}">
+                        <ul class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 flex flex-row gap-2 flex-wrap justify-start items-start" role="img" aria-label="{{ __('tollerus::ui.grammar') }}">
                             @foreach ($wordClassGroups[$language->machine_name] as $wordClassGroup)
                                 @if ($wordClassGroup['class'] !== null)
                                     @if ($wordClassGroup['featureCount'] == 0)
