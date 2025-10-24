@@ -74,6 +74,12 @@ return [
      */
 
     /**
+     * Maximum size of SVG and TTF font files. Default of
+     * 1,048,576 bytes is 1 MiB.
+     */
+    'max_font_size' => 1048576,
+
+    /**
      * The service provider takes your default DB config array,
      * and builds a new one under this `connection` name that
      * includes the `table_prefix` and `connection_overrides`.

@@ -31,6 +31,63 @@ class NeographyGlyph extends Model
         return $this->belongsTo(Neography::class);
     }
 
+    /**
+     * Find the SVG data of this glyph. Return it as a
+     * standalone SVG image, or null on failure
+     */
+    public function getSvg(string $classes = null): string|null
+    {
+        // Initialize
+        $neography = $this->neography;
+        if ($neography === null || $neography->font_svg === null) {
+            return null;
+        }
+        $svg = simplexml_load_string($neography->font_svg);
+        if ($svg === false) {
+            return null;
+        }
+        if (!isset($svg->defs->font)) {
+            return null;
+        }
+        $font = $svg->defs->font;
+        $path = "";
+        // Find this glyph inside the SVG font
+        foreach ($font->glyph as $glyph) {
+            if ($glyph['unicode'] == $this->glyph) {
+                $d = $glyph['d'];
+                $path = "<path fill=\"currentColor\" d=\"$d\"/>";
+                $width = $glyph['horiz-adv-x'];
+                break;
+            }
+        }
+        // If not found, give up ...
+        if (empty($path)) {
+            return null;
+        }
+        // Time to build output image
+        if ($this->render_base) {
+            /**
+             * Above, we set $width equal to the horizontal advance of the glyph.
+             * However, for combining marks this might be close to zero, meaning
+             * the glyph shape would be off the canvas and wouldn't be visible
+             * if our SVG image is displayed. So for combining marks we use the
+             * canvas width of the font file instead of the glyph advance.
+             */
+            $width = $svg['width'];
+        }
+        $height = $svg['height'];
+        $viewBox = "0 0 $width $height";
+        if ($classes === null) {
+            $output[] = "<svg width=\"$width\" height=\"$height\" viewBox=\"$viewBox\">";
+        } else {
+            $output[] = "<svg width=\"$width\" height=\"$height\" viewBox=\"$viewBox\" class=\"$classes\">";
+        }
+        $output[] = $path;
+        $output[] = "</svg>";
+        $output[] = "";
+        return implode("\n",$output);
+    }
+
     protected static function booted()
     {
         // Validate extended model relations

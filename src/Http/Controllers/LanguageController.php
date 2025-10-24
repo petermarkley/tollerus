@@ -26,10 +26,11 @@ class LanguageController extends Controller
                     ->where('render_base', false)
                     ->limit(2)
                     ->get();
-                $svg = null; // FIXME - pull from neography->font_svg field
+                $svg = $glyphs->map(fn($g)=>$g->getSvg('h-12 w-auto'));
                 $output = [
                     'models' => $glyphs,
                     'svg' => $svg,
+                    'allSvgFound' => !($svg->contains(fn($g)=>$g===null)),
                 ];
             } else {
                 $output = null;
