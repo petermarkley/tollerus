@@ -37,11 +37,11 @@
                                 @if ($wordClassGroup['class'] !== null)
                                     @if ($wordClassGroup['featureCount'] == 0)
                                         <li class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm flex flex-row gap-1 items-center p-1">
-                                            <span>{{ $wordClassGroup['nameBrief'] }}</span>
+                                            <span><abbr class="no-underline" title="{{ $wordClassGroup['class']->name }}">{{ $wordClassGroup['nameBrief'] }}</abbr></span>
                                         </li>
                                     @else
                                         <li class="border-cyan-400 text-cyan-700 dark:border-cyan-700 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-950 rounded-lg shadow-sm flex flex-row gap-1 items-center p-1 border-2 font-bold">
-                                            <span>{{ $wordClassGroup['nameBrief'] }}</span>
+                                            <span><abbr class="no-underline" title="{{ $wordClassGroup['class']->name }}">{{ $wordClassGroup['nameBrief'] }}</abbr></span>
                                             <span class="block text-white dark:text-cyan-950 bg-cyan-700 dark:bg-cyan-300 rounded-full w-6 h-6 flex justify-center items-center text-center text-sm">{{ $wordClassGroup['featureCount'] }}</span>
                                         </li>
                                     @endif
