@@ -26,7 +26,7 @@
                         @endif
                     @else
                         <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500">
-                            <p class="text-sm text-zinc-300 dark:text-zinc-500 italic text-center max-w-40">{{ __('tollerus::ui.no_neographies') }}</p>
+                            <p class="text-sm text-zinc-500 dark:text-zinc-400 italic text-center max-w-40">{{ __('tollerus::ui.no_neographies') }}</p>
                         </div>
                     @endif
 
@@ -50,7 +50,7 @@
                         </ul>
                     @else
                         <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500">
-                            <p class="text-sm text-zinc-300 dark:text-zinc-500 italic text-center max-w-40">{{ __('tollerus::ui.no_grammar') }}</p>
+                            <p class="text-sm text-zinc-500 dark:text-zinc-400 italic text-center max-w-40">{{ __('tollerus::ui.no_grammar') }}</p>
                         </div>
                     @endif
 
