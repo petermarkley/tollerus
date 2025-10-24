@@ -15,6 +15,8 @@ return [
   'no_neographies' => '(No Neographies)',
   'grammar' => 'Grammar',
   'no_grammar' => '(No Grammar)',
+  'entries' => 'Entries', // Word entries in a dictionary
+  'no_entries' => '(No Entries)',
   /**
    * This website footer uses Markdown syntax for a couple of
    * hyperlinks. It works like this:

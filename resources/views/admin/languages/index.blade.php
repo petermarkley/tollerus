@@ -54,6 +54,21 @@
                         </div>
                     @endif
 
+                    {{-- Entries preview --}}
+                    @if (count($entriesPreview[$language->machine_name]) > 0)
+                        <div class="relative rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 w-full max-h-28 overflow-hidden">
+                            <ul class="p-4 flex flex-col gap-x-4 flex-wrap justify-start items-start w-full h-32 mask-b-to-85% mask-r-from-60%" role="img" aria-label="{{ __('tollerus::ui.entries') }}">
+                                @foreach ($entriesPreview[$language->machine_name] as $entry)
+                                    <li class="font-bold">{{ $entry->transliterated }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @else
+                        <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500">
+                            <p class="text-sm text-zinc-500 dark:text-zinc-400 italic text-center max-w-40">{{ __('tollerus::ui.no_entries') }}</p>
+                        </div>
+                    @endif
+
                 </div>
             </x-tollerus::panel>
         @endforeach

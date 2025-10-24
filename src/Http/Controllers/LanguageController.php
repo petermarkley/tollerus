@@ -20,6 +20,7 @@ class LanguageController extends Controller
         $languages->loadMissing([
             'primaryNeography',
             'wordClassGroups.primaryClass',
+            'entries.primaryForm'
         ]);
         // Preview of neography data
         $primaryGlyphs = $languages->mapWithKeys(function ($l) {
@@ -59,11 +60,25 @@ class LanguageController extends Controller
             });
             return [$l->machine_name => $groups];
         })->all();
+        // Preview of entry data
+        $entriesPreview = $languages->mapWithKeys(function ($l) {
+            $entries = $l->forms()
+                ->whereExists(function ($query) {
+                    $query->select(\DB::raw(1))
+                    ->from('entries')
+                    ->whereColumn('entries.primary_form', 'forms.id');
+                })
+                ->orderBy('transliterated')
+                ->limit(50)
+                ->get();
+            return [$l->machine_name => $entries];
+        })->all();
         // Pass data to view
         return view('tollerus::admin.languages.index', [
             'languages' => $languages,
             'primaryGlyphs' => $primaryGlyphs,
             'wordClassGroups' => $wordClassGroups,
+            'entriesPreview' => $entriesPreview,
         ]);
     }
 }
