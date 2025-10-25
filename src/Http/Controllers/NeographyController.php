@@ -17,11 +17,21 @@ class NeographyController extends Controller
     {
         $neographies = Neography::orderBy('machine_name')
             ->get();
-        // $neographies->loadMissing([
-        //     'languages',
-        // ]);
+        $glyphPreview = $neographies->mapWithKeys(function ($n) {
+            $glyphs = $n->glyphs()
+                ->orderBy('group_id')
+                ->orderBy('position')
+                ->where('render_base', false)
+                ->limit(50)->get()
+                ->map(fn ($g) => [
+                    'model' => $g,
+                    'svg' => $g->getSvg('h-12 w-auto'),
+                ]);
+            return [$n->machine_name => $glyphs];
+        })->all();
         return view('tollerus::admin.neographies.index', [
             'neographies' => $neographies,
+            'glyphPreview' => $glyphPreview,
         ]);
     }
 }
