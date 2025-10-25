@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * TRANSLATOR NOTE:
+ *
  * For grammar presets, abbreviated names may be an empty string ''.
  * This is intentional and means that the word is short enough that
  * it doesn't need an abbreviation, for example the word "past" for
@@ -13,6 +15,8 @@ return [
      * ===========================================================
      *                 TECHNICAL/ADMIN LABELS
      * ===========================================================
+     *
+     * TRANSLATOR NOTE:
      *
      * This first portion is mostly a list of technical terms. It
      * will display to admins who are configuring the conlang
@@ -161,6 +165,8 @@ return [
      *                 CASUAL / END-USER LABELS
      * ============================================================
      *
+     * TRANSLATOR NOTE:
+     *
      * These labels are shown when view/browsing entries in the
      * dictionary. Some will be the same as strings above, but the
      * viewing context is less technical so there's a need to be
@@ -191,6 +197,8 @@ return [
         ],
         'finite_verb' => [
             /**
+             * TRANSLATOR NOTE:
+             *
              * The reason in English that we have "finite verb" here
              * instead of just "finite" is because the word "finite"
              * is not obviously a grammatical term. In casual usage

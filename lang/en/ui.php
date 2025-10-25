@@ -3,12 +3,18 @@
 return [
   'languages' => 'Languages',
   /**
+   * TRANSLATOR NOTE:
+   *
    * A "neography" is a fictional writing system. ("Neo-"
    * because someone made it up as a "new" idea.) The
-   * more familiar English term is "script," but script
-   * can have many more meanings depending on context
-   * (like a movie script, or a computer script) and the
-   * phrase "writing system" is too clumsy.
+   * more familiar English terms are "script" or
+   * "alphabet."
+   *
+   * But script can have many more meanings depending on
+   * context (like a movie script, or a computer script)
+   * and "alphabet" excludes a variety of other kinds of
+   * writing system. That's why we prefer the term
+   * "neography" here.
    */
   'neographies' => 'Neographies',
   'primary_neography' => 'Primary neography: :name',
@@ -18,6 +24,18 @@ return [
   'entries' => 'Entries', // Word entries in a dictionary
   'no_entries' => '(No Entries)',
   /**
+   * TRANSLATOR NOTE:
+   *
+   * "Glyph" here is a term borrowed from the field of
+   * typography, referring to a shape of type inside a
+   * font. For a neography, it means a single letter or
+   * symbol in the alphabet (or other writing system).
+   */
+  'glyphs' => 'Glyphs',
+  'no_glyphs' => '(No Glyphs)',
+  /**
+   * TRANSLATOR NOTE:
+   *
    * This website footer uses Markdown syntax for a couple of
    * hyperlinks. It works like this:
    *
