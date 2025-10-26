@@ -23,16 +23,23 @@ class LanguageEditor extends Component
 
     public function save(): void
     {
-        $this->validate([
-            'form.machine_name' => 'alpha_dash:ascii',
-        ]);
-        $this->language->fill($this->form);
-        $this->language->save();
-
-        $this->form = $this->language->getAttributes();
-        unset($this->form['id']);
-
-        $this->dirty = false;
+        try {
+            // Validate
+            $this->validate([
+                'form.machine_name' => 'alpha_dash:ascii',
+            ]);
+            // Save to database
+            $this->language->fill($this->form);
+            $this->language->save();
+            // Refresh front-end state
+            $this->form = $this->language->getAttributes();
+            unset($this->form['id']);
+            $this->dispatch('save-success');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('save-failure');
+            // Let error keep propagating
+            throw $e;
+        }
     }
 
     public function render(): View
