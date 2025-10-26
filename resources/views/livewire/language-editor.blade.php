@@ -1,5 +1,8 @@
 <div>
-    <h1 class="font-bold text-2xl mb-4">{{ $form['name'] }}</h1>
+    <h1 class="font-bold text-2xl mb-4 flex flex-row gap-2 justify-start items-baseline">
+        <span>{{ $form['name'] }}</span>
+        <span wire:dirty wire:target="form">*</span>
+    </h1>
     <x-tollerus::panel class="flex flex-col gap-6">
         <x-tollerus::inputs.toggle id="visible" model="form.visible" label="{{ __('tollerus::ui.visible') }}" :checked="$form['visible']" />
         <div class="flex flex-col gap-4">
@@ -19,7 +22,7 @@
             <x-tollerus::inputs.textarea id="intro" model="form.intro" label="{{ __('tollerus::ui.intro') }}" />
         </div>
         <div>
-            <button wire:click="save" class="bg-cyan-800 dark:bg-cyan-500 hover:bg-cyan-700 hover:dark:bg-cyan-400 text-white dark:text-zinc-950 saturate-50 font-bold cursor-pointer rounded-lg py-2 px-4 shadow">Save</button>
+            <button wire:click="save" disabled wire:dirty.remove.attr="disabled" wire:target="form" class="bg-cyan-800 dark:bg-cyan-500 hover:bg-cyan-700 hover:dark:bg-cyan-400 text-white dark:text-zinc-950 saturate-50 font-bold cursor-pointer rounded-lg py-2 px-4 shadow disabled:cursor-not-allowed disabled:bg-zinc-500 disabled:dark:bg-zinc-400 disabled:saturate-100">Save</button>
         </div>
     </x-tollerus::panel>
 </div>
