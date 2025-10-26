@@ -33,6 +33,9 @@ return [
    */
   'glyphs' => 'Glyphs',
   'no_glyphs' => '(No Glyphs)',
+  'name' => 'Name',
+  'human_friendly' => 'Human-friendly',
+  'machine_friendly' => 'Machine-friendly',
   /**
    * TRANSLATOR NOTE:
    *

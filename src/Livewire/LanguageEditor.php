@@ -22,6 +22,9 @@ class LanguageEditor extends Component
 
     public function save(): void
     {
+        $this->validate([
+            'form.machine_name' => 'alpha_dash:ascii',
+        ]);
         $this->language->fill($this->form);
         $this->language->save();
     }
