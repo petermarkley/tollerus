@@ -12,6 +12,7 @@ class LanguageEditor extends Component
 {
     #[Locked] public Language $language;
     public array $form = [];
+    public bool $dirty = false;
 
     public function mount(Language $language): void
     {
@@ -27,6 +28,11 @@ class LanguageEditor extends Component
         ]);
         $this->language->fill($this->form);
         $this->language->save();
+
+        $this->form = $this->language->getAttributes();
+        unset($this->form['id']);
+
+        $this->dirty = false;
     }
 
     public function render(): View
