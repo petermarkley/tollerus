@@ -6,11 +6,13 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
+use Livewire\Livewire;
 
 use PeterMarkley\Tollerus\Console\Commands\TollerusImport;
 use PeterMarkley\Tollerus\Console\Commands\TollerusPopulate;
 use PeterMarkley\Tollerus\Console\Commands\TollerusAssetsGenerate;
 use PeterMarkley\Tollerus\Console\Commands\TollerusInstall;
+use PeterMarkley\Tollerus\Livewire\LanguageEditor;
 
 class TollerusServiceProvider extends ServiceProvider
 {
@@ -55,6 +57,8 @@ class TollerusServiceProvider extends ServiceProvider
 		$this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
 		$this->loadViewsFrom(__DIR__.'/../../resources/views', 'tollerus');
 		Blade::anonymousComponentNamespace('tollerus::components', 'tollerus');
+		// Expose Livewire component classes
+		Livewire::component('tollerus.language-editor', LanguageEditor::class);
 		// UI localization
 		$this->loadTranslationsFrom(__DIR__.'/../../lang', 'tollerus');
 	}

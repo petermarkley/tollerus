@@ -17,6 +17,7 @@ class Language extends Model
     use HasFactory;
     protected $table = 'languages';
     public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * Model relations
