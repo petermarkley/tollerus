@@ -18,6 +18,7 @@ class Language extends Model
     protected $table = 'languages';
     public $timestamps = false;
     protected $guarded = [];
+    protected $casts = ['visible' => 'boolean'];
 
     /**
      * Model relations

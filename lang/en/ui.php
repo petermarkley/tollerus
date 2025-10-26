@@ -33,9 +33,15 @@ return [
    */
   'glyphs' => 'Glyphs',
   'no_glyphs' => '(No Glyphs)',
+  'visible' => 'Visible',
   'name' => 'Name',
   'human_friendly' => 'Human-friendly',
   'machine_friendly' => 'Machine-friendly',
+  'dictionary_info' => 'Dictionary info',
+  'title_short' => 'Title (short)',
+  'title_full' => 'Title (full)',
+  'author' => 'Author',
+  'intro' => 'Intro',
   /**
    * TRANSLATOR NOTE:
    *
