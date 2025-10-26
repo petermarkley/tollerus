@@ -12,7 +12,6 @@ use PeterMarkley\Tollerus\Console\Commands\TollerusImport;
 use PeterMarkley\Tollerus\Console\Commands\TollerusPopulate;
 use PeterMarkley\Tollerus\Console\Commands\TollerusAssetsGenerate;
 use PeterMarkley\Tollerus\Console\Commands\TollerusInstall;
-use PeterMarkley\Tollerus\Livewire\LanguageEditor;
 
 class TollerusServiceProvider extends ServiceProvider
 {
@@ -58,7 +57,7 @@ class TollerusServiceProvider extends ServiceProvider
 		$this->loadViewsFrom(__DIR__.'/../../resources/views', 'tollerus');
 		Blade::anonymousComponentNamespace('tollerus::components', 'tollerus');
 		// Expose Livewire component classes
-		Livewire::component('tollerus.language-editor', LanguageEditor::class);
+		Livewire::component('tollerus.language-editor', \PeterMarkley\Tollerus\Livewire\LanguageEditor::class);
 		// UI localization
 		$this->loadTranslationsFrom(__DIR__.'/../../lang', 'tollerus');
 	}
