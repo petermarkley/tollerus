@@ -14,11 +14,17 @@ class LanguageEditor extends Component
     public array $form = [];
     public bool $dirty = false;
 
+    public function refreshForm(): void
+    {
+        $this->form = $this->language->getAttributes();
+        unset($this->form['id']);
+        unset($this->form['primary_neography']);
+    }
+
     public function mount(Language $language): void
     {
         $this->language = $language;
-        $this->form = $language->getAttributes();
-        unset($this->form['id']);
+        $this->refreshForm();
     }
 
     public function save(): void
@@ -32,8 +38,7 @@ class LanguageEditor extends Component
             $this->language->fill($this->form);
             $this->language->save();
             // Refresh front-end state
-            $this->form = $this->language->getAttributes();
-            unset($this->form['id']);
+            $this->refreshForm();
             $this->dispatch('save-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('save-failure');
