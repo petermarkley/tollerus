@@ -7,7 +7,7 @@
         saving: '{{ __('tollerus::ui.saving') }}'
     }
 }">
-    <h1 class="font-bold text-2xl mb-4 flex flex-row gap-2 justify-start items-baseline">
+    <h1 class="font-bold text-2xl mb-4 flex flex-row gap-2 justify-start items-baseline px-6 xl:px-0">
         <span>{{ $form['name'] }}</span>
         <span x-show="dirty">*</span>
     </h1>

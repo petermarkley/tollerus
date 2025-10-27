@@ -9,15 +9,15 @@
         <div class="w-full h-full absolute -z-5 pointer-events-none bg-white dark:bg-zinc-950 opacity-20 dark:opacity-10" role="none" aria-hidden="true"></div>
         <div class="flex flex-col gap-4 w-full items-stretch h-full min-h-screen">
             <header class="w-full py-2 bg-white dark:bg-zinc-800 shadow">
-                <div class="md:max-w-[1200px] mx-auto px-6 md:px-0">
+                <div class="md:max-w-[1200px] mx-auto px-6 xl:px-0">
                     <x-tollerus::logo.mono class="h-6 block dark:hidden text-zinc-700"/>
                     <x-tollerus::logo.mono light class="h-6 hidden dark:block"/>
                 </div>
             </header>
-            <main class="w-full md:max-w-[1200px] mx-auto px-6 md:px-0 flex-grow">
+            <main class="w-full md:max-w-[1200px] mx-auto flex-grow">
                 {{ $slot }}
             </main>
-            <footer class="w-full md:max-w-[1200px] mx-auto px-6 md:px-0 text-center text-zinc-800 dark:text-zinc-500 pb-8">
+            <footer class="w-full md:max-w-[1200px] mx-auto px-6 xl:px-0 text-center text-zinc-800 dark:text-zinc-500 pb-8">
                 {!! Str::markdown(__('tollerus::ui.copyright_footer', [
                     'year' => date('Y'),
                     'github_url' => 'https://github.com/petermarkley/tollerus',

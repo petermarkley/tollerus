@@ -1,7 +1,7 @@
 @use('PeterMarkley\Tollerus\Enums\WritingDirection')
 <x-tollerus::layout>
     <x-slot name="title">{{ __('tollerus::ui.neographies') }}</x-slot>
-    <h1 class="font-bold text-2xl mb-4">{{ __('tollerus::ui.neographies') }}</h1>
+    <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">{{ __('tollerus::ui.neographies') }}</h1>
     <div class="flex flex-col gap-4 items-stretch">
         @foreach ($neographies as $neography)
             <x-tollerus::panel class="flex flex-col gap-2">
