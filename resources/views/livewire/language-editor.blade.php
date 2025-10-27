@@ -5,13 +5,61 @@
         save: '{{ __('tollerus::ui.save') }}',
         saved: '{{ __('tollerus::ui.saved') }}',
         saving: '{{ __('tollerus::ui.saving') }}'
-    }
+    },
+    tab: 'info'
 }">
-    <h1 class="font-bold text-2xl mb-4 flex flex-row gap-2 justify-start items-baseline px-6 xl:px-0">
-        <span>{{ $form['name'] }}</span>
-        <span x-show="dirty">*</span>
-    </h1>
-    <x-tollerus::panel class="flex flex-col gap-6">
+    <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">{{ $form['name'] }}</h1>
+    <ul class="px-4 flex flex-row gap-4 justify-start items-end">
+        <li
+            x-bind:class="{
+                'rounded-t-lg flex flex-row justify-start items-center gap-2 cursor-pointer py-2 px-4 flex': true,
+                'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': tab!='info',
+                'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': tab=='info'
+            }"
+            @click="if (dirty) {alert('{{ __('tollerus::ui.unsaved_alert') }}');} else {tab='info';}"
+        >
+            <x-tollerus::icons.info class="h-6"/>
+            <span class="hidden md:inline">{{ __('tollerus::ui.info') }}</span>
+            <span x-show="tab=='info' && dirty">*</span>
+        </li>
+        <li
+            x-bind:class="{
+                'rounded-t-lg flex flex-rowjustify-start items-center gap-2 cursor-pointer py-2 px-4': true,
+                'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': tab!='neographies',
+                'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': tab=='neographies'
+            }"
+            @click="if (dirty) {alert('{{ __('tollerus::ui.unsaved_alert') }}');} else {tab='neographies';}"
+        >
+            <x-tollerus::icons.neography class="h-6"/>
+            <span class="hidden md:inline">{{ __('tollerus::ui.neographies') }}</span>
+            <span x-show="tab=='neographies' && dirty">*</span>
+        </li>
+        <li
+            x-bind:class="{
+                'rounded-t-lg flex flex-rowjustify-start items-center gap-2 cursor-pointer py-2 px-4': true,
+                'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': tab!='grammar',
+                'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': tab=='grammar'
+            }"
+            @click="if (dirty) {alert('{{ __('tollerus::ui.unsaved_alert') }}');} else {tab='grammar';}"
+        >
+            <x-tollerus::icons.grammar class="h-6"/>
+            <span class="hidden md:inline">{{ __('tollerus::ui.grammar') }}</span>
+            <span x-show="tab=='grammar' && dirty">*</span>
+        </li>
+        <li
+            x-bind:class="{
+                'rounded-t-lg flex flex-rowjustify-start items-center gap-2 cursor-pointer py-2 px-4': true,
+                'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': tab!='entries',
+                'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': tab=='entries'
+            }"
+            @click="if (dirty) {alert('{{ __('tollerus::ui.unsaved_alert') }}');} else {tab='entries';}"
+        >
+            <x-tollerus::icons.entries class="h-6"/>
+            <span class="hidden md:inline">{{ __('tollerus::ui.entries') }}</span>
+            <span x-show="tab=='entries' && dirty">*</span>
+        </li>
+    </ul>
+    <x-tollerus::panel x-show="tab=='info'" class="flex flex-col gap-6">
         <x-tollerus::inputs.toggle id="visible" model="form.visible" label="{{ __('tollerus::ui.visible') }}" :checked="$form['visible']" @change="btn = 'save'; dirty=true;" />
         <div class="flex flex-col gap-4">
             <h3 class="font-bold text-lg">{{ __('tollerus::ui.name') }}</h3>
@@ -38,5 +86,14 @@
                 @save-failure.window="btn = 'save';"
                 x-text="msgs[btn]" />
         </div>
+    </x-tollerus::panel>
+    <x-tollerus::panel x-show="tab=='neographies'" class="flex flex-col gap-6">
+        <p>Lorem ipsum dolor sit amet.</p>
+    </x-tollerus::panel>
+    <x-tollerus::panel x-show="tab=='grammar'" class="flex flex-col gap-6">
+        <p>Lorem ipsum dolor sit amet.</p>
+    </x-tollerus::panel>
+    <x-tollerus::panel x-show="tab=='entries'" class="flex flex-col gap-6">
+        <p>Lorem ipsum dolor sit amet.</p>
     </x-tollerus::panel>
 </div>

@@ -45,6 +45,8 @@ return [
   'save' => 'Save',
   'saving' => 'Saving ...',
   'saved' => '(Saved)',
+  'info' => 'Info',
+  'unsaved_alert' => 'You have unsaved changes here!',
   /**
    * TRANSLATOR NOTE:
    *
