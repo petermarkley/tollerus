@@ -42,6 +42,9 @@ return [
   'title_full' => 'Title (full)',
   'author' => 'Author',
   'intro' => 'Intro',
+  'save' => 'Save',
+  'saving' => 'Saving ...',
+  'saved' => '(Saved)',
   /**
    * TRANSLATOR NOTE:
    *
