@@ -30,15 +30,13 @@
             <x-tollerus::inputs.textarea id="intro" model="form.intro" label="{{ __('tollerus::ui.intro') }}" @input="btn = 'save'; dirty=true;" />
         </div>
         <div>
-            <button
+            <x-tollerus::inputs.button
                 @click="btn = 'saving'; $wire.save();"
-                :disabled="!dirty"
+                x-bind:disabled="!dirty"
                 wire:loading.attr="disabled"
                 @save-success.window="btn = 'saved'; dirty=false;"
                 @save-failure.window="btn = 'save';"
-                x-text="msgs[btn]"
-                class="bg-cyan-800 dark:bg-cyan-500 hover:bg-cyan-700 hover:dark:bg-cyan-400 text-white dark:text-zinc-950 saturate-50 font-bold cursor-pointer rounded-lg py-2 px-4 shadow disabled:cursor-not-allowed disabled:bg-zinc-500 disabled:dark:bg-zinc-400 disabled:saturate-100"
-            ></button>
+                x-text="msgs[btn]" />
         </div>
     </x-tollerus::panel>
 </div>
