@@ -12,7 +12,6 @@ class LanguageEditor extends Component
 {
     #[Locked] public Language $language;
     public array $form = [];
-    public bool $dirty = false;
 
     public function refreshForm(): void
     {
@@ -27,7 +26,7 @@ class LanguageEditor extends Component
         $this->refreshForm();
     }
 
-    public function save(): void
+    public function save(string $afterSuccess = '', array $payload = []): void
     {
         try {
             // Validate
@@ -39,7 +38,7 @@ class LanguageEditor extends Component
             $this->language->save();
             // Refresh front-end state
             $this->refreshForm();
-            $this->dispatch('save-success');
+            $this->dispatch('save-success', ['afterSuccess'=>$afterSuccess, 'payload'=>$payload]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('save-failure');
             // Let error keep propagating
@@ -52,14 +51,5 @@ class LanguageEditor extends Component
         return view('tollerus::livewire.language-editor')
             ->layout('tollerus::components.layout')
             ->title($this->language->name);
-    }
-
-    public function openModal(): void
-    {
-        $this->dispatch('open-modal');
-    }
-    public function closeModal(): void
-    {
-        $this->dispatch('close-modal');
     }
 }

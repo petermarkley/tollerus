@@ -10,9 +10,14 @@ class Modal extends Component
 {
     public bool $open;
     public string $message;
+    public array $buttons;
 
     #[On('open-modal')]
-    public function open(): void { $this->open = true; }
+    public function open(string $message, array $buttons): void {
+        $this->message = $message;
+        $this->buttons = $buttons;
+        $this->open = true;
+    }
 
     #[On('close-modal')]
     public function close(): void { $this->open = false; }

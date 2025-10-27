@@ -2,21 +2,26 @@
     dirty: false,
     btn: 'saved',
     msgs: {
-        save: '{{ __('tollerus::ui.save') }}',
-        saved: '{{ __('tollerus::ui.saved') }}',
-        saving: '{{ __('tollerus::ui.saving') }}'
+        save: @js(__('tollerus::ui.save')),
+        saved: @js(__('tollerus::ui.saved')),
+        saving: @js(__('tollerus::ui.saving'))
     },
     tab: 'info'
 }">
     <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">{{ $form['name'] }}</h1>
-    <ul class="px-4 flex flex-row gap-4 justify-start items-end">
+    <ul
+        class="px-4 flex flex-row gap-4 justify-start items-end"
+        @tab-switch.window="tab = $event.detail.tab;"
+        @modal-cancel.window="$dispatch('close-modal');"
+        @modal-discard.window="$wire.refreshForm(); dirty=false; $dispatch('close-modal');"
+        @modal-save.window="$dispatch('close-modal'); $wire.save('tab-switch', {tab: $event.detail.tab});">
         <li
             x-bind:class="{
                 'rounded-t-lg flex flex-row justify-start items-center gap-2 cursor-pointer py-2 px-4 flex': true,
                 'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': tab!='info',
                 'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': tab=='info'
             }"
-            @click="if (dirty) {alert('{{ __('tollerus::ui.unsaved_alert') }}');} else {tab='info';}"
+            @click="$store.tabFunctions.click(dirty, 'info');"
         >
             <x-tollerus::icons.info class="h-6"/>
             <span class="hidden md:inline">{{ __('tollerus::ui.info') }}</span>
@@ -28,7 +33,7 @@
                 'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': tab!='neographies',
                 'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': tab=='neographies'
             }"
-            @click="if (dirty) {alert('{{ __('tollerus::ui.unsaved_alert') }}');} else {tab='neographies'; $store.scrollLock.lock(); $wire.openModal();}"
+            @click="$store.tabFunctions.click(dirty, 'neographies');"
         >
             <x-tollerus::icons.neography class="h-6"/>
             <span class="hidden md:inline">{{ __('tollerus::ui.neographies') }}</span>
@@ -40,7 +45,7 @@
                 'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': tab!='grammar',
                 'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': tab=='grammar'
             }"
-            @click="if (dirty) {alert('{{ __('tollerus::ui.unsaved_alert') }}');} else {tab='grammar';}"
+            @click="$store.tabFunctions.click(dirty, 'grammar');"
         >
             <x-tollerus::icons.grammar class="h-6"/>
             <span class="hidden md:inline">{{ __('tollerus::ui.grammar') }}</span>
@@ -52,7 +57,7 @@
                 'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': tab!='entries',
                 'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': tab=='entries'
             }"
-            @click="if (dirty) {alert('{{ __('tollerus::ui.unsaved_alert') }}');} else {tab='entries';}"
+            @click="$store.tabFunctions.click(dirty, 'entries');"
         >
             <x-tollerus::icons.entries class="h-6"/>
             <span class="hidden md:inline">{{ __('tollerus::ui.entries') }}</span>
@@ -79,10 +84,10 @@
         </div>
         <div>
             <x-tollerus::inputs.button
-                @click="btn = 'saving'; $wire.save();"
+                @click="btn = 'saving'; $wire.save('',{});"
                 x-bind:disabled="!dirty"
                 wire:loading.attr="disabled"
-                @save-success.window="btn = 'saved'; dirty=false;"
+                @save-success.window="btn = 'saved'; dirty=false; if ($event.detail[0].afterSuccess) {$dispatch($event.detail[0].afterSuccess, $event.detail[0].payload);}"
                 @save-failure.window="btn = 'save';"
                 x-text="msgs[btn]" />
         </div>
@@ -98,3 +103,40 @@
     </x-tollerus::panel>
     <livewire:tollerus.modal/>
 </div>
+@once
+@push('tollerus-scripts')
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.store('tabFunctions', {
+        click(dirty, tab) {
+            if (dirty) {
+                Livewire.dispatch('open-modal', {
+                    message: @js(__('tollerus::ui.unsaved_alert')),
+                    buttons: [
+                        {
+                            text: @js(__('tollerus::ui.cancel')),
+                            type: 'secondary',
+                            clickEvent: 'modal-cancel',
+                        },
+                        {
+                            text: @js(__('tollerus::ui.discard')),
+                            type: 'secondary',
+                            clickEvent: 'modal-discard',
+                        },
+                        {
+                            text: @js(__('tollerus::ui.save')),
+                            type: 'primary',
+                            clickEvent: 'modal-save',
+                            payload: {tab: tab},
+                        },
+                    ],
+                });
+            } else {
+                Livewire.dispatch('tab-switch', {tab: tab});
+            }
+        },
+    });
+});
+</script>
+@endpush
+@endonce

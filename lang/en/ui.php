@@ -46,7 +46,18 @@ return [
   'saving' => 'Saving ...',
   'saved' => '(Saved)',
   'info' => 'Info',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * These items will be used together in a popup dialogue,
+   * along with "Save" above. "Cancel" means cancel the action
+   * of leaving, so the user can continue making changes.
+   * "Discard" means get rid of the changes, reverting back
+   * to the last saved state.
+   */
   'unsaved_alert' => 'You have unsaved changes here!',
+  'cancel' => 'Cancel',
+  'discard' => 'Discard',
   /**
    * TRANSLATOR NOTE:
    *
