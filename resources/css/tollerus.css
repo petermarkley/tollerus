@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+[x-cloak] { display: none !important; }
+
 @layer base {
     a {
         @apply text-cyan-800 dark:text-cyan-500 saturate-80 dark:saturate-20

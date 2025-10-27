@@ -20,7 +20,7 @@
         >
             <x-tollerus::icons.info class="h-6"/>
             <span class="hidden md:inline">{{ __('tollerus::ui.info') }}</span>
-            <span x-show="tab=='info' && dirty">*</span>
+            <span x-cloak x-show="tab=='info' && dirty">*</span>
         </li>
         <li
             x-bind:class="{
@@ -28,11 +28,11 @@
                 'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': tab!='neographies',
                 'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': tab=='neographies'
             }"
-            @click="if (dirty) {alert('{{ __('tollerus::ui.unsaved_alert') }}');} else {tab='neographies';}"
+            @click="if (dirty) {alert('{{ __('tollerus::ui.unsaved_alert') }}');} else {tab='neographies'; $store.scrollLock.lock(); $wire.openModal();}"
         >
             <x-tollerus::icons.neography class="h-6"/>
             <span class="hidden md:inline">{{ __('tollerus::ui.neographies') }}</span>
-            <span x-show="tab=='neographies' && dirty">*</span>
+            <span x-cloak x-show="tab=='neographies' && dirty">*</span>
         </li>
         <li
             x-bind:class="{
@@ -44,7 +44,7 @@
         >
             <x-tollerus::icons.grammar class="h-6"/>
             <span class="hidden md:inline">{{ __('tollerus::ui.grammar') }}</span>
-            <span x-show="tab=='grammar' && dirty">*</span>
+            <span x-cloak x-show="tab=='grammar' && dirty">*</span>
         </li>
         <li
             x-bind:class="{
@@ -56,10 +56,10 @@
         >
             <x-tollerus::icons.entries class="h-6"/>
             <span class="hidden md:inline">{{ __('tollerus::ui.entries') }}</span>
-            <span x-show="tab=='entries' && dirty">*</span>
+            <span x-cloak x-show="tab=='entries' && dirty">*</span>
         </li>
     </ul>
-    <x-tollerus::panel x-show="tab=='info'" class="flex flex-col gap-6">
+    <x-tollerus::panel x-cloak x-show="tab=='info'" class="flex flex-col gap-6">
         <x-tollerus::inputs.toggle id="visible" model="form.visible" label="{{ __('tollerus::ui.visible') }}" :checked="$form['visible']" @change="btn = 'save'; dirty=true;" />
         <div class="flex flex-col gap-4">
             <h3 class="font-bold text-lg">{{ __('tollerus::ui.name') }}</h3>
@@ -87,13 +87,14 @@
                 x-text="msgs[btn]" />
         </div>
     </x-tollerus::panel>
-    <x-tollerus::panel x-show="tab=='neographies'" class="flex flex-col gap-6">
+    <x-tollerus::panel x-cloak x-show="tab=='neographies'" class="flex flex-col gap-6">
         <p>Lorem ipsum dolor sit amet.</p>
     </x-tollerus::panel>
-    <x-tollerus::panel x-show="tab=='grammar'" class="flex flex-col gap-6">
+    <x-tollerus::panel x-cloak x-show="tab=='grammar'" class="flex flex-col gap-6">
         <p>Lorem ipsum dolor sit amet.</p>
     </x-tollerus::panel>
-    <x-tollerus::panel x-show="tab=='entries'" class="flex flex-col gap-6">
+    <x-tollerus::panel x-cloak x-show="tab=='entries'" class="flex flex-col gap-6">
         <p>Lorem ipsum dolor sit amet.</p>
     </x-tollerus::panel>
+    <livewire:tollerus.modal/>
 </div>

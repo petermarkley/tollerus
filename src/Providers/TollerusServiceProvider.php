@@ -58,6 +58,7 @@ class TollerusServiceProvider extends ServiceProvider
 		Blade::anonymousComponentNamespace('tollerus::components', 'tollerus');
 		// Expose Livewire component classes
 		Livewire::component('tollerus.language-editor', \PeterMarkley\Tollerus\Livewire\LanguageEditor::class);
+		Livewire::component('tollerus.modal',           \PeterMarkley\Tollerus\Livewire\Modal::class);
 		// UI localization
 		$this->loadTranslationsFrom(__DIR__.'/../../lang', 'tollerus');
 	}

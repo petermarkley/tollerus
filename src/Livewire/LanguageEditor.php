@@ -48,4 +48,13 @@ class LanguageEditor extends Component
             ->layout('tollerus::components.layout')
             ->title($this->language->name);
     }
+
+    public function openModal(): void
+    {
+        $this->dispatch('open-modal');
+    }
+    public function closeModal(): void
+    {
+        $this->dispatch('close-modal');
+    }
 }
