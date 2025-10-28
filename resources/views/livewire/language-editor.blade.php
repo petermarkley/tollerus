@@ -10,7 +10,6 @@
         tab: 'info'
     }"
     @tab-switch.window="tab = $event.detail.tab;"
-    @modal-cancel.window=""
     @modal-discard.window="$wire.refreshForm(); dirty=false;"
     @modal-save.window="$wire.save('tab-switch', {tab: $event.detail.tab});"
 >
