@@ -6,7 +6,7 @@
         <div class="w-full flex flex-row justify-start gap-2">
             @foreach ($buttons as $button)
                 @if (isset($button['payload']))
-                    <x-tollerus::inputs.button :type="$button['type']" x-on:click="$dispatch('{{ $button['clickEvent'] }}', {{ json_encode($button['payload']) }})">{{ $button['text'] }}</x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button :type="$button['type']" wire:click="$dispatch('{{ $button['clickEvent'] }}', {{ json_encode($button['payload']) }})">{{ $button['text'] }}</x-tollerus::inputs.button>
                 @else
                     <x-tollerus::inputs.button :type="$button['type']" wire:click="$dispatch('{{ $button['clickEvent'] }}')">{{ $button['text'] }}</x-tollerus::inputs.button>
                 @endif

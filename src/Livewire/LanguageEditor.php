@@ -15,7 +15,7 @@ class LanguageEditor extends Component
 
     public function refreshForm(): void
     {
-        $this->form = $this->language->getAttributes();
+        $this->form = $this->language->toArray();
         unset($this->form['id']);
         unset($this->form['primary_neography']);
     }

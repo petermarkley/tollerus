@@ -65,7 +65,7 @@
         </li>
     </ul>
     <x-tollerus::panel x-cloak x-show="tab=='info'" class="flex flex-col gap-6">
-        <x-tollerus::inputs.toggle id="visible" model="form.visible" label="{{ __('tollerus::ui.visible') }}" :checked="$form['visible']" @change="btn = 'save'; dirty=true;" />
+        <x-tollerus::inputs.toggle id="visible" model="form.visible" label="{{ __('tollerus::ui.visible') }}" @change="btn = 'save'; dirty=true;" />
         <div class="flex flex-col gap-4">
             <h3 class="font-bold text-lg">{{ __('tollerus::ui.name') }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
