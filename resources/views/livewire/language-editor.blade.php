@@ -1,20 +1,21 @@
-<div x-data="{
-    dirty: false,
-    btn: 'saved',
-    msgs: {
-        save: @js(__('tollerus::ui.save')),
-        saved: @js(__('tollerus::ui.saved')),
-        saving: @js(__('tollerus::ui.saving'))
-    },
-    tab: 'info'
-}">
+<div
+    x-data="{
+        dirty: false,
+        btn: 'saved',
+        msgs: {
+            save: @js(__('tollerus::ui.save')),
+            saved: @js(__('tollerus::ui.saved')),
+            saving: @js(__('tollerus::ui.saving'))
+        },
+        tab: 'info'
+    }"
+    @tab-switch.window="tab = $event.detail.tab;"
+    @modal-cancel.window=""
+    @modal-discard.window="$wire.refreshForm(); dirty=false;"
+    @modal-save.window="$wire.save('tab-switch', {tab: $event.detail.tab});"
+>
     <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">{{ $form['name'] }}</h1>
-    <ul
-        class="px-4 flex flex-row gap-4 justify-start items-end"
-        @tab-switch.window="tab = $event.detail.tab;"
-        @modal-cancel.window="$dispatch('close-modal');"
-        @modal-discard.window="$wire.refreshForm(); dirty=false; $dispatch('close-modal');"
-        @modal-save.window="$dispatch('close-modal'); $wire.save('tab-switch', {tab: $event.detail.tab});">
+    <ul class="px-4 flex flex-row gap-4 justify-start items-end">
         <li
             x-bind:class="{
                 'rounded-t-lg flex flex-row justify-start items-center gap-2 cursor-pointer py-2 px-4 flex': true,
@@ -101,7 +102,7 @@
     <x-tollerus::panel x-cloak x-show="tab=='entries'" class="flex flex-col gap-6">
         <p>Lorem ipsum dolor sit amet.</p>
     </x-tollerus::panel>
-    <livewire:tollerus.modal/>
+    <x-tollerus::modal/>
 </div>
 @once
 @push('tollerus-scripts')
@@ -110,7 +111,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('tabFunctions', {
         click(dirty, tab) {
             if (dirty) {
-                Livewire.dispatch('open-modal', {
+                window.dispatchEvent(new CustomEvent('open-modal', {detail: {
                     message: @js(__('tollerus::ui.unsaved_alert')),
                     buttons: [
                         {
@@ -130,9 +131,9 @@ document.addEventListener('alpine:init', () => {
                             payload: {tab: tab},
                         },
                     ],
-                });
+                }}));
             } else {
-                Livewire.dispatch('tab-switch', {tab: tab});
+                window.dispatchEvent(new CustomEvent('tab-switch', {detail: {tab: tab}}));
             }
         },
     });
