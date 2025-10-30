@@ -97,12 +97,15 @@
             <div class="flex flex-row justify-start">
                 <x-tollerus::button type="secondary" href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_neographies') }}</x-tollerus::button>
             </div>
-            <div class="grid grid-cols-3 gap-y-4" x-data="{ neographiesForm: $wire.entangle('neographiesForm') }">
+            <div class="grid grid-cols-4 gap-y-4" x-data="{ neographiesForm: $wire.entangle('neographiesForm') }">
                 <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
                     <span class="font-bold">{{ __('tollerus::ui.activate') }}</span>
                 </div>
                 <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
                     <span class="font-bold">{{ __('tollerus::ui.neography') }}</span>
+                </div>
+                <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
+                    <span class="font-bold">{{ __('tollerus::ui.edit') }}</span>
                 </div>
                 <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
                     <span class="font-bold">{{ __('tollerus::ui.primary') }}</span>
@@ -120,6 +123,16 @@
                     </div>
                     <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
                         <span x-bind:class="neographiesForm[{{ $neography->id }}] ? 'font-bold' : 'font-bold opacity-40'">{{ $neography->name }}</span>
+                    </div>
+                    <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
+                        <x-tollerus::button
+                            type="secondary"
+                            size="small"
+                            title="{{ __('tollerus::ui.edit_thing', ['thing' => $neography->name]) }}"
+                            href="{{ route('tollerus.admin.neographies.edit', ['neography' => $neography->id]) }}"
+                        >
+                            <x-tollerus::icons.edit />
+                        </x-tollerus::button>
                     </div>
                     <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
                         {{-- FIXME: this should be a radio button, because there can only be one selected --}}

@@ -52,6 +52,8 @@ return [
   'saving' => 'Saving ...',
   'saved' => '(Saved)',
   'info' => 'Info',
+  'edit' => 'Edit',
+  'edit_thing' => 'Edit :thing',
   'activate' => 'Activate',
   'activate_neography_in_language' => 'Activate :neography in :language',
   /**
