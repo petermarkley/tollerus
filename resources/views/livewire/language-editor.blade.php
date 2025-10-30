@@ -14,7 +14,10 @@
     @modal-save.window="$wire.save('tab-switch', {tab: $event.detail.tab});"
 >
     <div id="non-modal-content">
-        <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">{{ $infoForm['name'] }}</h1>
+        <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
+            <span>{{ $infoForm['name'] }}</span>
+            <span>({{ __('tollerus::ui.language') }})</span>
+        </h1>
         <ul class="px-4 flex flex-row gap-4 justify-start items-end" role="tablist">
             <x-tollerus::inputs.tab
                 switcher="tab"
@@ -95,8 +98,7 @@
         </x-tollerus::panel>
         <x-tollerus::panel id="tabpanel-neographies" role="tabpanel" x-cloak x-show="tab=='neographies'" class="flex flex-col gap-6 items-start">
             <div class="flex flex-col gap-4 items-start">
-                <p>{{ __('tollerus::ui.language_neographies_context_notice', ['language' => $language->name]) }}</p>
-                <p><x-tollerus::button type="secondary" href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_all_neographies') }}</x-tollerus::button></p>
+                <p>{{ __('tollerus::ui.language_neographies_context_notice', ['language' => $language->name]) }} <a href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_all_neographies') }}</a></p>
             </div>
             <div class="grid grid-cols-4 gap-y-4" x-data="{ neographiesForm: $wire.entangle('neographiesForm') }">
                 <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
@@ -117,6 +119,12 @@
                             showLabel="false"
                             id="neography_{{ $neography->id }}"
                             model="neographiesForm.{{ $neography->id }}"
+                            x-effect="
+                                if (!(neographiesForm[{{ $neography->id }}]) && neographiesForm.primary_neography == {{ $neography->id }}) {
+                                    neographiesForm.primary_neography = null;
+                                    $wire.set('neographiesForm.primary_neography', null);
+                                }
+                            "
                             label="{{ __('tollerus::ui.activate_neography_in_language', [
                                 'neography' => $neography->name,
                                 'language' => $language->name
@@ -140,7 +148,7 @@
                         <label class="w-6 h-6 relative group">
                             <x-tollerus::icons.star
                                 x-bind:fill="neographiesForm.primary_neography == {{ $neography->id }} ? 'currentColor' : 'none'"
-                                class="text-zinc-600 group-has-hover:text-zinc-500 dark:text-zinc-500 group-has-hover:dark:text-zinc-400 group-has-checked:text-cyan-800 group-has-checked:group-has-hover:text-cyan-700 group-has-checked:dark:text-cyan-300 group-has-checked:group-has-hover:dark:text-cyan-200 group-has-checked:saturate-50 group-has-disabled:text-zinc-300 group-has-disabled:dark:text-zinc-700"
+                                class="text-zinc-600 group-has-hover:text-zinc-500 dark:text-zinc-500 group-has-hover:dark:text-zinc-400 group-has-checked:text-cyan-800 group-has-checked:group-has-hover:text-cyan-700 group-has-checked:dark:text-cyan-300 group-has-checked:group-has-hover:dark:text-cyan-200 group-has-checked:saturate-50 group-has-disabled:text-zinc-300 group-has-disabled:dark:text-zinc-700 group-has-checked:group-has-hover:group-has-disabled:text-zinc-300 group-has-checked:group-has-hover:group-has-disabled:dark:text-zinc-700"
                             />
                             <input
                                 type="radio"

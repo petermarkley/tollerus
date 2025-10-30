@@ -1,6 +1,7 @@
 <?php
 
 return [
+  'language' => 'Language',
   'languages' => 'Languages',
   /**
    * TRANSLATOR NOTE:
