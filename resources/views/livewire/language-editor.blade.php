@@ -105,16 +105,16 @@
             <table x-data="{ neographiesForm: $wire.entangle('neographiesForm') }">
                 <thead>
                     <tr>
-                        <th class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
+                        <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
                             <span class="font-bold">{{ __('tollerus::ui.activate') }}</span>
                         </th>
-                        <th class="py-1 px-2 border-b-2 min-w-24 border-zinc-400 dark:border-zinc-600">
+                        <th scope="col" class="text-left py-1 px-2 border-b-2 min-w-24 border-zinc-400 dark:border-zinc-600">
                             <span class="font-bold">{{ __('tollerus::ui.neography') }}</span>
                         </th>
-                        <th class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
+                        <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
                             <span class="font-bold">{{ __('tollerus::ui.edit') }}</span>
                         </th>
-                        <th class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
+                        <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
                             <span class="font-bold">{{ __('tollerus::ui.primary') }}</span>
                         </th>
                     </tr>
@@ -138,9 +138,9 @@
                                         'language' => $language->name
                                     ]) }}" />
                             </td>
-                            <td class="px-2 pb-1 pt-5 min-w-24 border-b-2 border-zinc-300 dark:border-zinc-700">
+                            <th scope="row" class="text-left px-2 pb-1 pt-5 min-w-24 border-b-2 border-zinc-300 dark:border-zinc-700">
                                 <span x-bind:class="neographiesForm[{{ $neography->id }}] ? 'font-bold' : 'font-bold opacity-40'">{{ $neography->name }}</span>
-                            </td>
+                            </th>
                             <td class="text-center px-2 pb-1 pt-5 min-w-24 border-b-2 border-zinc-300 dark:border-zinc-700">
                                 <x-tollerus::button
                                     type="secondary"
