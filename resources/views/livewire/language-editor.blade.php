@@ -14,7 +14,7 @@
     @modal-save.window="$wire.save('tab-switch', {tab: $event.detail.tab});"
 >
     <div id="non-modal-content">
-        <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">{{ $form['name'] }}</h1>
+        <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">{{ $infoForm['name'] }}</h1>
         <ul class="px-4 flex flex-row gap-4 justify-start items-end" role="tablist">
             <x-tollerus::inputs.tab
                 switcher="tab"
@@ -66,22 +66,22 @@
             </x-tollerus::inputs.tab>
         </ul>
         <x-tollerus::panel id="tabpanel-info" role="tabpanel" x-cloak x-show="tab=='info'" class="flex flex-col gap-6">
-            <x-tollerus::inputs.toggle id="visible" model="form.visible" label="{{ __('tollerus::ui.visible') }}" @change="btn = 'save'; dirty=true;" />
+            <x-tollerus::inputs.toggle id="visible" model="infoForm.visible" label="{{ __('tollerus::ui.visible') }}" @change="btn = 'save'; dirty=true;" />
             <div class="flex flex-col gap-4">
                 <h3 class="font-bold text-lg">{{ __('tollerus::ui.name') }}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <x-tollerus::inputs.text id="name" model="form.name" label="{{ __('tollerus::ui.human_friendly') }}" @input="btn = 'save'; dirty=true;" />
-                    <x-tollerus::inputs.text id="machine_name" model="form.machine_name" label="{{ __('tollerus::ui.machine_friendly') }}" @input="btn = 'save'; dirty=true;" />
+                    <x-tollerus::inputs.text id="name" model="infoForm.name" label="{{ __('tollerus::ui.human_friendly') }}" @input="btn = 'save'; dirty=true;" />
+                    <x-tollerus::inputs.text id="machine_name" model="infoForm.machine_name" label="{{ __('tollerus::ui.machine_friendly') }}" @input="btn = 'save'; dirty=true;" />
                 </div>
             </div>
             <div class="flex flex-col gap-4">
                 <h3 class="font-bold text-lg">{{ __('tollerus::ui.dictionary_info') }}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <x-tollerus::inputs.text id="dict_title" model="form.dict_title" label="{{ __('tollerus::ui.title_short') }}" @input="btn = 'save'; dirty=true;" />
-                    <x-tollerus::inputs.text id="dict_title_full" model="form.dict_title_full" label="{{ __('tollerus::ui.title_full') }}" @input="btn = 'save'; dirty=true;" />
+                    <x-tollerus::inputs.text id="dict_title" model="infoForm.dict_title" label="{{ __('tollerus::ui.title_short') }}" @input="btn = 'save'; dirty=true;" />
+                    <x-tollerus::inputs.text id="dict_title_full" model="infoForm.dict_title_full" label="{{ __('tollerus::ui.title_full') }}" @input="btn = 'save'; dirty=true;" />
                 </div>
-                <x-tollerus::inputs.text id="dict_author" model="form.dict_author" label="{{ __('tollerus::ui.author') }}" @input="btn = 'save'; dirty=true;" />
-                <x-tollerus::inputs.textarea id="intro" model="form.intro" label="{{ __('tollerus::ui.intro') }}" @input="btn = 'save'; dirty=true;" />
+                <x-tollerus::inputs.text id="dict_author" model="infoForm.dict_author" label="{{ __('tollerus::ui.author') }}" @input="btn = 'save'; dirty=true;" />
+                <x-tollerus::inputs.textarea id="intro" model="infoForm.intro" label="{{ __('tollerus::ui.intro') }}" @input="btn = 'save'; dirty=true;" />
             </div>
             <div>
                 <x-tollerus::inputs.button

@@ -11,13 +11,13 @@ use PeterMarkley\Tollerus\Models\Language;
 class LanguageEditor extends Component
 {
     #[Locked] public Language $language;
-    public array $form = [];
+    public array $infoForm = [];
 
     public function refreshForm(): void
     {
-        $this->form = $this->language->toArray();
-        unset($this->form['id']);
-        unset($this->form['primary_neography']);
+        $this->infoForm = $this->language->toArray();
+        unset($this->infoForm['id']);
+        unset($this->infoForm['primary_neography']);
     }
 
     public function mount(Language $language): void
@@ -31,10 +31,10 @@ class LanguageEditor extends Component
         try {
             // Validate
             $this->validate([
-                'form.machine_name' => 'alpha_dash:ascii',
+                'infoForm.machine_name' => 'alpha_dash:ascii',
             ]);
             // Save to database
-            $this->language->fill($this->form);
+            $this->language->fill($this->infoForm);
             $this->language->save();
             // Refresh front-end state
             $this->refreshForm();
