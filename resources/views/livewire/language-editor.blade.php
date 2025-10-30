@@ -165,7 +165,7 @@
                                         name="primary_neography"
                                         value="{{ $neography->id }}"
                                         wire:model="neographiesForm.primary_neography"
-                                        title="{{ __('tollerus::ui.set_primary_as_name', ['name' => $neography->name]) }}"
+                                        x-bind:title="(neographiesForm[{{ $neography->id }}]) ? @js(__('tollerus::ui.set_primary_as_name', ['name' => $neography->name])) : @js(__('tollerus::ui.primary_must_be_active'))"
                                         x-bind:disabled="!(neographiesForm[{{ $neography->id }}])"
                                         class="absolute w-full h-full inset-0 opacity-0 z-10 cursor-pointer disabled:cursor-not-allowed"
                                     />

@@ -26,6 +26,7 @@ return [
   'primary_neography' => 'Primary neography',
   'primary_neography_name' => 'Primary neography: :name',
   'set_primary_as_name' => 'Set primary as :name',
+  'primary_must_be_active' => '(Primary must be active)',
   'is_primary' => 'Primary?', // Label that controls whether or not a given neography is primary
   'no_neographies' => '(No Neographies)',
   'grammar' => 'Grammar',
