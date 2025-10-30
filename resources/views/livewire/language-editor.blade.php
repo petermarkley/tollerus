@@ -10,7 +10,7 @@
         tab: 'info'
     }"
     @tab-switch.window="tab = $event.detail.tab;"
-    @modal-discard.window="$wire.refreshForm(); dirty=false;"
+    @modal-discard.window="$wire.refreshInfoForm(); dirty=false;"
     @modal-save.window="$wire.save('tab-switch', {tab: $event.detail.tab});"
 >
     <div id="non-modal-content">
@@ -93,8 +93,24 @@
                     x-text="msgs[btn]" />
             </div>
         </x-tollerus::panel>
-        <x-tollerus::panel id="tabpanel-neographies" role="tabpanel" x-cloak x-show="tab=='neographies'" class="flex flex-col gap-6">
-            <p>Lorem ipsum dolor sit amet.</p>
+        <x-tollerus::panel id="tabpanel-neographies" role="tabpanel" x-cloak x-show="tab=='neographies'" class="flex flex-col gap-6 items-start">
+            <div class="flex flex-row justify-start">
+                <x-tollerus::button type="secondary" href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_neographies') }}</x-tollerus::button>
+            </div>
+            <div class="grid grid-cols-3 gap-y-4">
+                @foreach ($neographies as $neography)
+                    <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
+                        <x-tollerus::inputs.toggle id="neography_{{ $neography->id }}_assigned" model="neographiesForm.{{ $neography->id }}.assigned" label="{{ __('tollerus::ui.assign') }}" />
+                    </div>
+                    <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
+                        <span class="font-bold">{{ $neography->name }}</span>
+                    </div>
+                    <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
+                        {{-- FIXME: this should be a radio button, because there can only be one selected --}}
+                        <x-tollerus::inputs.toggle id="neography_{{ $neography->id }}_isprimary" model="neographiesForm.{{ $neography->id }}.isPrimary" label="{{ __('tollerus::ui.is_primary') }}" />
+                    </div>
+                @endforeach
+            </div>
         </x-tollerus::panel>
         <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-6">
             <p>Lorem ipsum dolor sit amet.</p>

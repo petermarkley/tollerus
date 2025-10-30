@@ -17,7 +17,9 @@ return [
    * "neography" here.
    */
   'neographies' => 'Neographies',
+  'edit_neographies' => 'Edit neographies',
   'primary_neography' => 'Primary neography: :name',
+  'is_primary' => 'Primary?', // Label that controls whether or not a given neography is primary
   'no_neographies' => '(No Neographies)',
   'grammar' => 'Grammar',
   'no_grammar' => '(No Grammar)',
@@ -46,6 +48,14 @@ return [
   'saving' => 'Saving ...',
   'saved' => '(Saved)',
   'info' => 'Info',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Assign" here means assign or connect two data units. For
+   * example assigning a neography to a language, i.e. saying
+   * "this is a valid neography for this language."
+   */
+  'assign' => 'Assign',
   /**
    * TRANSLATOR NOTE:
    *
