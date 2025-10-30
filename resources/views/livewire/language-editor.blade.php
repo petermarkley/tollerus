@@ -98,25 +98,46 @@
                 <x-tollerus::button type="secondary" href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_neographies') }}</x-tollerus::button>
             </div>
             <div class="grid grid-cols-3 gap-y-4" x-data="{ neographiesForm: $wire.entangle('neographiesForm') }">
-                <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
-                    <span class="font-bold">{{ __('tollerus::ui.assign') }}</span>
+                <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
+                    <span class="font-bold">{{ __('tollerus::ui.activate') }}</span>
                 </div>
                 <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
                     <span class="font-bold">{{ __('tollerus::ui.neography') }}</span>
                 </div>
-                <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
+                <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
                     <span class="font-bold">{{ __('tollerus::ui.primary') }}</span>
                 </div>
                 @foreach ($neographies as $neography)
-                    <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
-                        <x-tollerus::inputs.toggle showLabel="false" id="neography_{{ $neography->id }}_assigned" model="neographiesForm.{{ $neography->id }}.assigned" label="{{ __('tollerus::ui.assign') }}" />
+                    <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
+                        <x-tollerus::inputs.toggle
+                            showLabel="false"
+                            id="neography_{{ $neography->id }}"
+                            model="neographiesForm.{{ $neography->id }}"
+                            label="{{ __('tollerus::ui.activate_neography_in_language', [
+                                'neography' => $neography->name,
+                                'language' => $language->name
+                            ]) }}" />
                     </div>
                     <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
-                        <span class="font-bold">{{ $neography->name }}</span>
+                        <span x-bind:class="neographiesForm[{{ $neography->id }}] ? 'font-bold' : 'font-bold opacity-40'">{{ $neography->name }}</span>
                     </div>
-                    <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
+                    <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
                         {{-- FIXME: this should be a radio button, because there can only be one selected --}}
-                        <x-tollerus::inputs.toggle showLabel="false" id="neography_{{ $neography->id }}_isprimary" x-bind:disabled="!(neographiesForm[{{ $neography->id }}].assigned)" model="neographiesForm.{{ $neography->id }}.isPrimary" label="{{ __('tollerus::ui.is_primary') }}" />
+                        <label class="w-6 h-6 relative group">
+                            <x-tollerus::icons.star
+                                x-bind:fill="neographiesForm.primary_neography == {{ $neography->id }} ? 'currentColor' : 'none'"
+                                class="text-zinc-600 group-has-hover:text-zinc-500 dark:text-zinc-500 group-has-hover:dark:text-zinc-400 group-has-checked:text-cyan-800 group-has-checked:group-has-hover:text-cyan-700 group-has-checked:dark:text-cyan-300 group-has-checked:group-has-hover:dark:text-cyan-200 group-has-checked:saturate-50 group-has-disabled:text-zinc-300 group-has-disabled:dark:text-zinc-700"
+                            />
+                            <input
+                                type="radio"
+                                name="primary_neography"
+                                value="{{ $neography->id }}"
+                                wire:model="neographiesForm.primary_neography"
+                                title="{{ __('tollerus::ui.set_primary_as_name', ['name' => $neography->name]) }}"
+                                x-bind:disabled="!(neographiesForm[{{ $neography->id }}])"
+                                class="absolute w-full h-full inset-0 opacity-0 z-10 cursor-pointer disabled:cursor-not-allowed"
+                            />
+                        </label>
                     </div>
                 @endforeach
             </div>

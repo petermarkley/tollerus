@@ -26,11 +26,11 @@ class LanguageEditor extends Component
     public function refreshNeographiesForm(): void
     {
         $this->neographiesForm = collect($this->neographies)->mapWithKeys(fn ($neography) => [
-            $neography->id => [
-                'assigned' => collect($this->languageNeographies)->pluck('id')->contains($neography->id),
-                'isPrimary' => $neography->id == $this->language->primary_neography,
-            ]
+            $neography->id => collect($this->languageNeographies)
+                ->pluck('id')
+                ->contains($neography->id)
         ])->toArray();
+        $this->neographiesForm['primary_neography'] = $this->language->primary_neography;
     }
 
     public function mount(Language $language): void
