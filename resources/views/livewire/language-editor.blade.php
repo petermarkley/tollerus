@@ -94,8 +94,9 @@
             </div>
         </x-tollerus::panel>
         <x-tollerus::panel id="tabpanel-neographies" role="tabpanel" x-cloak x-show="tab=='neographies'" class="flex flex-col gap-6 items-start">
-            <div class="flex flex-row justify-start">
-                <x-tollerus::button type="secondary" href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_neographies') }}</x-tollerus::button>
+            <div class="flex flex-col gap-4 items-start">
+                <p>{{ __('tollerus::ui.language_neographies_context_notice', ['language' => $language->name]) }}</p>
+                <p><x-tollerus::button type="secondary" href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_all_neographies') }}</x-tollerus::button></p>
             </div>
             <div class="grid grid-cols-4 gap-y-4" x-data="{ neographiesForm: $wire.entangle('neographiesForm') }">
                 <div class="col-span-1 flex flex-row justify-center items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">

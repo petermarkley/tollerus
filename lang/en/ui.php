@@ -19,6 +19,8 @@ return [
   'neography' => 'Neography',
   'neographies' => 'Neographies',
   'edit_neographies' => 'Edit neographies',
+  'language_neographies_context_notice' => 'These options configure the neographies specifically for :language.',
+  'edit_all_neographies' => 'Edit all neographies',
   'primary' => 'Primary',
   'primary_neography' => 'Primary neography',
   'primary_neography_name' => 'Primary neography: :name',
