@@ -97,17 +97,26 @@
             <div class="flex flex-row justify-start">
                 <x-tollerus::button type="secondary" href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_neographies') }}</x-tollerus::button>
             </div>
-            <div class="grid grid-cols-3 gap-y-4">
+            <div class="grid grid-cols-3 gap-y-4" x-data="{ neographiesForm: $wire.entangle('neographiesForm') }">
+                <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
+                    <span class="font-bold">{{ __('tollerus::ui.assign') }}</span>
+                </div>
+                <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
+                    <span class="font-bold">{{ __('tollerus::ui.neography') }}</span>
+                </div>
+                <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-400 dark:border-zinc-600">
+                    <span class="font-bold">{{ __('tollerus::ui.primary') }}</span>
+                </div>
                 @foreach ($neographies as $neography)
                     <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
-                        <x-tollerus::inputs.toggle id="neography_{{ $neography->id }}_assigned" model="neographiesForm.{{ $neography->id }}.assigned" label="{{ __('tollerus::ui.assign') }}" />
+                        <x-tollerus::inputs.toggle showLabel="false" id="neography_{{ $neography->id }}_assigned" model="neographiesForm.{{ $neography->id }}.assigned" label="{{ __('tollerus::ui.assign') }}" />
                     </div>
                     <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
                         <span class="font-bold">{{ $neography->name }}</span>
                     </div>
                     <div class="col-span-1 flex flex-row justify-start items-center py-1 px-2 border-b-2 border-zinc-300 dark:border-zinc-700">
                         {{-- FIXME: this should be a radio button, because there can only be one selected --}}
-                        <x-tollerus::inputs.toggle id="neography_{{ $neography->id }}_isprimary" model="neographiesForm.{{ $neography->id }}.isPrimary" label="{{ __('tollerus::ui.is_primary') }}" />
+                        <x-tollerus::inputs.toggle showLabel="false" id="neography_{{ $neography->id }}_isprimary" x-bind:disabled="!(neographiesForm[{{ $neography->id }}].assigned)" model="neographiesForm.{{ $neography->id }}.isPrimary" label="{{ __('tollerus::ui.is_primary') }}" />
                     </div>
                 @endforeach
             </div>

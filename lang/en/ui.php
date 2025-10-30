@@ -16,9 +16,12 @@ return [
    * writing system. That's why we prefer the term
    * "neography" here.
    */
+  'neography' => 'Neography',
   'neographies' => 'Neographies',
   'edit_neographies' => 'Edit neographies',
-  'primary_neography' => 'Primary neography: :name',
+  'primary' => 'Primary',
+  'primary_neography' => 'Primary neography',
+  'primary_neography_name' => 'Primary neography: :name',
   'is_primary' => 'Primary?', // Label that controls whether or not a given neography is primary
   'no_neographies' => '(No Neographies)',
   'grammar' => 'Grammar',
