@@ -5,10 +5,12 @@
   'model' => null,
   'checked' => false,
 ])
-<div class="flex flex-col gap-1 items-start">
+<div class="flex flex-col gap-1 items-center">
     <div class="flex flex-row gap-4 justify-start items-center">
         @if (filter_var($showLabel, FILTER_VALIDATE_BOOLEAN))
             <label for="{{ $id }}">{{ $label }}</label>
+        @elseif ($label)
+            <label for="{{ $id }}" class="sr-only">{{ $label }}</label>
         @endif
         <div class="relative inline-block w-[56px] h-[32px] group">
             <input type="checkbox" id="{{ $id }}" title="{{ $showLabel ? $label : '' }}" class="absolute opacity-0 inset-0 w-full h-full cursor-pointer disabled:cursor-not-allowed z-10" wire:model="{{ $model }}" {{ $attributes }}>
