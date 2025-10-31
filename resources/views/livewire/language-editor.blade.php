@@ -187,6 +187,13 @@
                     @save-neographies-failure.window="btn = 'save';"
                     x-text="msgs[btn]" />
             </div>
+            @if ($errors->has('neographiesForm.*'))
+                <div class="flex flex-row gap-2">
+                    @foreach (collect($errors->get('neographiesForm.*'))->flatten() as $message)
+                        <x-tollerus::alert type="error">{{ $message }}</x-tollerus::alert>
+                    @endforeach
+                </div>
+            @endif
         </x-tollerus::panel>
         <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-6">
             <p>Lorem ipsum dolor sit amet.</p>
