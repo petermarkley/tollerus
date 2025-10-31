@@ -99,9 +99,9 @@
             </div>
         </x-tollerus::panel>
         <x-tollerus::panel id="tabpanel-neographies" role="tabpanel" x-cloak x-show="tab=='neographies'" class="flex flex-col gap-6 items-start">
-            <div class="flex flex-col gap-4 items-start">
+            <x-tollerus::alert>
                 <p>{{ __('tollerus::ui.language_neographies_context_notice', ['language' => $language->name]) }} <a href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_all_neographies') }}</a></p>
-            </div>
+            </x-tollerus::alert>
             <table x-data="{ neographiesForm: $wire.entangle('neographiesForm') }">
                 <thead>
                     <tr>

@@ -9,4 +9,7 @@
     footer a {
         @apply text-cyan-800 hover:text-cyan-800 dark:text-cyan-500 hover:dark:text-cyan-500 saturate-80 dark:saturate-20
     }
+    [data-component="alert"] a {
+        @apply saturate-100 underline font-bold
+    }
 }
