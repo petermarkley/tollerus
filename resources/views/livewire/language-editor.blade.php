@@ -11,7 +11,7 @@
     }"
     @tab-switch.window="tab = $event.detail.tab;"
     @modal-discard.window="$wire.refreshInfoForm(); dirty=false;"
-    @modal-save.window="$wire.save('tab-switch', {tab: $event.detail.tab});"
+    @modal-save.window="$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});"
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
@@ -90,11 +90,11 @@
             </div>
             <div>
                 <x-tollerus::inputs.button
-                    @click="btn = 'saving'; $wire.save('',{});"
+                    @click="btn = 'saving'; $wire.infoSave('',{});"
                     x-bind:disabled="!dirty"
                     wire:loading.attr="disabled"
-                    @save-success.window="btn = 'saved'; dirty=false; if ($event.detail[0].afterSuccess) {$dispatch($event.detail[0].afterSuccess, $event.detail[0].payload);}"
-                    @save-failure.window="btn = 'save';"
+                    @save-info-success.window="btn = 'saved'; dirty=false; if ($event.detail[0].afterSuccess) {$dispatch($event.detail[0].afterSuccess, $event.detail[0].payload);}"
+                    @save-info-failure.window="btn = 'save';"
                     x-text="msgs[btn]" />
             </div>
         </x-tollerus::panel>
@@ -136,7 +136,8 @@
                                     label="{{ __('tollerus::ui.activate_neography_in_language', [
                                         'neography' => $neography->name,
                                         'language' => $language->name
-                                    ]) }}" />
+                                    ]) }}"
+                                    @change="btn = 'save'; dirty=true;" />
                             </td>
                             <th scope="row" class="text-left px-2 pb-1 pt-5 min-w-24 border-b-2 border-zinc-300 dark:border-zinc-700">
                                 <span x-bind:class="neographiesForm[{{ $neography->id }}] ? 'font-bold' : 'font-bold opacity-40'">{{ $neography->name }}</span>
@@ -168,6 +169,7 @@
                                         x-bind:title="(neographiesForm[{{ $neography->id }}]) ? @js(__('tollerus::ui.set_primary_as_name', ['name' => $neography->name])) : @js(__('tollerus::ui.primary_must_be_active'))"
                                         x-bind:disabled="!(neographiesForm[{{ $neography->id }}])"
                                         class="absolute w-full h-full inset-0 opacity-0 z-10 cursor-pointer disabled:cursor-not-allowed"
+                                        @change="btn = 'save'; dirty=true;"
                                     />
                                     <span class="sr-only">{{ __('tollerus::ui.set_primary_as_name', ['name' => $neography->name]) }}</span>
                                 </label>
@@ -176,6 +178,15 @@
                     @endforeach
                 </tbody>
             </table>
+            <div>
+                <x-tollerus::inputs.button
+                    @click="btn = 'saving'; $wire.neographiesSave('',{});"
+                    x-bind:disabled="!dirty"
+                    wire:loading.attr="disabled"
+                    @save-neographies-success.window="btn = 'saved'; dirty=false; if ($event.detail[0].afterSuccess) {$dispatch($event.detail[0].afterSuccess, $event.detail[0].payload);}"
+                    @save-neographies-failure.window="btn = 'save';"
+                    x-text="msgs[btn]" />
+            </div>
         </x-tollerus::panel>
         <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-6">
             <p>Lorem ipsum dolor sit amet.</p>
