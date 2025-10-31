@@ -55,6 +55,7 @@ return [
   'save' => 'Save',
   'saving' => 'Saving ...',
   'saved' => '(Saved)',
+  'reset' => 'Reset', // i.e. reset the form; revert/discard changes
   'info' => 'Info',
   'edit' => 'Edit',
   'edit_thing' => 'Edit :thing',

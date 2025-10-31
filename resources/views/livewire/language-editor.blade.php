@@ -106,7 +106,8 @@
                 <x-tollerus::inputs.text id="dict_author" model="infoForm.dict_author" label="{{ __('tollerus::ui.author') }}" @input="btn = 'save'; dirty=true;" />
                 <x-tollerus::inputs.textarea id="intro" model="infoForm.intro" label="{{ __('tollerus::ui.intro') }}" @input="btn = 'save'; dirty=true;" />
             </div>
-            <div>
+            <div class="flex flex-row justify-start gap-2">
+                <x-tollerus::inputs.button type="secondary" x-bind:disabled="!dirty" @click="$wire.refreshInfoForm(); dirty=false;">{{ __('tollerus::ui.reset') }}</x-tollerus::inputs.button>
                 <x-tollerus::inputs.button
                     @click="btn = 'saving'; $wire.infoSave('',{});"
                     x-bind:disabled="!dirty"
@@ -206,7 +207,9 @@
             </table>
             <div class="flex flex-col items-start gap-2">
                 <x-tollerus::alert type="warning" x-cloak x-show="nativeSpellingsToDelete > 0">{{ __('tollerus::ui.associated_delete') }}</x-tollerus::alert>
-                <x-tollerus::inputs.button
+                <div class="flex flex-row justify-start gap-2">
+                    <x-tollerus::inputs.button type="secondary" x-bind:disabled="!dirty" @click="$wire.refreshNeographiesForm(); dirty=false;">{{ __('tollerus::ui.reset') }}</x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button
                     @click="btn = 'saving'; $wire.neographiesSave('',{});"
                     x-bind:disabled="!dirty"
                     wire:loading.attr="disabled"
@@ -214,6 +217,7 @@
                     @save-neographies-success.window="btn = 'saved'; dirty=false; if ($event.detail[0].afterSuccess) {$dispatch($event.detail[0].afterSuccess, $event.detail[0].payload);}"
                     @save-neographies-failure.window="btn = 'save';"
                     x-text="msgs[btn]" />
+                </div>
             </div>
             @if ($errors->has('neographiesForm.*'))
                 <div class="flex flex-row gap-2">
