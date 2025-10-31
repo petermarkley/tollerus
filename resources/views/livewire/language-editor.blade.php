@@ -10,7 +10,7 @@
         tab: 'info'
     }"
     @tab-switch.window="tab = $event.detail.tab;"
-    @modal-discard.window="$wire.refreshInfoForm(); dirty=false;"
+    @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
     @modal-save.window="$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});"
 >
     <div id="non-modal-content">

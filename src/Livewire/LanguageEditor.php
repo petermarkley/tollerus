@@ -38,7 +38,33 @@ class LanguageEditor extends Component
     }
 
     /**
-     * Front-end refresh functions, per tab
+     * Convenience functions that switch between methods based on tab
+     */
+    public function refreshForm(string $tab): void
+    {
+        switch ($tab) {
+            case 'info':
+                $this->refreshInfoForm();
+            break;
+            case 'neographies':
+                $this->refreshNeographiesForm();
+            break;
+        }
+    }
+    public function save(string $tab, string $afterSuccess = '', array $payload = []): void
+    {
+        switch ($tab) {
+            case 'info':
+                $this->infoSave($afterSuccess, $payload);
+            break;
+            case 'neographies':
+                $this->neographiesSave($afterSuccess, $payload);
+            break;
+        }
+    }
+
+    /**
+     * Tab-specific refresh functions
      */
     public function refreshInfoForm(): void
     {
@@ -54,21 +80,6 @@ class LanguageEditor extends Component
                 ->contains($neography->id)
         ])->toArray();
         $this->neographiesForm['primary_neography'] = $this->language->primary_neography;
-    }
-
-    /**
-     * Convenience function that switches between save methods based on tab
-     */
-    public function save(string $tab, string $afterSuccess = '', array $payload = []): void
-    {
-        switch ($tab) {
-            case 'info':
-                $this->infoSave($afterSuccess, $payload);
-            break;
-            case 'neographies':
-                $this->neographiesSave($afterSuccess, $payload);
-            break;
-        }
     }
 
     /**
@@ -125,6 +136,7 @@ class LanguageEditor extends Component
             $this->language->primary_neography = $this->neographiesForm['primary_neography'];
             $this->language->save();
             // Refresh front-end state
+            $this->languageNeographies = $this->language->neographies->all();
             $this->refreshNeographiesForm();
             $this->dispatch('save-neographies-success', ['afterSuccess'=>$afterSuccess, 'payload'=>$payload]);
         } catch (\Illuminate\Validation\ValidationException $e) {
