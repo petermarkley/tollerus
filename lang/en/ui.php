@@ -60,6 +60,7 @@ return [
   'edit_thing' => 'Edit :thing',
   'activate' => 'Activate',
   'activate_neography_in_language' => 'Activate :neography in :language',
+  'associated_delete' => 'Saving this change will delete associated data.',
   /**
    * TRANSLATOR NOTE:
    *
@@ -72,6 +73,16 @@ return [
   'unsaved_alert' => 'You have unsaved changes here!',
   'cancel' => 'Cancel',
   'discard' => 'Discard',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * These items will be used together in a popup dialogue.
+   * The colon and number symbol ':#' will be replaced with
+   * a number.
+   */
+  'will_delete_native_spellings' => 'You are about to delete :# native spellings! Are you sure?',
+  'no_cancel' => 'No, cancel',
+  'yes_delete' => 'Yes, delete',
   /**
    * TRANSLATOR NOTE:
    *

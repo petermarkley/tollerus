@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
+use PeterMarkley\Tollerus\Models\NativeSpelling;
 
 class LanguageEditor extends Component
 {
@@ -18,6 +19,7 @@ class LanguageEditor extends Component
     #[Locked] public array $languageNeographies = [];
     public array $infoForm = [];
     public array $neographiesForm = [];
+    #[Locked] public array $nativeSpellingCounts = [];
 
     /**
      * Livewire hooks
@@ -80,6 +82,11 @@ class LanguageEditor extends Component
                 ->contains($neography->id)
         ])->toArray();
         $this->neographiesForm['primary_neography'] = $this->language->primary_neography;
+        $this->nativeSpellingCounts = collect($this->neographies)->mapWithKeys(fn ($neography) => [
+            $neography->id => NativeSpelling::where('neography_id', $neography->id)
+                ->whereHas('form', fn ($q) => $q->where('language_id', $this->language->id))
+                ->count()
+        ])->toArray();
     }
 
     /**
@@ -121,7 +128,9 @@ class LanguageEditor extends Component
                 if (!($activated->contains($pivotRow->neography_id))) {
                     // This neography was deactivated by the user
                     $pivotRow->delete();
-                    // FIXME delete NativeSpelling rows?
+                    NativeSpelling::where('neography_id', $pivotRow->neography_id)
+                        ->whereHas('form', fn ($q) => $q->where('language_id', $this->language->id))
+                        ->delete();
                 }
             }
             foreach ($activated as $activeNeographyId) {

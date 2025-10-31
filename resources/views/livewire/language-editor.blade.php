@@ -7,7 +7,23 @@
             saved: @js(__('tollerus::ui.saved')),
             saving: @js(__('tollerus::ui.saving'))
         },
-        tab: 'info'
+        tab: 'info',
+        neographiesForm: $wire.entangle('neographiesForm'),
+        nativeSpellingCounts: $wire.entangle('nativeSpellingCounts'),
+        nativeSpellingsMsgSrc: @js(__('tollerus::ui.will_delete_native_spellings')),
+        get nativeSpellingsToDelete() {
+            let count = 0;
+            for (let neographyId in this.neographiesForm) {
+                let active = this.neographiesForm[neographyId];
+                if (this.neographiesForm.hasOwnProperty(neographyId) && typeof active === 'boolean' && !active) {
+                    count += Number(this.nativeSpellingCounts[neographyId]);
+                }
+            }
+            return count;
+        },
+        get nativeSpellingsMsg() {
+            return this.nativeSpellingsMsgSrc.replaceAll(':#', this.nativeSpellingsToDelete.toLocaleString());
+        },
     }"
     @tab-switch.window="tab = $event.detail.tab;"
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
@@ -68,6 +84,8 @@
                 <span x-cloak x-show="tab=='entries' && dirty">*</span>
             </x-tollerus::inputs.tab>
         </ul>
+
+        {{-- INFO TAB --}}
         <x-tollerus::panel id="tabpanel-info" role="tabpanel" x-cloak x-show="tab=='info'" class="flex flex-col gap-6">
             <div class="flex justify-start items-start">
                 <x-tollerus::inputs.toggle id="visible" model="infoForm.visible" label="{{ __('tollerus::ui.visible') }}" @change="btn = 'save'; dirty=true;" />
@@ -99,11 +117,18 @@
                     x-text="msgs[btn]" />
             </div>
         </x-tollerus::panel>
-        <x-tollerus::panel id="tabpanel-neographies" role="tabpanel" x-cloak x-show="tab=='neographies'" class="flex flex-col gap-6 items-start">
+
+        {{-- NEOGRAPHIES TAB --}}
+        <x-tollerus::panel
+            id="tabpanel-neographies"
+            role="tabpanel"
+            x-cloak x-show="tab=='neographies'"
+            class="flex flex-col gap-6 items-start"
+        >
             <x-tollerus::alert>
                 <p>{{ __('tollerus::ui.language_neographies_context_notice', ['language' => $language->name]) }} <a href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_all_neographies') }}</a></p>
             </x-tollerus::alert>
-            <table x-data="{ neographiesForm: $wire.entangle('neographiesForm') }">
+            <table>
                 <thead>
                     <tr>
                         <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
@@ -179,7 +204,8 @@
                     @endforeach
                 </tbody>
             </table>
-            <div>
+            <div class="flex flex-col items-start gap-2">
+                <x-tollerus::alert type="warning" x-cloak x-show="nativeSpellingsToDelete > 0">{{ __('tollerus::ui.associated_delete') }}</x-tollerus::alert>
                 <x-tollerus::inputs.button
                     @click="btn = 'saving'; $wire.neographiesSave('',{});"
                     x-bind:disabled="!dirty"
@@ -197,12 +223,17 @@
                 </div>
             @endif
         </x-tollerus::panel>
+
+        {{-- GRAMMAR TAB --}}
         <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-6">
             <p>Lorem ipsum dolor sit amet.</p>
         </x-tollerus::panel>
+
+        {{-- ENTRIES TAB --}}
         <x-tollerus::panel id="tabpanel-entries" role="tabpanel" x-cloak x-show="tab=='entries'" class="flex flex-col gap-6">
             <p>Lorem ipsum dolor sit amet.</p>
         </x-tollerus::panel>
+
     </div>
     <x-tollerus::modal/>
 </div>
