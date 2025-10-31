@@ -93,6 +93,7 @@
                     @click="btn = 'saving'; $wire.infoSave('',{});"
                     x-bind:disabled="!dirty"
                     wire:loading.attr="disabled"
+                    wire:target="infoSave"
                     @save-info-success.window="btn = 'saved'; dirty=false; if ($event.detail[0].afterSuccess) {$dispatch($event.detail[0].afterSuccess, $event.detail[0].payload);}"
                     @save-info-failure.window="btn = 'save';"
                     x-text="msgs[btn]" />
@@ -183,6 +184,7 @@
                     @click="btn = 'saving'; $wire.neographiesSave('',{});"
                     x-bind:disabled="!dirty"
                     wire:loading.attr="disabled"
+                    wire:target="neographiesSave"
                     @save-neographies-success.window="btn = 'saved'; dirty=false; if ($event.detail[0].afterSuccess) {$dispatch($event.detail[0].afterSuccess, $event.detail[0].payload);}"
                     @save-neographies-failure.window="btn = 'save';"
                     x-text="msgs[btn]" />
