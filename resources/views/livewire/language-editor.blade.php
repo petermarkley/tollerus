@@ -5,7 +5,9 @@
         msgs: {
             save: @js(__('tollerus::ui.save')),
             saved: @js(__('tollerus::ui.saved')),
-            saving: @js(__('tollerus::ui.saving'))
+            saving: @js(__('tollerus::ui.saving')),
+            no_cancel: @js(__('tollerus::ui.no_cancel')),
+            yes_delete: @js(__('tollerus::ui.yes_delete')),
         },
         tab: 'info',
         neographiesForm: $wire.entangle('neographiesForm'),
@@ -27,7 +29,7 @@
     }"
     @tab-switch.window="tab = $event.detail.tab;"
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
-    @modal-save.window="$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});"
+    @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
@@ -210,7 +212,13 @@
                 <div class="flex flex-row justify-start gap-2">
                     <x-tollerus::inputs.button type="secondary" x-bind:disabled="!dirty" @click="$wire.refreshNeographiesForm(); dirty=false;">{{ __('tollerus::ui.reset') }}</x-tollerus::inputs.button>
                     <x-tollerus::inputs.button
-                    @click="btn = 'saving'; $wire.neographiesSave('',{});"
+                    @click="if (nativeSpellingsToDelete > 0) {$dispatch('open-modal', {
+                        message: nativeSpellingsMsg,
+                        buttons: [
+                            { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                            { text: msgs.yes_delete, type: 'primary', clickEvent: 'modal-save' }
+                        ]
+                    })} else {btn = 'saving'; $wire.neographiesSave('',{});}"
                     x-bind:disabled="!dirty"
                     wire:loading.attr="disabled"
                     wire:target="neographiesSave"
