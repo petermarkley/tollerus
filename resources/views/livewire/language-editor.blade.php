@@ -46,7 +46,7 @@
                 @keydown.space.prevent="$store.tabFunctions.click(dirty, tab, 'info');"
             >
                 <x-tollerus::icons.info class="h-6"/>
-                <span class="hidden md:inline">{{ __('tollerus::ui.info') }}</span>
+                <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.info') }}</span>
                 <span x-cloak x-show="tab=='info' && dirty">*</span>
             </x-tollerus::inputs.tab>
             <x-tollerus::inputs.tab
@@ -58,7 +58,7 @@
                 @keydown.space.prevent="$store.tabFunctions.click(dirty, tab, 'neographies');"
             >
                 <x-tollerus::icons.neography class="h-6"/>
-                <span class="hidden md:inline">{{ __('tollerus::ui.neographies') }}</span>
+                <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.neographies') }}</span>
                 <span x-cloak x-show="tab=='neographies' && dirty">*</span>
             </x-tollerus::inputs.tab>
             <x-tollerus::inputs.tab
@@ -70,7 +70,7 @@
                 @keydown.space.prevent="$store.tabFunctions.click(dirty, tab, 'grammar');"
             >
                 <x-tollerus::icons.grammar class="h-6"/>
-                <span class="hidden md:inline">{{ __('tollerus::ui.grammar') }}</span>
+                <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.grammar') }}</span>
                 <span x-cloak x-show="tab=='grammar' && dirty">*</span>
             </x-tollerus::inputs.tab>
             <x-tollerus::inputs.tab
@@ -82,7 +82,7 @@
                 @keydown.space.prevent="$store.tabFunctions.click(dirty, tab, 'entries');"
             >
                 <x-tollerus::icons.entries class="h-6"/>
-                <span class="hidden md:inline">{{ __('tollerus::ui.entries') }}</span>
+                <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.entries') }}</span>
                 <span x-cloak x-show="tab=='entries' && dirty">*</span>
             </x-tollerus::inputs.tab>
         </ul>
