@@ -26,12 +26,32 @@ class LanguageEditor extends Component
     public array $grammarForm = [];
     // UI display properties
     #[Locked] public array $nativeSpellingCounts = [];
+    #[Locked] public array $presets = [];
 
     /**
      * Livewire hooks
      */
     public function render(): View
     {
+        return view('tollerus::livewire.language-editor', ['presets' => $this->presets])
+            ->layout('tollerus::components.layout')
+            ->title($this->language->name);
+    }
+    public function mount(Language $language): void
+    {
+        $this->language = $language;
+
+        // Info tab
+        $this->refreshInfoForm();
+        $this->neographies = Neography::orderBy('machine_name')->get()->all();
+        $this->languageNeographies = $language->neographies->all();
+
+        // Neographies tab
+        $this->refreshNeographiesForm();
+        $this->wordClassGroups = $language->wordClassGroups->all();
+
+        // Grammar tab
+        $this->refreshGrammarForm();
         $folder = __DIR__ . '/../../resources/grammar_presets/';
         $presetFiles = collect(scandir($folder))
             ->map(fn ($f) => $folder . $f)
@@ -40,24 +60,11 @@ class LanguageEditor extends Component
                 str_contains($path, '.json') &&
                 mime_content_type($path) == 'application/json'
             ))->values();
-        $presets = $presetFiles
+        $this->presets = $presetFiles
             ->map(fn ($f) => json_decode(file_get_contents($f)))
             ->filter()
             ->mapWithKeys(fn ($f) => [$f->i18n_file => __('tollerus::grammar_presets/' . $f->i18n_file . '.preset_name')])
             ->toArray();
-        return view('tollerus::livewire.language-editor', ['presets' => $presets])
-            ->layout('tollerus::components.layout')
-            ->title($this->language->name);
-    }
-    public function mount(Language $language): void
-    {
-        $this->language = $language;
-        $this->refreshInfoForm();
-        $this->neographies = Neography::orderBy('machine_name')->get()->all();
-        $this->languageNeographies = $language->neographies->all();
-        $this->refreshNeographiesForm();
-        $this->wordClassGroups = $language->wordClassGroups->all();
-        $this->refreshGrammarForm();
     }
 
     /**
@@ -209,5 +216,18 @@ class LanguageEditor extends Component
     public function grammarSave(): void
     {
         //
+    }
+
+    /**
+     * Utility functions
+     */
+    public function loadGrammarPreset($preset): void
+    {
+        if (!(collect($this->presets)->keys()->contains($preset))) {
+            $this->dispatch('preset-button-done');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_preset')]]);
+        }
+        // dd($preset);
+        $this->dispatch('preset-button-done');
     }
 }

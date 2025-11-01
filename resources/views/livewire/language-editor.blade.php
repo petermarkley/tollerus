@@ -216,19 +216,19 @@
                 <div class="flex flex-row justify-start gap-2">
                     <x-tollerus::inputs.button type="secondary" x-bind:disabled="!dirty" @click="$wire.refreshNeographiesForm(); dirty=false;">{{ __('tollerus::ui.reset') }}</x-tollerus::inputs.button>
                     <x-tollerus::inputs.button
-                    @click="if (nativeSpellingsToDelete > 0) {$dispatch('open-modal', {
-                        message: nativeSpellingsMsg,
-                        buttons: [
-                            { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
-                            { text: msgs.yes_delete, type: 'primary', clickEvent: 'modal-save' }
-                        ]
-                    })} else {btn = 'saving'; $wire.neographiesSave('',{});}"
-                    x-bind:disabled="!dirty"
-                    wire:loading.attr="disabled"
-                    wire:target="neographiesSave"
-                    @save-neographies-success.window="btn = 'saved'; dirty=false; if ($event.detail[0].afterSuccess) {$dispatch($event.detail[0].afterSuccess, $event.detail[0].payload);}"
-                    @save-neographies-failure.window="btn = 'save';"
-                    x-text="msgs[btn]" />
+                        @click="if (nativeSpellingsToDelete > 0) {$dispatch('open-modal', {
+                            message: nativeSpellingsMsg,
+                            buttons: [
+                                { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                { text: msgs.yes_delete, type: 'primary', clickEvent: 'modal-save' }
+                            ]
+                        })} else {btn = 'saving'; $wire.neographiesSave('',{});}"
+                        x-bind:disabled="!dirty"
+                        wire:loading.attr="disabled"
+                        wire:target="neographiesSave"
+                        @save-neographies-success.window="btn = 'saved'; dirty=false; if ($event.detail[0].afterSuccess) {$dispatch($event.detail[0].afterSuccess, $event.detail[0].payload);}"
+                        @save-neographies-failure.window="btn = 'save';"
+                        x-text="msgs[btn]" />
                 </div>
             </div>
             @if ($errors->has('neographiesForm.*'))
@@ -251,8 +251,18 @@
                 </x-tollerus::alert>
                 <div class="flex flex-row gap-4 justify-start items-center">
                     <x-tollerus::inputs.select id="preset" :options="$presets" label="{{ __('tollerus::ui.preset') }}" model="preset"/>
-                    <x-tollerus::inputs.button x-text="msgs[btn]" x-bind:disabled="preset.length == 0" />
+                    <x-tollerus::inputs.button
+                        x-text="msgs[btn]"
+                        @click="btn = 'loading'; $wire.loadGrammarPreset(preset);"
+                        @preset-button-done.window="btn = 'load';"
+                        x-bind:disabled="preset.length == 0"
+                        wire:loading.attr="disabled"
+                        wire:target="loadGrammarPreset"
+                    />
                 </div>
+                @error('preset')
+                    <p class="text-red-700 dark:text-red-500 text-sm">{{ $message }}</p>
+                @enderror
             </div>
             <div class="flex flex-col gap-6 items-center w-full">
                 <x-tollerus::inputs.missing-data title="{{ __('tollerus::ui.add_word_class_group') }}" class="relative flex flex-row gap-2 justify-center items-center w-full">
