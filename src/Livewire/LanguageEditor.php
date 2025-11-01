@@ -26,14 +26,15 @@ class LanguageEditor extends Component
     public array $grammarForm = [];
     // UI display properties
     #[Locked] public array $nativeSpellingCounts = [];
-    #[Locked] public array $presets = [];
+    #[Locked] public array $presetData = [];
+    #[Locked] public array $presetSelectOpts = [];
 
     /**
      * Livewire hooks
      */
     public function render(): View
     {
-        return view('tollerus::livewire.language-editor', ['presets' => $this->presets])
+        return view('tollerus::livewire.language-editor', ['presetSelectOpts' => $this->presetSelectOpts])
             ->layout('tollerus::components.layout')
             ->title($this->language->name);
     }
@@ -60,10 +61,14 @@ class LanguageEditor extends Component
                 str_contains($path, '.json') &&
                 mime_content_type($path) == 'application/json'
             ))->values();
-        $this->presets = $presetFiles
+        $this->presetData = $presetFiles
             ->map(fn ($f) => json_decode(file_get_contents($f)))
             ->filter()
-            ->mapWithKeys(fn ($f) => [$f->i18n_file => __('tollerus::grammar_presets/' . $f->i18n_file . '.preset_name')])
+            ->mapWithKeys(fn ($f) => [$f->i18n_file => [
+                'name' => __('tollerus::grammar_presets/' . $f->i18n_file . '.preset_name'),
+            ]])->toArray();
+        $this->presetSelectOpts = collect($this->presetData)
+            ->mapWithKeys(fn ($p, $k) => [$k => $p['name']])
             ->toArray();
     }
 
@@ -223,7 +228,7 @@ class LanguageEditor extends Component
      */
     public function loadGrammarPreset($preset): void
     {
-        if (!(collect($this->presets)->keys()->contains($preset))) {
+        if (!(collect($this->presetData)->keys()->contains($preset))) {
             $this->dispatch('preset-button-done');
             throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_preset')]]);
         }

@@ -245,12 +245,12 @@
 
         {{-- GRAMMAR TAB --}}
         <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-4 items-start">
-            <div x-cloak x-show="grammarForm.length == 0" class="flex flex-col gap-4 items-center w-full" x-data="{ btn: 'load', preset: '' }">
+            <div x-cloak x-show="grammarForm.length == 0" class="flex flex-col gap-4 items-start w-full" x-data="{ btn: 'load', preset: '' }">
                 <x-tollerus::alert>
                     <p>{{ __('tollerus::ui.preset_notice') }}</p>
                 </x-tollerus::alert>
-                <div class="flex flex-row gap-4 justify-start items-center">
-                    <x-tollerus::inputs.select id="preset" :options="$presets" label="{{ __('tollerus::ui.preset') }}" model="preset"/>
+                <div class="flex flex-col gap-4 items-start" x-init="console.log($wire.presetData)">
+                    <x-tollerus::inputs.select id="preset" :options="$presetSelectOpts" label="{{ __('tollerus::ui.preset') }}" model="preset"/>
                     <x-tollerus::inputs.button
                         x-text="msgs[btn]"
                         @click="btn = 'loading'; $wire.loadGrammarPreset(preset);"
