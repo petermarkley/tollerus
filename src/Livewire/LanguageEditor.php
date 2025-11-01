@@ -23,6 +23,7 @@ class LanguageEditor extends Component
     // UI input layer
     public array $infoForm = [];
     public array $neographiesForm = [];
+    public array $grammarForm = [];
     // UI display properties
     #[Locked] public array $nativeSpellingCounts = [];
 
@@ -31,7 +32,20 @@ class LanguageEditor extends Component
      */
     public function render(): View
     {
-        return view('tollerus::livewire.language-editor')
+        $folder = __DIR__ . '/../../resources/grammar_presets/';
+        $presetFiles = collect(scandir($folder))
+            ->map(fn ($f) => $folder . $f)
+            ->filter(fn ($path) => (
+                is_file($path) &&
+                str_contains($path, '.json') &&
+                mime_content_type($path) == 'application/json'
+            ))->values();
+        $presets = $presetFiles
+            ->map(fn ($f) => json_decode(file_get_contents($f)))
+            ->filter()
+            ->mapWithKeys(fn ($f) => [$f->i18n_file => __('tollerus::grammar_presets/' . $f->i18n_file . '.preset_name')])
+            ->toArray();
+        return view('tollerus::livewire.language-editor', ['presets' => $presets])
             ->layout('tollerus::components.layout')
             ->title($this->language->name);
     }
@@ -42,6 +56,8 @@ class LanguageEditor extends Component
         $this->neographies = Neography::orderBy('machine_name')->get()->all();
         $this->languageNeographies = $language->neographies->all();
         $this->refreshNeographiesForm();
+        $this->wordClassGroups = $language->wordClassGroups->all();
+        $this->refreshGrammarForm();
     }
 
     /**
@@ -101,7 +117,28 @@ class LanguageEditor extends Component
     }
     public function refreshGrammarForm(): void
     {
-        //
+        foreach ($this->wordClassGroups as $group) {
+            $group->loadMissing([
+                'wordClasses',
+                'features.featureValues',
+                'inflectionTables.filterValues',
+                'inflectionTables.rows.filterValues',
+            ]);
+        }
+        $this->grammarForm = collect($this->wordClassGroups)
+            ->mapWithKeys(function ($group) {return [
+                $group->id => [
+                    'primaryClass' => $group->primary_class,
+                    'classes' => $group->wordClasses->mapWithKeys(fn ($class) => [
+                        $class->id => [
+                            'name' => $class->name,
+                            'name_brief' => $class->name_brief,
+                        ],
+                    ])->toArray(),
+                    'features' => null, // FIXME
+                    'tables' => null, // FIXME
+                ]
+            ];})->toArray();
     }
 
     /**

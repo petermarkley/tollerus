@@ -8,6 +8,8 @@
             saving: @js(__('tollerus::ui.saving')),
             no_cancel: @js(__('tollerus::ui.no_cancel')),
             yes_delete: @js(__('tollerus::ui.yes_delete')),
+            load: @js(__('tollerus::ui.load')),
+            loading: @js(__('tollerus::ui.loading')),
         },
         tab: 'info',
         neographiesForm: $wire.entangle('neographiesForm'),
@@ -26,6 +28,7 @@
         get nativeSpellingsMsg() {
             return this.nativeSpellingsMsgSrc.replaceAll(':#', this.nativeSpellingsToDelete.toLocaleString());
         },
+        grammarForm: $wire.entangle('grammarForm'),
     }"
     @tab-switch.window="tab = $event.detail.tab;"
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
@@ -229,7 +232,7 @@
                 </div>
             </div>
             @if ($errors->has('neographiesForm.*'))
-                <div class="flex flex-row gap-2">
+                <div class="flex flex-row gap-4">
                     @foreach (collect($errors->get('neographiesForm.*'))->flatten() as $message)
                         <x-tollerus::alert type="error">{{ $message }}</x-tollerus::alert>
                     @endforeach
@@ -242,6 +245,15 @@
 
         {{-- GRAMMAR TAB --}}
         <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-4 items-start">
+            <div x-cloak x-show="grammarForm.length == 0" class="flex flex-col gap-4 items-center w-full" x-data="{ btn: 'load' }">
+                <x-tollerus::alert>
+                    <p>{{ __('tollerus::ui.preset_notice') }}</p>
+                </x-tollerus::alert>
+                <div class="flex flex-row gap-4 justify-start items-center">
+                    <x-tollerus::inputs.select id="preset" :options="$presets" label="{{ __('tollerus::ui.preset') }}"/>
+                    <x-tollerus::inputs.button x-text="msgs[btn]" />
+                </div>
+            </div>
             <div class="flex flex-col gap-6 items-center w-full">
                 <x-tollerus::inputs.missing-data title="{{ __('tollerus::ui.add_word_class_group') }}" class="relative flex flex-row gap-2 justify-center items-center w-full">
                     <x-tollerus::icons.plus/>

@@ -56,9 +56,12 @@ return [
   'saving' => 'Saving ...',
   'saved' => '(Saved)',
   'reset' => 'Reset', // i.e. reset the form; revert/discard changes
+  'load' => 'Load',
+  'loading' => 'Loading ...',
   'info' => 'Info',
   'edit' => 'Edit',
   'edit_thing' => 'Edit :thing',
+  'select' => 'Select',
   /**
    * TRANSLATOR NOTE:
    *
@@ -79,6 +82,8 @@ return [
    */
   'add_word_class_group' => 'Add grammar group',
   'add_word_class' => 'Add word class',
+  'preset' => 'Preset', // i.e. a predefined configuration for user convenience
+  'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
   'activate' => 'Activate',
   'activate_neography_in_language' => 'Activate :neography in :language',
   'associated_delete' => 'Saving this change will delete associated data.',
