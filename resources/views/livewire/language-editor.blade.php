@@ -241,8 +241,13 @@
         </x-tollerus::panel>
 
         {{-- GRAMMAR TAB --}}
-        <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-6">
-            <p>Lorem ipsum dolor sit amet.</p>
+        <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-4 items-start">
+            <div class="flex flex-col gap-6 items-center w-full">
+                <x-tollerus::inputs.missing-data title="{{ __('tollerus::ui.add_word_class_group') }}" class="relative flex flex-row gap-2 justify-center items-center w-full">
+                    <x-tollerus::icons.plus/>
+                    <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_word_class_group') }}</span>
+                </x-tollerus::inputs.missing-data>
+            </div>
         </x-tollerus::panel>
 
         {{-- ENTRIES TAB --}}

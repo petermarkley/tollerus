@@ -59,6 +59,26 @@ return [
   'info' => 'Info',
   'edit' => 'Edit',
   'edit_thing' => 'Edit :thing',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Add grammar group"
+   *
+   * In the source code, this is called a "word class
+   * group," i.e. a group of word classes (or "parts of
+   * speech"). These are grouped according to shared
+   * grammatical rules: for example common nouns and
+   * proper nouns are technically 2 different parts of
+   * speech, but they follow the same rules. So they
+   * would belong in the same "word class group" and
+   * the rules are defined per group.
+   *
+   * However "grammar group" is a little more casually
+   * comprehensible, so we use that phrase here for the
+   * user.
+   */
+  'add_word_class_group' => 'Add grammar group',
+  'add_word_class' => 'Add word class',
   'activate' => 'Activate',
   'activate_neography_in_language' => 'Activate :neography in :language',
   'associated_delete' => 'Saving this change will delete associated data.',

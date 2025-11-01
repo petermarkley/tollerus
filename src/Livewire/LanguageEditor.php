@@ -11,14 +11,19 @@ use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 use PeterMarkley\Tollerus\Models\NativeSpelling;
+use PeterMarkley\Tollerus\Models\WordClassGroups;
 
 class LanguageEditor extends Component
 {
+    // Models
     #[Locked] public Language $language;
     #[Locked] public array $neographies = [];
     #[Locked] public array $languageNeographies = [];
+    #[Locked] public array $wordClassGroups = [];
+    // UI input layer
     public array $infoForm = [];
     public array $neographiesForm = [];
+    // UI display properties
     #[Locked] public array $nativeSpellingCounts = [];
 
     /**
@@ -51,6 +56,9 @@ class LanguageEditor extends Component
             case 'neographies':
                 $this->refreshNeographiesForm();
             break;
+            case 'grammar':
+                $this->refreshGrammarForm();
+            break;
         }
     }
     public function save(string $tab, string $afterSuccess = '', array $payload = []): void
@@ -61,6 +69,9 @@ class LanguageEditor extends Component
             break;
             case 'neographies':
                 $this->neographiesSave($afterSuccess, $payload);
+            break;
+            case 'grammar':
+                $this->grammarSave($afterSuccess, $payload);
             break;
         }
     }
@@ -87,6 +98,10 @@ class LanguageEditor extends Component
                 ->whereHas('form', fn ($q) => $q->where('language_id', $this->language->id))
                 ->count()
         ])->toArray();
+    }
+    public function refreshGrammarForm(): void
+    {
+        //
     }
 
     /**
@@ -153,5 +168,9 @@ class LanguageEditor extends Component
             // Let error keep propagating
             throw $e;
         }
+    }
+    public function grammarSave(): void
+    {
+        //
     }
 }
