@@ -128,6 +128,7 @@
             x-cloak x-show="tab=='neographies'"
             class="flex flex-col gap-6 items-start"
         >
+        @if (count($neographies)>0)
             <x-tollerus::alert>
                 <p>{{ __('tollerus::ui.language_neographies_context_notice', ['language' => $language->name]) }} <a href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.edit_all_neographies') }}</a></p>
             </x-tollerus::alert>
@@ -234,6 +235,9 @@
                     @endforeach
                 </div>
             @endif
+        @else
+            <x-tollerus::missing-data>{{ __('tollerus::ui.no_neographies') }}</x-tollerus::missing-data>
+        @endif
         </x-tollerus::panel>
 
         {{-- GRAMMAR TAB --}}

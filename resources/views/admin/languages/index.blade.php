@@ -25,9 +25,7 @@
                             </div>
                         @endif
                     @else
-                        <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500">
-                            <p class="text-sm text-zinc-500 dark:text-zinc-400 italic text-center max-w-40">{{ __('tollerus::ui.no_neographies') }}</p>
-                        </div>
+                        <x-tollerus::missing-data>{{ __('tollerus::ui.no_neographies') }}</x-tollerus::missing-data>
                     @endif
 
                     {{-- Grammar preview --}}
@@ -49,9 +47,7 @@
                             @endforeach
                         </ul>
                     @else
-                        <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500">
-                            <p class="text-sm text-zinc-500 dark:text-zinc-400 italic text-center max-w-40">{{ __('tollerus::ui.no_grammar') }}</p>
-                        </div>
+                        <x-tollerus::missing-data>{{ __('tollerus::ui.no_grammar') }}</x-tollerus::missing-data>
                     @endif
 
                     {{-- Entries preview --}}
@@ -64,9 +60,7 @@
                             </ul>
                         </div>
                     @else
-                        <div class="p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500">
-                            <p class="text-sm text-zinc-500 dark:text-zinc-400 italic text-center max-w-40">{{ __('tollerus::ui.no_entries') }}</p>
-                        </div>
+                        <x-tollerus::missing-data>{{ __('tollerus::ui.no_entries') }}</x-tollerus::missing-data>
                     @endif
 
                 </div>
