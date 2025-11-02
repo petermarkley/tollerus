@@ -296,7 +296,7 @@
                     <p class="text-red-700 dark:text-red-500 text-sm">{{ $message }}</p>
                 @enderror
             </div>
-            <template x-for="group in grammarForm">
+            <template x-for="(group, groupId) in grammarForm">
                 <div class="flex flex-col gap-4 w-full">
                     <h2 class="font-bold text-xl flex flex-row justify-start items-center rounded-bl overflow-hidden w-full border-b-2 border-zinc-900 dark:border-zinc-300">
                         <div class="flex flex-row gap-2 px-2 justify-start items-center rounded-t-xl bg-zinc-900 dark:bg-zinc-300 text-white dark:text-zinc-800">
@@ -304,6 +304,7 @@
                             <span x-text="group.primaryClass === null ? msgs['group_nameless'] : group.classes[group.primaryClass].name" x-bind:class="{ 'font-normal italic': group.primaryClass === null }"></span>
                         </div>
                     </h2>
+                    <p x-text="'group ID: ' + groupId"></p>
                     <x-tollerus::pane>
                         <ul>
                             <template x-for="(wordClass, wordClassId) in group.classes">
