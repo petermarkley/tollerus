@@ -64,9 +64,30 @@ class LanguageEditor extends Component
         $this->presetData = $presetFiles
             ->map(fn ($f) => json_decode(file_get_contents($f)))
             ->filter()
-            ->mapWithKeys(fn ($f) => [$f->i18n_file => [
-                'name' => __('tollerus::grammar_presets/' . $f->i18n_file . '.preset_name'),
-            ]])->toArray();
+            ->mapWithKeys(function ($file) {
+                $i18n_prefix = 'tollerus::grammar_presets/' . $file->i18n_file;
+                $featureKeys = collect($file->groups)
+                    ->filter(fn ($g) => isset($g->features))
+                    ->pluck('features')
+                    ->flatten(1)
+                    ->pluck('i18n_key')
+                    ->unique()
+                    ->values();
+                return [$file->i18n_file => [
+                    'name' => __($i18n_prefix . '.preset_name'),
+                    'groups' => collect($file->groups)
+                        ->map(function ($group) use ($i18n_prefix) {
+                            $i18n_key = collect($group->classes)
+                                ->filter(fn ($c) => $c->primary)
+                                ->first()->i18n_key;
+                            return [
+                                'name' => __($i18n_prefix . '.word_classes.' . $i18n_key . '.name'),
+                                'featureNum' => (isset($group->features) ? count($group->features) : 0),
+                            ];
+                        })->toArray(),
+                    'features' => $featureKeys->map(fn ($k) => __($i18n_prefix . '.' . $k . '._name'))->toArray(),
+                ]];
+            })->toArray();
         $this->presetSelectOpts = collect($this->presetData)
             ->mapWithKeys(fn ($p, $k) => [$k => $p['name']])
             ->toArray();

@@ -249,16 +249,23 @@
                 <x-tollerus::alert>
                     <p>{{ __('tollerus::ui.preset_notice') }}</p>
                 </x-tollerus::alert>
-                <div class="flex flex-col gap-4 items-start" x-init="console.log($wire.presetData)">
+                <div class="flex flex-col gap-4 items-start">
                     <x-tollerus::inputs.select id="preset" :options="$presetSelectOpts" label="{{ __('tollerus::ui.preset') }}" model="preset"/>
-                    <x-tollerus::inputs.button
-                        x-text="msgs[btn]"
-                        @click="btn = 'loading'; $wire.loadGrammarPreset(preset);"
-                        @preset-button-done.window="btn = 'load';"
-                        x-bind:disabled="preset.length == 0"
-                        wire:loading.attr="disabled"
-                        wire:target="loadGrammarPreset"
-                    />
+                    <template x-if="preset.length > 0">
+                        <div class="flex flex-col items-start gap-4">
+                            <x-tollerus::pane>
+                                <template x-for="(presetData, key) in $wire.presetData"><p><span x-text="key"></span> | <span x-text="presetData.name"></span></p></template>
+                            </x-tollerus::pane>
+                            <x-tollerus::inputs.button
+                                x-text="msgs[btn]"
+                                @click="btn = 'loading'; $wire.loadGrammarPreset(preset);"
+                                @preset-button-done.window="btn = 'load';"
+                                x-bind:disabled="preset.length == 0"
+                                wire:loading.attr="disabled"
+                                wire:target="loadGrammarPreset"
+                            />
+                        </div>
+                    </template>
                 </div>
                 @error('preset')
                     <p class="text-red-700 dark:text-red-500 text-sm">{{ $message }}</p>
