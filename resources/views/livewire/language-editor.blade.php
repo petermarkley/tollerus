@@ -245,7 +245,7 @@
 
         {{-- GRAMMAR TAB --}}
         <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-4 items-start">
-            <div x-cloak x-show="grammarForm.length == 0" class="flex flex-col gap-4 items-start w-full" x-data="{ btn: 'load', preset: '' }">
+            <div x-cloak wire:show="grammarForm.length == 0" class="flex flex-col gap-4 items-start w-full" x-data="{ btn: 'load', preset: '' }">
                 <x-tollerus::alert>
                     <p>{{ __('tollerus::ui.preset_notice') }}</p>
                 </x-tollerus::alert>
@@ -282,7 +282,8 @@
                             <x-tollerus::inputs.button
                                 x-text="msgs[btn]"
                                 @click="btn = 'loading'; $wire.loadGrammarPreset(preset);"
-                                @preset-button-done.window="btn = 'load';"
+                                @preset-button-failure.window="btn = 'load';"
+                                @preset-button-success.window="btn = 'load'; preset = '';"
                                 x-bind:disabled="preset.length == 0"
                                 wire:loading.attr="disabled"
                                 wire:target="loadGrammarPreset"

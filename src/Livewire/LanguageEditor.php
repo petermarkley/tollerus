@@ -12,6 +12,7 @@ use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 use PeterMarkley\Tollerus\Models\NativeSpelling;
 use PeterMarkley\Tollerus\Models\WordClassGroups;
+use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
 
 class LanguageEditor extends Component
 {
@@ -107,6 +108,7 @@ class LanguageEditor extends Component
                 $this->refreshNeographiesForm();
             break;
             case 'grammar':
+                $this->wordClassGroups = $this->language->wordClassGroups->all();
                 $this->refreshGrammarForm();
             break;
         }
@@ -251,10 +253,19 @@ class LanguageEditor extends Component
     public function loadGrammarPreset($preset): void
     {
         if (!(collect($this->presetData)->keys()->contains($preset))) {
-            $this->dispatch('preset-button-done');
+            $this->dispatch('preset-button-failure');
             throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_preset')]]);
+            return;
         }
-        // dd($preset);
-        $this->dispatch('preset-button-done');
+        $loadAction = new LoadGrammarPreset;
+        try {
+            $loadAction($this->language, $preset);
+            $this->wordClassGroups = $this->language->wordClassGroups->all();
+            $this->refreshGrammarForm();
+            $this->dispatch('preset-button-success');
+        } catch (\Throwable $e) {
+            $this->dispatch('preset-button-failure');
+            return;
+        }
     }
 }
