@@ -43,14 +43,14 @@
                         }
                     @endphp
                     @if (count($glyphPreview[$neography->machine_name]) > 0)
-                        <div class="p-4 rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 w-full max-h-28 overflow-hidden" role="img" aria-label="{{ __('tollerus::ui.glyphs') }}">
+                        <x-tollerus::pane class="w-full max-h-28 overflow-hidden" role="img" aria-label="{{ __('tollerus::ui.glyphs') }}">
                             <div class="w-full max-h-28 flex {{ $flexStr }} justify-start items-baseline gap-2 mask-b-to-85%">
                                 @foreach ($glyphPreview[$neography->machine_name] as $glyph)
                                     {{-- Controller generates these with classes: 'h-12 w-auto' --}}
                                     {!! $glyph['svg'] !!}
                                 @endforeach
                             </div>
-                        </div>
+                        </x-tollerus::pane>
                     @else
                         <x-tollerus::missing-data>{{ __('tollerus::ui.no_glyphs') }}</x-tollerus::missing-data>
                     @endif
