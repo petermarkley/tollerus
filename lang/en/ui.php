@@ -82,6 +82,8 @@ return [
    */
   'add_word_class_group' => 'Add grammar group',
   'add_word_class' => 'Add word class',
+  'word_classes' => 'Word classes',
+  'features' => 'Features', // i.e. grammatical features or dimensions
   'preset' => 'Preset', // i.e. a predefined configuration for user convenience
   'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
   'activate' => 'Activate',

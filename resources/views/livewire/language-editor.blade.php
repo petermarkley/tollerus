@@ -254,7 +254,24 @@
                     <template x-if="preset.length > 0">
                         <div class="flex flex-col items-start gap-4">
                             <x-tollerus::pane>
-                                <template x-for="(presetData, key) in $wire.presetData"><p><span x-text="key"></span> | <span x-text="presetData.name"></span></p></template>
+                                <div class="flex flex-col md:flex-row gap-y-4 gap-x-12">
+                                    <div class="flex flex-col gap-1 justify-start items-start">
+                                        <h4 class="font-bold">{{ __('tollerus::ui.word_classes') }}</h4>
+                                        <ul>
+                                            <template x-for="group in $wire.presetData[preset]['groups']">
+                                                <li><span x-text="group.name"></span> | <span x-text="group.featureNum"></span></li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                    <div class="flex flex-col gap-1 justify-start items-start">
+                                        <h4 class="font-bold">{{ __('tollerus::ui.features') }}</h4>
+                                        <ul>
+                                            <template x-for="feature in $wire.presetData[preset]['features']">
+                                                <li><span x-text="feature"></span></li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                </div>
                             </x-tollerus::pane>
                             <x-tollerus::inputs.button
                                 x-text="msgs[btn]"
