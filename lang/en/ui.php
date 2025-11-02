@@ -86,6 +86,7 @@ return [
   'features' => 'Features', // i.e. grammatical features or dimensions
   'preset' => 'Preset', // i.e. a predefined configuration for user convenience
   'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
+  'preview_of_thing' => 'Preview of :thing',
   'activate' => 'Activate',
   'activate_neography_in_language' => 'Activate :neography in :language',
   'associated_delete' => 'Saving this change will delete associated data.',

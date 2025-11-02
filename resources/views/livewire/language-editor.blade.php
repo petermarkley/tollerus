@@ -253,18 +253,24 @@
                     <x-tollerus::inputs.select id="preset" :options="$presetSelectOpts" label="{{ __('tollerus::ui.preset') }}" model="preset"/>
                     <template x-if="preset.length > 0">
                         <div class="flex flex-col items-start gap-4">
+                            <h3 class="font-bold text-lg" x-text="$wire.presetData[preset]['previewHeading']"></h3>
                             <x-tollerus::pane>
-                                <div class="flex flex-col md:flex-row gap-y-4 gap-x-12">
+                                <div class="flex flex-col sm:flex-row gap-y-4 gap-x-12">
                                     <div class="flex flex-col gap-1 justify-start items-start">
-                                        <h4 class="font-bold">{{ __('tollerus::ui.word_classes') }}</h4>
+                                        <h4 class="font-bold text-base">{{ __('tollerus::ui.word_classes') }}</h4>
                                         <ul>
                                             <template x-for="group in $wire.presetData[preset]['groups']">
-                                                <li><span x-text="group.name"></span> | <span x-text="group.featureNum"></span></li>
+                                                <li class="flex flex-row gap-1 items-center">
+                                                    <span x-text="group.name"></span>
+                                                    <template x-if="group.featureNum > 0">
+                                                        <span x-text="group.featureNum" class="block font-bold text-white dark:text-zinc-900 bg-zinc-700 dark:bg-zinc-300 rounded-full w-4 h-4 flex justify-center items-center text-center text-sm"></span>
+                                                    </template>
+                                                </li>
                                             </template>
                                         </ul>
                                     </div>
                                     <div class="flex flex-col gap-1 justify-start items-start">
-                                        <h4 class="font-bold">{{ __('tollerus::ui.features') }}</h4>
+                                        <h4 class="font-bold text-base">{{ __('tollerus::ui.features') }}</h4>
                                         <ul>
                                             <template x-for="feature in $wire.presetData[preset]['features']">
                                                 <li><span x-text="feature"></span></li>
