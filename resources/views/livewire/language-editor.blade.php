@@ -189,7 +189,6 @@
                                 </x-tollerus::button>
                             </td>
                             <td class="text-center px-2 pb-1 pt-5 min-w-24 border-b-2 border-zinc-300 dark:border-zinc-700">
-                                {{-- FIXME: this should be a radio button, because there can only be one selected --}}
                                 <label class="inline-block align-middle w-6 h-6 relative group">
                                     <x-tollerus::icons.star
                                         x-bind:fill="neographiesForm.primary_neography == {{ $neography->id }} ? 'currentColor' : 'none'"
@@ -304,13 +303,55 @@
                             <span x-text="group.primaryClass === null ? msgs['group_nameless'] : group.classes[group.primaryClass].name" x-bind:class="{ 'font-normal italic': group.primaryClass === null }"></span>
                         </div>
                     </h2>
-                    <p x-text="'group ID: ' + groupId"></p>
                     <x-tollerus::pane>
-                        <ul>
-                            <template x-for="(wordClass, wordClassId) in group.classes">
-                                <p><span x-text="wordClassId"></span> | <span x-text="wordClass.name"></span> | <span x-text="wordClass.nameBrief"></span></p>
-                            </template>
-                        </ul>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-left py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
+                                        <span class="font-bold">{{ __('tollerus::ui.word_class') }}</span>
+                                    </th>
+                                    <th scope="col" class="text-left py-1 px-2 border-b-2 min-w-24 border-zinc-400 dark:border-zinc-600">
+                                        <span class="font-bold">{{ __('tollerus::ui.abbreviation') }}</span>
+                                    </th>
+                                    <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
+                                        <span class="font-bold">{{ __('tollerus::ui.primary') }}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="(wordClass, wordClassId) in group.classes">
+                                    <tr>
+                                        <td class="text-left px-2 py-1 min-w-24">
+                                            <x-tollerus::inputs.text
+                                                x-bind:id="'class_' + wordClassId + '_name'"
+                                                x-model="wordClass.name" />
+                                        </td>
+                                        <td class="text-left px-2 py-1 min-w-24">
+                                            <x-tollerus::inputs.text
+                                                x-bind:id="'class_' + wordClassId + '_name_brief'"
+                                                x-model="wordClass.nameBrief" />
+                                        </td>
+                                        <td class="text-center px-2 py-1 min-w-24">
+                                            <label class="inline-block align-middle w-6 h-6 relative group">
+                                                <x-tollerus::icons.star
+                                                    x-bind:fill="group.primaryClass == wordClassId ? 'currentColor' : 'none'"
+                                                    class="rounded-lg text-zinc-600 group-has-hover:text-zinc-500 dark:text-zinc-500 group-has-hover:dark:text-zinc-400 group-has-checked:text-cyan-800 group-has-checked:group-has-hover:text-cyan-700 group-has-checked:dark:text-cyan-300 group-has-checked:group-has-hover:dark:text-cyan-200 group-has-checked:saturate-50 group-has-disabled:text-zinc-300 group-has-disabled:dark:text-zinc-700 group-has-checked:group-has-hover:group-has-disabled:text-zinc-300 group-has-checked:group-has-hover:group-has-disabled:dark:text-zinc-700 group-has-focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white"
+                                                />
+                                                <input
+                                                    type="radio"
+                                                    x-bind:name="'group_' + groupId + '_primary_class'"
+                                                    x-bind:value="wordClassId"
+                                                    title="{{ __('tollerus::ui.set_this_as_primary') }}"
+                                                    x-model="group.primaryClass"
+                                                    class="absolute w-full h-full inset-0 opacity-0 z-10 cursor-pointer disabled:cursor-not-allowed"
+                                                />
+                                                <span class="sr-only">{{ __('tollerus::ui.set_this_as_primary') }}</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
                     </x-tollerus::pane>
                 </div>
             </template>

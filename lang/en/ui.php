@@ -25,6 +25,7 @@ return [
   'primary' => 'Primary',
   'primary_neography' => 'Primary neography',
   'primary_neography_name' => 'Primary neography: :name',
+  'set_this_as_primary' => 'Set this as primary',
   'set_primary_as_name' => 'Set primary as :name',
   'primary_must_be_active' => '(Primary must be active)',
   'is_primary' => 'Primary?', // Label that controls whether or not a given neography is primary
@@ -82,7 +83,9 @@ return [
    */
   'add_word_class_group' => 'Add grammar group',
   'add_word_class' => 'Add word class',
+  'word_class' => 'Word class',
   'word_classes' => 'Word classes',
+  'abbreviation' => 'Abbreviation',
   'group_nameless' => '(group)',
   'features' => 'Features', // i.e. grammatical features or dimensions
   'preset' => 'Preset', // i.e. a predefined configuration for user convenience
