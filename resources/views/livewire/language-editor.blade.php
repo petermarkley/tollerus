@@ -316,6 +316,9 @@
                                     <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
                                         <span class="font-bold">{{ __('tollerus::ui.primary') }}</span>
                                     </th>
+                                    <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
+                                        <span class="font-bold">{{ __('tollerus::ui.delete') }}</span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -347,6 +350,11 @@
                                                 />
                                                 <span class="sr-only">{{ __('tollerus::ui.set_this_as_primary') }}</span>
                                             </label>
+                                        </td>
+                                        <td class="text-center px-2 py-1 min-w-24">
+                                            <x-tollerus::inputs.button type="secondary" size="small" class="align-middle">
+                                                <x-tollerus::icons.delete/>
+                                            </x-tollerus::inputs.button>
                                         </td>
                                     </tr>
                                 </template>

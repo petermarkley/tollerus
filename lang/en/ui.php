@@ -63,6 +63,7 @@ return [
   'edit' => 'Edit',
   'edit_thing' => 'Edit :thing',
   'select' => 'Select',
+  'delete' => 'Delete',
   /**
    * TRANSLATOR NOTE:
    *
