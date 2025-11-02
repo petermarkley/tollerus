@@ -10,6 +10,7 @@
             yes_delete: @js(__('tollerus::ui.yes_delete')),
             load: @js(__('tollerus::ui.load')),
             loading: @js(__('tollerus::ui.loading')),
+            group_nameless: @js(__('tollerus::ui.group_nameless')),
         },
         tab: 'info',
         neographiesForm: $wire.entangle('neographiesForm'),
@@ -295,6 +296,23 @@
                     <p class="text-red-700 dark:text-red-500 text-sm">{{ $message }}</p>
                 @enderror
             </div>
+            <template x-for="group in grammarForm">
+                <div class="flex flex-col gap-4 w-full">
+                    <h2 class="font-bold text-xl flex flex-row justify-start items-center rounded-bl overflow-hidden w-full border-b-2 border-zinc-900 dark:border-zinc-300">
+                        <div class="flex flex-row gap-2 px-2 justify-start items-center rounded-t-xl bg-zinc-900 dark:bg-zinc-300 text-white dark:text-zinc-800">
+                            <x-tollerus::icons.folder />
+                            <span x-text="group.primaryClass === null ? msgs['group_nameless'] : group.classes[group.primaryClass].name" x-bind:class="{ 'font-normal italic': group.primaryClass === null }"></span>
+                        </div>
+                    </h2>
+                    <x-tollerus::pane>
+                        <ul>
+                            <template x-for="(wordClass, wordClassId) in group.classes">
+                                <p><span x-text="wordClassId"></span> | <span x-text="wordClass.name"></span> | <span x-text="wordClass.nameBrief"></span></p>
+                            </template>
+                        </ul>
+                    </x-tollerus::pane>
+                </div>
+            </template>
             <div class="flex flex-col gap-6 items-center w-full">
                 <x-tollerus::inputs.missing-data title="{{ __('tollerus::ui.add_word_class_group') }}" class="relative flex flex-row gap-2 justify-center items-center w-full">
                     <x-tollerus::icons.plus/>

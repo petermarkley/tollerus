@@ -168,7 +168,7 @@ class LanguageEditor extends Component
                     'classes' => $group->wordClasses->mapWithKeys(fn ($class) => [
                         $class->id => [
                             'name' => $class->name,
-                            'name_brief' => $class->name_brief,
+                            'nameBrief' => $class->name_brief,
                         ],
                     ])->toArray(),
                     'features' => null, // FIXME
