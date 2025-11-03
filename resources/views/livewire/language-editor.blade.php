@@ -244,7 +244,7 @@
         </x-tollerus::panel>
 
         {{-- GRAMMAR TAB --}}
-        <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-4 items-start">
+        <x-tollerus::panel id="tabpanel-grammar" role="tabpanel" x-cloak x-show="tab=='grammar'" class="flex flex-col gap-8 items-start">
             <div x-cloak wire:show="grammarForm.length == 0" class="flex flex-col gap-4 items-start w-full" x-data="{ btn: 'load', preset: '' }">
                 <x-tollerus::alert>
                     <p>{{ __('tollerus::ui.preset_notice') }}</p>
@@ -297,69 +297,80 @@
             </div>
             <template x-for="(group, groupId) in grammarForm">
                 <div class="flex flex-col gap-4 w-full">
-                    <h2 class="font-bold text-xl flex flex-row justify-start items-center rounded-bl overflow-hidden w-full border-b-2 border-zinc-500 dark:border-zinc-400">
-                        <div class="flex flex-row gap-2 px-2 justify-start items-center rounded-t-xl bg-zinc-500 dark:bg-zinc-400 text-white dark:text-zinc-800">
+                    <h2 class="font-bold text-xl flex flex-row justify-between items-end rounded-b overflow-hidden w-full border-b-2 border-zinc-500 dark:border-zinc-400">
+                        <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl bg-zinc-500 dark:bg-zinc-400 text-white dark:text-zinc-800">
                             <x-tollerus::icons.folder />
                             <span x-text="group.primaryClass === null ? msgs['group_nameless'] : group.classes[group.primaryClass].name" x-bind:class="{ 'font-normal italic': group.primaryClass === null }"></span>
                         </div>
+                        <button title="{{ __('tollerus::ui.delete_word_class_group') }}" class="flex p-1 justify-center items-center rounded-t-lg bg-zinc-600 dark:bg-zinc-400 hover:bg-zinc-500 hover:dark:bg-zinc-300 text-white dark:text-zinc-950 cursor-pointer">
+                            <x-tollerus::icons.delete/>
+                            <span class="sr-only">{{ __('tollerus::ui.delete_word_class_group') }}</span>
+                        </button>
                     </h2>
-                    <x-tollerus::pane>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="text-left py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
-                                        <span class="font-bold">{{ __('tollerus::ui.word_class') }}</span>
-                                    </th>
-                                    <th scope="col" class="text-left py-1 px-2 border-b-2 min-w-24 border-zinc-400 dark:border-zinc-600">
-                                        <span class="font-bold">{{ __('tollerus::ui.abbreviation') }}</span>
-                                    </th>
-                                    <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
-                                        <span class="font-bold">{{ __('tollerus::ui.primary') }}</span>
-                                    </th>
-                                    <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
-                                        <span class="font-bold">{{ __('tollerus::ui.delete') }}</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template x-for="(wordClass, wordClassId) in group.classes">
+                    <x-tollerus::pane class="flex flex-col gap-4 items-start">
+                        <template x-if="Object.keys(group.classes).length > 0">
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td class="text-left px-2 py-1 min-w-24">
-                                            <x-tollerus::inputs.text
-                                                x-bind:id="'class_' + wordClassId + '_name'"
-                                                x-model="wordClass.name" />
-                                        </td>
-                                        <td class="text-left px-2 py-1 min-w-24">
-                                            <x-tollerus::inputs.text
-                                                x-bind:id="'class_' + wordClassId + '_name_brief'"
-                                                x-model="wordClass.nameBrief" />
-                                        </td>
-                                        <td class="text-center px-2 py-1 min-w-24">
-                                            <label class="inline-block align-middle w-6 h-6 relative group">
-                                                <x-tollerus::icons.star
-                                                    x-bind:fill="group.primaryClass == wordClassId ? 'currentColor' : 'none'"
-                                                    class="rounded-lg text-zinc-600 group-has-hover:text-zinc-500 dark:text-zinc-500 group-has-hover:dark:text-zinc-400 group-has-checked:text-cyan-800 group-has-checked:group-has-hover:text-cyan-700 group-has-checked:dark:text-cyan-300 group-has-checked:group-has-hover:dark:text-cyan-200 group-has-checked:saturate-50 group-has-disabled:text-zinc-300 group-has-disabled:dark:text-zinc-700 group-has-checked:group-has-hover:group-has-disabled:text-zinc-300 group-has-checked:group-has-hover:group-has-disabled:dark:text-zinc-700 group-has-focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white"
-                                                />
-                                                <input
-                                                    type="radio"
-                                                    x-bind:name="'group_' + groupId + '_primary_class'"
-                                                    x-bind:value="wordClassId"
-                                                    title="{{ __('tollerus::ui.set_this_as_primary') }}"
-                                                    x-model="group.primaryClass"
-                                                    class="absolute w-full h-full inset-0 opacity-0 z-10 cursor-pointer disabled:cursor-not-allowed"
-                                                />
-                                                <span class="sr-only">{{ __('tollerus::ui.set_this_as_primary') }}</span>
-                                            </label>
-                                        </td>
-                                        <td class="text-center px-2 py-1 min-w-24">
-                                            <x-tollerus::inputs.button type="secondary" size="small" class="align-middle">
-                                                <x-tollerus::icons.delete/>
-                                            </x-tollerus::inputs.button>
-                                        </td>
+                                        <th scope="col" class="text-left py-1 pr-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
+                                            <span class="font-bold">{{ __('tollerus::ui.word_class') }}</span>
+                                        </th>
+                                        <th scope="col" class="text-left py-1 px-2 border-b-2 min-w-24 border-zinc-400 dark:border-zinc-600">
+                                            <span class="font-bold">{{ __('tollerus::ui.abbreviation') }}</span>
+                                        </th>
+                                        <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
+                                            <span class="font-bold">{{ __('tollerus::ui.primary') }}</span>
+                                        </th>
+                                        <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
+                                            <span class="font-bold">{{ __('tollerus::ui.delete') }}</span>
+                                        </th>
                                     </tr>
-                                </template>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <template x-for="(wordClass, wordClassId) in group.classes">
+                                        <tr>
+                                            <td class="text-left pr-2 py-1 min-w-24">
+                                                <x-tollerus::inputs.text
+                                                    x-bind:id="'class_' + wordClassId + '_name'"
+                                                    x-model="wordClass.name" />
+                                            </td>
+                                            <td class="text-left px-2 py-1 min-w-24">
+                                                <x-tollerus::inputs.text
+                                                    x-bind:id="'class_' + wordClassId + '_name_brief'"
+                                                    x-model="wordClass.nameBrief" />
+                                            </td>
+                                            <td class="text-center px-2 py-1 min-w-24">
+                                                <label class="inline-block align-middle w-6 h-6 relative group">
+                                                    <x-tollerus::icons.star
+                                                        x-bind:fill="group.primaryClass == wordClassId ? 'currentColor' : 'none'"
+                                                        class="rounded-lg text-zinc-600 group-has-hover:text-zinc-500 dark:text-zinc-500 group-has-hover:dark:text-zinc-400 group-has-checked:text-cyan-800 group-has-checked:group-has-hover:text-cyan-700 group-has-checked:dark:text-cyan-300 group-has-checked:group-has-hover:dark:text-cyan-200 group-has-checked:saturate-50 group-has-disabled:text-zinc-300 group-has-disabled:dark:text-zinc-700 group-has-checked:group-has-hover:group-has-disabled:text-zinc-300 group-has-checked:group-has-hover:group-has-disabled:dark:text-zinc-700 group-has-focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white"
+                                                    />
+                                                    <input
+                                                        type="radio"
+                                                        x-bind:name="'group_' + groupId + '_primary_class'"
+                                                        x-bind:value="wordClassId"
+                                                        title="{{ __('tollerus::ui.set_this_as_primary') }}"
+                                                        x-model="group.primaryClass"
+                                                        class="absolute w-full h-full inset-0 opacity-0 z-10 cursor-pointer disabled:cursor-not-allowed"
+                                                    />
+                                                    <span class="sr-only">{{ __('tollerus::ui.set_this_as_primary') }}</span>
+                                                </label>
+                                            </td>
+                                            <td class="text-center px-2 py-1 min-w-24">
+                                                <x-tollerus::inputs.button type="secondary" size="small" class="align-middle" title="{{ __('tollerus::ui.delete_word_class') }}">
+                                                    <x-tollerus::icons.delete/>
+                                                    <label class="sr-only">{{ __('tollerus::ui.delete_word_class') }}</label>
+                                                </x-tollerus::inputs.button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </template>
+                        <x-tollerus::inputs.missing-data size="small" title="{{ __('tollerus::ui.add_word_class') }}" class="relative flex flex-row gap-2 justify-center items-center w-full">
+                            <x-tollerus::icons.plus/>
+                            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_word_class') }}</span>
+                        </x-tollerus::inputs.missing-data>
                     </x-tollerus::pane>
                 </div>
             </template>

@@ -83,7 +83,9 @@ return [
    * user.
    */
   'add_word_class_group' => 'Add grammar group',
+  'delete_word_class_group' => 'Delete grammar group',
   'add_word_class' => 'Add word class',
+  'delete_word_class' => 'Delete word class',
   'word_class' => 'Word class',
   'word_classes' => 'Word classes',
   'abbreviation' => 'Abbreviation',
