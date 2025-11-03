@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="w-full h-full min-h-screen bg-zinc-300 dark:bg-800 text-zinc-900 dark:text-zinc-300">
+<html class="w-full h-full min-h-screen bg-zinc-300 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-300">
     <head>
         <title>{{ $title }}</title>
         <link rel="stylesheet" href="{{ asset('vendor/tollerus/tollerus.css') }}">
