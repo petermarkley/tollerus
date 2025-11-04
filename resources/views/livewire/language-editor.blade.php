@@ -12,6 +12,7 @@
             loading: @js(__('tollerus::ui.loading')),
             group_nameless: @js(__('tollerus::ui.group_nameless')),
             delete_word_class_group_confirmation: @js(__('tollerus::ui.delete_word_class_group_confirmation')),
+            delete_word_class_confirmation: @js(__('tollerus::ui.delete_word_class_confirmation')),
         },
         tab: 'info',
         neographiesForm: $wire.entangle('neographiesForm'),
@@ -36,6 +37,7 @@
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
     @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
     @grammar-group-delete.window="$wire.deleteGroup($event.detail.groupId);"
+    @grammar-class-delete.window="$wire.deleteWordClass($event.detail.wordClassId);"
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
@@ -370,7 +372,19 @@
                                                 </label>
                                             </td>
                                             <td class="text-center px-2 py-1 min-w-24">
-                                                <x-tollerus::inputs.button type="secondary" size="small" class="align-middle" title="{{ __('tollerus::ui.delete_word_class') }}">
+                                                <x-tollerus::inputs.button
+                                                    type="secondary"
+                                                    size="small"
+                                                    class="align-middle"
+                                                    title="{{ __('tollerus::ui.delete_word_class') }}"
+                                                    @click="$dispatch('open-modal', {
+                                                        message: msgs['delete_word_class_confirmation'],
+                                                        buttons: [
+                                                            { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                                            { text: msgs.yes_delete, type: 'primary', clickEvent: 'grammar-class-delete', payload: {wordClassId: wordClassId} }
+                                                        ]
+                                                    });"
+                                                >
                                                     <x-tollerus::icons.delete/>
                                                     <label class="sr-only">{{ __('tollerus::ui.delete_word_class') }}</label>
                                                 </x-tollerus::inputs.button>
