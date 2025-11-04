@@ -253,6 +253,7 @@ class LanguageEditor extends Component
     public function deleteGroup(string $groupId): void
     {
         WordClassGroup::findOrFail((int)$groupId)->delete();
+        $this->wordClassGroups = $this->language->wordClassGroups->all();
         $this->refreshGrammarForm();
     }
 
