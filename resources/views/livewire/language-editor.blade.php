@@ -313,7 +313,10 @@
                                     { text: msgs.yes_delete, type: 'primary', clickEvent: 'grammar-group-delete', payload: {groupId: groupId} }
                                 ]
                             });"
-                            @grammar-group-delete.window="$wire.deleteGroup($event.detail.groupId);"
+                            @grammar-group-delete.window="if (groupId == $event.detail.groupId) {
+                                $wire.deleteGroup($event.detail.groupId);
+                                delete grammarForm[groupId];
+                            }"
                             class="flex p-1 justify-center items-center rounded-t-lg rounded-br bg-zinc-600 dark:bg-zinc-400 hover:bg-zinc-500 hover:dark:bg-zinc-300 text-white dark:text-zinc-950 cursor-pointer"
                         >
                             <x-tollerus::icons.delete/>
