@@ -297,12 +297,13 @@
             </div>
             <template x-for="(group, groupId) in grammarForm">
                 <div class="flex flex-col gap-4 w-full">
-                    <h2 class="font-bold text-xl flex flex-row justify-between items-end rounded-b overflow-hidden w-full border-b-2 border-zinc-500 dark:border-zinc-400">
-                        <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl bg-zinc-500 dark:bg-zinc-400 text-white dark:text-zinc-800">
+                    <h2 class="font-bold text-xl flex flex-row items-end w-full">
+                        <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl rounded-bl bg-zinc-500 dark:bg-zinc-400 text-white dark:text-zinc-800">
                             <x-tollerus::icons.folder />
                             <span x-text="group.primaryClass === null ? msgs['group_nameless'] : group.classes[group.primaryClass].name" x-bind:class="{ 'font-normal italic': group.primaryClass === null }"></span>
                         </div>
-                        <button title="{{ __('tollerus::ui.delete_word_class_group') }}" class="flex p-1 justify-center items-center rounded-t-lg bg-zinc-600 dark:bg-zinc-400 hover:bg-zinc-500 hover:dark:bg-zinc-300 text-white dark:text-zinc-950 cursor-pointer">
+                        <div class="flex-grow border-b-2 border-zinc-500 dark:border-zinc-400"></div>
+                        <button title="{{ __('tollerus::ui.delete_word_class_group') }}" class="flex p-1 justify-center items-center rounded-t-lg rounded-br bg-zinc-600 dark:bg-zinc-400 hover:bg-zinc-500 hover:dark:bg-zinc-300 text-white dark:text-zinc-950 cursor-pointer">
                             <x-tollerus::icons.delete/>
                             <span class="sr-only">{{ __('tollerus::ui.delete_word_class_group') }}</span>
                         </button>
