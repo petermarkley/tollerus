@@ -253,29 +253,65 @@ class LanguageEditor extends Component
     public function createGroup(): void
     {
         $group = $this->language->wordClassGroups()->create();
-        $group->wordClasses()->create([
-            'language_id' => $this->language->id,
-            'name' => __('tollerus::ui.untitled'),
-        ]);
-        $this->refreshGrammarForm();
+        $this->createWordClass($group);
     }
     public function deleteGroup(string $groupId): void
     {
         WordClassGroup::findOrFail((int)$groupId)->delete();
         $this->refreshGrammarForm();
     }
-    public function createWordClass(string $groupId): void
+    public function createWordClass(string|WordClassGroup $group): void
     {
-        $group = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
-        if ($group === null) {
+        /**
+         * $group can be either a string or a model instance. If it's a string,
+         * then we need to convert it into a model instance.
+         */
+        if (gettype($group) == 'string') {
+            $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$group);
+        } else {
+            $groupModel = $group;
+        }
+        // Should be a model instance by now, no matter what.
+        if (!($groupModel instanceof WordClassGroup)) {
             $this->dispatch('grammar-class-add-failure');
             throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
             return;
         }
-        $group->wordClasses()->create([
-            'language_id' => $this->language->id,
-            'name' => __('tollerus::ui.untitled'),
-        ]);
+        /**
+         * This DB table has a non-nullable 'name' field with a unique constraint.
+         * Since we're not prompting the user for a name first, that means we
+         * need a placeholder name that's unique or else the insert will fail.
+         */
+        $class = null;
+        $num = $this->language->wordClasses()->count();
+        $base = __('tollerus::ui.untitled');
+        $maxAttempts = 20;
+        for ($i=0; $i < $maxAttempts; $i++) {
+            $tryNum = $num + $i;
+            $tryName = $i==0 ? $base : $base . " ({$tryNum})";
+            try {
+                $class = $groupModel->wordClasses()->create([
+                    'language_id' => $this->language->id,
+                    'name' => $tryName,
+                ]);
+                break;
+            } catch (\Illuminate\Database\QueryException $e) {
+                /**
+                 * If this isn't a `unique` constraint violation, then
+                 * something else is wrong and we need to surface the error.
+                 */
+                $sqlState = $e->getCode();
+                $driverCode = $e->errorInfo[1] ?? null;
+                if (!($sqlState === '23000' && $driverCode === 1062)) {
+                    throw $e;
+                    return;
+                }
+            }
+        }
+        if ($class === null || !($class instanceof WordClass)) {
+            throw new \RuntimeException(__('tollerus::error.max_attempts_adding_word_class'));
+            return;
+        }
         $this->refreshGrammarForm();
     }
     public function deleteWordClass(string $wordClassId): void
