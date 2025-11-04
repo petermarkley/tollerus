@@ -119,6 +119,8 @@ return [
   'will_delete_native_spellings' => 'You are about to delete :# native spellings! Are you sure?',
   'no_cancel' => 'No, cancel',
   'yes_delete' => 'Yes, delete',
+  'delete_word_class_group_confirmation' => 'About to delete grammar group. Are you sure?',
+  'delete_word_class_confirmation' => 'About to delete word class. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *

@@ -11,7 +11,7 @@ use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 use PeterMarkley\Tollerus\Models\NativeSpelling;
-use PeterMarkley\Tollerus\Models\WordClassGroups;
+use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
 
 class LanguageEditor extends Component
@@ -245,6 +245,15 @@ class LanguageEditor extends Component
     public function grammarSave(): void
     {
         //
+    }
+
+    /**
+     * Granular create & delete functions
+     */
+    public function deleteGroup(string $groupId): void
+    {
+        WordClassGroup::findOrFail((int)$groupId)->delete();
+        $this->refreshGrammarForm();
     }
 
     /**
