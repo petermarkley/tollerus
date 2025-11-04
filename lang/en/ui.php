@@ -64,6 +64,7 @@ return [
   'edit_thing' => 'Edit :thing',
   'select' => 'Select',
   'delete' => 'Delete',
+  'untitled' => 'untitled',
   /**
    * TRANSLATOR NOTE:
    *

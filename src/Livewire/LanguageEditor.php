@@ -51,7 +51,6 @@ class LanguageEditor extends Component
 
         // Neographies tab
         $this->refreshNeographiesForm();
-        $this->wordClassGroups = $language->wordClassGroups->all();
 
         // Grammar tab
         $this->refreshGrammarForm();
@@ -109,7 +108,6 @@ class LanguageEditor extends Component
                 $this->refreshNeographiesForm();
             break;
             case 'grammar':
-                $this->wordClassGroups = $this->language->wordClassGroups->all();
                 $this->refreshGrammarForm();
             break;
         }
@@ -154,6 +152,7 @@ class LanguageEditor extends Component
     }
     public function refreshGrammarForm(): void
     {
+        $this->wordClassGroups = $this->language->wordClassGroups->all();
         foreach ($this->wordClassGroups as $group) {
             $group->loadMissing([
                 'wordClasses',
@@ -251,16 +250,37 @@ class LanguageEditor extends Component
     /**
      * Granular create & delete functions
      */
+    public function createGroup(): void
+    {
+        $group = $this->language->wordClassGroups()->create();
+        $group->wordClasses()->create([
+            'language_id' => $this->language->id,
+            'name' => __('tollerus::ui.untitled'),
+        ]);
+        $this->refreshGrammarForm();
+    }
     public function deleteGroup(string $groupId): void
     {
         WordClassGroup::findOrFail((int)$groupId)->delete();
-        $this->wordClassGroups = $this->language->wordClassGroups->all();
+        $this->refreshGrammarForm();
+    }
+    public function createWordClass(string $groupId): void
+    {
+        $group = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
+        if ($group === null) {
+            $this->dispatch('grammar-class-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
+            return;
+        }
+        $group->wordClasses()->create([
+            'language_id' => $this->language->id,
+            'name' => __('tollerus::ui.untitled'),
+        ]);
         $this->refreshGrammarForm();
     }
     public function deleteWordClass(string $wordClassId): void
     {
         WordClass::findOrFail((int)$wordClassId)->delete();
-        $this->wordClassGroups = $this->language->wordClassGroups->all();
         $this->refreshGrammarForm();
     }
 
@@ -277,7 +297,6 @@ class LanguageEditor extends Component
         $loadAction = new LoadGrammarPreset;
         try {
             $loadAction($this->language, $preset);
-            $this->wordClassGroups = $this->language->wordClassGroups->all();
             $this->refreshGrammarForm();
             $this->dispatch('preset-button-success');
         } catch (\Throwable $e) {
