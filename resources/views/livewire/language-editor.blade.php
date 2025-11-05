@@ -367,6 +367,7 @@
                                                         title="{{ __('tollerus::ui.set_this_as_primary') }}"
                                                         x-model="group.primaryClass"
                                                         class="absolute w-full h-full inset-0 opacity-0 z-10 cursor-pointer disabled:cursor-not-allowed"
+                                                        @change.once="$wire.updateGroupPrimaryClass(groupId);"
                                                     />
                                                     <span class="sr-only">{{ __('tollerus::ui.set_this_as_primary') }}</span>
                                                 </label>

@@ -248,12 +248,24 @@ class LanguageEditor extends Component
     }
 
     /**
-     * Granular create & delete functions
+     * Granular CRUD-type functions
      */
     public function createGroup(): void
     {
         $group = $this->language->wordClassGroups()->create();
         $this->createWordClass($group);
+    }
+    public function updateGroupPrimaryClass(string $groupId): void
+    {
+        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
+        if (!($groupModel instanceof WordClassGroup)) {
+            $this->dispatch('grammar-group-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
+            return;
+        }
+        $groupModel->primary_class = $this->grammarForm[$groupId]['primaryClass'];
+        $groupModel->save();
+        $this->refreshGrammarForm();
     }
     public function deleteGroup(string $groupId): void
     {
