@@ -4,7 +4,7 @@
     'fieldName' => '',
     'saveEvent' => '',
 ])
-<div x-data="{ id: {{ $idExpression }}, editing: false }">
+<div x-data="{ id: {{ $idExpression }}, editing: false, originalValue: {{ $model }} }">
     <template x-if="editing">
         <div class="flex flex-row gap-2 justify-start items-center w-full">
             <x-tollerus::inputs.text x-bind:id="id" x-model="{{ $model }}" />
@@ -12,7 +12,7 @@
                 type="primary"
                 size="small"
                 title="{{ __('tollerus::ui.save') }}"
-                @click="{{ $saveEvent }} editing = false;"
+                @click="{{ $saveEvent }} originalValue = {{ $model }}; editing = false;"
             >
                 <x-tollerus::icons.check/>
                 <span class="sr-only">{{ __('tollerus::ui.save') }}</span>
@@ -21,7 +21,7 @@
                 type="secondary"
                 size="small"
                 title="{{ __('tollerus::ui.cancel') }}"
-                @click="editing = false;"
+                @click="{{ $model }} = originalValue; editing = false;"
             >
                 <x-tollerus::icons.cancel/>
                 <span class="sr-only">{{ __('tollerus::ui.cancel') }}</span>
