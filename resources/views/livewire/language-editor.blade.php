@@ -404,6 +404,8 @@
                             title="{{ __('tollerus::ui.add_word_class') }}"
                             class="relative flex flex-row gap-2 justify-center items-center w-full"
                             @click="$wire.createWordClass(groupId, false);"
+                            wire:loading.attr="disabled"
+                            wire:target="createWordClass"
                         >
                             <x-tollerus::icons.plus/>
                             <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_word_class') }}</span>
@@ -416,6 +418,8 @@
                     title="{{ __('tollerus::ui.add_word_class_group') }}"
                     class="relative flex flex-row gap-2 justify-center items-center w-full"
                     @click="$wire.createGroup();"
+                    wire:loading.attr="disabled"
+                    wire:target="createGroup"
                 >
                     <x-tollerus::icons.plus/>
                     <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_word_class_group') }}</span>
