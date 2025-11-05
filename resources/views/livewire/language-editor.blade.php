@@ -344,85 +344,19 @@
                                 <tbody>
                                     <template x-for="(wordClass, wordClassId) in group.classes">
                                         <tr>
-                                            <td class="text-left pr-2 py-1 w-60" x-data="{ id: 'class_' + wordClassId + '_name', editing: false }">
-                                                <template x-if="editing">
-                                                    <div class="flex flex-row gap-2 justify-start items-center w-full">
-                                                        <x-tollerus::inputs.text x-bind:id="id" x-model="wordClass.name" />
-                                                        <x-tollerus::inputs.button
-                                                            type="primary"
-                                                            size="small"
-                                                            title="{{ __('tollerus::ui.save') }}"
-                                                            @click="$wire.updateClass(groupId, wordClassId, 'name', document.getElementById(id).value); editing = false;"
-                                                        >
-                                                            <x-tollerus::icons.check/>
-                                                            <span class="sr-only">{{ __('tollerus::ui.save') }}</span>
-                                                        </x-tollerus::inputs.button>
-                                                        <x-tollerus::inputs.button
-                                                            type="secondary"
-                                                            size="small"
-                                                            title="{{ __('tollerus::ui.cancel') }}"
-                                                            @click="editing = false;"
-                                                        >
-                                                            <x-tollerus::icons.cancel/>
-                                                            <span class="sr-only">{{ __('tollerus::ui.cancel') }}</span>
-                                                        </x-tollerus::inputs.button>
-                                                    </div>
-                                                </template>
-                                                <template x-if="!editing">
-                                                    <div class="flex flex-row gap-2 justify-start items-center w-full">
-                                                        <template x-if="wordClass.name!==null && wordClass.name.length>0"><span x-text="wordClass.name"></span></template>
-                                                        <template x-if="wordClass.name===null || wordClass.name.length==0"><span class="italic text-zinc-500 dark:text-zinc-500">({{ __('tollerus::ui.empty') }})</span></template>
-                                                        <x-tollerus::inputs.button
-                                                            type="secondary"
-                                                            size="small"
-                                                            title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.name')]) }}"
-                                                            @click="editing = true;"
-                                                        >
-                                                            <x-tollerus::icons.edit/>
-                                                            <span class="sr-only">{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.name')]) }}</span>
-                                                        </x-tollerus::inputs.button>
-                                                    </div>
-                                                </template>
+                                            <td class="text-left pr-2 py-1 w-60">
+                                                <x-tollerus::inputs.text-saveable
+                                                    idExpression="'class_' + wordClassId + '_name'"
+                                                    model="wordClass.name"
+                                                    fieldName="{{ __('tollerus::ui.name') }}"
+                                                    saveEvent="$wire.updateClass(groupId, wordClassId, 'name', document.getElementById(id).value);" />
                                             </td>
-                                            <td class="text-left px-2 py-1 w-60" x-data="{ id: 'class_' + wordClassId + '_name_brief', editing: false }">
-                                                <template x-if="editing">
-                                                    <div class="flex flex-row gap-2 justify-start items-center w-full">
-                                                        <x-tollerus::inputs.text x-bind:id="id" x-model="wordClass.nameBrief" />
-                                                        <x-tollerus::inputs.button
-                                                            type="primary"
-                                                            size="small"
-                                                            title="{{ __('tollerus::ui.save') }}"
-                                                            @click="$wire.updateClass(groupId, wordClassId, 'name_brief', document.getElementById(id).value); editing = false;"
-                                                        >
-                                                            <x-tollerus::icons.check/>
-                                                            <span class="sr-only">{{ __('tollerus::ui.save') }}</span>
-                                                        </x-tollerus::inputs.button>
-                                                        <x-tollerus::inputs.button
-                                                            type="secondary"
-                                                            size="small"
-                                                            title="{{ __('tollerus::ui.cancel') }}"
-                                                            @click="editing = false;"
-                                                        >
-                                                            <x-tollerus::icons.cancel/>
-                                                            <span class="sr-only">{{ __('tollerus::ui.cancel') }}</span>
-                                                        </x-tollerus::inputs.button>
-                                                    </div>
-                                                </template>
-                                                <template x-if="!editing">
-                                                    <div class="flex flex-row gap-2 justify-start items-center w-full">
-                                                        <template x-if="wordClass.nameBrief!==null && wordClass.nameBrief.length>0"><span x-text="wordClass.nameBrief"></span></template>
-                                                        <template x-if="wordClass.nameBrief===null || wordClass.nameBrief.length==0"><span class="italic text-zinc-500 dark:text-zinc-500">({{ __('tollerus::ui.empty') }})</span></template>
-                                                        <x-tollerus::inputs.button
-                                                            type="secondary"
-                                                            size="small"
-                                                            title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.abbreviation')]) }}"
-                                                            @click="editing = true;"
-                                                        >
-                                                            <x-tollerus::icons.edit/>
-                                                            <span class="sr-only">{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.abbreviation')]) }}</span>
-                                                        </x-tollerus::inputs.button>
-                                                    </div>
-                                                </template>
+                                            <td class="text-left px-2 py-1 w-60">
+                                                <x-tollerus::inputs.text-saveable
+                                                    idExpression="'class_' + wordClassId + '_name_brief'"
+                                                    model="wordClass.nameBrief"
+                                                    fieldName="{{ __('tollerus::ui.abbreviation') }}"
+                                                    saveEvent="$wire.updateClass(groupId, wordClassId, 'name_brief', document.getElementById(id).value);" />
                                             </td>
                                             <td class="text-center px-2 py-1 min-w-24">
                                                 <label class="inline-block align-middle w-6 h-6 relative group">
