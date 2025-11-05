@@ -348,7 +348,7 @@ class LanguageEditor extends Component
             throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
             return;
         }
-        $classModel = $groupModel->wordClasses->firstWhere('id', (int)$groupId);
+        $classModel = $groupModel->wordClasses->firstWhere('id', (int)$classId);
         if (!($classModel instanceof WordClass)) {
             $this->dispatch('grammar-group-update-failure');
             throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);

@@ -65,6 +65,7 @@ return [
   'select' => 'Select',
   'delete' => 'Delete',
   'untitled' => 'untitled',
+  'empty' => 'empty',
   /**
    * TRANSLATOR NOTE:
    *
