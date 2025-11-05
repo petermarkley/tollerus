@@ -399,7 +399,7 @@
                             size="small"
                             title="{{ __('tollerus::ui.add_word_class') }}"
                             class="relative flex flex-row gap-2 justify-center items-center w-full"
-                            @click="$wire.createWordClass(groupId);"
+                            @click="$wire.createWordClass(groupId, false);"
                         >
                             <x-tollerus::icons.plus/>
                             <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_word_class') }}</span>

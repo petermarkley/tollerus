@@ -253,7 +253,7 @@ class LanguageEditor extends Component
     public function createGroup(): void
     {
         $group = $this->language->wordClassGroups()->create();
-        $this->createWordClass($group);
+        $this->createWordClass($group, true);
     }
     public function updateGroupPrimaryClass(string $groupId): void
     {
@@ -272,7 +272,7 @@ class LanguageEditor extends Component
         WordClassGroup::findOrFail((int)$groupId)->delete();
         $this->refreshGrammarForm();
     }
-    public function createWordClass(string|WordClassGroup $group): void
+    public function createWordClass(string|WordClassGroup $group, bool $setAsPrimary = false): void
     {
         /**
          * $group can be either a string or a model instance. If it's a string,
@@ -323,6 +323,10 @@ class LanguageEditor extends Component
         if ($class === null || !($class instanceof WordClass)) {
             throw new \RuntimeException(__('tollerus::error.max_attempts_adding_word_class'));
             return;
+        }
+        if ($setAsPrimary) {
+            $groupModel->primary_class = $class->id;
+            $groupModel->save();
         }
         $this->refreshGrammarForm();
     }
