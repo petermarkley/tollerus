@@ -36,7 +36,7 @@
                 type="secondary"
                 size="small"
                 title="{{ __('tollerus::ui.edit_thing', ['thing' => $fieldName]) }}"
-                @click="editing = true;"
+                @click="editing = true; $nextTick(()=>{document.getElementById(id).focus()});"
             >
                 <x-tollerus::icons.edit/>
                 <span class="sr-only">{{ __('tollerus::ui.edit_thing', ['thing' => $fieldName]) }}</span>
