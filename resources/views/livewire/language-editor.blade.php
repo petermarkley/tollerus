@@ -371,7 +371,7 @@
                                                 <template x-if="!editing">
                                                     <div class="flex flex-row gap-2 justify-start items-center w-full">
                                                         <template x-if="wordClass.name!==null && wordClass.name.length>0"><span x-text="wordClass.name"></span></template>
-                                                        <template x-if="wordClass.name===null || wordClass.name.length==0"><span class="italic text-zinc-600 dark:text-zinc-500">({{ __('tollerus::ui.empty') }})</span></template>
+                                                        <template x-if="wordClass.name===null || wordClass.name.length==0"><span class="italic text-zinc-500 dark:text-zinc-500">({{ __('tollerus::ui.empty') }})</span></template>
                                                         <x-tollerus::inputs.button
                                                             type="secondary"
                                                             size="small"
@@ -411,7 +411,7 @@
                                                 <template x-if="!editing">
                                                     <div class="flex flex-row gap-2 justify-start items-center w-full">
                                                         <template x-if="wordClass.nameBrief!==null && wordClass.nameBrief.length>0"><span x-text="wordClass.nameBrief"></span></template>
-                                                        <template x-if="wordClass.nameBrief===null || wordClass.nameBrief.length==0"><span class="italic text-zinc-600 dark:text-zinc-500">({{ __('tollerus::ui.empty') }})</span></template>
+                                                        <template x-if="wordClass.nameBrief===null || wordClass.nameBrief.length==0"><span class="italic text-zinc-500 dark:text-zinc-500">({{ __('tollerus::ui.empty') }})</span></template>
                                                         <x-tollerus::inputs.button
                                                             type="secondary"
                                                             size="small"
