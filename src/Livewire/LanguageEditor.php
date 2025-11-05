@@ -330,6 +330,36 @@ class LanguageEditor extends Component
         }
         $this->refreshGrammarForm();
     }
+    public function updateClass(string $groupId, string $classId, string $propName, string $propVal): void
+    {
+        /**
+         * We could just directly query for word class like:
+         *
+         *    WordClass::where('group_id', $groupId)
+         *      ->where('id', $classId)
+         *      ->first()
+         *
+         * However, this method uses cached data and might
+         * actually save us a trip to the DB.
+         */
+        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
+        if (!($groupModel instanceof WordClassGroup)) {
+            $this->dispatch('grammar-group-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
+            return;
+        }
+        $classModel = $groupModel->wordClasses->firstWhere('id', (int)$groupId);
+        if (!($classModel instanceof WordClass)) {
+            $this->dispatch('grammar-group-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
+            return;
+        }
+        if ($propName === 'name' || $propName === 'name_brief') {
+            $classModel[$propName] = $propVal;
+            $classModel->save();
+            $this->refreshGrammarForm();
+        }
+    }
     public function deleteWordClass(string $wordClassId): void
     {
         WordClass::findOrFail((int)$wordClassId)->delete();

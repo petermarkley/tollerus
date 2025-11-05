@@ -347,12 +347,14 @@
                                             <td class="text-left pr-2 py-1 min-w-24">
                                                 <x-tollerus::inputs.text
                                                     x-bind:id="'class_' + wordClassId + '_name'"
-                                                    x-model="wordClass.name" />
+                                                    x-model="wordClass.name"
+                                                    @change="$wire.updateClass(groupId, wordClassId, 'name', $el.value);" />
                                             </td>
                                             <td class="text-left px-2 py-1 min-w-24">
                                                 <x-tollerus::inputs.text
                                                     x-bind:id="'class_' + wordClassId + '_name_brief'"
-                                                    x-model="wordClass.nameBrief" />
+                                                    x-model="wordClass.nameBrief"
+                                                    @change="$wire.updateClass(groupId, wordClassId, 'name_brief', $el.value);" />
                                             </td>
                                             <td class="text-center px-2 py-1 min-w-24">
                                                 <label class="inline-block align-middle w-6 h-6 relative group">
