@@ -40,6 +40,8 @@
     @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
     @grammar-group-delete.window="$wire.deleteGroup($event.detail.groupId);"
     @grammar-class-delete.window="$wire.deleteWordClass($event.detail.wordClassId);"
+    @grammar-feature-delete.window="$wire.deleteFeature($event.detail.featureId);"
+    @grammar-value-delete.window="$wire.deleteFeatureValue($event.detail.featureValueId);"
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
@@ -505,7 +507,7 @@
                                                                             message: msgs['delete_feature_value_confirmation'],
                                                                             buttons: [
                                                                                 { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
-                                                                                { text: msgs.yes_delete, type: 'primary', clickEvent: 'grammar-feature-value-delete', payload: {featureValueId: featureValueId} }
+                                                                                { text: msgs.yes_delete, type: 'primary', clickEvent: 'grammar-value-delete', payload: {featureValueId: featureValueId} }
                                                                             ]
                                                                         });"
                                                                     >
@@ -522,7 +524,9 @@
                                                 size="small"
                                                 title="{{ __('tollerus::ui.add_feature_value') }}"
                                                 class="relative flex flex-row gap-2 justify-center items-center w-full"
+                                                @click="$wire.createFeatureValue(groupId, featureId);"
                                                 wire:loading.attr="disabled"
+                                                wire:target="createFeatureValue"
                                             >
                                                 <x-tollerus::icons.plus/>
                                                 <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_feature_value') }}</span>
@@ -536,7 +540,9 @@
                             size="small"
                             title="{{ __('tollerus::ui.add_feature') }}"
                             class="relative flex flex-row gap-2 justify-center items-center w-full"
+                            @click="$wire.createFeature(groupId);"
                             wire:loading.attr="disabled"
+                            wire:target="createFeature"
                         >
                             <x-tollerus::icons.plus/>
                             <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_feature') }}</span>

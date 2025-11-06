@@ -7,12 +7,14 @@ use Livewire\Attributes\Locked;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
+use PeterMarkley\Tollerus\Models\Feature;
+use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Neography;
-use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 use PeterMarkley\Tollerus\Models\NativeSpelling;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\WordClass;
+use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
 
 class LanguageEditor extends Component
@@ -326,12 +328,14 @@ class LanguageEditor extends Component
                 $sqlState = $e->getCode();
                 $driverCode = $e->errorInfo[1] ?? null;
                 if (!($sqlState === '23000' && $driverCode === 1062)) {
+                    $this->dispatch('grammar-class-add-failure');
                     throw $e;
                     return;
                 }
             }
         }
         if ($class === null || !($class instanceof WordClass)) {
+            $this->dispatch('grammar-class-add-failure');
             throw new \RuntimeException(__('tollerus::error.max_attempts_adding_word_class'));
             return;
         }
@@ -355,14 +359,14 @@ class LanguageEditor extends Component
          */
         $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
         if (!($groupModel instanceof WordClassGroup)) {
-            $this->dispatch('grammar-group-update-failure');
+            $this->dispatch('grammar-class-update-failure');
             throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
             return;
         }
         $classModel = $groupModel->wordClasses->firstWhere('id', (int)$classId);
         if (!($classModel instanceof WordClass)) {
-            $this->dispatch('grammar-group-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
+            $this->dispatch('grammar-class-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class')]]);
             return;
         }
         if ($propName === 'name' || $propName === 'name_brief') {
@@ -374,6 +378,114 @@ class LanguageEditor extends Component
     public function deleteWordClass(string $wordClassId): void
     {
         WordClass::findOrFail((int)$wordClassId)->delete();
+        $this->refreshGrammarForm();
+    }
+    public function createFeature(string $groupId): void
+    {
+        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
+        if (!($groupModel instanceof WordClassGroup)) {
+            $this->dispatch('grammar-feature-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
+            return;
+        }
+        /**
+         * This DB table has a non-nullable 'name' field with a unique constraint.
+         * Since we're not prompting the user for a name first, that means we
+         * need a placeholder name that's unique or else the insert will fail.
+         */
+        $feature = null;
+        $num = $groupModel->features()->count();
+        $base = __('tollerus::ui.untitled');
+        $maxAttempts = 20;
+        for ($i=0; $i < $maxAttempts; $i++) {
+            $tryNum = $num + $i;
+            $tryName = $i==0 ? $base : $base . " ({$tryNum})";
+            try {
+                $feature = $groupModel->features()->create([
+                    'name' => $tryName,
+                ]);
+                break;
+            } catch (\Illuminate\Database\QueryException $e) {
+                /**
+                 * If this isn't a `unique` constraint violation, then
+                 * something else is wrong and we need to surface the error.
+                 */
+                $sqlState = $e->getCode();
+                $driverCode = $e->errorInfo[1] ?? null;
+                if (!($sqlState === '23000' && $driverCode === 1062)) {
+                    $this->dispatch('grammar-feature-add-failure');
+                    throw $e;
+                    return;
+                }
+            }
+        }
+        if ($feature === null || !($feature instanceof Feature)) {
+            $this->dispatch('grammar-feature-add-failure');
+            throw new \RuntimeException(__('tollerus::error.max_attempts_adding_feature'));
+            return;
+        }
+        $this->refreshGrammarForm();
+    }
+    public function deleteFeature(string $featureId): void
+    {
+        Feature::findOrFail((int)$featureId)->delete();
+        $this->refreshGrammarForm();
+    }
+    public function createFeatureValue(string $groupId, string $featureId): void
+    {
+        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
+        if (!($groupModel instanceof WordClassGroup)) {
+            $this->dispatch('grammar-value-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
+            return;
+        }
+        $featureModel = $groupModel->features->firstWhere('id', (int)$featureId);
+        if (!($featureModel instanceof Feature)) {
+            $this->dispatch('grammar-value-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_feature')]]);
+            return;
+        }
+        /**
+         * This DB table has a non-nullable 'name' field with a unique constraint.
+         * Since we're not prompting the user for a name first, that means we
+         * need a placeholder name that's unique or else the insert will fail.
+         */
+        $featureValue = null;
+        $num = $featureModel->featureValues()->count();
+        $base = __('tollerus::ui.untitled');
+        $maxAttempts = 20;
+        for ($i=0; $i < $maxAttempts; $i++) {
+            $tryNum = $num + $i;
+            $tryName = $i==0 ? $base : $base . " ({$tryNum})";
+            try {
+                $featureValue = $featureModel->featureValues()->create([
+                    'name' => $tryName,
+                ]);
+                break;
+            } catch (\Illuminate\Database\QueryException $e) {
+                /**
+                 * If this isn't a `unique` constraint violation, then
+                 * something else is wrong and we need to surface the error.
+                 */
+                $sqlState = $e->getCode();
+                $driverCode = $e->errorInfo[1] ?? null;
+                if (!($sqlState === '23000' && $driverCode === 1062)) {
+                    $this->dispatch('grammar-value-add-failure');
+                    throw $e;
+                    return;
+                }
+            }
+        }
+        if ($featureValue === null || !($featureValue instanceof FeatureValue)) {
+            $this->dispatch('grammar-value-add-failure');
+            throw new \RuntimeException(__('tollerus::error.max_attempts_adding_feature_value'));
+            return;
+        }
+        $this->refreshGrammarForm();
+    }
+    public function deleteFeatureValue(string $featureValueId): void
+    {
+        FeatureValue::findOrFail((int)$featureValueId)->delete();
         $this->refreshGrammarForm();
     }
 
