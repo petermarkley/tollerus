@@ -384,7 +384,7 @@
                                             </td>
                                             <td class="text-center px-2 py-1 min-w-24">
                                                 <x-tollerus::inputs.button
-                                                    type="secondary"
+                                                    type="inverse"
                                                     size="small"
                                                     class="align-middle"
                                                     title="{{ __('tollerus::ui.delete_word_class') }}"
@@ -445,7 +445,7 @@
                                             </div>
                                             <div class="min-w-24">
                                                 <x-tollerus::inputs.button
-                                                    type="secondary"
+                                                    type="inverse"
                                                     size="small"
                                                     class="align-middle"
                                                     title="{{ __('tollerus::ui.delete_feature') }}"
@@ -497,7 +497,7 @@
                                                                 </td>
                                                                 <td class="text-center px-2 py-1 min-w-24">
                                                                     <x-tollerus::inputs.button
-                                                                        type="secondary"
+                                                                        type="inverse"
                                                                         size="small"
                                                                         class="align-middle"
                                                                         title="{{ __('tollerus::ui.delete_feature_value') }}"
