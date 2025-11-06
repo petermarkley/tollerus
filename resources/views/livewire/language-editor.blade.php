@@ -13,6 +13,8 @@
             group_nameless: @js(__('tollerus::ui.group_nameless')),
             delete_word_class_group_confirmation: @js(__('tollerus::ui.delete_word_class_group_confirmation')),
             delete_word_class_confirmation: @js(__('tollerus::ui.delete_word_class_confirmation')),
+            delete_feature_confirmation: @js(__('tollerus::ui.delete_feature_confirmation')),
+            delete_feature_value_confirmation: @js(__('tollerus::ui.delete_feature_value_confirmation')),
         },
         tab: 'info',
         neographiesForm: $wire.entangle('neographiesForm'),
@@ -409,6 +411,72 @@
                         >
                             <x-tollerus::icons.plus/>
                             <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_word_class') }}</span>
+                        </x-tollerus::inputs.missing-data>
+                    </x-tollerus::pane>
+                    <x-tollerus::pane class="flex flex-col gap-4 items-start">
+                        <template x-if="Object.keys(group.features).length > 0">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-left py-1 pr-2 w-60 border-b-2 border-zinc-400 dark:border-zinc-600">
+                                            <span class="font-bold">{{ __('tollerus::ui.feature') }}</span>
+                                        </th>
+                                        <th scope="col" class="text-left py-1 px-2 w-60 border-b-2 border-zinc-400 dark:border-zinc-600">
+                                            <span class="font-bold">{{ __('tollerus::ui.abbreviation') }}</span>
+                                        </th>
+                                        <th scope="col" class="text-center py-1 px-2 min-w-24 border-b-2 border-zinc-400 dark:border-zinc-600">
+                                            <span class="font-bold">{{ __('tollerus::ui.delete') }}</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="(feature, featureId) in group.features">
+                                        <tr>
+                                            <td class="text-left pr-2 py-1 w-60">
+                                                <x-tollerus::inputs.text-saveable
+                                                    idExpression="'feature_' + featureId + '_name'"
+                                                    model="feature.name"
+                                                    fieldName="{{ __('tollerus::ui.name') }}"
+                                                    saveEvent="$wire.updateFeature(groupId, featureId, 'name', document.getElementById(id).value);" />
+                                            </td>
+                                            <td class="text-left px-2 py-1 w-60">
+                                                <x-tollerus::inputs.text-saveable
+                                                    idExpression="'feature_' + featureId + '_name_brief'"
+                                                    model="feature.nameBrief"
+                                                    fieldName="{{ __('tollerus::ui.abbreviation') }}"
+                                                    saveEvent="$wire.updateFeature(groupId, featureId, 'name_brief', document.getElementById(id).value);" />
+                                            </td>
+                                            <td class="text-center px-2 py-1 min-w-24">
+                                                <x-tollerus::inputs.button
+                                                    type="secondary"
+                                                    size="small"
+                                                    class="align-middle"
+                                                    title="{{ __('tollerus::ui.delete_feature') }}"
+                                                    @click="$dispatch('open-modal', {
+                                                        message: msgs['delete_feature_confirmation'],
+                                                        buttons: [
+                                                            { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                                            { text: msgs.yes_delete, type: 'primary', clickEvent: 'grammar-feature-delete', payload: {featureId: featureId} }
+                                                        ]
+                                                    });"
+                                                >
+                                                    <x-tollerus::icons.delete/>
+                                                    <label class="sr-only">{{ __('tollerus::ui.delete_feature') }}</label>
+                                                </x-tollerus::inputs.button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </template>
+                        <x-tollerus::inputs.missing-data
+                            size="small"
+                            title="{{ __('tollerus::ui.add_feature') }}"
+                            class="relative flex flex-row gap-2 justify-center items-center w-full"
+                            wire:loading.attr="disabled"
+                        >
+                            <x-tollerus::icons.plus/>
+                            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_feature') }}</span>
                         </x-tollerus::inputs.missing-data>
                     </x-tollerus::pane>
                 </div>

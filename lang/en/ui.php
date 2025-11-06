@@ -92,7 +92,13 @@ return [
   'word_classes' => 'Word classes',
   'abbreviation' => 'Abbreviation',
   'group_nameless' => '(group)',
-  'features' => 'Features', // i.e. grammatical features or dimensions
+  'features' => 'Features', // i.e. grammatical features or dimensions, for example tense / person / number
+  'feature' => 'Feature',
+  'add_feature' => 'Add feature',
+  'delete_feature' => 'Delete feature',
+  'feature_values' => 'Values', // i.e. specific values of grammatical features, for example past-tense / first-person / plural
+  'add_feature_value' => 'Add value',
+  'delete_feature_value' => 'Delete value',
   'preset' => 'Preset', // i.e. a predefined configuration for user convenience
   'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
   'preview_of_thing' => 'Preview of :thing',
@@ -123,6 +129,8 @@ return [
   'yes_delete' => 'Yes, delete',
   'delete_word_class_group_confirmation' => 'About to delete grammar group. Are you sure?',
   'delete_word_class_confirmation' => 'About to delete word class. Are you sure?',
+  'delete_feature_confirmation' => 'About to delete an inflection feature. Are you sure?',
+  'delete_feature_value_confirmation' => 'About to delete an inflection feature value. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *

@@ -171,7 +171,18 @@ class LanguageEditor extends Component
                             'nameBrief' => $class->name_brief,
                         ],
                     ])->toArray(),
-                    'features' => null, // FIXME
+                    'features' => $group->features->mapWithKeys(fn ($feature) => [
+                        $feature->id => [
+                            'name' => $feature->name,
+                            'nameBrief' => $feature->name_brief,
+                            'featureValues' => $feature->featureValues->mapWithKeys(fn ($value) => [
+                                $value->id => [
+                                    'name' => $value->name,
+                                    'nameBrief' => $value->name_brief,
+                                ],
+                            ])->toArray(),
+                        ],
+                    ])->toArray(),
                     'tables' => null, // FIXME
                 ]
             ];})->toArray();
