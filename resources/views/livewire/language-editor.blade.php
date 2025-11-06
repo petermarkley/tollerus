@@ -325,6 +325,10 @@
                         </button>
                     </h2>
                     <x-tollerus::pane class="flex flex-col gap-4 items-start">
+                        <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
+                            <x-tollerus::icons.word-class />
+                            <span>{{ __('tollerus::ui.word_classes') }}</span>
+                        </h3>
                         <template x-if="Object.keys(group.classes).length > 0">
                             <table>
                                 <thead>
@@ -414,6 +418,10 @@
                         </x-tollerus::inputs.missing-data>
                     </x-tollerus::pane>
                     <x-tollerus::pane class="flex flex-col gap-4 items-start">
+                        <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
+                            <x-tollerus::icons.feature />
+                            <span>{{ __('tollerus::ui.features') }}</span>
+                        </h3>
                         <template x-if="Object.keys(group.features).length > 0">
                             <table>
                                 <thead>
