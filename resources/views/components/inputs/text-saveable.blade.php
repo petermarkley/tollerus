@@ -2,9 +2,13 @@
     'idExpression' => '',
     'model' => '',
     'fieldName' => '',
+    'showLabel' => false,
     'saveEvent' => '',
 ])
-<div x-data="{ id: {{ $idExpression }}, editing: false, originalValue: {{ $model }} }">
+<div x-data="{ id: {{ $idExpression }}, editing: false, originalValue: {{ $model }} }" class="flex flex-row gap-4 justify-start items-center">
+    @if (filter_var($showLabel, FILTER_VALIDATE_BOOLEAN))
+        <label x-bind:for="id">{{ $fieldName }}:</label>
+    @endif
     <template x-if="editing">
         <div class="flex flex-row gap-2 justify-start items-center w-full">
             <x-tollerus::inputs.text x-bind:id="id" x-model="{{ $model }}" />

@@ -97,6 +97,7 @@ return [
   'add_feature' => 'Add feature',
   'delete_feature' => 'Delete feature',
   'feature_values' => 'Values', // i.e. specific values of grammatical features, for example past-tense / first-person / plural
+  'feature_value' => 'Value',
   'add_feature_value' => 'Add value',
   'delete_feature_value' => 'Delete value',
   'preset' => 'Preset', // i.e. a predefined configuration for user convenience
