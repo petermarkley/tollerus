@@ -426,6 +426,36 @@ class LanguageEditor extends Component
         }
         $this->refreshGrammarForm();
     }
+    public function updateFeature(string $groupId, string $featureId, string $propName, string $propVal): void
+    {
+        /**
+         * We could just directly query for feature like:
+         *
+         *    Feature::where('group_id', $groupId)
+         *      ->where('id', $featureId)
+         *      ->first()
+         *
+         * However, this method uses cached data and might
+         * actually save us a trip to the DB.
+         */
+        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
+        if (!($groupModel instanceof WordClassGroup)) {
+            $this->dispatch('grammar-feature-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
+            return;
+        }
+        $featureModel = $groupModel->features->firstWhere('id', (int)$featureId);
+        if (!($featureModel instanceof Feature)) {
+            $this->dispatch('grammar-feature-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_feature')]]);
+            return;
+        }
+        if ($propName === 'name' || $propName === 'name_brief') {
+            $featureModel[$propName] = $propVal;
+            $featureModel->save();
+            $this->refreshGrammarForm();
+        }
+    }
     public function deleteFeature(string $featureId): void
     {
         Feature::findOrFail((int)$featureId)->delete();
@@ -482,6 +512,40 @@ class LanguageEditor extends Component
             return;
         }
         $this->refreshGrammarForm();
+    }
+    public function updateFeatureValue(string $groupId, string $featureId, string $featureValueId, string $propName, string $propVal): void
+    {
+        /**
+         * We could just directly query for the feature value like:
+         *
+         *    FeatureValue::findOrFail($featureValueId)
+         *
+         * However, this method uses cached data and might
+         * actually save us a trip to the DB.
+         */
+        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
+        if (!($groupModel instanceof WordClassGroup)) {
+            $this->dispatch('grammar-value-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
+            return;
+        }
+        $featureModel = $groupModel->features->firstWhere('id', (int)$featureId);
+        if (!($featureModel instanceof Feature)) {
+            $this->dispatch('grammar-value-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_feature')]]);
+            return;
+        }
+        $featureValueModel = $featureModel->featureValues->firstWhere('id', (int)$featureValueId);
+        if (!($featureValueModel instanceof FeatureValue)) {
+            $this->dispatch('grammar-value-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_feature_value')]]);
+            return;
+        }
+        if ($propName === 'name' || $propName === 'name_brief') {
+            $featureValueModel[$propName] = $propVal;
+            $featureValueModel->save();
+            $this->refreshGrammarForm();
+        }
     }
     public function deleteFeatureValue(string $featureValueId): void
     {
