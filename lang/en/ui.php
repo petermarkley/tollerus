@@ -101,6 +101,7 @@ return [
   'add_feature_value' => 'Add value',
   'delete_feature_value' => 'Delete value',
   'preset' => 'Preset', // i.e. a predefined configuration for user convenience
+  'inflection_tables' => 'Inflection tables',
   'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
   'preview_of_thing' => 'Preview of :thing',
   'activate' => 'Activate',

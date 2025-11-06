@@ -548,6 +548,20 @@
                             <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_feature') }}</span>
                         </x-tollerus::inputs.missing-data>
                     </x-tollerus::pane>
+                    <template x-if="Object.keys(group.features).length > 0">
+                        <x-tollerus::pane class="flex flex-col gap-4 items-start">
+                            <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
+                                <x-tollerus::icons.table />
+                                <span>{{ __('tollerus::ui.inflection_tables') }}</span>
+                            </h3>
+                            <div>
+                                <x-tollerus::button href="{{ route('tollerus.admin.languages.inflection-tables', ['language' => $language]) }}" class="flex flex-row gap-2 items-center">
+                                    <x-tollerus::icons.edit/>
+                                    <span>{{ __('tollerus::ui.edit') }}</span>
+                                </x-tollerus::button>
+                            </div>
+                        </x-tollerus::pane>
+                    </template>
                 </div>
             </template>
             <div class="flex flex-col gap-6 items-center w-full">

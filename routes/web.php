@@ -26,6 +26,7 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
             ->group(function () {
                 Route::get('/languages', [LanguageController::class, 'index'])->name('languages.index');
                 Route::get('/languages/{language}', LanguageEditor::class)->name('languages.edit');
+                Route::get('/languages/{language}/inflection-tables', fn () => 'fixme')->name('languages.inflection-tables');
                 Route::get('/neographies', [NeographyController::class, 'index'])->name('neographies.index');
                 Route::get('/neographies/{neography}', fn () => 'fixme')->name('neographies.edit');
             });
