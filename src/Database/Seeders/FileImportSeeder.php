@@ -510,6 +510,14 @@ class FileImportSeeder extends Seeder
         $classModel->name = $classXML['name']->__toString();
         $classModel->save();
         /**
+         * Since the legacy XML schema had no concept of a "primary class"
+         * in a group, we'll set as primary the first one we see.
+         */
+        if ($groupModel->primary_class == null) {
+            $groupModel->primary_class = $classModel->id;
+            $groupModel->save();
+        }
+        /**
          * Later when we're reading word entries from the dictionary,
          * we can't assume that there was an inflections file provided
          * or therefore word classes already registered. We will need
