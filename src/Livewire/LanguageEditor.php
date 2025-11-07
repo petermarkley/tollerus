@@ -4,6 +4,7 @@ namespace PeterMarkley\Tollerus\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\Locked;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
@@ -280,12 +281,13 @@ class LanguageEditor extends Component
     }
     public function updateGroupPrimaryClass(string $groupId): void
     {
-        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
-        if (!($groupModel instanceof WordClassGroup)) {
-            $this->dispatch('grammar-group-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
-            return;
-        }
+        $groupModel = $this->findInCache('grammar-group-update-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => WordClassGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
+            ],
+        ]);
         $groupModel->primary_class = $this->grammarForm[$groupId]['primaryClass'];
         $groupModel->save();
         $this->refreshGrammarForm();
@@ -301,7 +303,7 @@ class LanguageEditor extends Component
          * $group can be either a string or a model instance. If it's a string,
          * then we need to convert it into a model instance.
          */
-        if (gettype($group) == 'string') {
+        if (is_string($group) == 'string') {
             $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$group);
         } else {
             $groupModel = $group;
@@ -309,7 +311,7 @@ class LanguageEditor extends Component
         // Should be a model instance by now, no matter what.
         if (!($groupModel instanceof WordClassGroup)) {
             $this->dispatch('grammar-class-add-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages(['groupId' => [__('tollerus::error.invalid_word_class_group')]]);
             return;
         }
         /**
@@ -357,28 +359,19 @@ class LanguageEditor extends Component
     }
     public function updateClass(string $groupId, string $classId, string $propName, string $propVal): void
     {
-        /**
-         * We could just directly query for word class like:
-         *
-         *    WordClass::where('group_id', $groupId)
-         *      ->where('id', $classId)
-         *      ->first()
-         *
-         * However, this method uses cached data and might
-         * actually save us a trip to the DB.
-         */
-        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
-        if (!($groupModel instanceof WordClassGroup)) {
-            $this->dispatch('grammar-class-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
-            return;
-        }
-        $classModel = $groupModel->wordClasses->firstWhere('id', (int)$classId);
-        if (!($classModel instanceof WordClass)) {
-            $this->dispatch('grammar-class-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class')]]);
-            return;
-        }
+        $classModel = $this->findInCache('grammar-class-update-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => WordClassGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
+                'relation' => 'wordClasses',
+            ],
+            [
+                'id' => $classId,
+                'objectType' => WordClass::class,
+                'failMessage' => ['classId' => [__('tollerus::error.invalid_word_class')]],
+            ],
+        ]);
         if ($propName === 'name' || $propName === 'name_brief') {
             $classModel[$propName] = $propVal;
             $classModel->save();
@@ -392,12 +385,13 @@ class LanguageEditor extends Component
     }
     public function createFeature(string $groupId): void
     {
-        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
-        if (!($groupModel instanceof WordClassGroup)) {
-            $this->dispatch('grammar-feature-add-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
-            return;
-        }
+        $groupModel = $this->findInCache('grammar-feature-add-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => WordClassGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
+            ],
+        ]);
         /**
          * This DB table has a non-nullable 'name' field with a unique constraint.
          * Since we're not prompting the user for a name first, that means we
@@ -438,28 +432,19 @@ class LanguageEditor extends Component
     }
     public function updateFeature(string $groupId, string $featureId, string $propName, string $propVal): void
     {
-        /**
-         * We could just directly query for feature like:
-         *
-         *    Feature::where('group_id', $groupId)
-         *      ->where('id', $featureId)
-         *      ->first()
-         *
-         * However, this method uses cached data and might
-         * actually save us a trip to the DB.
-         */
-        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
-        if (!($groupModel instanceof WordClassGroup)) {
-            $this->dispatch('grammar-feature-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
-            return;
-        }
-        $featureModel = $groupModel->features->firstWhere('id', (int)$featureId);
-        if (!($featureModel instanceof Feature)) {
-            $this->dispatch('grammar-feature-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_feature')]]);
-            return;
-        }
+        $featureModel = $this->findInCache('grammar-feature-update-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => WordClassGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
+                'relation' => 'features',
+            ],
+            [
+                'id' => $featureId,
+                'objectType' => Feature::class,
+                'failMessage' => ['featureId' => [__('tollerus::error.invalid_feature')]],
+            ],
+        ]);
         if ($propName === 'name' || $propName === 'name_brief') {
             $featureModel[$propName] = $propVal;
             $featureModel->save();
@@ -473,18 +458,19 @@ class LanguageEditor extends Component
     }
     public function createFeatureValue(string $groupId, string $featureId): void
     {
-        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
-        if (!($groupModel instanceof WordClassGroup)) {
-            $this->dispatch('grammar-value-add-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
-            return;
-        }
-        $featureModel = $groupModel->features->firstWhere('id', (int)$featureId);
-        if (!($featureModel instanceof Feature)) {
-            $this->dispatch('grammar-value-add-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_feature')]]);
-            return;
-        }
+        $featureModel = $this->findInCache('grammar-value-add-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => WordClassGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
+                'relation' => 'features',
+            ],
+            [
+                'id' => $featureId,
+                'objectType' => Feature::class,
+                'failMessage' => ['featureId' => [__('tollerus::error.invalid_feature')]],
+            ],
+        ]);
         /**
          * This DB table has a non-nullable 'name' field with a unique constraint.
          * Since we're not prompting the user for a name first, that means we
@@ -525,32 +511,25 @@ class LanguageEditor extends Component
     }
     public function updateFeatureValue(string $groupId, string $featureId, string $featureValueId, string $propName, string $propVal): void
     {
-        /**
-         * We could just directly query for the feature value like:
-         *
-         *    FeatureValue::findOrFail($featureValueId)
-         *
-         * However, this method uses cached data and might
-         * actually save us a trip to the DB.
-         */
-        $groupModel = collect($this->wordClassGroups)->firstWhere('id', (int)$groupId);
-        if (!($groupModel instanceof WordClassGroup)) {
-            $this->dispatch('grammar-value-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_word_class_group')]]);
-            return;
-        }
-        $featureModel = $groupModel->features->firstWhere('id', (int)$featureId);
-        if (!($featureModel instanceof Feature)) {
-            $this->dispatch('grammar-value-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_feature')]]);
-            return;
-        }
-        $featureValueModel = $featureModel->featureValues->firstWhere('id', (int)$featureValueId);
-        if (!($featureValueModel instanceof FeatureValue)) {
-            $this->dispatch('grammar-value-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['preset' => [__('tollerus::error.invalid_feature_value')]]);
-            return;
-        }
+        $featureValueModel = $this->findInCache('grammar-value-update-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => WordClassGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
+                'relation' => 'features',
+            ],
+            [
+                'id' => $featureId,
+                'objectType' => Feature::class,
+                'failMessage' => ['featureId' => [__('tollerus::error.invalid_feature')]],
+                'relation' => 'featureValues',
+            ],
+            [
+                'id' => $featureValueId,
+                'objectType' => FeatureValue::class,
+                'failMessage' => ['featureValueId' => [__('tollerus::error.invalid_feature_value')]],
+            ],
+        ]);
         if ($propName === 'name' || $propName === 'name_brief') {
             $featureValueModel[$propName] = $propVal;
             $featureValueModel->save();
@@ -564,7 +543,28 @@ class LanguageEditor extends Component
     }
 
     /**
-     * Utility functions
+     * Internal utility function, for non-DB data lookups
+     */
+    private function findInCache(string $failEvent, array $steps): object
+    {
+        $collection = collect($this->wordClassGroups);
+        foreach ($steps as $step) {
+            $model = $collection->firstWhere('id', (int)$step['id']);
+            if (!($model instanceof $step['objectType'])) {
+                $this->dispatch($failEvent);
+                throw \Illuminate\Validation\ValidationException::withMessages($step['failMessage']);
+                return null;
+            }
+            if (isset($step['relation'])) {
+                $collection = $model->{$step['relation']};
+            } else {
+                return $model;
+            }
+        }
+    }
+
+    /**
+     * Public utility functions
      */
     public function loadGrammarPreset($preset): void
     {
