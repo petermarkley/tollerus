@@ -185,7 +185,17 @@ class LanguageEditor extends Component
                             ])->toArray(),
                         ],
                     ])->toArray(),
-                    'tables' => null, // FIXME
+                    'tables' => $group->inflectionTables->sortBy('position')->mapWithKeys(fn ($table) => [
+                        $table->id => [
+                            'label' => $table->label,
+                            'rows' => $table->rows->sortBy('position')->mapWithKeys(fn ($row) => [
+                                $row->id => [
+                                    'label' => $row->label,
+                                    'labelBrief' => $row->label_brief,
+                                ],
+                            ])->toArray(),
+                        ],
+                    ])->toArray(),
                 ]
             ];})->toArray();
     }

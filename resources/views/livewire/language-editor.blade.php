@@ -554,10 +554,35 @@
                                 <x-tollerus::icons.table />
                                 <span>{{ __('tollerus::ui.inflection_tables') }}</span>
                             </h3>
-                            <div>
-                                <x-tollerus::button href="{{ route('tollerus.admin.languages.inflection-tables', ['language' => $language]) }}" class="flex flex-row gap-2 items-center">
-                                    <x-tollerus::icons.edit/>
-                                    <span>{{ __('tollerus::ui.edit') }}</span>
+                            <div class="flex flex-row flex-wrap justify-center items-center gap-4 w-full">
+                                <template x-for="(table, tableId) in group.tables">
+                                    <div class="rounded-lg shadow overflow-hidden border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sm">
+                                        <table>
+                                            <thead>
+                                                <tr><th scope="col" colspan="2" x-text="table.label" class="text-center px-4 py-2 font-normal"></th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <template x-for="(row, rowId) in table.rows">
+                                                    <tr>
+                                                        <th scope="row" class="text-right p-1 font-normal border-t border-r border-zinc-300 dark:border-zinc-600">
+                                                            <abbr x-bind:title="row.label" x-text="row.labelBrief || row.label.slice(0,3)" class="no-underline"></abbr>
+                                                        </th>
+                                                        <td class="text-center px-4 py-1 border-t border-zinc-300 dark:border-zinc-600">&hellip;</td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </template>
+                                <x-tollerus::button
+                                    type="secondary"
+                                    size="small"
+                                    title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.inflection_tables')]) }}"
+                                    href="{{ route('tollerus.admin.languages.inflection-tables', ['language' => $language]) }}"
+                                    class="flex flex-row gap-2 items-center"
+                                >
+                                    <x-tollerus::icons.edit class="m-2"/>
+                                    <span class="sr-only">{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.inflection_tables')]) }}</span>
                                 </x-tollerus::button>
                             </div>
                         </x-tollerus::pane>
