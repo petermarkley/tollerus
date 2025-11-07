@@ -304,28 +304,31 @@
                 @enderror
             </div>
             <template x-for="(group, groupId) in grammarForm">
-                <div class="flex flex-col gap-4 w-full">
-                    <h2 class="font-bold text-xl flex flex-row items-end w-full">
-                        <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl rounded-bl bg-zinc-500 dark:bg-zinc-400 text-white dark:text-zinc-800">
-                            <x-tollerus::icons.folder />
-                            <span x-text="group.primaryClass === null ? msgs['group_nameless'] : group.classes[group.primaryClass].name" x-bind:class="{ 'font-normal italic': group.primaryClass === null }"></span>
-                        </div>
-                        <div class="flex-grow border-b-2 border-zinc-500 dark:border-zinc-400"></div>
-                        <button
-                            title="{{ __('tollerus::ui.delete_word_class_group') }}"
-                            @click="$dispatch('open-modal', {
-                                message: msgs['delete_word_class_group_confirmation'],
-                                buttons: [
-                                    { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
-                                    { text: msgs.yes_delete, type: 'primary', clickEvent: 'grammar-group-delete', payload: {groupId: groupId} }
-                                ]
-                            });"
-                            class="flex p-1 justify-center items-center rounded-t-lg rounded-br bg-zinc-600 dark:bg-zinc-400 hover:bg-zinc-500 hover:dark:bg-zinc-300 text-white dark:text-zinc-950 cursor-pointer"
-                        >
-                            <x-tollerus::icons.delete/>
-                            <span class="sr-only">{{ __('tollerus::ui.delete_word_class_group') }}</span>
-                        </button>
-                    </h2>
+                <x-tollerus::drawer open="false" rootClass="w-full" class="flex flex-col gap-4 w-full">
+                    <x-slot:heading>
+                        <h2 class="font-bold text-xl flex flex-row items-end w-full">
+                            <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl rounded-bl bg-zinc-500 dark:bg-zinc-400 text-white dark:text-zinc-800">
+                                <x-tollerus::icons.folder x-show="!drawerOpen" />
+                                <x-tollerus::icons.folder-open x-show="drawerOpen" />
+                                <span x-text="group.primaryClass === null ? msgs['group_nameless'] : group.classes[group.primaryClass].name" x-bind:class="{ 'font-normal italic': group.primaryClass === null }"></span>
+                            </div>
+                            <div class="flex-grow border-b-2 border-zinc-500 dark:border-zinc-400"></div>
+                            <button
+                                title="{{ __('tollerus::ui.delete_word_class_group') }}"
+                                @click="$dispatch('open-modal', {
+                                    message: msgs['delete_word_class_group_confirmation'],
+                                    buttons: [
+                                        { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                        { text: msgs.yes_delete, type: 'primary', clickEvent: 'grammar-group-delete', payload: {groupId: groupId} }
+                                    ]
+                                });"
+                                class="flex p-1 justify-center items-center rounded-t-lg rounded-br bg-zinc-600 dark:bg-zinc-400 hover:bg-zinc-500 hover:dark:bg-zinc-300 text-white dark:text-zinc-950 cursor-pointer"
+                            >
+                                <x-tollerus::icons.delete/>
+                                <span class="sr-only">{{ __('tollerus::ui.delete_word_class_group') }}</span>
+                            </button>
+                        </h2>
+                    </x-slot:heading>
                     <x-tollerus::pane class="flex flex-col gap-4 items-start">
                         <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
                             <x-tollerus::icons.word-class />
@@ -594,7 +597,7 @@
                             </template>
                         </x-tollerus::pane>
                     </template>
-                </div>
+                </x-tollerus::drawer>
             </template>
             <div class="flex flex-col gap-6 items-center w-full">
                 <x-tollerus::inputs.missing-data

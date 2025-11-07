@@ -12,4 +12,16 @@
     [data-component="alert"] a {
         @apply saturate-100 underline font-bold
     }
+    div.drawer-content {
+        margin-top: 0%;
+        opacity: 1;
+        max-height: 10000in;
+        transition: margin-top 0.5s ease-out 0s, opacity 0.5s ease-out 0s, max-height 0s linear 0s;
+    }
+    div.drawer-content-closed {
+        margin-top: -100%;
+        opacity: 0;
+        max-height: 0in;
+        transition: margin-top 0.5s ease-out 0s, opacity 0.5s ease-out 0s, max-height 0s linear 0.5s;
+    }
 }
