@@ -5,6 +5,7 @@ namespace PeterMarkley\Tollerus\Livewire;
 use Livewire\Component;
 use Livewire\Attributes\Locked;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
@@ -276,8 +277,11 @@ class LanguageEditor extends Component
      */
     public function createGroup(): void
     {
-        $group = $this->language->wordClassGroups()->create();
-        $this->createWordClass($group, true);
+        $connection = config('tollerus.connection', 'tollerus');
+        DB::connection($connection)->transaction(function () {
+            $group = $this->language->wordClassGroups()->create();
+            $this->createWordClass($group, true);
+        });
     }
     public function updateGroupPrimaryClass(string $groupId): void
     {
