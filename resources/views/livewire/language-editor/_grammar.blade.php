@@ -57,6 +57,9 @@
                         <x-tollerus::icons.folder x-show="!drawerOpen" />
                         <x-tollerus::icons.folder-open x-show="drawerOpen" />
                         <span x-text="group.primaryClass === null ? msgs['group_nameless'] : group.classes[group.primaryClass].name" x-bind:class="{ 'font-normal italic': group.primaryClass === null }"></span>
+                        <template x-if="Object.keys(group.features).length > 0">
+                            <span x-text="Object.keys(group.features).length" class="block font-bold text-zinc-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 rounded-full w-6 h-6 flex justify-center items-center text-center"></span>
+                        </template>
                     </div>
                     <div class="flex-grow border-b-2 border-zinc-500 dark:border-zinc-400"></div>
                     <button
