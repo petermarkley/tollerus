@@ -35,9 +35,16 @@ class InflectionTableEditor extends Component
             $groupName = $this->group->primaryClass->name;
         }
         $pageTitle = $this->language->name . ': ' . ucfirst($groupName) . ': ' . __('tollerus::ui.inflection_tables');
-        return view('tollerus::livewire.inflection-table-editor', ['pageTitle' => $pageTitle])
-            ->layout('tollerus::components.layout')
-            ->title($pageTitle);
+        return view('tollerus::livewire.inflection-table-editor', [
+                'groupName' => $groupName,
+                'pageTitle' => $pageTitle,
+            ])->layout('tollerus::components.layout', [
+                'breadcrumbs' => [
+                    // ['href' => route('tollerus.admin'), 'text' => __('tollerus::ui.admin')],
+                    ['href' => route('tollerus.admin.languages.index'), 'text' => __('tollerus::ui.languages')],
+                    ['href' => route('tollerus.admin.languages.edit', ['language' => $this->language->id]), 'text' => $this->language->name],
+                ],
+            ])->title($pageTitle);
     }
     public function mount(Language $language, WordClassGroup $group): void
     {

@@ -1,6 +1,7 @@
 <?php
 
 return [
+  'admin' => 'Admin',
   'language' => 'Language',
   'languages' => 'Languages',
   /**

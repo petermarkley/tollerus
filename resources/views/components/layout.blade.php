@@ -14,6 +14,19 @@
                     <x-tollerus::logo.mono light class="h-6 hidden dark:block"/>
                 </div>
             </header>
+            @if (isset($breadcrumbs))
+                <nav class="w-full md:max-w-[1200px] mx-auto">
+                    <ul class="flex flex-row gap-2 justify-start items-center">
+                        @foreach ($breadcrumbs as $breadcrumb)
+                            @if (isset($breadcrumb['href']))
+                                <li class="before:content-['→'] before:mr-2 first:before:content-none"><a href="{{ $breadcrumb['href'] }}">{{ $breadcrumb['text'] }}</a></li>
+                            @else
+                                <li class="before:content-['→'] before:mr-2 first:before:content-none">{{ $breadcrumb['text'] }}</li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </nav>
+            @endif
             <main class="w-full md:max-w-[1200px] mx-auto flex-grow">
                 {{ $slot }}
             </main>
