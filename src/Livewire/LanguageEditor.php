@@ -200,6 +200,10 @@ class LanguageEditor extends Component
                             ])->toArray(),
                         ],
                     ])->toArray(),
+                    'tablesUrl' => route('tollerus.admin.languages.inflection-tables', [
+                        'language' => $this->language,
+                        'group' => $group,
+                    ]),
                 ]
             ];})->toArray();
     }

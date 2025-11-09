@@ -331,7 +331,7 @@
                                 type="secondary"
                                 size="small"
                                 title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.inflection_tables')]) }}"
-                                href="{{ route('tollerus.admin.languages.inflection-tables', ['language' => $language]) }}"
+                                x-bind:href="group.tablesUrl"
                                 class="flex flex-row gap-2 items-center"
                             >
                                 <x-tollerus::icons.edit class="m-2"/>
