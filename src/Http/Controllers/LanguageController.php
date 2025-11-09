@@ -75,6 +75,9 @@ class LanguageController extends Controller
         })->all();
         // Pass data to view
         return view('tollerus::admin.languages.index', [
+            'breadcrumbs' => [
+                ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
+            ],
             'languages' => $languages,
             'primaryGlyphs' => $primaryGlyphs,
             'wordClassGroups' => $wordClassGroups,

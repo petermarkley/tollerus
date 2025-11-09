@@ -40,7 +40,7 @@ class InflectionTableEditor extends Component
                 'pageTitle' => $pageTitle,
             ])->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
-                    // ['href' => route('tollerus.admin'), 'text' => __('tollerus::ui.admin')],
+                    ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.languages.index'), 'text' => __('tollerus::ui.languages')],
                     ['href' => route('tollerus.admin.languages.edit', ['language' => $this->language->id]), 'text' => $this->language->name],
                 ],

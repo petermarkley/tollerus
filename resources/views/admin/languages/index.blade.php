@@ -1,4 +1,4 @@
-<x-tollerus::layout>
+<x-tollerus::layout :breadcrumbs="$breadcrumbs">
     <x-slot name="title">{{ __('tollerus::ui.languages') }}</x-slot>
     <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">{{ __('tollerus::ui.languages') }}</h1>
     <div class="flex flex-col gap-4 items-stretch">

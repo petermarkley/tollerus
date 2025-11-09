@@ -25,6 +25,7 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
             ->as('admin.')
             ->middleware($adminMiddleware)
             ->group(function () {
+                Route::get('/', [HelloController::class, 'index'])->name('index');
                 Route::get('/languages', [LanguageController::class, 'index'])->name('languages.index');
                 Route::get('/languages/{language}', LanguageEditor::class)->name('languages.edit');
                 Route::get('/languages/{language}/grammar/{group}/inflection-tables', InflectionTableEditor::class)->name('languages.inflection-tables');

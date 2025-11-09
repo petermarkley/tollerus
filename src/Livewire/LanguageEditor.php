@@ -45,7 +45,7 @@ class LanguageEditor extends Component
         return view('tollerus::livewire.language-editor', ['presetSelectOpts' => $this->presetSelectOpts])
             ->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
-                    // ['href' => route('tollerus.admin'), 'text' => __('tollerus::ui.admin')],
+                    ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.languages.index'), 'text' => __('tollerus::ui.languages')],
                 ],
             ])->title($this->language->name);

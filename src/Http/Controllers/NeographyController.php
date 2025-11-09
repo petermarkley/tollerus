@@ -30,6 +30,9 @@ class NeographyController extends Controller
             return [$n->machine_name => $glyphs];
         })->all();
         return view('tollerus::admin.neographies.index', [
+            'breadcrumbs' => [
+                ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
+            ],
             'neographies' => $neographies,
             'glyphPreview' => $glyphPreview,
         ]);
