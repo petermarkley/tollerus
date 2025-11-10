@@ -39,32 +39,37 @@ document.addEventListener('alpine:init', () => {
         message: '',
         buttons: [],
         refocus: null,
+        darkList: ['header', 'nav', 'footer'],
         show(message, buttons) {
             this.message = message;
             this.buttons = buttons || [];
             this.open = true;
             this.refocus = document.activeElement;
-            let header = document.getElementsByTagName('header')[0];
-            header.setAttribute('aria-hidden', 'true');
-            header.setAttribute('inert', '');
+            for (let i=0; i < this.darkList.length; i++) {
+                let elem = document.getElementsByTagName(this.darkList[i])[0];
+                if (typeof elem === 'object' && elem !== null) {
+                    elem.setAttribute('aria-hidden', 'true');
+                    elem.setAttribute('inert', '');
+                }
+            }
             let nonmodal = document.getElementById('non-modal-content');
             nonmodal.setAttribute('aria-hidden', 'true');
             nonmodal.setAttribute('inert', '');
-            let footer = document.getElementsByTagName('footer')[0];
-            footer.setAttribute('aria-hidden', 'true');
-            footer.setAttribute('inert', '');
         },
         close() {
-            let header = document.getElementsByTagName('header')[0];
-            header.removeAttribute('aria-hidden');
-            header.removeAttribute('inert');
+            for (let i=0; i < this.darkList.length; i++) {
+                let elem = document.getElementsByTagName(this.darkList[i])[0];
+                if (typeof elem === 'object' && elem !== null) {
+                    elem.removeAttribute('aria-hidden');
+                    elem.removeAttribute('inert');
+                }
+            }
             let nonmodal = document.getElementById('non-modal-content');
             nonmodal.removeAttribute('aria-hidden');
             nonmodal.removeAttribute('inert');
-            let footer = document.getElementsByTagName('footer')[0];
-            footer.removeAttribute('aria-hidden');
-            footer.removeAttribute('inert');
-            this.refocus.focus();
+            if (this.refocus !== null) {
+                this.refocus.focus();
+            }
             this.open = false;
             this.message = '';
             this.buttons = [];
