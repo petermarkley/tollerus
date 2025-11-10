@@ -92,6 +92,7 @@ return [
   'delete_word_class' => 'Delete word class',
   'word_class' => 'Word class',
   'word_classes' => 'Word classes',
+  'add_language' => 'Add language',
   'abbreviation' => 'Abbreviation',
   'group_nameless' => '(group)',
   'features' => 'Features', // i.e. grammatical features or dimensions, for example tense / person / number

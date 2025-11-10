@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 
+use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
 use PeterMarkley\Tollerus\Models\Language;
 
 class LanguageController extends Controller
@@ -100,7 +101,7 @@ class LanguageController extends Controller
     public function store()
     {
         $language = CreateWithUniqueName::handle(
-            startNum: $groupModel->features()->count(),
+            startNum: Language::count(),
             createFunc: fn ($tryName) => Language::create([
                 'name' => $tryName,
                 'machine_name' => strtr(mb_strtolower($tryName), [
@@ -110,7 +111,7 @@ class LanguageController extends Controller
                 ]),
             ]),
         );
-        return redirect()->route('tollerus.admin.languages.edit', ['language' => $language]);
+        return response()->json(['id' => $language->id]);
     }
 
     /**

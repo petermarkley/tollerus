@@ -16,22 +16,37 @@
             @foreach ($languages as $language)
                 <x-tollerus::panel class="flex flex-col gap-2">
                     <h2 class="flex flex-row gap-2 items-center justify-between">
-                        <div class="font-bold text-xl flex flex-row gap-2 items-center">
+                        <a
+                            class="text-zinc-900 dark:text-zinc-300 font-bold text-xl flex flex-row gap-2 items-center"
+                            title="{{ __('tollerus::ui.edit_thing', ['thing' => $language->name]) }}"
+                            href="{{ route('tollerus.admin.languages.edit', ['language' => $language]) }}"
+                        >
                             <x-tollerus::icons.language class="h-8"/>
                             <span>{{ $language->name }}</span>
+                        </a>
+                        <div class="flex flex-row gap-2 items-center">
+                            <x-tollerus::button
+                                type="secondary"
+                                size="small"
+                                title="{{ __('tollerus::ui.edit_thing', ['thing' => $language->name]) }}"
+                                href="{{ route('tollerus.admin.languages.edit', ['language' => $language]) }}"
+                            >
+                                <x-tollerus::icons.edit class="h-6 w-6"/>
+                                <span class="sr-only">{{ __('tollerus::ui.edit_thing', ['thing' => $language->name]) }}</span>
+                            </x-tollerus::button>
+                            <x-tollerus::inputs.button
+                                type="secondary"
+                                size="small"
+                                title="{{ __('tollerus::ui.delete_thing', ['thing' => $language->name]) }}"
+                                @click="$dispatch('open-modal', {message: msgs['delete_language_confirmation']['{{ $language->machine_name }}'], buttons: [
+                                    {text: msgs['no_cancel'], type: 'secondary', clickEvent: 'close-modal'},
+                                    {text: msgs['yes_delete'], type: 'primary', clickEvent: 'language-delete', payload: {url: '{{ route('tollerus.admin.languages.destroy', ['language' => $language]) }}'} },
+                                ]});"
+                            >
+                                <x-tollerus::icons.delete/>
+                                <span class="sr-only">{{ __('tollerus::ui.delete_thing', ['thing' => $language->name]) }}</span>
+                            </x-tollerus::inputs.button>
                         </div>
-                        <x-tollerus::inputs.button
-                            type="secondary"
-                            size="small"
-                            title="{{ __('tollerus::ui.delete_thing', ['thing' => $language->name]) }}"
-                            @click="$dispatch('open-modal', {message: msgs['delete_language_confirmation']['{{ $language->machine_name }}'], buttons: [
-                                {text: msgs['no_cancel'], type: 'secondary', clickEvent: 'close-modal'},
-                                {text: msgs['yes_delete'], type: 'primary', clickEvent: 'language-delete', payload: {url: '{{ route('tollerus.admin.languages.destroy', ['language' => $language]) }}'} },
-                            ]});"
-                        >
-                            <x-tollerus::icons.delete/>
-                            <span class="sr-only">{{ __('tollerus::ui.delete_thing', ['thing' => $language->name]) }}</span>
-                        </x-tollerus::inputs.button>
                     </h2>
                     <div class="flex flex-row justify-start gap-4">
 
@@ -93,6 +108,15 @@
                     </div>
                 </x-tollerus::panel>
             @endforeach
+            <x-tollerus::inputs.missing-data
+                size="medium"
+                title="{{ __('tollerus::ui.add_language') }}"
+                class="relative flex flex-row gap-2 justify-center items-center w-full"
+                @click="$store.languages.create();"
+            >
+                <x-tollerus::icons.plus/>
+                <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_language') }}</span>
+            </x-tollerus::inputs.missing-data>
         </div>
     </div>
     <x-tollerus::modal/>
@@ -101,6 +125,20 @@
     <script>
     document.addEventListener('alpine:init', () => {
         Alpine.store('languages', {
+            create() {
+                fetch('{{ route('tollerus.admin.languages.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.id) {
+                        window.location.href = '{{ route('tollerus.admin.languages.edit', '#') }}'.replaceAll('#', data.id);
+                    }
+                }).catch(error => console.error('Network error:', error));
+            },
             delete(url) {
                 fetch(url, {
                     method: 'DELETE',
