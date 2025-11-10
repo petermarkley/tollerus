@@ -111,6 +111,6 @@
             </div>
         @endif
     @else
-        <x-tollerus::missing-data>{{ __('tollerus::ui.no_neographies') }}</x-tollerus::missing-data>
+        <x-tollerus::missing-data href="{{ route('tollerus.admin.neographies.index') }}">{{ __('tollerus::ui.no_neographies') }}</x-tollerus::missing-data>
     @endif
 </x-tollerus::panel>

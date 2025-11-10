@@ -341,7 +341,7 @@
                     </template>
                     <template x-if="Object.keys(group.tables).length == 0">
                         <div class="flex flex-row justify-center items-center w-full">
-                            <x-tollerus::missing-data>{{ __('tollerus::ui.no_inflection_tables') }}</x-tollerus::missing-data>
+                            <x-tollerus::missing-data href x-bind:href="group.tablesUrl">{{ __('tollerus::ui.no_inflection_tables') }}</x-tollerus::missing-data>
                         </div>
                     </template>
                 </x-tollerus::pane>
