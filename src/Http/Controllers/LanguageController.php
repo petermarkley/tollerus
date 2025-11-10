@@ -73,6 +73,14 @@ class LanguageController extends Controller
                 ->get();
             return [$l->machine_name => $entries];
         })->all();
+        $deleteMsgs = $languages
+            ->mapWithKeys(function ($l) {
+                $count = $l->entries->count();
+                return [$l->machine_name => __('tollerus::ui.delete_language_confirmation', [
+                    'name' => $l->name,
+                    'num' => number_format($count),
+                ])];
+            })->all();
         // Pass data to view
         return view('tollerus::admin.languages.index', [
             'breadcrumbs' => [
@@ -82,6 +90,7 @@ class LanguageController extends Controller
             'primaryGlyphs' => $primaryGlyphs,
             'wordClassGroups' => $wordClassGroups,
             'entriesPreview' => $entriesPreview,
+            'deleteMsgs' => $deleteMsgs,
         ]);
     }
 

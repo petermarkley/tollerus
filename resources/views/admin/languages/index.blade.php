@@ -5,7 +5,7 @@
             msgs: {
                 no_cancel: @js(__('tollerus::ui.no_cancel')),
                 yes_delete: @js(__('tollerus::ui.yes_delete')),
-                delete_language_confirmation: @js(__('tollerus::ui.delete_language_confirmation')),
+                delete_language_confirmation: @js( $deleteMsgs ),
             }
         }"
         @language-delete.window="$store.languages.delete($event.detail.url);"
@@ -24,7 +24,7 @@
                             type="secondary"
                             size="small"
                             title="{{ __('tollerus::ui.delete_thing', ['thing' => $language->name]) }}"
-                            @click="$dispatch('open-modal', {message: msgs['delete_language_confirmation'], buttons: [
+                            @click="$dispatch('open-modal', {message: msgs['delete_language_confirmation']['{{ $language->machine_name }}'], buttons: [
                                 {text: msgs['no_cancel'], type: 'secondary', clickEvent: 'close-modal'},
                                 {text: msgs['yes_delete'], type: 'primary', clickEvent: 'language-delete', payload: {url: '{{ route('tollerus.admin.languages.destroy', ['language' => $language]) }}'} },
                             ]});"
