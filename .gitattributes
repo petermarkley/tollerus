@@ -12,3 +12,4 @@ CHANGELOG.md export-ignore
 phpunit.xml export-ignore
 
 dist/tollerus.css -diff
+dist/tollerus.js -diff
