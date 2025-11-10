@@ -23,6 +23,7 @@ use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
 
 class LanguageEditor extends Component
 {
+    public string $tab = 'info';
     // Models
     #[Locked] public Language $language;
     #[Locked] public array $neographies = [];
@@ -50,9 +51,10 @@ class LanguageEditor extends Component
                 ],
             ])->title($this->language->name);
     }
-    public function mount(Language $language): void
+    public function mount(Language $language, ?string $tab = null): void
     {
         $this->language = $language;
+        $this->tab = $tab ?? 'info';
 
         // Info tab
         $this->refreshInfoForm();

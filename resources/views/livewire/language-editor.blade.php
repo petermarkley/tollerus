@@ -16,7 +16,16 @@
             delete_feature_confirmation: @js(__('tollerus::ui.delete_feature_confirmation')),
             delete_feature_value_confirmation: @js(__('tollerus::ui.delete_feature_value_confirmation')),
         },
-        tab: 'info',
+        tab: $wire.entangle('tab'),
+        updateTabFromUrl() {
+            const parts = window.location.pathname.split('/');
+            const last = parts.pop() || 'info';
+            newTab = ['info','neographies','grammar','entries'].includes(last) ? last : 'info';
+            $wire.refreshForm(this.tab);
+            this.dirty=false;
+            document.activeElement.blur();
+            this.tab = newTab;
+        },
         neographiesForm: $wire.entangle('neographiesForm'),
         nativeSpellingCounts: $wire.entangle('nativeSpellingCounts'),
         nativeSpellingsMsgSrc: @js(__('tollerus::ui.will_delete_native_spellings')),
@@ -35,7 +44,8 @@
         },
         grammarForm: $wire.entangle('grammarForm'),
     }"
-    @tab-switch.window="tab = $event.detail.tab;"
+    @tab-switch.window="tab = $event.detail.tab; $store.tabFunctions.updateAddress($event.detail.tab);"
+    @popstate.window="updateTabFromUrl();"
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
     @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
     @grammar-group-delete.window="$wire.deleteGroup($event.detail.groupId);"
@@ -147,6 +157,22 @@ document.addEventListener('alpine:init', () => {
                 }}));
             } else {
                 window.dispatchEvent(new CustomEvent('tab-switch', {detail: {tab: tab}}));
+            }
+        },
+        updateAddress(tab) {
+            switch (tab) {
+                case 'info':
+                    history.pushState({}, '', '{{ route('tollerus.admin.languages.edit', [$language]) }}');
+                break;
+                case 'neographies':
+                    history.pushState({}, '', '{{ route('tollerus.admin.languages.edit.tab', [$language, 'neographies']) }}');
+                break;
+                case 'grammar':
+                    history.pushState({}, '', '{{ route('tollerus.admin.languages.edit.tab', [$language, 'grammar']) }}');
+                break;
+                case 'entries':
+                    history.pushState({}, '', '{{ route('tollerus.admin.languages.edit.tab', [$language, 'entries']) }}');
+                break;
             }
         },
     });
