@@ -53,25 +53,41 @@
                         {{-- Neography preview --}}
                         @if ($primaryGlyphs[$language->machine_name] !== null)
                             @if ($primaryGlyphs[$language->machine_name]['allSvgFound'])
-                                <x-tollerus::pane class="flex flex-row" role="img" aria-label="{{ __('tollerus::ui.primary_neography_name', ['name' => $language->primaryNeography->name]) }}">
+                                <x-tollerus::pane
+                                    class="flex flex-row"
+                                    role="img"
+                                    aria-label="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.neographies')]) }}"
+                                    href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'neographies']) }}"
+                                    title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.neographies')]) }}"
+                                >
                                     @foreach ($primaryGlyphs[$language->machine_name]['svg'] as $svg)
-                                        {{-- Controller generates these with classes: 'h-12 w-auto' --}}
+                                        {{-- Controller generates these with classes: 'h-12 w-auto pointer-events-none' --}}
                                         {!! $svg !!}
                                     @endforeach
                                 </x-tollerus::pane>
                             @else
-                                <x-tollerus::pane role="img" aria-label="{{ __('tollerus::ui.primary_neography_name', ['name' => $language->primaryNeography->name]) }}">
-                                    <p class="text-5xl" style="font-family:{{ $language->primaryNeography->machine_name }};">{{ $primaryGlyphs[$language->machine_name]['models']->pluck('glyph')->implode('') }}</p>
+                                <x-tollerus::pane
+                                    role="img"
+                                    aria-label="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.neographies')]) }}"
+                                    href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'neographies']) }}"
+                                    title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.neographies')]) }}"
+                                >
+                                    <p class="text-5xl pointer-events-none" style="font-family:{{ $language->primaryNeography->machine_name }};">{{ $primaryGlyphs[$language->machine_name]['models']->pluck('glyph')->implode('') }}</p>
                                 </x-tollerus::pane>
                             @endif
                         @else
-                            <x-tollerus::missing-data>{{ __('tollerus::ui.no_neographies') }}</x-tollerus::missing-data>
+                            <x-tollerus::missing-data href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'neographies']) }}">{{ __('tollerus::ui.no_neographies') }}</x-tollerus::missing-data>
                         @endif
 
                         {{-- Grammar preview --}}
                         @if (count($wordClassGroups[$language->machine_name]) > 0)
-                            <x-tollerus::pane>
-                                <ul class="flex flex-row gap-2 flex-wrap justify-start items-start" role="img" aria-label="{{ __('tollerus::ui.grammar') }}">
+                            <x-tollerus::pane
+                                role="img"
+                                aria-label="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.grammar')]) }}"
+                                href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'grammar']) }}"
+                                title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.grammar')]) }}"
+                            >
+                                <ul class="flex flex-row gap-2 flex-wrap justify-start items-start pointer-events-none">
                                     @foreach ($wordClassGroups[$language->machine_name] as $wordClassGroup)
                                         @if ($wordClassGroup['class'] !== null)
                                             @if ($wordClassGroup['featureCount'] == 0)
@@ -89,20 +105,26 @@
                                 </ul>
                             </x-tollerus::pane>
                         @else
-                            <x-tollerus::missing-data>{{ __('tollerus::ui.no_grammar') }}</x-tollerus::missing-data>
+                            <x-tollerus::missing-data href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'grammar']) }}">{{ __('tollerus::ui.no_grammar') }}</x-tollerus::missing-data>
                         @endif
 
                         {{-- Entries preview --}}
                         @if (count($entriesPreview[$language->machine_name]) > 0)
-                            <x-tollerus::pane class="w-full max-h-28 overflow-hidden">
-                                <ul class="flex flex-col gap-x-4 flex-wrap justify-start items-start w-full h-32 mask-b-to-85% mask-r-from-60%" role="img" aria-label="{{ __('tollerus::ui.entries') }}">
+                            <x-tollerus::pane
+                                class="w-full max-h-28 overflow-hidden"
+                                role="img"
+                                aria-label="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.entries')]) }}"
+                                href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'entries']) }}"
+                                title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.entries')]) }}"
+                            >
+                                <ul class="flex flex-col gap-x-4 flex-wrap justify-start items-start w-full h-32 mask-b-to-85% mask-r-from-60% pointer-events-none">
                                     @foreach ($entriesPreview[$language->machine_name] as $entry)
                                         <li class="font-bold">{{ $entry->transliterated }}</li>
                                     @endforeach
                                 </ul>
                             </x-tollerus::pane>
                         @else
-                            <x-tollerus::missing-data>{{ __('tollerus::ui.no_entries') }}</x-tollerus::missing-data>
+                            <x-tollerus::missing-data href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'entries']) }}">{{ __('tollerus::ui.no_entries') }}</x-tollerus::missing-data>
                         @endif
 
                     </div>

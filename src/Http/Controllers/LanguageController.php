@@ -30,7 +30,7 @@ class LanguageController extends Controller
                     ->where('render_base', false)
                     ->limit(2)
                     ->get();
-                $svg = $glyphs->map(fn($g)=>$g->getSvg('h-12 w-auto'));
+                $svg = $glyphs->map(fn($g)=>$g->getSvg('h-12 w-auto pointer-events-none'));
                 $output = [
                     'models' => $glyphs,
                     'svg' => $svg,
