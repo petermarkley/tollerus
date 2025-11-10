@@ -84,4 +84,32 @@ class LanguageController extends Controller
             'entriesPreview' => $entriesPreview,
         ]);
     }
+
+    /**
+     * Create new language
+     */
+    public function store()
+    {
+        $language = CreateWithUniqueName::handle(
+            startNum: $groupModel->features()->count(),
+            createFunc: fn ($tryName) => Language::create([
+                'name' => $tryName,
+                'machine_name' => strtr(mb_strtolower($tryName), [
+                    ' ' => '_',
+                    '(' => '',
+                    ')' => '',
+                ]),
+            ]),
+        );
+        return redirect()->route('tollerus.admin.languages.edit', ['language' => $language]);
+    }
+
+    /**
+     * Delete existing language
+     */
+    public function destroy(Language $language)
+    {
+        $language->delete();
+        return response()->noContent();
+    }
 }

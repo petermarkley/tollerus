@@ -1,12 +1,23 @@
 <x-tollerus::layout :breadcrumbs="$breadcrumbs">
     <x-slot name="title">{{ __('tollerus::ui.languages') }}</x-slot>
     <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">{{ __('tollerus::ui.languages') }}</h1>
-    <div class="flex flex-col gap-4 items-stretch">
+    <div class="flex flex-col gap-4 items-stretch" x-data="{}">
         @foreach ($languages as $language)
             <x-tollerus::panel class="flex flex-col gap-2">
-                <h2 class="font-bold text-xl flex flex-row gap-2 items-center">
-                    <x-tollerus::icons.language class="h-8"/>
-                    <span>{{ $language->name }}</span>
+                <h2 class="flex flex-row gap-2 items-center justify-between">
+                    <div class="font-bold text-xl flex flex-row gap-2 items-center">
+                        <x-tollerus::icons.language class="h-8"/>
+                        <span>{{ $language->name }}</span>
+                    </div>
+                    <x-tollerus::inputs.button
+                        type="secondary"
+                        size="small"
+                        title="{{ __('tollerus::ui.delete_thing', ['thing' => $language->name]) }}"
+                        @click="$store.languages.delete('{{ route('tollerus.admin.languages.destroy', ['language' => $language]) }}');"
+                    >
+                        <x-tollerus::icons.delete/>
+                        <span class="sr-only">{{ __('tollerus::ui.delete_thing', ['thing' => $language->name]) }}</span>
+                    </x-tollerus::inputs.button>
                 </h2>
                 <div class="flex flex-row justify-start gap-4">
 
@@ -69,4 +80,26 @@
             </x-tollerus::panel>
         @endforeach
     </div>
+    @once
+    @push('tollerus-scripts')
+    <script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.store('languages', {
+            delete(url) {
+                fetch(url, {
+                    method: 'DELETE',
+                    headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        console.error('Delete failed:', response.status);
+                    }
+                }).catch(error => console.error('Network error:', error));
+            },
+        });
+    });
+    </script>
+    @endpush
+    @endonce
 </x-tollerus::layout>

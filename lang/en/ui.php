@@ -65,6 +65,7 @@ return [
   'edit_thing' => 'Edit :thing',
   'select' => 'Select',
   'delete' => 'Delete',
+  'delete_thing' => 'Delete :thing',
   'untitled' => 'untitled',
   'empty' => 'empty',
   /**

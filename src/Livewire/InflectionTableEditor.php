@@ -34,7 +34,7 @@ class InflectionTableEditor extends Component
         } else {
             $groupName = $this->group->primaryClass->name;
         }
-        $pageTitle = $this->language->name . ': ' . ucfirst($groupName) . ': ' . __('tollerus::ui.inflection_tables');
+        $pageTitle = $this->language->name . ': ' . mb_ucfirst($groupName) . ': ' . __('tollerus::ui.inflection_tables');
         return view('tollerus::livewire.inflection-table-editor', [
                 'groupName' => $groupName,
                 'pageTitle' => $pageTitle,

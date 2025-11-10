@@ -3,6 +3,7 @@
     <head>
         <title>{{ $title }}</title>
         <link rel="stylesheet" href="{{ asset('vendor/tollerus/tollerus.css') }}">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <script src="{{ asset('vendor/tollerus/tollerus.js') }}" defer></script>
     </head>
     <body class="bg-gradient-to-b from-zinc-300 to-zinc-300 bg-repeat-x dark:from-zinc-800 dark:to-zinc-900 relative -z-20 w-full">

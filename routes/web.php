@@ -30,6 +30,8 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                     ->as('languages.')
                     ->group(function () {
                         Route::get('/', [LanguageController::class, 'index'])->name('index');
+                        Route::post('/', [LanguageController::class, 'store'])->name('store');
+                        Route::delete('/{language}', [LanguageController::class, 'destroy'])->name('destroy');
                         Route::get('/{language}', LanguageEditor::class)->name('edit');
                         Route::get('/{language}/grammar/{group}/inflection-tables', InflectionTableEditor::class)->name('inflection-tables');
                     });
