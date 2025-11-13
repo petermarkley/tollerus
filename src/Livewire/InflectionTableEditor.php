@@ -11,6 +11,8 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
+use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\InflectionTable;
@@ -23,6 +25,8 @@ class InflectionTableEditor extends Component
     #[Locked] public Language $language;
     #[Locked] public WordClassGroup $group;
     #[Locked] public array $tables;
+    // UI input layer
+    public array $tableForm = [];
 
     /**
      * Livewire hooks
@@ -50,6 +54,147 @@ class InflectionTableEditor extends Component
     {
         $this->language = $language;
         $this->group = $group;
-        $this->tables = $group->inflectionTables->all();
+        $this->tables = $group->inflectionTables->sortBy('position')->all();
+        $this->refreshTableForm();
+    }
+
+    /**
+     * Refresh UI input layer from database
+     */
+    public function refreshTableForm(): void
+    {
+        $this->group->loadMissing([
+            'features.featureValues',
+        ]);
+        foreach ($this->tables as $table) {
+            $table->loadMissing([
+                'filterValues.feature',
+                'rows.filterValues.feature',
+                'rows.sourceParticle.nativeSpellings',
+            ]);
+        }
+        $primaryNeographyId = $this->language->primary_neography;
+        $neographies = $this->language->neographies;
+        $this->tableForm = collect($this->tables)->mapWithKeys(function ($table) use ($primaryNeographyId, $neographies) {
+            return [$table->id => [
+                'label'        => $table->label,
+                'visible'      => $table->visible,
+                'showLabel'    => $table->show_label,
+                'position'     => $table->position,
+                'stack'        => $table->stack,
+                'alignOnStack' => $table->align_on_stack,
+                'tableFold'    => $table->table_fold,
+                'rowsFold'     => $table->rows_fold,
+                'filters' => $table->filterValues->mapWithKeys(function ($filterValue) {
+                    return [$filterValue->id => [
+                        'featureId'   => $filterValue->feature->id,
+                        'featureName' => $filterValue->feature->name,
+                        'valueId'     => $filterValue->id,
+                        'valueName'   => $filterValue->name,
+                    ]];
+                })->toArray(),
+                'rows' => $table->rows->sortBy('position')->mapWithKeys(function ($row) use ($primaryNeographyId, $neographies) {
+                    return [$row->id => [
+                        'label'         => $row->label,
+                        'labelBrief'    => $row->label_brief,
+                        'labelLong'     => $row->label_long,
+                        'visible'       => $row->visible,
+                        'showLabel'     => $row->show_label,
+                        'position'      => $row->position,
+                        'morphTemplate' => $row->morph_template,
+                        'srcBase'       => $row->src_base,
+                        'srcParticle' => ($row->sourceParticle === null ? null : [
+                            'id' => $row->sourceParticle->id,
+                            'transliterated' => $row->sourceParticle->transliterated,
+                            'phonemic' => $row->sourceParticle->phonemic,
+                            'primaryNativeSpelling' => $row->sourceParticle->nativeSpellings
+                                ->firstWhere('neography_id', $primaryNeographyId),
+                        ]),
+                        'filters' => $row->filterValues->mapWithKeys(function ($filterValue) {
+                            return [$filterValue->id => [
+                                'featureId'   => $filterValue->feature->id,
+                                'featureName' => $filterValue->feature->name,
+                                'valueId'     => $filterValue->id,
+                                'valueName'   => $filterValue->name,
+                            ]];
+                        })->toArray(),
+                        'morphRules' => [
+                            'onBaseTransliterated' => $row->morphRules->filter(
+                                fn ($r) => ($r->target_type == MorphRuleTargetType::BaseInput && $r->pattern_type == MorphRulePatternType::Transliterated)
+                            )->sortBy('order')->mapWithKeys(function ($rule) {
+                                return [$rule->id => [
+                                    'order' => $rule->order,
+                                    'pattern' => $rule->pattern,
+                                    'replacement' => $rule->replacement,
+                                ]];
+                            })->toArray(),
+                            'onBasePhonemic' => $row->morphRules->filter(
+                                fn ($r) => ($r->target_type == MorphRuleTargetType::BaseInput && $r->pattern_type == MorphRulePatternType::Phonemic)
+                            )->sortBy('order')->mapWithKeys(function ($rule) {
+                                return [$rule->id => [
+                                    'order' => $rule->order,
+                                    'pattern' => $rule->pattern,
+                                    'replacement' => $rule->replacement,
+                                ]];
+                            })->toArray(),
+                            'onBaseNative' => $neographies->mapWithKeys(fn ($neography) => [
+                                $neography->id => [
+                                    'neographyId' => $neography->id,
+                                    'rules' => $row->morphRules->filter(
+                                        fn ($r) => (
+                                            $r->target_type == MorphRuleTargetType::BaseInput &&
+                                            $r->pattern_type == MorphRulePatternType::Transliterated &&
+                                            $r->neography_id == $neography->id
+                                        )
+                                    )->sortBy('order')->mapWithKeys(function ($rule) {
+                                        return [$rule->id => [
+                                            'order' => $rule->order,
+                                            'pattern' => $rule->pattern,
+                                            'replacement' => $rule->replacement,
+                                        ]];
+                                    })->toArray(),
+                                ]
+                            ])->toArray(),
+                            'onParticleTransliterated' => $row->morphRules->filter(
+                                fn ($r) => ($r->target_type == MorphRuleTargetType::ParticleInput && $r->pattern_type == MorphRulePatternType::Transliterated)
+                            )->sortBy('order')->mapWithKeys(function ($rule) {
+                                return [$rule->id => [
+                                    'order' => $rule->order,
+                                    'pattern' => $rule->pattern,
+                                    'replacement' => $rule->replacement,
+                                ]];
+                            })->toArray(),
+                            'onParticlePhonemic' => $row->morphRules->filter(
+                                fn ($r) => ($r->target_type == MorphRuleTargetType::ParticleInput && $r->pattern_type == MorphRulePatternType::Phonemic)
+                            )->sortBy('order')->mapWithKeys(function ($rule) {
+                                return [$rule->id => [
+                                    'order' => $rule->order,
+                                    'pattern' => $rule->pattern,
+                                    'replacement' => $rule->replacement,
+                                ]];
+                            })->toArray(),
+                            'onParticleNative' => $neographies->mapWithKeys(fn ($neography) => [
+                                $neography->id => [
+                                    'neographyId' => $neography->id,
+                                    'rules' => $row->morphRules->filter(
+                                        fn ($r) => (
+                                            $r->target_type == MorphRuleTargetType::ParticleInput &&
+                                            $r->pattern_type == MorphRulePatternType::Transliterated &&
+                                            $r->neography_id == $neography->id
+                                        )
+                                    )->sortBy('order')->mapWithKeys(function ($rule) {
+                                        return [$rule->id => [
+                                            'order' => $rule->order,
+                                            'pattern' => $rule->pattern,
+                                            'replacement' => $rule->replacement,
+                                        ]];
+                                    })->toArray(),
+                                ]
+                            ])->toArray(),
+                        ],
+                    ]];
+                })->toArray(),
+            ]];
+        })->toArray();
     }
 }
