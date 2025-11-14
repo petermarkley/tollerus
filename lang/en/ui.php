@@ -95,6 +95,7 @@ return [
   'add_language' => 'Add language',
   'abbreviation' => 'Abbreviation',
   'group_nameless' => '(group)',
+  'inflection_table_nameless' => '(inflection table)',
   'features' => 'Features', // i.e. grammatical features or dimensions, for example tense / person / number
   'feature' => 'Feature',
   'add_feature' => 'Add feature',
@@ -105,12 +106,17 @@ return [
   'delete_feature_value' => 'Delete value',
   'preset' => 'Preset', // i.e. a predefined configuration for user convenience
   'inflection_tables' => 'Inflection tables',
+  'inflection_table' => 'Inflection table',
   'no_inflection_tables' => 'No inflection tables',
+  'add_inflection_table' => 'Add inflection table',
   'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
   'preview_of_thing' => 'Preview of :thing',
   'activate' => 'Activate',
   'activate_neography_in_language' => 'Activate :neography in :language',
   'associated_delete' => 'Saving this change will delete associated data.',
+  'label' => 'Label',
+  'label_long' => 'Label (long)',
+  'show_label' => 'Show label',
   /**
    * TRANSLATOR NOTE:
    *
@@ -138,6 +144,20 @@ return [
   'delete_word_class_confirmation' => 'About to delete word class. Are you sure?',
   'delete_feature_confirmation' => 'About to delete an inflection feature. Are you sure?',
   'delete_feature_value_confirmation' => 'About to delete an inflection feature value. Are you sure?',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * This is a series of display options with a description
+   * explaining each one.
+   */
+  'stack' => 'Stack',
+  'stack_description' => 'Allow table to have other tables beside it on wide displays?',
+  'align_on_stack' => 'Align on stack',
+  'align_on_stack_description' => 'By default, a table\'s label is centered. When the table stacks horizontally, should it align left instead?',
+  'table_fold' => 'Table fold',
+  'table_fold_description' => 'When the table is wrapped (not stacked), should its label hide? Use if redundant with the table above it.',
+  'rows_fold' => 'Rows fold',
+  'rows_fold_description' => 'When the table stacks horizontally, should the row labels hide? Use if redundant with the table next to it.',
   /**
    * TRANSLATOR NOTE:
    *
