@@ -10,7 +10,7 @@
         <label x-bind:for="id">{{ $fieldName }}:</label>
     @endif
     <template x-if="editing">
-        <div class="flex flex-row gap-2 justify-start items-center w-full">
+        <div class="flex flex-row gap-2 justify-start items-center flex-grow">
             <x-tollerus::inputs.text x-bind:id="id" x-model="{{ $model }}" />
             <x-tollerus::inputs.button
                 type="primary"
@@ -33,7 +33,7 @@
         </div>
     </template>
     <template x-if="!editing">
-        <div class="flex flex-row gap-2 justify-start items-center w-full">
+        <div class="flex flex-row gap-2 justify-start items-center flex-grow">
             <template x-if="{{ $model }}!==null && {{ $model }}.length>0"><span x-text="{{ $model }}"></span></template>
             <template x-if="{{ $model }}===null || {{ $model }}.length==0"><span class="italic text-zinc-500 dark:text-zinc-500">({{ __('tollerus::ui.empty') }})</span></template>
             <x-tollerus::inputs.button

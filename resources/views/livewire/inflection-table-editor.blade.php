@@ -48,14 +48,104 @@
                             <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_show_label'" model="table.showLabel" modelAlpine="true" label="{{ __('tollerus::ui.show_label') }}" />
                         </div>
                     </div>
-                    <div class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-4">
-                        <x-tollerus::alert>
-                            <p x-text="msgs['stack_description']"></p>
-                        </x-tollerus::alert>
-                        <div class="flex flex-row justify-start">
+                    <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
+                        <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['stack_description']"></legend></div>
+                        <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
                             <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_stack'" model="table.stack" modelAlpine="true" label="{{ __('tollerus::ui.stack') }}" />
                         </div>
-                    </div>
+                    </fieldset>
+                    <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
+                        <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['align_on_stack_description']"></legend></div>
+                        <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
+                            <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_align_on_stack'" model="table.alignOnStack" modelAlpine="true" label="{{ __('tollerus::ui.align_on_stack') }}" />
+                        </div>
+                    </fieldset>
+                    <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
+                        <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['table_fold_description']"></legend></div>
+                        <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
+                            <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_table_fold'" model="table.tableFold" modelAlpine="true" label="{{ __('tollerus::ui.table_fold') }}" />
+                        </div>
+                    </fieldset>
+                    <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
+                        <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['rows_fold_description']"></legend></div>
+                        <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
+                            <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_rows_fold'" model="table.rowsFold" modelAlpine="true" label="{{ __('tollerus::ui.rows_fold') }}" />
+                        </div>
+                    </fieldset>
+                    <x-tollerus::pane class="flex flex-col gap-4 items-start">
+                        <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
+                            <x-tollerus::icons.filter />
+                            <span>{{ __('tollerus::ui.filters') }}</span>
+                        </h3>
+                        {{-- FIXME Add/remove filters --}}
+                    </x-tollerus::pane>
+                    <x-tollerus::pane class="flex flex-col gap-4 items-start">
+                        <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
+                            <x-tollerus::icons.bars />
+                            <span>{{ __('tollerus::ui.rows') }}</span>
+                        </h3>
+                        <template x-if="Object.keys(table.rows).length > 0">
+                            <div class="flex flex-col gap-4 items-start">
+                                <template x-for="(row, rowId) in table.rows">
+                                    <x-tollerus::panel class="flex flex-col gap-4 items-start">
+                                        <div class="flex flex-row gap-4 items-between">
+                                            <div class="flex flex-row gap-4 items-center">
+                                                <div class="w-80">
+                                                    <x-tollerus::inputs.text-saveable
+                                                        idExpression="'row_' + rowId + '_label'"
+                                                        model="row.label"
+                                                        fieldName="{{ __('tollerus::ui.label') }}"
+                                                        showLabel="true" />
+                                                </div>
+                                                <div class="w-80">
+                                                    <x-tollerus::inputs.text-saveable
+                                                        idExpression="'row_' + rowId + '_label_brief'"
+                                                        model="row.labelBrief"
+                                                        fieldName="{{ __('tollerus::ui.abbreviation') }}"
+                                                        showLabel="true" />
+                                                </div>
+                                            </div>
+                                            <x-tollerus::inputs.button
+                                                type="inverse"
+                                                size="small"
+                                                class="align-middle"
+                                                title="{{ __('tollerus::ui.delete_row') }}"
+                                            >
+                                                <x-tollerus::icons.delete/>
+                                                <label class="sr-only">{{ __('tollerus::ui.delete_row') }}</label>
+                                            </x-tollerus::inputs.button>
+                                        </div>
+                                        <div class="w-full">
+                                            <x-tollerus::inputs.text-saveable
+                                                idExpression="'row_' + rowId + '_label_long'"
+                                                model="row.labelLong"
+                                                fieldName="{{ __('tollerus::ui.label_long') }}"
+                                                showLabel="true" />
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                                            <div class="flex flex-col items-start">
+                                                <x-tollerus::inputs.toggle idExpression="'row_' + rowId + '_visible'" model="row.visible" modelAlpine="true" label="{{ __('tollerus::ui.visible') }}" />
+                                            </div>
+                                            <div class="flex flex-row justify-start">
+                                                <x-tollerus::inputs.toggle idExpression="'row_' + rowId + '_show_label'" model="row.showLabel" modelAlpine="true" label="{{ __('tollerus::ui.show_label') }}" />
+                                            </div>
+                                        </div>
+                                        <div class="pl-12">
+                                            {{-- FIXME Add/remove filters --}}
+                                        </div>
+                                    </x-tollerus::panel>
+                                </template>
+                            </div>
+                        </template>
+                        <x-tollerus::inputs.missing-data
+                            size="small"
+                            title="{{ __('tollerus::ui.add_row') }}"
+                            class="relative flex flex-row gap-2 justify-center items-center w-full"
+                        >
+                            <x-tollerus::icons.plus/>
+                            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_row') }}</span>
+                        </x-tollerus::inputs.missing-data>
+                    </x-tollerus::pane>
                 </x-tollerus::panel>
             </template>
             <x-tollerus::inputs.missing-data

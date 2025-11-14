@@ -109,6 +109,12 @@ return [
   'inflection_table' => 'Inflection table',
   'no_inflection_tables' => 'No inflection tables',
   'add_inflection_table' => 'Add inflection table',
+  'filters' => 'Filters',
+  'add_filter' => 'Add filter',
+  'delete_filter' => 'Delete filter',
+  'rows' => 'Rows',
+  'add_row' => 'Add row',
+  'delete_row' => 'Delete row',
   'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
   'preview_of_thing' => 'Preview of :thing',
   'activate' => 'Activate',
@@ -150,13 +156,13 @@ return [
    * This is a series of display options with a description
    * explaining each one.
    */
-  'stack' => 'Stack',
+  'stack' => 'Stack on wide displays',
   'stack_description' => 'Allow table to have other tables beside it on wide displays?',
-  'align_on_stack' => 'Align on stack',
+  'align_on_stack' => 'Align left on stack',
   'align_on_stack_description' => 'By default, a table\'s label is centered. When the table stacks horizontally, should it align left instead?',
-  'table_fold' => 'Table fold',
+  'table_fold' => 'Table label is redundant',
   'table_fold_description' => 'When the table is wrapped (not stacked), should its label hide? Use if redundant with the table above it.',
-  'rows_fold' => 'Rows fold',
+  'rows_fold' => 'Rows labels are redundant',
   'rows_fold_description' => 'When the table stacks horizontally, should the row labels hide? Use if redundant with the table next to it.',
   /**
    * TRANSLATOR NOTE:
