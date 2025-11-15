@@ -88,8 +88,8 @@
                             <div class="flex flex-col gap-4 items-start">
                                 <template x-for="(row, rowId) in table.rows">
                                     <x-tollerus::panel class="flex flex-col gap-4 items-start">
-                                        <div class="flex flex-row gap-4 items-between">
-                                            <div class="flex flex-row gap-4 items-center">
+                                        <div class="flex flex-row gap-4 justify-between items-start md:items-center">
+                                            <div class="flex flex-col md:flex-row gap-4 items-center">
                                                 <div class="w-80">
                                                     <x-tollerus::inputs.text-saveable
                                                         idExpression="'row_' + rowId + '_label'"
