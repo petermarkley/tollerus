@@ -45,31 +45,31 @@
                             fieldName="{{ __('tollerus::ui.label') }}"
                             saveEvent="" />
                         <div class="flex flex-row justify-start">
-                            <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_show_label'" model="table.showLabel" modelAlpine="true" label="{{ __('tollerus::ui.show_label') }}" />
+                            <x-tollerus::inputs.checkbox idExpression="'table_' + tableId + '_show_label'" model="table.showLabel" modelAlpine="true" label="{{ __('tollerus::ui.show_label') }}" />
                         </div>
                     </div>
                     <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                         <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['stack_description']"></legend></div>
                         <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                            <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_stack'" model="table.stack" modelAlpine="true" label="{{ __('tollerus::ui.stack') }}" />
+                            <x-tollerus::inputs.checkbox idExpression="'table_' + tableId + '_stack'" model="table.stack" modelAlpine="true" label="{{ __('tollerus::ui.stack') }}" />
                         </div>
                     </fieldset>
                     <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                         <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['align_on_stack_description']"></legend></div>
                         <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                            <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_align_on_stack'" model="table.alignOnStack" modelAlpine="true" label="{{ __('tollerus::ui.align_on_stack') }}" />
+                            <x-tollerus::inputs.checkbox idExpression="'table_' + tableId + '_align_on_stack'" model="table.alignOnStack" modelAlpine="true" label="{{ __('tollerus::ui.align_on_stack') }}" />
                         </div>
                     </fieldset>
                     <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                         <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['table_fold_description']"></legend></div>
                         <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                            <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_table_fold'" model="table.tableFold" modelAlpine="true" label="{{ __('tollerus::ui.table_fold') }}" />
+                            <x-tollerus::inputs.checkbox idExpression="'table_' + tableId + '_table_fold'" model="table.tableFold" modelAlpine="true" label="{{ __('tollerus::ui.table_fold') }}" />
                         </div>
                     </fieldset>
                     <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                         <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['rows_fold_description']"></legend></div>
                         <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                            <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_rows_fold'" model="table.rowsFold" modelAlpine="true" label="{{ __('tollerus::ui.rows_fold') }}" />
+                            <x-tollerus::inputs.checkbox idExpression="'table_' + tableId + '_rows_fold'" model="table.rowsFold" modelAlpine="true" label="{{ __('tollerus::ui.rows_fold') }}" />
                         </div>
                     </fieldset>
                     <x-tollerus::pane class="flex flex-col gap-4 items-start">
@@ -124,10 +124,10 @@
                                         </div>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                                             <div class="flex flex-col items-start">
-                                                <x-tollerus::inputs.toggle idExpression="'row_' + rowId + '_visible'" model="row.visible" modelAlpine="true" label="{{ __('tollerus::ui.visible') }}" />
+                                                <x-tollerus::inputs.checkbox idExpression="'row_' + rowId + '_visible'" model="row.visible" modelAlpine="true" label="{{ __('tollerus::ui.visible') }}" />
                                             </div>
                                             <div class="flex flex-row justify-start">
-                                                <x-tollerus::inputs.toggle idExpression="'row_' + rowId + '_show_label'" model="row.showLabel" modelAlpine="true" label="{{ __('tollerus::ui.show_label') }}" />
+                                                <x-tollerus::inputs.checkbox idExpression="'row_' + rowId + '_show_label'" model="row.showLabel" modelAlpine="true" label="{{ __('tollerus::ui.show_label') }}" />
                                             </div>
                                         </div>
                                         <div class="pl-12">
