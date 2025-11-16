@@ -109,7 +109,7 @@
                                             idExpression="'class_' + wordClassId + '_name'"
                                             model="wordClass.name"
                                             fieldName="{{ __('tollerus::ui.name') }}"
-                                            saveEvent="$wire.updateClass(groupId, wordClassId, 'name', document.getElementById(id).value);" />
+                                            saveEvent="$wire.updateClass(groupId, wordClassId, 'name', document.getElementById(id).value, id);" />
                                     </td>
                                     <td class="text-left px-2 py-1 w-60">
                                         <x-tollerus::inputs.text-saveable

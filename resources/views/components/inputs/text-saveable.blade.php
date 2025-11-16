@@ -1,22 +1,28 @@
 @props([
     'idExpression' => '',
     'model' => '',
+    'modelIsAlpine' => true,
     'fieldName' => '',
     'showLabel' => false,
     'saveEvent' => '',
 ])
-<div x-data="{ id: {{ $idExpression }}, editing: false, originalValue: {{ $model }} }" class="flex flex-row gap-4 justify-start items-center">
+<div
+    x-data="{ id: {{ $idExpression }}, editing: false, originalValue: {{ $model }} }"
+    @text-save-failure.window="if ($event.detail.id==id) {editing=true;}"
+    @text-save-success.window="if ($event.detail.id==id) {originalValue = {{ $model }};}"
+    class="flex flex-row gap-4 justify-start items-center"
+>
     @if (filter_var($showLabel, FILTER_VALIDATE_BOOLEAN))
         <label x-bind:for="id">{{ $fieldName }}:</label>
     @endif
     <template x-if="editing">
         <div class="flex flex-row gap-2 justify-start items-center flex-grow">
-            <x-tollerus::inputs.text x-bind:id="id" x-model="{{ $model }}" />
+            <x-tollerus::inputs.text x-bind:id="id" model="{{ $model }}" :modelIsAlpine="$modelIsAlpine" />
             <x-tollerus::inputs.button
                 type="primary"
                 size="small"
                 title="{{ __('tollerus::ui.save') }}"
-                @click="{{ $saveEvent }} originalValue = {{ $model }}; editing = false;"
+                @click="{{ $saveEvent }} editing = false;"
             >
                 <x-tollerus::icons.check/>
                 <span class="sr-only">{{ __('tollerus::ui.save') }}</span>

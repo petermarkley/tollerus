@@ -4,7 +4,7 @@
   'label' => '',
   'showLabel' => true,
   'model' => null,
-  'modelAlpine' => false,
+  'modelIsAlpine' => false,
   'checked' => false,
 ])
 <div class="flex flex-col gap-1 items-center">
@@ -29,7 +29,7 @@
                 @endif
                 title="{{ $showLabel ? $label : '' }}"
                 class="absolute opacity-0 inset-0 w-full h-full cursor-pointer disabled:cursor-not-allowed z-10"
-                @if (filter_var($modelAlpine, FILTER_VALIDATE_BOOLEAN))
+                @if (filter_var($modelIsAlpine, FILTER_VALIDATE_BOOLEAN))
                     x-model="{{ $model }}"
                 @else
                     wire:model="{{ $model }}"

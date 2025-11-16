@@ -12,6 +12,7 @@ return [
     */
     'invalid_preset' => 'Invalid preset',
     'invalid_word_class' => 'Invalid word class ID',
+    'duplicate_word_class_name' => 'Word class name must be unique per group.',
     'invalid_word_class_group' => 'Invalid word class group ID',
     'invalid_feature' => 'Invalid feature ID',
     'invalid_feature_value' => 'Invalid feature value ID',

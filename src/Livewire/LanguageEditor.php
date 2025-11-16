@@ -349,9 +349,9 @@ class LanguageEditor extends Component
         }
         $this->refreshGrammarForm();
     }
-    public function updateClass(string $groupId, string $classId, string $propName, string $propVal): void
+    public function updateClass(string $groupId, string $classId, string $propName, string $propVal, ?string $domId = ''): void
     {
-        $classModel = $this->findInCache('grammar-class-update-failure', [
+        $classModel = $this->findInCache('text-save-failure', [
             [
                 'id' => $groupId,
                 'objectType' => WordClassGroup::class,
@@ -363,11 +363,21 @@ class LanguageEditor extends Component
                 'objectType' => WordClass::class,
                 'failMessage' => ['classId' => [__('tollerus::error.invalid_word_class')]],
             ],
-        ]);
+        ], $domId);
         if ($propName === 'name' || $propName === 'name_brief') {
-            $classModel[$propName] = $propVal;
-            $classModel->save();
-            $this->refreshGrammarForm();
+            try {
+                $classModel[$propName] = $propVal;
+                $classModel->save();
+                $this->refreshGrammarForm();
+                $this->dispatch('text-save-success', id: $domId);
+            } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                $alpinePropName = match ($propName) {
+                    'name' => 'name',
+                    'name_brief' => 'nameBrief',
+                };
+                $this->dispatch('text-save-failure', id: $domId);
+                throw \Illuminate\Validation\ValidationException::withMessages(["wordClass.${alpinePropName}" => [__('tollerus::error.duplicate_word_class_name')]]);
+            }
         }
     }
     public function deleteWordClass(string $wordClassId): void
@@ -487,13 +497,13 @@ class LanguageEditor extends Component
     /**
      * Internal utility function, for non-DB data lookups
      */
-    private function findInCache(string $failEvent, array $steps): Model|null
+    private function findInCache(string $failEvent, array $steps, ?string $domId = ''): Model|null
     {
         $collection = collect($this->wordClassGroups);
         foreach ($steps as $step) {
             $model = $collection->firstWhere('id', (int)$step['id']);
             if (!($model instanceof $step['objectType'])) {
-                $this->dispatch($failEvent);
+                $this->dispatch($failEvent, id: $domId);
                 throw \Illuminate\Validation\ValidationException::withMessages($step['failMessage']);
                 return null;
             }
