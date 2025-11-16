@@ -11,6 +11,14 @@
         rows_fold_description: @js(__('tollerus::ui.rows_fold_description')),
     },
     tableForm: $wire.entangle('tableForm'),
+    moveTableUp(tableElem, tableId) {
+        neighborId = $store.reorderFunctions.getNeighborId(this.tableForm, tableId, -1);
+        if (neighborId === null) {
+            return;
+        }
+        neighborDomId = 'table_' + neighborId;
+        $store.reorderFunctions.swapItems(tableElem, neighborDomId);
+    },
 }">
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
@@ -20,13 +28,13 @@
         <div class="flex flex-col gap-6">
             <div class="flex flex-col gap-6">
                 <template x-for="(table, tableId) in tableForm">
-                    <div class="flex flex-row gap-[1px] w-full items-stretch" x-bind:style="'order: '+table.position">
+                    <div x-bind:id="'table_' + tableId" data-obj="table" class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-200" x-bind:style="'order: '+table.position">
                         <x-tollerus::panel class="px-3 py-12 flex flex-col gap-6 justify-start shrink-0 rounded-l-full rounded-r-none">
                             <x-tollerus::inputs.button
                                 type="inverse"
                                 title="{{ __('tollerus::ui.move_inflection_table_up') }}"
                                 x-bind:disabled="$store.reorderFunctions.isFirstItem(tableForm, tableId)"
-                                @click="$wire.moveTable(tableId, -1);"
+                                @click="moveTableUp($el.closest('[data-obj=&quot;table&quot;]'), tableId); $nextTick(() => {$wire.moveTable(tableId, -1);});"
                             >
                                 <x-tollerus::icons.chevron-up class="h-8 w-8" />
                                 <span class="sr-only">{{ __('tollerus::ui.move_inflection_table_up') }}</span>
@@ -35,7 +43,7 @@
                                 type="inverse"
                                 title="{{ __('tollerus::ui.move_inflection_table_down') }}"
                                 x-bind:disabled="$store.reorderFunctions.isLastItem(tableForm, tableId)"
-                                @click="$wire.moveTable(tableId, +1);"
+                                {{-- @click="$wire.moveTable(tableId, +1);" --}}
                             >
                                 <x-tollerus::icons.chevron-down class="h-8 w-8" />
                                 <span class="sr-only">{{ __('tollerus::ui.move_inflection_table_down') }}</span>
@@ -109,7 +117,7 @@
                                 <template x-if="Object.keys(table.rows).length > 0">
                                     <div class="flex flex-col gap-4 items-start">
                                         <template x-for="(row, rowId) in table.rows">
-                                            <div class="flex flex-row gap-[1px] w-full items-stretch" x-bind:style="'order: '+row.position">
+                                            <div x-bind:id="'row_' + rowId" data-obj="row" class="flex flex-row gap-[1px] w-full items-stretch" x-bind:style="'order: '+row.position">
                                                 <x-tollerus::panel class="px-3 py-8 flex flex-col gap-6 justify-start shrink-0 rounded-l-xl rounded-r-none">
                                                     <x-tollerus::inputs.button
                                                         type="inverse"
@@ -226,6 +234,49 @@ document.addEventListener('alpine:init', () => {
                 }
             }
             return (parentObj[itemId].position == highest);
+        },
+        getNeighborId(parentObj, itemId, dir) {
+            // Normalize input
+            if (dir == 0) {
+                return null;
+            }
+            dir = Math.round(dir / Math.abs(dir));
+            // Get sorted numeric arrays
+            let itemsNumeric = [];
+            for (id in parentObj) {
+                itemsNumeric.push({id: id, position: parentObj[id].position});
+            }
+            itemsNumeric.sort((a, b) => a.position - b.position);
+            idsNumeric = itemsNumeric.map(item => item.id);
+            // Get numeric indices
+            itemIndex = idsNumeric.indexOf(itemId);
+            if (itemIndex < 0) {
+                return null;
+            }
+            neighborIndex = itemIndex + dir;
+            if (neighborIndex < 0 || neighborIndex >= itemsNumeric.length) {
+                return null;
+            }
+            // Return result
+            return idsNumeric[neighborIndex];
+        },
+        swapItems(itemElem, neighborId) {
+            neighborElem = document.getElementById(neighborId);
+            itemRect = itemElem.getBoundingClientRect();
+            neighborRect = neighborElem.getBoundingClientRect();
+            if (itemRect.y > neighborRect.y) {
+                // Item is moving upward
+                itemMove = neighborRect.y - itemRect.y;
+                gap = Math.abs(itemMove) - neighborRect.height;
+                neighborMove = itemRect.height + gap;
+            } else {
+                // Item is moving downward
+                neighborMove = itemRect.y - neighborRect.y;
+                gap = Math.abs(neighborMove) - itemRect.height;
+                itemMove = neighborRect.height + gap;
+            }
+            itemElem.style.transform = `translateY(${itemMove}px)`;
+            neighborElem.style.transform = `translateY(${neighborMove}px)`;
         },
     });
 });
