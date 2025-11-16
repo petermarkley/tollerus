@@ -81,7 +81,7 @@
                     </x-tollerus::pane>
                     <x-tollerus::pane class="flex flex-col gap-4 items-start">
                         <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
-                            <x-tollerus::icons.bars />
+                            <x-tollerus::icons.arrow-down-right />
                             <span>{{ __('tollerus::ui.rows') }}</span>
                         </h3>
                         <template x-if="Object.keys(table.rows).length > 0">
