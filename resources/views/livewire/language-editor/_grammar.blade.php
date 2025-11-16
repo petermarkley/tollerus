@@ -116,7 +116,7 @@
                                             idExpression="'class_' + wordClassId + '_name_brief'"
                                             model="wordClass.nameBrief"
                                             fieldName="{{ __('tollerus::ui.abbreviation') }}"
-                                            saveEvent="$wire.updateClass(groupId, wordClassId, 'name_brief', document.getElementById(id).value);" />
+                                            saveEvent="$wire.updateClass(groupId, wordClassId, 'name_brief', document.getElementById(id).value, id);" />
                                     </td>
                                     <td class="text-center px-2 py-1 min-w-24">
                                         <label class="inline-block align-middle w-6 h-6 relative group">
@@ -187,7 +187,7 @@
                                             model="feature.name"
                                             fieldName="{{ __('tollerus::ui.name') }}"
                                             showLabel="true"
-                                            saveEvent="$wire.updateFeature(groupId, featureId, 'name', document.getElementById(id).value);" />
+                                            saveEvent="$wire.updateFeature(groupId, featureId, 'name', document.getElementById(id).value, id);" />
                                     </div>
                                     <div class="w-80">
                                         <x-tollerus::inputs.text-saveable
@@ -195,7 +195,7 @@
                                             model="feature.nameBrief"
                                             fieldName="{{ __('tollerus::ui.abbreviation') }}"
                                             showLabel="true"
-                                            saveEvent="$wire.updateFeature(groupId, featureId, 'name_brief', document.getElementById(id).value);" />
+                                            saveEvent="$wire.updateFeature(groupId, featureId, 'name_brief', document.getElementById(id).value, id);" />
                                     </div>
                                     <div class="min-w-24">
                                         <x-tollerus::inputs.button
@@ -240,14 +240,14 @@
                                                                 idExpression="'value_' + featureValueId + '_name'"
                                                                 model="featureValue.name"
                                                                 fieldName="{{ __('tollerus::ui.name') }}"
-                                                                saveEvent="$wire.updateFeatureValue(groupId, featureId, featureValueId, 'name', document.getElementById(id).value);" />
+                                                                saveEvent="$wire.updateFeatureValue(groupId, featureId, featureValueId, 'name', document.getElementById(id).value, id);" />
                                                         </td>
                                                         <td class="text-left px-2 py-1 w-60">
                                                             <x-tollerus::inputs.text-saveable
                                                                 idExpression="'value_' + featureValueId + '_name_brief'"
                                                                 model="featureValue.nameBrief"
                                                                 fieldName="{{ __('tollerus::ui.abbreviation') }}"
-                                                                saveEvent="$wire.updateFeatureValue(groupId, featureId, featureValueId, 'name_brief', document.getElementById(id).value);" />
+                                                                saveEvent="$wire.updateFeatureValue(groupId, featureId, featureValueId, 'name_brief', document.getElementById(id).value, id);" />
                                                         </td>
                                                         <td class="text-center px-2 py-1 min-w-24">
                                                             <x-tollerus::inputs.button

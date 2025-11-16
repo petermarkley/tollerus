@@ -371,12 +371,12 @@ class LanguageEditor extends Component
                 $this->refreshGrammarForm();
                 $this->dispatch('text-save-success', id: $domId);
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
-                $alpinePropName = match ($propName) {
-                    'name' => 'name',
-                    'name_brief' => 'nameBrief',
+                $error = match ($propName) {
+                    'name' => ['wordClass.name' => [__('tollerus::error.duplicate_of_unique')]],
+                    'name_brief' => ['wordClass.nameBrief' => [__('tollerus::error.duplicate_of_unique')]],
                 };
                 $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages(["wordClass.${alpinePropName}" => [__('tollerus::error.duplicate_word_class_name')]]);
+                throw \Illuminate\Validation\ValidationException::withMessages($error);
             }
         }
     }
@@ -407,9 +407,9 @@ class LanguageEditor extends Component
         }
         $this->refreshGrammarForm();
     }
-    public function updateFeature(string $groupId, string $featureId, string $propName, string $propVal): void
+    public function updateFeature(string $groupId, string $featureId, string $propName, string $propVal, ?string $domId = ''): void
     {
-        $featureModel = $this->findInCache('grammar-feature-update-failure', [
+        $featureModel = $this->findInCache('text-save-failure', [
             [
                 'id' => $groupId,
                 'objectType' => WordClassGroup::class,
@@ -421,11 +421,20 @@ class LanguageEditor extends Component
                 'objectType' => Feature::class,
                 'failMessage' => ['featureId' => [__('tollerus::error.invalid_feature')]],
             ],
-        ]);
+        ], $domId);
         if ($propName === 'name' || $propName === 'name_brief') {
-            $featureModel[$propName] = $propVal;
-            $featureModel->save();
-            $this->refreshGrammarForm();
+            try {
+                $featureModel[$propName] = $propVal;
+                $featureModel->save();
+                $this->refreshGrammarForm();
+            } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                $error = match ($propName) {
+                    'name' => ['feature.name' => [__('tollerus::error.duplicate_of_unique')]],
+                    'name_brief' => ['feature.nameBrief' => [__('tollerus::error.duplicate_of_unique')]],
+                };
+                $this->dispatch('text-save-failure', id: $domId);
+                throw \Illuminate\Validation\ValidationException::withMessages($error);
+            }
         }
     }
     public function deleteFeature(string $featureId): void
@@ -461,9 +470,9 @@ class LanguageEditor extends Component
         }
         $this->refreshGrammarForm();
     }
-    public function updateFeatureValue(string $groupId, string $featureId, string $featureValueId, string $propName, string $propVal): void
+    public function updateFeatureValue(string $groupId, string $featureId, string $featureValueId, string $propName, string $propVal, ?string $domId = ''): void
     {
-        $featureValueModel = $this->findInCache('grammar-value-update-failure', [
+        $featureValueModel = $this->findInCache('text-save-failure', [
             [
                 'id' => $groupId,
                 'objectType' => WordClassGroup::class,
@@ -481,11 +490,20 @@ class LanguageEditor extends Component
                 'objectType' => FeatureValue::class,
                 'failMessage' => ['featureValueId' => [__('tollerus::error.invalid_feature_value')]],
             ],
-        ]);
+        ], $domId);
         if ($propName === 'name' || $propName === 'name_brief') {
-            $featureValueModel[$propName] = $propVal;
-            $featureValueModel->save();
-            $this->refreshGrammarForm();
+            try {
+                $featureValueModel[$propName] = $propVal;
+                $featureValueModel->save();
+                $this->refreshGrammarForm();
+            } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                $error = match ($propName) {
+                    'name' => ['featureValue.name' => [__('tollerus::error.duplicate_of_unique')]],
+                    'name_brief' => ['featureValue.nameBrief' => [__('tollerus::error.duplicate_of_unique')]],
+                };
+                $this->dispatch('text-save-failure', id: $domId);
+                throw \Illuminate\Validation\ValidationException::withMessages($error);
+            }
         }
     }
     public function deleteFeatureValue(string $featureValueId): void
