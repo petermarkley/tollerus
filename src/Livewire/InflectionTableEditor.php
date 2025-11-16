@@ -197,4 +197,39 @@ class InflectionTableEditor extends Component
             ]];
         })->toArray();
     }
+
+    /**
+     * Granular UI functions
+     */
+    function moveTable(
+        string $tableId,
+        int $dir // -1 is up; +1 is down
+    ): void
+    {
+        // normalize direction input
+        if ($dir == 0) {
+            return;
+        }
+        $dir = (int)($dir / abs($dir));
+        // Prepare some numeric arrays
+        $tableFormSorted = collect($this->tableForm)->sortBy('position');
+        $positionsNumeric = $tableFormSorted->pluck('position')->values()->toArray();
+        $idsNumeric = $tableFormSorted->keys()->toArray();
+        // Find certain numeric indices
+        $tableIndex = array_search($tableId, $idsNumeric);
+        if ($tableIndex === false) {
+            return;
+        }
+        $neighborIndex = $tableIndex + $dir;
+        if ($neighborIndex < 0 || $neighborIndex >= count($idsNumeric)) {
+            return;
+        }
+        // Now we can finally deduce the table ID for the neighbor
+        $neighborTableId = $idsNumeric[$neighborIndex];
+        // And perform the swap
+        $storedPosition = $this->tableForm[$tableId]['position'];
+        $this->tableForm[$tableId]['position'] = $this->tableForm[$neighborTableId]['position'];
+        $this->tableForm[$neighborTableId]['position'] = $storedPosition;
+        // FIXME - persist to DB
+    }
 }
