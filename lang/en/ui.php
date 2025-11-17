@@ -35,6 +35,7 @@ return [
   'no_grammar' => '(No Grammar)',
   'entries' => 'Entries', // Word entries in a dictionary
   'no_entries' => '(No Entries)',
+  'none' => '(none)',
   /**
    * TRANSLATOR NOTE:
    *
@@ -57,7 +58,7 @@ return [
   'save' => 'Save',
   'saving' => 'Saving ...',
   'saved' => '(Saved)',
-  'reset' => 'Reset', // i.e. reset the form; revert/discard changes
+  'reset' => 'Reset', // i.e. reset the interface; revert/discard changes
   'load' => 'Load',
   'loading' => 'Loading ...',
   'info' => 'Info',
@@ -119,6 +120,37 @@ return [
   'delete_row' => 'Delete row',
   'move_row_up' => 'Move row up',
   'move_row_down' => 'Move row down',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Base row" denotes the inflection row which is used
+   * as a root or starting point when building different
+   * forms of the word.
+   *
+   * For example if you have inflection tables like this:
+   *
+   *     |          INFINITIVE          |
+   *     +----+------------+------------+
+   * --> | a) | infinitive | walk       |
+   *
+   *     |             FINITE VERB              |
+   *     +----+-------------------+-------------+
+   *     | b) | 3rd pers. present | walks       |
+   *     | c) |        past tense | walked      |
+   *
+   *     |         PARTICIPLE        |
+   *     +----+---------+------------+
+   *     | b) | present | walking    |
+   *     | c) |    past | walked     |
+   *
+   * ... then your "base row" is (a), marked above with
+   * an arrow, because the other word forms are made from
+   * it by adding suffixes like '-s', '-ed', and '-ing'.
+   *
+   * In the UI, we are calling these suffixes "particles"
+   * because they might instead be prefixes, for example.
+   */
+  'base_row' => 'Base row',
   'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
   'preview_of_thing' => 'Preview of :thing',
   'activate' => 'Activate',

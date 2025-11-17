@@ -11,8 +11,11 @@
         rows_fold_description: @js(__('tollerus::ui.rows_fold_description')),
     },
     tableForm: $wire.entangle('tableForm'),
+    get tablesFiltered() {
+        return Object.fromEntries(Object.entries(this.tableForm).filter(([k, v]) => !isNaN(k)));
+    },
     moveTable(tableElem, tableId, dir) {
-        neighborId = $store.reorderFunctions.getNeighborId(this.tableForm, tableId, dir);
+        neighborId = $store.reorderFunctions.getNeighborId(this.tablesFiltered, tableId, dir);
         if (neighborId === null) {
             return;
         }
@@ -48,8 +51,20 @@
             <span>{{ __('tollerus::ui.inflection_tables') }}</span>
         </h1>
         <div class="flex flex-col gap-6">
+            <x-tollerus::panel>
+                <x-tollerus::inputs.select id="base_row" label="{{ __('tollerus::ui.base_row') }}" model="tableForm.baseRow">
+                    <option value="" class="cursor-pointer italic" x-bind:selected="tableForm.baseRow===null || tableForm.baseRow===''">{{ __('tollerus::ui.none') }}</option>
+                    <template x-for="(table, tableId) in tablesFiltered">
+                        <optgroup x-bind:label="table.label">
+                            <template x-for="(row, rowId) in table.rows">
+                                <option x-bind:value="rowId" class="cursor-pointer" x-text="row.label" x-bind:selected="tableForm.baseRow==rowId"></option>
+                            </template>
+                        </optgroup>
+                    </template>
+                </x-tollerus::inputs.select>
+            </x-tollerus::panel>
             <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-                <template x-for="(table, tableId) in tableForm">
+                <template x-for="(table, tableId) in tablesFiltered">
                     <div
                         x-bind:id="'table_' + tableId"
                         data-obj="table"
@@ -61,7 +76,7 @@
                             <x-tollerus::inputs.button
                                 type="inverse"
                                 title="{{ __('tollerus::ui.move_inflection_table_up') }}"
-                                x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(tableForm, tableId)"
+                                x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(tablesFiltered, tableId)"
                                 @click="animating=true; moveTable($el.closest('[data-obj=&quot;table&quot;]'), tableId, -1);"
                             >
                                 <x-tollerus::icons.chevron-up class="h-8 w-8" />
@@ -70,7 +85,7 @@
                             <x-tollerus::inputs.button
                                 type="inverse"
                                 title="{{ __('tollerus::ui.move_inflection_table_down') }}"
-                                x-bind:disabled="animating || $store.reorderFunctions.isLastItem(tableForm, tableId)"
+                                x-bind:disabled="animating || $store.reorderFunctions.isLastItem(tablesFiltered, tableId)"
                                 @click="animating=true; moveTable($el.closest('[data-obj=&quot;table&quot;]'), tableId, +1);"
                             >
                                 <x-tollerus::icons.chevron-down class="h-8 w-8" />

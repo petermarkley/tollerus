@@ -102,7 +102,6 @@ class InflectionTableEditor extends Component
                         'showLabel'     => (bool)($row->show_label),
                         'position'      => $row->position,
                         'morphTemplate' => $row->morph_template,
-                        'srcBase'       => $row->src_base,
                         'srcParticle' => ($row->sourceParticle === null ? null : [
                             'id' => $row->sourceParticle->id,
                             'transliterated' => $row->sourceParticle->transliterated,
@@ -196,6 +195,19 @@ class InflectionTableEditor extends Component
                 })->toArray(),
             ]];
         })->toArray();
+        $nullRows = collect($this->tables)
+            ->flatMap->rows
+            ->map(fn ($r) => [
+                'id' => $r->id,
+                'src_base' => $r->src_base,
+            ])->filter(fn ($r) => $r['src_base'] === null)
+            ->pluck('id')
+            ->toArray();
+        if (count($nullRows) !== 1) {
+            $this->tableForm['baseRow'] = null;
+        } else {
+            $this->tableForm['baseRow'] = $nullRows[0];
+        }
     }
 
     /**
