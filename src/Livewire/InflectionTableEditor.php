@@ -213,6 +213,46 @@ class InflectionTableEditor extends Component
     /**
      * Granular UI functions
      */
+    function updateBaseRow(string $val): void
+    {
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($val) {
+                $rowsCollection = collect($this->tables)->flatMap->rows;
+                /**
+                 * We need to first set the base row to comply with
+                 * the model's logic constraints.
+                 */
+                if (!empty($val)) {
+                    foreach ($rowsCollection as $row) {
+                        if ($row->id == $val) {
+                            $row->src_base = null;
+                            $row->save();
+                            break;
+                        }
+                    }
+                }
+                /**
+                 * Now we can point all the other rows to it.
+                 */
+                foreach ($rowsCollection as $row) {
+                    if (empty($val)) {
+                        // If there is no base row, set everything to null.
+                        $row->src_base = null;
+                        $row->save();
+                    } elseif ($row->id != $val) {
+                        // If there is a base row, set all others to reference it.
+                        $row->src_base = (int)$val;
+                        $row->save();
+                    }
+                }
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('baserow-update-failure');
+            throw $e;
+        }
+        $this->refreshTableForm();
+    }
     function updateTable(string $tableId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model

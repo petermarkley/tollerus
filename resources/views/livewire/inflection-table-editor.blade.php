@@ -52,7 +52,12 @@
         </h1>
         <div class="flex flex-col gap-6">
             <x-tollerus::panel>
-                <x-tollerus::inputs.select id="base_row" label="{{ __('tollerus::ui.base_row') }}" model="tableForm.baseRow">
+                <x-tollerus::inputs.select
+                    id="base_row"
+                    label="{{ __('tollerus::ui.base_row') }}"
+                    model="tableForm.baseRow"
+                    @change="$wire.updateBaseRow($el.value);"
+                >
                     <option value="" class="cursor-pointer italic" x-bind:selected="tableForm.baseRow===null || tableForm.baseRow===''">{{ __('tollerus::ui.none') }}</option>
                     <template x-for="(table, tableId) in tablesFiltered">
                         <optgroup x-bind:label="table.label">
