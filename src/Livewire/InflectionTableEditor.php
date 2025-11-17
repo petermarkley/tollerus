@@ -232,4 +232,35 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
+    function swapRows(string $tableId, string $rowId, string $neighborId): void
+    {
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($tableId, $rowId, $neighborId) {
+                $tableModel = collect($this->tables)->firstWhere('id', $tableId);
+                $rowModel      = $tableModel->rows->firstWhere('id', $rowId);
+                $neighborModel = $tableModel->rows->firstWhere('id', $neighborId);
+                $oldRowPosition      = (int) $this->tableForm[$tableId]['rows'][$rowId]['position'];
+                $oldNeighborPosition = (int) $this->tableForm[$tableId]['rows'][$neighborId]['position'];
+                /**
+                 * Apparently the 'unique' constraint applies even within a transaction.
+                 * So we need to carefully move one of the models out of the way first.
+                 */
+                $minPosition = $tableModel->rows->min('position');
+                $neighborModel->position = $minPosition - 1;
+                $neighborModel->save();
+                /**
+                 * And finally we can just set and save both correct values.
+                 */
+                $rowModel->position = $oldNeighborPosition;
+                $rowModel->save();
+                $neighborModel->position = $oldRowPosition;
+                $neighborModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('row-swap-failure');
+            throw $e;
+        }
+        $this->refreshTableForm();
+    }
 }
