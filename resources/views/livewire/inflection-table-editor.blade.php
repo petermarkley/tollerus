@@ -93,7 +93,13 @@
                                 </x-tollerus::inputs.button>
                             </h2>
                             <div class="flex flex-col items-start">
-                                <x-tollerus::inputs.toggle idExpression="'table_' + tableId + '_visible'" model="table.visible" modelIsAlpine="true" label="{{ __('tollerus::ui.visible') }}" />
+                                <x-tollerus::inputs.toggle
+                                    idExpression="'table_' + tableId + '_visible'"
+                                    model="table.visible"
+                                    modelIsAlpine="true"
+                                    label="{{ __('tollerus::ui.visible') }}"
+                                    @change="$wire.updateTable(tableId, 'visible', $el.checked, id);"
+                                />
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <x-tollerus::inputs.text-saveable
@@ -101,33 +107,64 @@
                                     idExpression="'table_' + tableId + '_label'"
                                     model="table.label"
                                     fieldName="{{ __('tollerus::ui.label') }}"
-                                    saveEvent="" />
+                                    saveEvent="$wire.updateTable(tableId, 'label', document.getElementById(id).value, id);"
+                                />
                                 <div class="flex flex-row justify-start">
-                                    <x-tollerus::inputs.checkbox idExpression="'table_' + tableId + '_show_label'" model="table.showLabel" modelIsAlpine="true" label="{{ __('tollerus::ui.show_label') }}" />
+                                    <x-tollerus::inputs.checkbox
+                                        idExpression="'table_' + tableId + '_show_label'"
+                                        model="table.showLabel"
+                                        modelIsAlpine="true"
+                                        label="{{ __('tollerus::ui.show_label') }}"
+                                        @change="$wire.updateTable(tableId, 'showLabel', $el.checked, id);"
+                                    />
                                 </div>
                             </div>
                             <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                                 <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['stack_description']"></legend></div>
                                 <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                                    <x-tollerus::inputs.checkbox idExpression="'table_' + tableId + '_stack'" model="table.stack" modelIsAlpine="true" label="{{ __('tollerus::ui.stack') }}" />
+                                    <x-tollerus::inputs.checkbox
+                                        idExpression="'table_' + tableId + '_stack'"
+                                        model="table.stack"
+                                        modelIsAlpine="true"
+                                        label="{{ __('tollerus::ui.stack') }}"
+                                        @change="$wire.updateTable(tableId, 'stack', $el.checked, id);"
+                                    />
                                 </div>
                             </fieldset>
                             <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                                 <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['align_on_stack_description']"></legend></div>
                                 <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                                    <x-tollerus::inputs.checkbox idExpression="'table_' + tableId + '_align_on_stack'" model="table.alignOnStack" modelIsAlpine="true" label="{{ __('tollerus::ui.align_on_stack') }}" />
+                                    <x-tollerus::inputs.checkbox
+                                        idExpression="'table_' + tableId + '_align_on_stack'"
+                                        model="table.alignOnStack"
+                                        modelIsAlpine="true"
+                                        label="{{ __('tollerus::ui.align_on_stack') }}"
+                                        @change="$wire.updateTable(tableId, 'alignOnStack', $el.checked, id);"
+                                    />
                                 </div>
                             </fieldset>
                             <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                                 <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['table_fold_description']"></legend></div>
                                 <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                                    <x-tollerus::inputs.checkbox idExpression="'table_' + tableId + '_table_fold'" model="table.tableFold" modelIsAlpine="true" label="{{ __('tollerus::ui.table_fold') }}" />
+                                    <x-tollerus::inputs.checkbox
+                                        idExpression="'table_' + tableId + '_table_fold'"
+                                        model="table.tableFold"
+                                        modelIsAlpine="true"
+                                        label="{{ __('tollerus::ui.table_fold') }}"
+                                        @change="$wire.updateTable(tableId, 'tableFold', $el.checked, id);"
+                                    />
                                 </div>
                             </fieldset>
                             <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                                 <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['rows_fold_description']"></legend></div>
                                 <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                                    <x-tollerus::inputs.checkbox idExpression="'table_' + tableId + '_rows_fold'" model="table.rowsFold" modelIsAlpine="true" label="{{ __('tollerus::ui.rows_fold') }}" />
+                                    <x-tollerus::inputs.checkbox
+                                        idExpression="'table_' + tableId + '_rows_fold'"
+                                        model="table.rowsFold"
+                                        modelIsAlpine="true"
+                                        label="{{ __('tollerus::ui.rows_fold') }}"
+                                        @change="$wire.updateTable(tableId, 'rowsFold', $el.checked, id);"
+                                    />
                                 </div>
                             </fieldset>
                             <x-tollerus::pane class="flex flex-col gap-4 items-start">

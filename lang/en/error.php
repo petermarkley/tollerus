@@ -22,5 +22,8 @@ return [
     'duplicate_feature_value_name' => 'Value name must be unique per group.',
     'duplicate_feature_value_name_brief' => 'Value name abbreviation must be unique per group.',
     'duplicate_of_unique' => 'This must be unique per group.',
+    'invalid_inflection_table' => 'Invalid inflection table ID',
+    'invalid_prop_name' => 'Invalid property name',
+    'duplicate_inflection_table_label' => 'Table label must be unique per group.',
     'max_attempts_adding_unique_name' => 'Reached max attempts while trying to create unique object name.',
 ];

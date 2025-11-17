@@ -201,6 +201,53 @@ class InflectionTableEditor extends Component
     /**
      * Granular UI functions
      */
+    function updateTable(string $tableId, string $propName, string $propVal, ?string $domId = ''): void
+    {
+        // Find model
+        $tableModel = collect($this->tables)->firstWhere('id', $tableId);
+        if (!($tableModel instanceof InflectionTable)) {
+            $this->dispatch('table-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['tableId' => [__('tollerus::error.invalid_inflection_table')]]);
+            return;
+        }
+        // $propName whitelist
+        $allowedPropData = [
+            'label'        => ['type' => 'string', 'column' => 'label'],
+            'visible'      => ['type' => 'boolean', 'column' => 'visible'],
+            'showLabel'    => ['type' => 'boolean', 'column' => 'show_label'],
+            'stack'        => ['type' => 'boolean', 'column' => 'stack'],
+            'alignOnStack' => ['type' => 'boolean', 'column' => 'align_on_stack'],
+            'tableFold'    => ['type' => 'boolean', 'column' => 'table_fold'],
+            'rowsFold'     => ['type' => 'boolean', 'column' => 'rows_fold'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('table-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'boolean':
+                $tableModel[$allowedPropData[$propName]['column']] = (bool) filter_var($propVal, FILTER_VALIDATE_BOOLEAN);
+            break;
+            case 'string':
+            default:
+                $tableModel[$allowedPropData[$propName]['column']] = $propVal;
+            break;
+        }
+        // Save to database
+        try {
+            $tableModel->save();
+        } catch (\Throwable $e) {
+            if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
+                $this->dispatch('text-save-failure', id: $domId);
+                throw \Illuminate\Validation\ValidationException::withMessages(['table.'.$propName => [__('tollerus::error.duplicate_of_unique')]]);
+            } else {
+                $this->dispatch('table-update-failure');
+                throw $e;
+            }
+        }
+    }
     function swapTables(string $tableId, string $neighborId): void
     {
         try {
