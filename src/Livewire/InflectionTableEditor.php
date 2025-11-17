@@ -259,12 +259,13 @@ class InflectionTableEditor extends Component
     function updateTable(string $tableId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
-        $tableModel = collect($this->tables)->firstWhere('id', $tableId);
-        if (!($tableModel instanceof InflectionTable)) {
-            $this->dispatch('table-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['tableId' => [__('tollerus::error.invalid_inflection_table')]]);
-            return;
-        }
+        $tableModel = $this->findInCache('table-update-failure', [
+            [
+                'id' => $tableId,
+                'objectType' => InflectionTable::class,
+                'failMessage' => ['tableId' => [__('tollerus::error.invalid_inflection_table')]],
+            ],
+        ]);
         // $propName whitelist
         $allowedPropData = [
             'label'        => ['type' => 'string', 'column' => 'label'],
