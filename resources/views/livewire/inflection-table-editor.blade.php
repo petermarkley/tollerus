@@ -48,20 +48,21 @@
             <span>{{ __('tollerus::ui.inflection_tables') }}</span>
         </h1>
         <div class="flex flex-col gap-6">
-            <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
                 <template x-for="(table, tableId) in tableForm">
                     <div
                         x-bind:id="'table_' + tableId"
                         data-obj="table"
                         class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
                         x-bind:style="'order: '+table.position"
+                        @transitionend="$nextTick(() => {animating=false});"
                     >
                         <x-tollerus::panel class="px-3 py-12 flex flex-col gap-6 justify-start shrink-0 rounded-l-full rounded-r-none">
                             <x-tollerus::inputs.button
                                 type="inverse"
                                 title="{{ __('tollerus::ui.move_inflection_table_up') }}"
-                                x-bind:disabled="$store.reorderFunctions.isFirstItem(tableForm, tableId)"
-                                @click="moveTable($el.closest('[data-obj=&quot;table&quot;]'), tableId, -1);"
+                                x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(tableForm, tableId)"
+                                @click="animating=true; moveTable($el.closest('[data-obj=&quot;table&quot;]'), tableId, -1);"
                             >
                                 <x-tollerus::icons.chevron-up class="h-8 w-8" />
                                 <span class="sr-only">{{ __('tollerus::ui.move_inflection_table_up') }}</span>
@@ -69,8 +70,8 @@
                             <x-tollerus::inputs.button
                                 type="inverse"
                                 title="{{ __('tollerus::ui.move_inflection_table_down') }}"
-                                x-bind:disabled="$store.reorderFunctions.isLastItem(tableForm, tableId)"
-                                @click="moveTable($el.closest('[data-obj=&quot;table&quot;]'), tableId, +1);"
+                                x-bind:disabled="animating || $store.reorderFunctions.isLastItem(tableForm, tableId)"
+                                @click="animating=true; moveTable($el.closest('[data-obj=&quot;table&quot;]'), tableId, +1);"
                             >
                                 <x-tollerus::icons.chevron-down class="h-8 w-8" />
                                 <span class="sr-only">{{ __('tollerus::ui.move_inflection_table_down') }}</span>
@@ -142,20 +143,21 @@
                                     <span>{{ __('tollerus::ui.rows') }}</span>
                                 </h3>
                                 <template x-if="Object.keys(table.rows).length > 0">
-                                    <div class="flex flex-col gap-4 items-start">
+                                    <div class="flex flex-col gap-4 items-start" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
                                         <template x-for="(row, rowId) in table.rows">
                                             <div
                                                 x-bind:id="'row_' + rowId"
                                                 data-obj="row"
                                                 class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
                                                 x-bind:style="'order: '+row.position"
+                                                @transitionend="$nextTick(() => {animating=false});"
                                             >
                                                 <x-tollerus::panel class="px-3 py-8 flex flex-col gap-6 justify-start shrink-0 rounded-l-xl rounded-r-none">
                                                     <x-tollerus::inputs.button
                                                         type="inverse"
                                                         title="{{ __('tollerus::ui.move_row_up') }}"
-                                                        x-bind:disabled="$store.reorderFunctions.isFirstItem(table.rows, rowId)"
-                                                        @click="moveRow(tableId, $el.closest('[data-obj=&quot;row&quot;]'), rowId, -1);"
+                                                        x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(table.rows, rowId)"
+                                                        @click="animating=true; moveRow(tableId, $el.closest('[data-obj=&quot;row&quot;]'), rowId, -1);"
                                                     >
                                                         <x-tollerus::icons.chevron-up class="h-8 w-8" />
                                                         <span class="sr-only">{{ __('tollerus::ui.move_row_up') }}</span>
@@ -163,8 +165,8 @@
                                                     <x-tollerus::inputs.button
                                                         type="inverse"
                                                         title="{{ __('tollerus::ui.move_row_down') }}"
-                                                        x-bind:disabled="$store.reorderFunctions.isLastItem(table.rows, rowId)"
-                                                        @click="moveRow(tableId, $el.closest('[data-obj=&quot;row&quot;]'), rowId, +1);"
+                                                        x-bind:disabled="animating || $store.reorderFunctions.isLastItem(table.rows, rowId)"
+                                                        @click="animating=true; moveRow(tableId, $el.closest('[data-obj=&quot;row&quot;]'), rowId, +1);"
                                                     >
                                                         <x-tollerus::icons.chevron-down class="h-8 w-8" />
                                                         <span class="sr-only">{{ __('tollerus::ui.move_row_down') }}</span>
