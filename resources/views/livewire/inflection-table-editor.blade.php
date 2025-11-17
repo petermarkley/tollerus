@@ -11,13 +11,20 @@
         rows_fold_description: @js(__('tollerus::ui.rows_fold_description')),
     },
     tableForm: $wire.entangle('tableForm'),
-    moveTableUp(tableElem, tableId) {
-        neighborId = $store.reorderFunctions.getNeighborId(this.tableForm, tableId, -1);
+    moveTable(tableElem, tableId, dir) {
+        neighborId = $store.reorderFunctions.getNeighborId(this.tableForm, tableId, dir);
         if (neighborId === null) {
             return;
         }
-        neighborDomId = 'table_' + neighborId;
-        $store.reorderFunctions.swapItems(tableElem, neighborDomId);
+        neighborElem = document.getElementById('table_' + neighborId);
+        $store.reorderFunctions.swapItems(tableElem, neighborElem);
+        const onDone = (event) => {
+            // Listener should be ephemeral
+            event.target.removeEventListener('transitionend', onDone);
+            // Livewire request
+            $wire.swapTables(tableId, neighborId);
+        };
+        tableElem.addEventListener('transitionend', onDone);
     },
 }">
     <div id="non-modal-content">
@@ -28,13 +35,13 @@
         <div class="flex flex-col gap-6">
             <div class="flex flex-col gap-6">
                 <template x-for="(table, tableId) in tableForm">
-                    <div x-bind:id="'table_' + tableId" data-obj="table" class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-200" x-bind:style="'order: '+table.position">
+                    <div x-bind:id="'table_' + tableId" data-obj="table" class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out" x-bind:style="'order: '+table.position">
                         <x-tollerus::panel class="px-3 py-12 flex flex-col gap-6 justify-start shrink-0 rounded-l-full rounded-r-none">
                             <x-tollerus::inputs.button
                                 type="inverse"
                                 title="{{ __('tollerus::ui.move_inflection_table_up') }}"
                                 x-bind:disabled="$store.reorderFunctions.isFirstItem(tableForm, tableId)"
-                                @click="moveTableUp($el.closest('[data-obj=&quot;table&quot;]'), tableId); $nextTick(() => {$wire.moveTable(tableId, -1);});"
+                                @click="moveTable($el.closest('[data-obj=&quot;table&quot;]'), tableId, -1);"
                             >
                                 <x-tollerus::icons.chevron-up class="h-8 w-8" />
                                 <span class="sr-only">{{ __('tollerus::ui.move_inflection_table_up') }}</span>
@@ -260,10 +267,11 @@ document.addEventListener('alpine:init', () => {
             // Return result
             return idsNumeric[neighborIndex];
         },
-        swapItems(itemElem, neighborId) {
-            neighborElem = document.getElementById(neighborId);
+        swapItems(itemElem, neighborElem) {
+            // Measure
             itemRect = itemElem.getBoundingClientRect();
             neighborRect = neighborElem.getBoundingClientRect();
+            // Calculate
             if (itemRect.y > neighborRect.y) {
                 // Item is moving upward
                 itemMove = neighborRect.y - itemRect.y;
@@ -275,8 +283,32 @@ document.addEventListener('alpine:init', () => {
                 gap = Math.abs(neighborMove) - itemRect.height;
                 itemMove = neighborRect.height + gap;
             }
+            // Begin animation
             itemElem.style.transform = `translateY(${itemMove}px)`;
             neighborElem.style.transform = `translateY(${neighborMove}px)`;
+            // After animation is over ...
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Disable CSS animations
+                itemElem.classList.add('transition-none');
+                neighborElem.classList.add('transition-none');
+                // Remove transform
+                itemElem.style.removeProperty('transform');
+                neighborElem.style.removeProperty('transform');
+                void itemElem.offsetWidth; // Force re-flow
+                // Update position on same frame, ahead of Alpine
+                let storedPosition = itemElem.style.order;
+                itemElem.style.order = neighborElem.style.order;
+                neighborElem.style.order = storedPosition;
+                void itemElem.offsetWidth; // Force re-flow
+                // Wait for repaint, then re-enable CSS animations
+                requestAnimationFrame(() => {
+                    itemElem.classList.remove('transition-none');
+                    neighborElem.classList.remove('transition-none');
+                });
+            };
+            itemElem.addEventListener('transitionend', onDone);
         },
     });
 });

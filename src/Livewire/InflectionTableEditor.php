@@ -201,35 +201,35 @@ class InflectionTableEditor extends Component
     /**
      * Granular UI functions
      */
-    function moveTable(
-        string $tableId,
-        int $dir // -1 is up; +1 is down
-    ): void
+    function swapTables(string $tableId, string $neighborId): void
     {
-        // normalize direction input
-        if ($dir == 0) {
-            return;
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($tableId, $neighborId) {
+                $tablesCollection = collect($this->tables);
+                $tableModel    = $tablesCollection->firstWhere('id', $tableId);
+                $neighborModel = $tablesCollection->firstWhere('id', $neighborId);
+                $oldTablePosition    = (int) $this->tableForm[$tableId]['position'];
+                $oldNeighborPosition = (int) $this->tableForm[$neighborId]['position'];
+                /**
+                 * Apparently the 'unique' constraint applies even within a transaction.
+                 * So we need to carefully move one of the models out of the way first.
+                 */
+                $minPosition = $tablesCollection->min('position');
+                $neighborModel->position = $minPosition - 1;
+                $neighborModel->save();
+                /**
+                 * And finally we can just set and save both correct values.
+                 */
+                $tableModel->position = $oldNeighborPosition;
+                $tableModel->save();
+                $neighborModel->position = $oldTablePosition;
+                $neighborModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('table-swap-failure');
+            throw $e;
         }
-        $dir = (int)($dir / abs($dir));
-        // Prepare some numeric arrays
-        $tableFormSorted = collect($this->tableForm)->sortBy('position');
-        $positionsNumeric = $tableFormSorted->pluck('position')->values()->toArray();
-        $idsNumeric = $tableFormSorted->keys()->toArray();
-        // Find certain numeric indices
-        $tableIndex = array_search($tableId, $idsNumeric);
-        if ($tableIndex === false) {
-            return;
-        }
-        $neighborIndex = $tableIndex + $dir;
-        if ($neighborIndex < 0 || $neighborIndex >= count($idsNumeric)) {
-            return;
-        }
-        // Now we can finally deduce the table ID for the neighbor
-        $neighborTableId = $idsNumeric[$neighborIndex];
-        // And perform the swap
-        $storedPosition = $this->tableForm[$tableId]['position'];
-        $this->tableForm[$tableId]['position'] = $this->tableForm[$neighborTableId]['position'];
-        $this->tableForm[$neighborTableId]['position'] = $storedPosition;
-        // FIXME - persist to DB
+        $this->refreshTableForm();
     }
 }
