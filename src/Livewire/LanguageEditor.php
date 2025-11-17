@@ -20,9 +20,12 @@ use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\WordClass;
 use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
+use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class LanguageEditor extends Component
 {
+    use HasModelCache;
+    private $cacheRoot = 'wordClassGroups';
     public string $tab = 'info';
     // Models
     #[Locked] public Language $language;
@@ -510,27 +513,6 @@ class LanguageEditor extends Component
     {
         FeatureValue::findOrFail((int)$featureValueId)->delete();
         $this->refreshGrammarForm();
-    }
-
-    /**
-     * Internal utility function, for non-DB data lookups
-     */
-    private function findInCache(string $failEvent, array $steps, ?string $domId = ''): Model|null
-    {
-        $collection = collect($this->wordClassGroups);
-        foreach ($steps as $step) {
-            $model = $collection->firstWhere('id', (int)$step['id']);
-            if (!($model instanceof $step['objectType'])) {
-                $this->dispatch($failEvent, id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages($step['failMessage']);
-                return null;
-            }
-            if (isset($step['relation'])) {
-                $collection = $model->{$step['relation']};
-            } else {
-                return $model;
-            }
-        }
     }
 
     /**
