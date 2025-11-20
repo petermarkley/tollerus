@@ -186,6 +186,8 @@ return [
   'delete_word_class_confirmation' => 'About to delete word class. Are you sure?',
   'delete_feature_confirmation' => 'About to delete an inflection feature. Are you sure?',
   'delete_feature_value_confirmation' => 'About to delete an inflection feature value. Are you sure?',
+  'delete_inflection_table_confirmation' => 'About to delete an inflection table. Are you sure?',
+  'delete_inflection_row_confirmation' => 'About to delete an inflection row. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *

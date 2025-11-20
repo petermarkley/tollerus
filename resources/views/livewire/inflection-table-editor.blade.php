@@ -1,50 +1,58 @@
-<div x-data="{
-    msgs: {
-        inflection_table_nameless: @js(__('tollerus::ui.inflection_table_nameless')),
-        stack: @js(__('tollerus::ui.stack')),
-        stack_description: @js(__('tollerus::ui.stack_description')),
-        align_on_stack: @js(__('tollerus::ui.align_on_stack')),
-        align_on_stack_description: @js(__('tollerus::ui.align_on_stack_description')),
-        table_fold: @js(__('tollerus::ui.table_fold')),
-        table_fold_description: @js(__('tollerus::ui.table_fold_description')),
-        rows_fold: @js(__('tollerus::ui.rows_fold')),
-        rows_fold_description: @js(__('tollerus::ui.rows_fold_description')),
-    },
-    tableForm: $wire.entangle('tableForm'),
-    get tablesFiltered() {
-        return Object.fromEntries(Object.entries(this.tableForm).filter(([k, v]) => !isNaN(k)));
-    },
-    moveTable(tableElem, tableId, dir) {
-        neighborId = $store.reorderFunctions.getNeighborId(this.tablesFiltered, tableId, dir);
-        if (neighborId === null) {
-            return;
-        }
-        neighborElem = document.getElementById('table_' + neighborId);
-        $store.reorderFunctions.swapItems(tableElem, neighborElem);
-        const onDone = (event) => {
-            // Listener should be ephemeral
-            event.target.removeEventListener('transitionend', onDone);
-            // Livewire request
-            $wire.swapTables(tableId, neighborId);
-        };
-        tableElem.addEventListener('transitionend', onDone);
-    },
-    moveRow(tableId, rowElem, rowId, dir) {
-        neighborId = $store.reorderFunctions.getNeighborId(this.tableForm[tableId].rows, rowId, dir);
-        if (neighborId === null) {
-            return;
-        }
-        neighborElem = document.getElementById('row_' + neighborId);
-        $store.reorderFunctions.swapItems(rowElem, neighborElem);
-        const onDone = (event) => {
-            // Listener should be ephemeral
-            event.target.removeEventListener('transitionend', onDone);
-            // Livewire request
-            $wire.swapRows(tableId, rowId, neighborId);
-        };
-        rowElem.addEventListener('transitionend', onDone);
-    },
-}">
+<div
+    x-data="{
+        msgs: {
+            no_cancel: @js(__('tollerus::ui.no_cancel')),
+            yes_delete: @js(__('tollerus::ui.yes_delete')),
+            inflection_table_nameless: @js(__('tollerus::ui.inflection_table_nameless')),
+            stack: @js(__('tollerus::ui.stack')),
+            stack_description: @js(__('tollerus::ui.stack_description')),
+            align_on_stack: @js(__('tollerus::ui.align_on_stack')),
+            align_on_stack_description: @js(__('tollerus::ui.align_on_stack_description')),
+            table_fold: @js(__('tollerus::ui.table_fold')),
+            table_fold_description: @js(__('tollerus::ui.table_fold_description')),
+            rows_fold: @js(__('tollerus::ui.rows_fold')),
+            rows_fold_description: @js(__('tollerus::ui.rows_fold_description')),
+            delete_inflection_table_confirmation: @js(__('tollerus::ui.delete_inflection_table_confirmation')),
+            delete_inflection_row_confirmation: @js(__('tollerus::ui.delete_inflection_row_confirmation')),
+        },
+        tableForm: $wire.entangle('tableForm'),
+        get tablesFiltered() {
+            return Object.fromEntries(Object.entries(this.tableForm).filter(([k, v]) => !isNaN(k)));
+        },
+        moveTable(tableElem, tableId, dir) {
+            neighborId = $store.reorderFunctions.getNeighborId(this.tablesFiltered, tableId, dir);
+            if (neighborId === null) {
+                return;
+            }
+            neighborElem = document.getElementById('table_' + neighborId);
+            $store.reorderFunctions.swapItems(tableElem, neighborElem);
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Livewire request
+                $wire.swapTables(tableId, neighborId);
+            };
+            tableElem.addEventListener('transitionend', onDone);
+        },
+        moveRow(tableId, rowElem, rowId, dir) {
+            neighborId = $store.reorderFunctions.getNeighborId(this.tableForm[tableId].rows, rowId, dir);
+            if (neighborId === null) {
+                return;
+            }
+            neighborElem = document.getElementById('row_' + neighborId);
+            $store.reorderFunctions.swapItems(rowElem, neighborElem);
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Livewire request
+                $wire.swapRows(tableId, rowId, neighborId);
+            };
+            rowElem.addEventListener('transitionend', onDone);
+        },
+    }"
+    @table-delete.window="$wire.deleteTable($event.detail.tableId);"
+    @row-delete.window="$wire.deleteRow($event.detail.rowId);"
+>
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
             <span>{{ mb_ucfirst($groupName) }}</span>
@@ -107,6 +115,13 @@
                                     type="secondary"
                                     size="small"
                                     title="{{ __('tollerus::ui.delete_thing', ['thing' => __('tollerus::ui.inflection_table')]) }}"
+                                    @click="$dispatch('open-modal', {
+                                        message: msgs['delete_inflection_table_confirmation'],
+                                        buttons: [
+                                            { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                            { text: msgs.yes_delete, type: 'primary', clickEvent: 'table-delete', payload: {tableId: tableId} }
+                                        ]
+                                    });"
                                 >
                                     <x-tollerus::icons.delete/>
                                     <span class="sr-only">{{ __('tollerus::ui.delete_thing', ['thing' => __('tollerus::ui.inflection_table')]) }}</span>
@@ -252,6 +267,13 @@
                                                             size="small"
                                                             class="align-middle"
                                                             title="{{ __('tollerus::ui.delete_row') }}"
+                                                            @click="$dispatch('open-modal', {
+                                                                message: msgs['delete_inflection_row_confirmation'],
+                                                                buttons: [
+                                                                    { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                                                    { text: msgs.yes_delete, type: 'primary', clickEvent: 'row-delete', payload: {rowId: rowId} }
+                                                                ]
+                                                            });"
                                                         >
                                                             <x-tollerus::icons.delete/>
                                                             <label class="sr-only">{{ __('tollerus::ui.delete_row') }}</label>
@@ -284,6 +306,9 @@
                                     size="small"
                                     title="{{ __('tollerus::ui.add_row') }}"
                                     class="relative flex flex-row gap-2 justify-center items-center w-full"
+                                    @click="$wire.createRow(tableId);"
+                                    wire:loading.attr="disabled"
+                                    wire:target="createRow"
                                 >
                                     <x-tollerus::icons.plus/>
                                     <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_row') }}</span>

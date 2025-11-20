@@ -16,6 +16,7 @@ use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\InflectionTable;
+use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
@@ -325,6 +326,11 @@ class InflectionTableEditor extends Component
             }
         }
     }
+    public function deleteTable(string $tableId): void
+    {
+        InflectionTable::findOrFail((int)$tableId)->delete();
+        $this->refreshTableForm();
+    }
     function swapTables(string $tableId, string $neighborId): void
     {
         try {
@@ -354,6 +360,37 @@ class InflectionTableEditor extends Component
             $this->dispatch('table-swap-failure');
             throw $e;
         }
+        $this->refreshTableForm();
+    }
+    function createRow(string $tableId): void
+    {
+        // Find model
+        $tableModel = $this->findInCache('row-add-failure', [
+            [
+                'id' => $tableId,
+                'objectType' => InflectionTable::class,
+                'failMessage' => ['tableId' => [__('tollerus::error.invalid_inflection_table')]],
+            ],
+        ]);
+        // Create row
+        try {
+            $nextPosition = $tableModel->rows->max('position') + 1;
+            $row = CreateWithUniqueName::handle(
+                startNum: $tableModel->rows()->count(),
+                createFunc: fn ($tryName) => $tableModel->rows()->create([
+                    'label' => $tryName,
+                    'position' => $nextPosition,
+                ]),
+            );
+        } catch (\Throwable $e) {
+            $this->dispatch('row-add-failure');
+            throw $e;
+        }
+        $this->refreshTableForm();
+    }
+    public function deleteRow(string $rowId): void
+    {
+        InflectionTableRow::findOrFail((int)$rowId)->delete();
         $this->refreshTableForm();
     }
     function swapRows(string $tableId, string $rowId, string $neighborId): void
