@@ -297,6 +297,9 @@
                 size="medium"
                 title="{{ __('tollerus::ui.add_inflection_table') }}"
                 class="relative flex flex-row gap-2 justify-center items-center w-full"
+                @click="$wire.createTable();"
+                wire:loading.attr="disabled"
+                wire:target="createTable"
             >
                 <x-tollerus::icons.plus/>
                 <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_inflection_table') }}</span>

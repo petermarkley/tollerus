@@ -57,7 +57,6 @@ class InflectionTableEditor extends Component
     {
         $this->language = $language;
         $this->group = $group;
-        $this->tables = $group->inflectionTables->sortBy('position')->all();
         $this->refreshTableForm();
     }
 
@@ -66,6 +65,7 @@ class InflectionTableEditor extends Component
      */
     public function refreshTableForm(): void
     {
+        $this->tables = $this->group->inflectionTables->sortBy('position')->all();
         $this->group->loadMissing([
             'features.featureValues',
         ]);
@@ -252,6 +252,27 @@ class InflectionTableEditor extends Component
             });
         } catch (\Throwable $e) {
             $this->dispatch('baserow-update-failure');
+            throw $e;
+        }
+        $this->refreshTableForm();
+    }
+    function createTable(): void
+    {
+        try {
+            $nextPosition = collect($this->tables)->max('position') + 1;
+            $table = CreateWithUniqueName::handle(
+                startNum: $this->group->inflectionTables()->count(),
+                createFunc: fn ($tryName) => $this->group->inflectionTables()->create([
+                    'label' => $tryName,
+                    'position' => $nextPosition,
+                    'stack' => false,
+                    'align_on_stack' => false,
+                    'table_fold' => false,
+                    'rows_fold' => false,
+                ]),
+            );
+        } catch (\Throwable $e) {
+            $this->dispatch('table-add-failure');
             throw $e;
         }
         $this->refreshTableForm();
