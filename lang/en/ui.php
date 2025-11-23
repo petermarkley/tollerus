@@ -114,7 +114,7 @@ return [
   'move_inflection_table_down' => 'Move table down',
   'filters' => 'Filters',
   'add_filter' => 'Add filter',
-  'delete_filter' => 'Delete filter',
+  'remove_filter' => 'Remove filter',
   'rows' => 'Rows',
   'add_row' => 'Add row',
   'delete_row' => 'Delete row',

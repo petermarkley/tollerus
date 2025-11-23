@@ -207,7 +207,32 @@
                                     <x-tollerus::icons.filter />
                                     <span>{{ __('tollerus::ui.filters') }}</span>
                                 </h3>
-                                {{-- FIXME Add/remove filters --}}
+                                <div class="flex flex-col gap-2 items-start">
+                                    <ul class="flex flex-row flex-wrap gap-2">
+                                        <template x-for="(filter, filterId) in table.filters">
+                                            <li class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm flex flex-row gap-1 items-center p-1">
+                                                <span x-text="filter.featureName + ': ' + filter.valueName"></span>
+                                                <x-tollerus::inputs.button
+                                                    type="inverse"
+                                                    size="small"
+                                                    class="align-middle"
+                                                    title="{{ __('tollerus::ui.remove_filter') }}"
+                                                >
+                                                    <x-tollerus::icons.x/>
+                                                    <label class="sr-only">{{ __('tollerus::ui.remove_filter') }}</label>
+                                                </x-tollerus::inputs.button>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                    <x-tollerus::inputs.missing-data
+                                        size="small"
+                                        title="{{ __('tollerus::ui.add_filter') }}"
+                                        class="relative flex flex-row gap-2 justify-center items-center w-full"
+                                    >
+                                        <x-tollerus::icons.plus/>
+                                        <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_filter') }}</span>
+                                    </x-tollerus::inputs.missing-data>
+                                </div>
                             </x-tollerus::pane>
                             <x-tollerus::pane class="flex flex-col gap-4 items-start">
                                 <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
@@ -294,8 +319,32 @@
                                                             <x-tollerus::inputs.checkbox idExpression="'row_' + rowId + '_show_label'" model="row.showLabel" modelIsAlpine="true" label="{{ __('tollerus::ui.show_label') }}" />
                                                         </div>
                                                     </div>
-                                                    <div class="pl-12">
-                                                        {{-- FIXME Add/remove filters --}}
+                                                    <h4>{{ __('tollerus::ui.filters') }}</h4>
+                                                    <div class="pl-12 flex flex-col gap-2 items-start">
+                                                        <ul class="flex flex-row flex-wrap gap-2">
+                                                            <template x-for="(filter, filterId) in row.filters">
+                                                                <li class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm flex flex-row gap-1 items-center p-1">
+                                                                    <span x-text="filter.featureName + ': ' + filter.valueName"></span>
+                                                                    <x-tollerus::inputs.button
+                                                                        type="inverse"
+                                                                        size="small"
+                                                                        class="align-middle"
+                                                                        title="{{ __('tollerus::ui.remove_filter') }}"
+                                                                    >
+                                                                        <x-tollerus::icons.x/>
+                                                                        <label class="sr-only">{{ __('tollerus::ui.remove_filter') }}</label>
+                                                                    </x-tollerus::inputs.button>
+                                                                </li>
+                                                            </template>
+                                                        </ul>
+                                                        <x-tollerus::inputs.missing-data
+                                                            size="small"
+                                                            title="{{ __('tollerus::ui.add_filter') }}"
+                                                            class="relative flex flex-row gap-2 justify-center items-center w-full"
+                                                        >
+                                                            <x-tollerus::icons.plus/>
+                                                            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_filter') }}</span>
+                                                        </x-tollerus::inputs.missing-data>
                                                     </div>
                                                 </x-tollerus::panel>
                                             </div>
