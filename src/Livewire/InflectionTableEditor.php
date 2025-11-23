@@ -31,6 +31,8 @@ class InflectionTableEditor extends Component
     #[Locked] public array $tables;
     // UI input layer
     public array $tableForm = [];
+    // UI display properties
+    #[Locked] public array $features = [];
 
     /**
      * Livewire hooks
@@ -70,6 +72,14 @@ class InflectionTableEditor extends Component
         $this->group->loadMissing([
             'features.featureValues',
         ]);
+        $this->features = $this->group->features->sortBy('name')->map(fn ($f) => [
+            'id' => $f->id,
+            'name' => $f->name,
+            'values' => $f->featureValues->sortBy('name')->map(fn ($v) => [
+                'id' => $v->id,
+                'name' => $v->name,
+            ])->toArray(),
+        ])->toArray();
         foreach ($this->tables as $table) {
             $table->loadMissing([
                 'filterValues.feature',

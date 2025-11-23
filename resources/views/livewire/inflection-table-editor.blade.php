@@ -16,6 +16,7 @@
             delete_inflection_row_confirmation: @js(__('tollerus::ui.delete_inflection_row_confirmation')),
         },
         tableForm: $wire.entangle('tableForm'),
+        features: $wire.entangle('features'),
         get tablesFiltered() {
             return Object.fromEntries(Object.entries(this.tableForm).filter(([k, v]) => !isNaN(k)));
         },
@@ -207,7 +208,7 @@
                                     <x-tollerus::icons.filter />
                                     <span>{{ __('tollerus::ui.filters') }}</span>
                                 </h3>
-                                <div class="flex flex-col gap-2 items-start">
+                                <div class="flex flex-col gap-2 items-start w-full">
                                     <ul class="flex flex-row flex-wrap gap-2">
                                         <template x-for="(filter, filterId) in table.filters">
                                             <li class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm flex flex-row gap-1 items-center p-1">
@@ -224,14 +225,39 @@
                                             </li>
                                         </template>
                                     </ul>
-                                    <x-tollerus::inputs.missing-data
-                                        size="small"
-                                        title="{{ __('tollerus::ui.add_filter') }}"
-                                        class="relative flex flex-row gap-2 justify-center items-center w-full"
+                                    <div
+                                        class="relative w-full"
+                                        x-data="{ open: false }"
+                                        @focusout="if (open && $event.relatedTarget !== null && !($el.contains($event.relatedTarget) || $event.relatedTarget.contains($el))) {open=false;}"
+                                        @click.window="if (open && !$el.contains($event.target)) {open=false;}"
+                                        @keydown.escape="open=false"
                                     >
-                                        <x-tollerus::icons.plus/>
-                                        <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_filter') }}</span>
-                                    </x-tollerus::inputs.missing-data>
+                                        <x-tollerus::inputs.missing-data
+                                            size="small"
+                                            title="{{ __('tollerus::ui.add_filter') }}"
+                                            class="relative flex flex-row gap-2 justify-center items-center"
+                                            @click="open=true"
+                                        >
+                                            <x-tollerus::icons.plus/>
+                                            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_filter') }}</span>
+                                        </x-tollerus::inputs.missing-data>
+                                        <div x-show="open" class="max-w-40 lg:max-w-80 w-full absolute left-0 top-11 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-lg shadow p-2 flex flex-col gap-2 items-start">
+                                            <template x-for="feature in features">
+                                                <div class="flex flex-col items-start">
+                                                    <span x-text="feature.name" class="italic opacity-50"></span>
+                                                    <template x-for="value in feature.values">
+                                                        <x-tollerus::inputs.button
+                                                            type="inverse"
+                                                            size="small"
+                                                            x-bind:class="{'ml-4': true, 'line-through': Object.keys(table.filters).includes(value.id.toString())}"
+                                                            x-bind:disabled="Object.keys(table.filters).includes(value.id.toString());"
+                                                            x-text="value.name"
+                                                        />
+                                                    </template>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
                                 </div>
                             </x-tollerus::pane>
                             <x-tollerus::pane class="flex flex-col gap-4 items-start">
@@ -320,7 +346,7 @@
                                                         </div>
                                                     </div>
                                                     <h4>{{ __('tollerus::ui.filters') }}</h4>
-                                                    <div class="pl-12 flex flex-col gap-2 items-start">
+                                                    <div class="pl-12 flex flex-col gap-2 items-start w-full">
                                                         <ul class="flex flex-row flex-wrap gap-2">
                                                             <template x-for="(filter, filterId) in row.filters">
                                                                 <li class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm flex flex-row gap-1 items-center p-1">
@@ -340,7 +366,7 @@
                                                         <x-tollerus::inputs.missing-data
                                                             size="small"
                                                             title="{{ __('tollerus::ui.add_filter') }}"
-                                                            class="relative flex flex-row gap-2 justify-center items-center w-full"
+                                                            class="relative flex flex-row gap-2 justify-center items-center"
                                                         >
                                                             <x-tollerus::icons.plus/>
                                                             <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_filter') }}</span>
