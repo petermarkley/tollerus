@@ -19,6 +19,8 @@ use PeterMarkley\Tollerus\Models\InflectionTable;
 use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
+use PeterMarkley\Tollerus\Models\Pivots\InflectionTableFilter;
+use PeterMarkley\Tollerus\Models\Pivots\InflectionTableRowFilter;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class InflectionTableEditor extends Component
@@ -370,6 +372,42 @@ class InflectionTableEditor extends Component
             $this->dispatch('table-swap-failure');
             throw $e;
         }
+        $this->refreshTableForm();
+    }
+    function addTableFilter(string $tableId, string $valueId): void
+    {
+        // Find models
+        $tableModel = $this->findInCache('table-filter-add-failure', [
+            [
+                'id' => $tableId,
+                'objectType' => InflectionTable::class,
+                'failMessage' => ['tableId' => [__('tollerus::error.invalid_inflection_table')]],
+            ],
+        ]);
+        $valueModel = FeatureValue::find($valueId);
+        if (!($valueModel instanceof FeatureValue)) {
+            $this->dispatch('table-filter-add-failure');
+            return;
+        }
+        // Create pivot row
+        try {
+            (new InflectionTableFilter([
+                'inflect_table_id' => $tableModel->id,
+                'feature_id' => $valueModel->feature_id,
+                'value_id' => $valueModel->id,
+            ]))->save();
+        } catch (\Throwable $e) {
+            $this->dispatch('table-filter-add-failure');
+            throw $e;
+        }
+        $this->refreshTableForm();
+    }
+    function removeTableFilter(string $tableId, string $valueId): void
+    {
+        InflectionTableFilter::where('inflect_table_id', (int)$tableId)
+            ->where('value_id', (int)$valueId)
+            ->firstOrFail()
+            ->delete();
         $this->refreshTableForm();
     }
     function createRow(string $tableId): void

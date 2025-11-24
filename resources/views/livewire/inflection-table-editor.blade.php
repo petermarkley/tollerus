@@ -218,6 +218,9 @@
                                                     size="small"
                                                     class="align-middle"
                                                     title="{{ __('tollerus::ui.remove_filter') }}"
+                                                    @click="$wire.removeTableFilter(tableId, filter.valueId);"
+                                                    wire:loading.attr="disabled"
+                                                    wire:target="removeTableFilter"
                                                 >
                                                     <x-tollerus::icons.x/>
                                                     <label class="sr-only">{{ __('tollerus::ui.remove_filter') }}</label>
@@ -247,6 +250,7 @@
                                                         x-bind:class="{'ml-4': true, 'line-through': Object.values(table.filters).map((f)=>f.featureId).includes(feature.id)}"
                                                         x-bind:disabled="Object.values(table.filters).map((f)=>f.featureId).includes(feature.id);"
                                                         x-text="value.name"
+                                                        @click="open=false; $wire.addTableFilter(tableId, value.id);"
                                                     />
                                                 </template>
                                             </div>
