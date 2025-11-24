@@ -249,8 +249,8 @@
                                                         <x-tollerus::inputs.button
                                                             type="inverse"
                                                             size="small"
-                                                            x-bind:class="{'ml-4': true, 'line-through': Object.keys(table.filters).includes(value.id.toString())}"
-                                                            x-bind:disabled="Object.keys(table.filters).includes(value.id.toString());"
+                                                            x-bind:class="{'ml-4': true, 'line-through': Object.values(table.filters).map((f)=>f.featureId).includes(feature.id)}"
+                                                            x-bind:disabled="Object.values(table.filters).map((f)=>f.featureId).includes(feature.id);"
                                                             x-text="value.name"
                                                         />
                                                     </template>
