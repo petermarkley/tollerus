@@ -225,39 +225,33 @@
                                             </li>
                                         </template>
                                     </ul>
-                                    <div
-                                        class="relative w-full"
-                                        x-data="{ open: false }"
-                                        @focusout="if (open && $event.relatedTarget !== null && !($el.contains($event.relatedTarget) || $event.relatedTarget.contains($el))) {open=false;}"
-                                        @click.window="if (open && !$el.contains($event.target)) {open=false;}"
-                                        @keydown.escape="open=false"
-                                    >
-                                        <x-tollerus::inputs.missing-data
-                                            size="small"
-                                            title="{{ __('tollerus::ui.add_filter') }}"
-                                            class="relative flex flex-row gap-2 justify-center items-center"
-                                            @click="open=true"
-                                        >
-                                            <x-tollerus::icons.plus/>
-                                            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_filter') }}</span>
-                                        </x-tollerus::inputs.missing-data>
-                                        <div x-show="open" class="max-w-40 lg:max-w-80 w-full absolute left-0 top-11 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-lg shadow p-2 flex flex-col gap-2 items-start">
-                                            <template x-for="feature in features">
-                                                <div class="flex flex-col items-start">
-                                                    <span x-text="feature.name" class="italic opacity-50"></span>
-                                                    <template x-for="value in feature.values">
-                                                        <x-tollerus::inputs.button
-                                                            type="inverse"
-                                                            size="small"
-                                                            x-bind:class="{'ml-4': true, 'line-through': Object.values(table.filters).map((f)=>f.featureId).includes(feature.id)}"
-                                                            x-bind:disabled="Object.values(table.filters).map((f)=>f.featureId).includes(feature.id);"
-                                                            x-text="value.name"
-                                                        />
-                                                    </template>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </div>
+                                    <x-tollerus::inputs.dropdown class="relative w-full">
+                                        <x-slot:button>
+                                            <x-tollerus::inputs.missing-data
+                                                size="small"
+                                                title="{{ __('tollerus::ui.add_filter') }}"
+                                                class="relative flex flex-row gap-2 justify-center items-center"
+                                                @click="open=true"
+                                            >
+                                                <x-tollerus::icons.plus/>
+                                                <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_filter') }}</span>
+                                            </x-tollerus::inputs.missing-data>
+                                        </x-slot:button>
+                                        <template x-for="feature in features">
+                                            <div class="flex flex-col items-start">
+                                                <span x-text="feature.name" class="italic opacity-50"></span>
+                                                <template x-for="value in feature.values">
+                                                    <x-tollerus::inputs.button
+                                                        type="inverse"
+                                                        size="small"
+                                                        x-bind:class="{'ml-4': true, 'line-through': Object.values(table.filters).map((f)=>f.featureId).includes(feature.id)}"
+                                                        x-bind:disabled="Object.values(table.filters).map((f)=>f.featureId).includes(feature.id);"
+                                                        x-text="value.name"
+                                                    />
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </x-tollerus::inputs.dropdown>
                                 </div>
                             </x-tollerus::pane>
                             <x-tollerus::pane class="flex flex-col gap-4 items-start">
@@ -363,14 +357,33 @@
                                                                 </li>
                                                             </template>
                                                         </ul>
-                                                        <x-tollerus::inputs.missing-data
-                                                            size="small"
-                                                            title="{{ __('tollerus::ui.add_filter') }}"
-                                                            class="relative flex flex-row gap-2 justify-center items-center"
-                                                        >
-                                                            <x-tollerus::icons.plus/>
-                                                            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_filter') }}</span>
-                                                        </x-tollerus::inputs.missing-data>
+                                                        <x-tollerus::inputs.dropdown class="relative w-full">
+                                                            <x-slot:button>
+                                                                <x-tollerus::inputs.missing-data
+                                                                    size="small"
+                                                                    title="{{ __('tollerus::ui.add_filter') }}"
+                                                                    class="relative flex flex-row gap-2 justify-center items-center"
+                                                                    @click="open=true"
+                                                                >
+                                                                    <x-tollerus::icons.plus/>
+                                                                    <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_filter') }}</span>
+                                                                </x-tollerus::inputs.missing-data>
+                                                            </x-slot:button>
+                                                            <template x-for="feature in features">
+                                                                <div class="flex flex-col items-start">
+                                                                    <span x-text="feature.name" class="italic opacity-50"></span>
+                                                                    <template x-for="value in feature.values">
+                                                                        <x-tollerus::inputs.button
+                                                                            type="inverse"
+                                                                            size="small"
+                                                                            x-bind:class="{'ml-4': true, 'line-through': Object.values(row.filters).map((f)=>f.featureId).includes(feature.id)}"
+                                                                            x-bind:disabled="Object.values(row.filters).map((f)=>f.featureId).includes(feature.id);"
+                                                                            x-text="value.name"
+                                                                        />
+                                                                    </template>
+                                                                </div>
+                                                            </template>
+                                                        </x-tollerus::inputs.dropdown>
                                                     </div>
                                                 </x-tollerus::panel>
                                             </div>
