@@ -89,7 +89,6 @@ class InflectionTableEditor extends Component
             $table->loadMissing([
                 'filterValues.feature',
                 'rows.filterValues.feature',
-                'rows.sourceParticle.nativeSpellings',
             ]);
         }
         $primaryNeographyId = $this->language->primary_neography;
@@ -120,14 +119,6 @@ class InflectionTableEditor extends Component
                         'visible'       => (bool)($row->visible),
                         'showLabel'     => (bool)($row->show_label),
                         'position'      => $row->position,
-                        'morphTemplate' => $row->morph_template,
-                        'srcParticle' => ($row->sourceParticle === null ? null : [
-                            'id' => $row->sourceParticle->id,
-                            'transliterated' => $row->sourceParticle->transliterated,
-                            'phonemic' => $row->sourceParticle->phonemic,
-                            'primaryNativeSpelling' => $row->sourceParticle->nativeSpellings
-                                ->firstWhere('neography_id', $primaryNeographyId),
-                        ]),
                         'filters' => $row->filterValues->mapWithKeys(function ($filterValue) {
                             return [$filterValue->id => [
                                 'featureId'   => $filterValue->feature->id,
@@ -141,80 +132,6 @@ class InflectionTableEditor extends Component
                             'group' => $this->group,
                             'row' => $row,
                         ]),
-                        'morphRules' => [
-                            'onBaseTransliterated' => $row->morphRules->filter(
-                                fn ($r) => ($r->target_type == MorphRuleTargetType::BaseInput && $r->pattern_type == MorphRulePatternType::Transliterated)
-                            )->sortBy('order')->mapWithKeys(function ($rule) {
-                                return [$rule->id => [
-                                    'order' => $rule->order,
-                                    'pattern' => $rule->pattern,
-                                    'replacement' => $rule->replacement,
-                                ]];
-                            })->toArray(),
-                            'onBasePhonemic' => $row->morphRules->filter(
-                                fn ($r) => ($r->target_type == MorphRuleTargetType::BaseInput && $r->pattern_type == MorphRulePatternType::Phonemic)
-                            )->sortBy('order')->mapWithKeys(function ($rule) {
-                                return [$rule->id => [
-                                    'order' => $rule->order,
-                                    'pattern' => $rule->pattern,
-                                    'replacement' => $rule->replacement,
-                                ]];
-                            })->toArray(),
-                            'onBaseNative' => $neographies->mapWithKeys(fn ($neography) => [
-                                $neography->id => [
-                                    'neographyId' => $neography->id,
-                                    'rules' => $row->morphRules->filter(
-                                        fn ($r) => (
-                                            $r->target_type == MorphRuleTargetType::BaseInput &&
-                                            $r->pattern_type == MorphRulePatternType::Transliterated &&
-                                            $r->neography_id == $neography->id
-                                        )
-                                    )->sortBy('order')->mapWithKeys(function ($rule) {
-                                        return [$rule->id => [
-                                            'order' => $rule->order,
-                                            'pattern' => $rule->pattern,
-                                            'replacement' => $rule->replacement,
-                                        ]];
-                                    })->toArray(),
-                                ]
-                            ])->toArray(),
-                            'onParticleTransliterated' => $row->morphRules->filter(
-                                fn ($r) => ($r->target_type == MorphRuleTargetType::ParticleInput && $r->pattern_type == MorphRulePatternType::Transliterated)
-                            )->sortBy('order')->mapWithKeys(function ($rule) {
-                                return [$rule->id => [
-                                    'order' => $rule->order,
-                                    'pattern' => $rule->pattern,
-                                    'replacement' => $rule->replacement,
-                                ]];
-                            })->toArray(),
-                            'onParticlePhonemic' => $row->morphRules->filter(
-                                fn ($r) => ($r->target_type == MorphRuleTargetType::ParticleInput && $r->pattern_type == MorphRulePatternType::Phonemic)
-                            )->sortBy('order')->mapWithKeys(function ($rule) {
-                                return [$rule->id => [
-                                    'order' => $rule->order,
-                                    'pattern' => $rule->pattern,
-                                    'replacement' => $rule->replacement,
-                                ]];
-                            })->toArray(),
-                            'onParticleNative' => $neographies->mapWithKeys(fn ($neography) => [
-                                $neography->id => [
-                                    'neographyId' => $neography->id,
-                                    'rules' => $row->morphRules->filter(
-                                        fn ($r) => (
-                                            $r->target_type == MorphRuleTargetType::ParticleInput &&
-                                            $r->pattern_type == MorphRulePatternType::Transliterated &&
-                                            $r->neography_id == $neography->id
-                                        )
-                                    )->sortBy('order')->mapWithKeys(function ($rule) {
-                                        return [$rule->id => [
-                                            'order' => $rule->order,
-                                            'pattern' => $rule->pattern,
-                                            'replacement' => $rule->replacement,
-                                        ]];
-                                    })->toArray(),
-                                ]
-                            ])->toArray(),
-                        ],
                     ]];
                 })->toArray(),
             ]];
