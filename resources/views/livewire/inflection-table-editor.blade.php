@@ -293,16 +293,16 @@
                                                     </x-tollerus::inputs.button>
                                                 </x-tollerus::panel>
                                                 <x-tollerus::panel class="flex flex-col gap-4 items-start rounded-l-none">
-                                                    <div class="flex flex-row gap-4 justify-between items-start md:items-center">
-                                                        <div class="flex flex-col md:flex-row gap-4 items-center">
-                                                            <div class="w-80">
+                                                    <div class="flex flex-row gap-4 justify-between items-start lg:items-center w-full">
+                                                        <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center flex-grow">
+                                                            <div class="lg:w-80">
                                                                 <x-tollerus::inputs.text-saveable
                                                                     idExpression="'row_' + rowId + '_label'"
                                                                     model="row.label"
                                                                     fieldName="{{ __('tollerus::ui.label') }}"
                                                                     showLabel="true" />
                                                             </div>
-                                                            <div class="w-80">
+                                                            <div class="lg:w-80">
                                                                 <x-tollerus::inputs.text-saveable
                                                                     idExpression="'row_' + rowId + '_label_brief'"
                                                                     model="row.labelBrief"
@@ -334,7 +334,7 @@
                                                             fieldName="{{ __('tollerus::ui.label_long') }}"
                                                             showLabel="true" />
                                                     </div>
-                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
                                                         <div class="flex flex-col items-start">
                                                             <x-tollerus::inputs.checkbox idExpression="'row_' + rowId + '_visible'" model="row.visible" modelIsAlpine="true" label="{{ __('tollerus::ui.visible') }}" />
                                                         </div>
