@@ -472,4 +472,46 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
+    function addRowFilter(string $tableId, string $rowId, string $valueId): void
+    {
+        // Find models
+        $rowModel = $this->findInCache('row-filter-add-failure', [
+            [
+                'id' => $tableId,
+                'objectType' => InflectionTable::class,
+                'failMessage' => ['tableId' => [__('tollerus::error.invalid_inflection_table')]],
+                'relation' => 'rows',
+            ],
+            [
+                'id' => $rowId,
+                'objectType' => InflectionTableRow::class,
+                'failMessage' => ['rowId' => [__('tollerus::error.invalid_inflection_table_row')]],
+            ],
+        ]);
+        $valueModel = FeatureValue::find($valueId);
+        if (!($valueModel instanceof FeatureValue)) {
+            $this->dispatch('row-filter-add-failure');
+            return;
+        }
+        // Create pivot row
+        try {
+            (new InflectionTableRowFilter([
+                'inflect_table_row_id' => $rowModel->id,
+                'feature_id' => $valueModel->feature_id,
+                'value_id' => $valueModel->id,
+            ]))->save();
+        } catch (\Throwable $e) {
+            $this->dispatch('row-filter-add-failure');
+            throw $e;
+        }
+        $this->refreshTableForm();
+    }
+    function removeRowFilter(string $rowId, string $valueId): void
+    {
+        InflectionTableRowFilter::where('inflect_table_row_id', (int)$rowId)
+            ->where('value_id', (int)$valueId)
+            ->firstOrFail()
+            ->delete();
+        $this->refreshTableForm();
+    }
 }

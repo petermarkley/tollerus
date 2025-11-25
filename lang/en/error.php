@@ -17,6 +17,7 @@ return [
     'invalid_feature_value' => 'Invalid feature value ID',
     'duplicate_of_unique' => 'This must be unique per group.',
     'invalid_inflection_table' => 'Invalid inflection table ID',
+    'invalid_inflection_table_row' => 'Invalid inflection row ID',
     'invalid_prop_name' => 'Invalid property name',
     'max_attempts_adding_unique_name' => 'Reached max attempts while trying to create unique object name.',
 ];
