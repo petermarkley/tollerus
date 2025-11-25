@@ -120,6 +120,7 @@ return [
   'delete_row' => 'Delete row',
   'move_row_up' => 'Move row up',
   'move_row_down' => 'Move row down',
+  'row_name' => 'Row ":name"',
   /**
    * TRANSLATOR NOTE:
    *
@@ -159,6 +160,8 @@ return [
   'label' => 'Label',
   'label_long' => 'Label (long)',
   'show_label' => 'Show label',
+  'auto_inflection' => 'Auto-inflection',
+  'configure_auto_inflection' => 'Configure auto-inflection',
   /**
    * TRANSLATOR NOTE:
    *

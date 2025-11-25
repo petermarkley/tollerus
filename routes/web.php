@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Config;
 use PeterMarkley\Tollerus\Http\Controllers\HelloController;
 use PeterMarkley\Tollerus\Http\Controllers\LanguageController;
 use PeterMarkley\Tollerus\Http\Controllers\NeographyController;
+use PeterMarkley\Tollerus\Livewire\AutoInflectionEditor;
 use PeterMarkley\Tollerus\Livewire\InflectionTableEditor;
 use PeterMarkley\Tollerus\Livewire\LanguageEditor;
 
@@ -31,12 +32,17 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                     ->group(function () {
                         Route::get('/', [LanguageController::class, 'index'])->name('index');
                         Route::post('/', [LanguageController::class, 'store'])->name('store');
-                        Route::delete('/{language}', [LanguageController::class, 'destroy'])->name('destroy');
-                        Route::get('/{language}', LanguageEditor::class)->name('edit');
-                        Route::get('/{language}/{tab}', LanguageEditor::class)
-                            ->whereIn('tab', ['neographies', 'grammar', 'entries'])
-                            ->name('edit.tab');
-                        Route::get('/{language}/grammar/{group}/inflection-tables', InflectionTableEditor::class)->name('inflection-tables');
+                        Route::prefix('{language}')->group(function () {
+                            Route::delete('/', [LanguageController::class, 'destroy'])->name('destroy');
+                            Route::get('/', LanguageEditor::class)->name('edit');
+                            Route::get('/{tab}', LanguageEditor::class)
+                                ->whereIn('tab', ['neographies', 'grammar', 'entries'])
+                                ->name('edit.tab');
+                            Route::prefix('grammar/{group}')->group(function () {
+                                Route::get('/inflection-tables', InflectionTableEditor::class)->name('inflection-tables');
+                                Route::get('/inflection-rows/{row}/auto', AutoInflectionEditor::class)->name('auto-inflection');
+                            });
+                        });
                     });
                 Route::prefix('neographies')
                     ->as('neographies.')

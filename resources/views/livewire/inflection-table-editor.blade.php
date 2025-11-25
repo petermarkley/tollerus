@@ -393,6 +393,9 @@
                                                             </template>
                                                         </x-tollerus::inputs.dropdown>
                                                     </div>
+                                                    <x-tollerus::button type="secondary" size="small" x-bind:href="row.autoInflectionUrl">
+                                                        <span>{{ __('tollerus::ui.configure_auto_inflection') }}</span>
+                                                    </x-tollerus::button>
                                                 </x-tollerus::panel>
                                             </div>
                                         </template>

@@ -54,7 +54,10 @@ class InflectionTableEditor extends Component
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.languages.index'), 'text' => __('tollerus::ui.languages')],
-                    ['href' => route('tollerus.admin.languages.edit.tab', ['language' => $this->language->id, 'tab' => 'grammar']), 'text' => $this->language->name],
+                    ['href' => route('tollerus.admin.languages.edit.tab', [
+                        'language' => $this->language->id,
+                        'tab' => 'grammar',
+                    ]), 'text' => $this->language->name],
                 ],
             ])->title($pageTitle);
     }
@@ -133,6 +136,11 @@ class InflectionTableEditor extends Component
                                 'valueName'   => $filterValue->name,
                             ]];
                         })->toArray(),
+                        'autoInflectionUrl' => route('tollerus.admin.languages.auto-inflection', [
+                            'language' => $this->language,
+                            'group' => $this->group,
+                            'row' => $row,
+                        ]),
                         'morphRules' => [
                             'onBaseTransliterated' => $row->morphRules->filter(
                                 fn ($r) => ($r->target_type == MorphRuleTargetType::BaseInput && $r->pattern_type == MorphRulePatternType::Transliterated)
