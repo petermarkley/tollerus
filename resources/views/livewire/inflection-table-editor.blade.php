@@ -3,7 +3,6 @@
         msgs: {
             no_cancel: @js(__('tollerus::ui.no_cancel')),
             yes_delete: @js(__('tollerus::ui.yes_delete')),
-            inflection_table_nameless: @js(__('tollerus::ui.inflection_table_nameless')),
             stack: @js(__('tollerus::ui.stack')),
             stack_description: @js(__('tollerus::ui.stack_description')),
             align_on_stack: @js(__('tollerus::ui.align_on_stack')),
@@ -110,7 +109,7 @@
                             <h2 class="flex flex-row gap-2 items-center justify-between">
                                 <div class="font-bold text-xl flex flex-row gap-2 items-center">
                                     <x-tollerus::icons.table class="h-8"/>
-                                    <span x-text="table.label.length>0 ? table.label : msgs['inflection_table_nameless']" x-bind:class="{ 'font-normal italic': table.label.length==0 }"></span>
+                                    <span x-text="table.label" x-bind:class="{ 'font-normal italic': table.label.length==0 }"></span>
                                 </div>
                                 <x-tollerus::inputs.button
                                     type="secondary"

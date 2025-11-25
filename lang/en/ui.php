@@ -96,7 +96,6 @@ return [
   'add_language' => 'Add language',
   'abbreviation' => 'Abbreviation',
   'group_nameless' => '(group)',
-  'inflection_table_nameless' => '(inflection table)',
   'features' => 'Features', // i.e. grammatical features or dimensions, for example tense / person / number
   'feature' => 'Feature',
   'add_feature' => 'Add feature',
