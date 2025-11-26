@@ -96,7 +96,11 @@
                             $targetLocal = \PeterMarkley\Tollerus\Enums\MorphRuleTargetType::from($targetStr)->localize();
                             $patternLocal = \PeterMarkley\Tollerus\Enums\MorphRulePatternType::from($tabPatternName)->localize();
                         @endphp
-                        <h2 class="font-bold text-xl">{{ mb_ucfirst($targetLocal) }} {{ $patternLocal }}</h2>
+                        <h2 class="font-bold text-xl flex flex-row gap-4 items-baseline">
+                            <span>{{ mb_ucfirst($targetLocal) }}</span>
+                            <span>&bull;</span>
+                            <span>{{ $patternLocal }}</span>
+                        </h2>
                         <p>Lorem ipsum dolor sit amet.</p>
                     </x-tollerus::panel>
                 @endforeach
