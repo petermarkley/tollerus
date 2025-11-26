@@ -11,4 +11,12 @@ enum MorphRuleTargetType: string
     {
         return array_column(self::cases(), 'value');
     }
+
+    public function localize(): string
+    {
+        return match ($this) {
+            self::BaseInput     => __('tollerus::ui.base'),
+            self::ParticleInput => __('tollerus::ui.particle'),
+        };
+    }
 }

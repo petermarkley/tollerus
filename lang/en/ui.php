@@ -151,6 +151,11 @@ return [
    * because they might instead be prefixes, for example.
    */
   'base_row' => 'Base row',
+  'base' => 'Base',
+  'particle' => 'Particle',
+  'transliterated' => 'Transliterated',
+  'phonemic' => 'Phonemic',
+  'native' => 'Native',
   'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
   'preview_of_thing' => 'Preview of :thing',
   'activate' => 'Activate',

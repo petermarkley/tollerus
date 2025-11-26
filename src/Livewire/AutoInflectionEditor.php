@@ -26,6 +26,8 @@ class AutoInflectionEditor extends Component
 {
     use HasModelCache;
     private $cacheRoot = 'rules';
+    public string $tabTarget = 'base';
+    public string $tabPattern = 'transliterated';
     // Models
     #[Locked] public Language $language;
     #[Locked] public WordClassGroup $group;
