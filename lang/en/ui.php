@@ -151,7 +151,7 @@ return [
    * because they might instead be prefixes, for example.
    */
   'base_row' => 'Base row',
-  'base_row_description' => 'Which form of the word should serve as the root, or starting point, for deriving other words forms?',
+  'base_row_description' => 'Which form of a word should serve as the root, or starting point, for deriving other word forms?',
   'particle_description' => 'What affix or combining form is added to make the :row?',
   'edit_at_group_level' => 'Edit at group level',
   'morph_template' => 'Morph template',
