@@ -18,8 +18,8 @@
         @if ($row->src_base === null)
             <x-tollerus::alert type="warning">{{ __('tollerus::ui.no_base_row_notice') }}</x-tollerus::alert>
         @endif
-        <x-tollerus::panel class="flex flex-col gap-4">
-            <div class="flex flex-col md:flex-row gap-4">
+        <x-tollerus::panel class="flex flex-col gap-8">
+            <div class="flex flex-col md:flex-row gap-8">
                 <div class="flex flex-col gap-2 items-start">
                     <h3 class="font-bold flex flex-row gap-4 items-center text-lg">{{ __('tollerus::ui.base_row') }}</h3>
                     <div>
