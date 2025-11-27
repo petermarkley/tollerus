@@ -113,12 +113,13 @@ class InflectionTableEditor extends Component
                 })->toArray(),
                 'rows' => $table->rows->sortBy('position')->mapWithKeys(function ($row) use ($primaryNeographyId, $neographies) {
                     return [$row->id => [
-                        'label'         => $row->label,
-                        'labelBrief'    => $row->label_brief,
-                        'labelLong'     => $row->label_long,
-                        'visible'       => (bool)($row->visible),
-                        'showLabel'     => (bool)($row->show_label),
-                        'position'      => $row->position,
+                        'label'      => $row->label,
+                        'labelBrief' => $row->label_brief,
+                        'labelLong'  => $row->label_long,
+                        'visible'    => (bool)($row->visible),
+                        'showLabel'  => (bool)($row->show_label),
+                        'position'   => $row->position,
+                        'srcBase'    => $row->src_base,
                         'filters' => $row->filterValues->mapWithKeys(function ($filterValue) {
                             return [$filterValue->id => [
                                 'featureId'   => $filterValue->feature->id,

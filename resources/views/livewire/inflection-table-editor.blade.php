@@ -392,10 +392,12 @@
                                                             </template>
                                                         </x-tollerus::inputs.dropdown>
                                                     </div>
-                                                    <x-tollerus::button type="secondary" size="small" x-bind:href="row.autoInflectionUrl" class="flex flex-row gap-1 items-center">
-                                                        <x-tollerus::icons.bolt fill="currentColor" />
-                                                        <span>{{ __('tollerus::ui.configure_auto_inflection') }}</span>
-                                                    </x-tollerus::button>
+                                                    <template x-if="row.srcBase !== null">
+                                                        <x-tollerus::button type="secondary" size="small" x-bind:href="row.autoInflectionUrl" class="flex flex-row gap-1 items-center">
+                                                            <x-tollerus::icons.bolt fill="currentColor" />
+                                                            <span>{{ __('tollerus::ui.configure_auto_inflection') }}</span>
+                                                        </x-tollerus::button>
+                                                    </template>
                                                 </x-tollerus::panel>
                                             </div>
                                         </template>

@@ -5,13 +5,16 @@
     }"
     @tab-target-switch.window="tabTarget = $event.detail.tabTarget;"
 >
-    <div id="non-modal-content">
-        <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
+    <div id="non-modal-content" class="flex flex-col gap-4">
+        <h1 class="font-bold text-2xl px-6 xl:px-0">
             <span>{{ __('tollerus::ui.row_name', ['name' => $rowName])}}</span>
             <span>{{ __('tollerus::ui.auto_inflection') }}</span>
         </h1>
-        <x-tollerus::panel class="mb-4">
-            Lorem ipsum dolor sit amet.
+        @if ($row->src_base === null)
+            <x-tollerus::alert type="warning">{{ __('tollerus::ui.no_base_row_notice') }}</x-tollerus::alert>
+        @endif
+        <x-tollerus::panel class="flex flex-col gap-4">
+            <div>Lorem ipsum dolor sit amet.</div>
         </x-tollerus::panel>
         <ul class="px-4 flex flex-row gap-4 justify-start items-end" role="tablist">
             <x-tollerus::inputs.tab
