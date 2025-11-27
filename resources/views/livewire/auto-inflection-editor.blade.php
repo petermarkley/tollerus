@@ -22,7 +22,10 @@
         <x-tollerus::panel class="flex flex-col gap-8">
             <div class="flex flex-col md:flex-row gap-8">
                 <div class="flex flex-col gap-2 items-start">
-                    <h3 class="font-bold flex flex-row gap-4 items-center text-lg">{{ __('tollerus::ui.base_row') }}</h3>
+                    <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
+                        <x-tollerus::icons.bricks />
+                        <span>{{ __('tollerus::ui.base_row') }}</span>
+                    </h3>
                     <div>
                         <p class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm p-1">{{ $row->sourceBase->label }}</p>
                     </div>
@@ -35,7 +38,12 @@
                     </div>
                 </div>
                 <fieldset class="flex flex-col gap-2 items-start">
-                    <h3 class="font-bold flex flex-row gap-4 items-center text-lg"><label for="src_particle">{{ __('tollerus::ui.particle') }}</label></h3>
+                    <h3 class="font-bold text-lg">
+                        <label for="src_particle" class="flex flex-row gap-4 items-center">
+                            <x-tollerus::icons.puzzle />
+                            <span>{{ __('tollerus::ui.particle') }}</span>
+                        </label>
+                    </h3>
                     <x-tollerus::inputs.text-saveable
                         idExpression="'src_particle'"
                         model="ruleForm.row.srcParticle.globalId"
@@ -46,7 +54,12 @@
                 </fieldset>
             </div>
             <fieldset class="flex flex-col gap-2 items-start">
-                <h3 class="font-bold flex flex-row gap-4 items-center text-lg"><label for="morph_template">{{ __('tollerus::ui.morph_template') }}</label></h3>
+                <h3 class="font-bold text-lg">
+                    <label for="morph_template" class="flex flex-row gap-4 items-center">
+                        <x-tollerus::icons.arrows-merge-right />
+                        <span>{{ __('tollerus::ui.morph_template') }}</span>
+                    </label>
+                </h3>
                 <x-tollerus::inputs.text-saveable
                     idExpression="'morph_template'"
                     model="ruleForm.row.morphTemplate"
@@ -54,6 +67,7 @@
                     fieldName="morphTemplate"
                 />
                 <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.morph_template_description') }}</legend></div>
+                <x-tollerus::alert type="info" class="whitespace-nowrap">{{ __('tollerus::ui.morph_template_key') }}</x-tollerus::alert>
             </fieldset>
         </x-tollerus::panel>
         <h1 class="font-bold text-2xl px-6 xl:px-0">{{ __('tollerus::ui.morph_rules') }}</h1>
