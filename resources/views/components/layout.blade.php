@@ -17,7 +17,7 @@
                 </div>
             </header>
             @if (isset($breadcrumbs))
-                <nav class="w-full md:max-w-[1200px] mx-auto">
+                <nav class="w-full md:max-w-[1200px] mx-auto px-6 xl:px-0">
                     <ul class="flex flex-row gap-2 justify-start items-center">
                         @foreach ($breadcrumbs as $breadcrumb)
                             @if (isset($breadcrumb['href']))
