@@ -152,6 +152,7 @@ return [
    */
   'base_row' => 'Base row',
   'base_row_description' => 'Which form of a word should serve as the root, or starting point, for deriving other word forms?',
+  'used_in_auto_inflection' => '(Used in auto-inflection)',
   'particle_description' => 'What affix or combining form is added to make the :row?',
   'edit_at_group_level' => 'Edit at group level',
   'morph_template' => 'Morph template',

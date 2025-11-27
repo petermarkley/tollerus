@@ -60,24 +60,33 @@
         </h1>
         <div class="flex flex-col gap-6">
             <x-tollerus::panel>
-                <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                    <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }}</legend></div>
-                    <div>
-                        <x-tollerus::inputs.select
-                            id="base_row"
-                            label="{{ __('tollerus::ui.base_row') }}"
-                            model="tableForm.baseRow"
-                            @change="$wire.updateBaseRow($el.value);"
-                        >
-                            <option value="" class="cursor-pointer italic" x-bind:selected="tableForm.baseRow===null || tableForm.baseRow===''">{{ __('tollerus::ui.none') }}</option>
-                            <template x-for="(table, tableId) in tablesFiltered">
-                                <optgroup x-bind:label="table.label">
-                                    <template x-for="(row, rowId) in table.rows">
-                                        <option x-bind:value="rowId" class="cursor-pointer" x-text="row.label" x-bind:selected="tableForm.baseRow==rowId"></option>
-                                    </template>
-                                </optgroup>
-                            </template>
-                        </x-tollerus::inputs.select>
+                <fieldset class="flex flex-col gap-2 items-start">
+                    <h3 class="font-bold text-lg">
+                        <label for="base_row" class="flex flex-row gap-4 items-center">
+                            <x-tollerus::icons.bricks />
+                            <span>{{ __('tollerus::ui.base_row') }}</span>
+                        </label>
+                    </h3>
+                    <div class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
+                        <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }} {{ __('tollerus::ui.used_in_auto_inflection') }}</legend></div>
+                        <div>
+                            <x-tollerus::inputs.select
+                                id="base_row"
+                                label="{{ __('tollerus::ui.base_row') }}"
+                                showLabel="false"
+                                model="tableForm.baseRow"
+                                @change="$wire.updateBaseRow($el.value);"
+                            >
+                                <option value="" class="cursor-pointer italic" x-bind:selected="tableForm.baseRow===null || tableForm.baseRow===''">{{ __('tollerus::ui.none') }}</option>
+                                <template x-for="(table, tableId) in tablesFiltered">
+                                    <optgroup x-bind:label="table.label">
+                                        <template x-for="(row, rowId) in table.rows">
+                                            <option x-bind:value="rowId" class="cursor-pointer" x-text="row.label" x-bind:selected="tableForm.baseRow==rowId"></option>
+                                        </template>
+                                    </optgroup>
+                                </template>
+                            </x-tollerus::inputs.select>
+                        </div>
                     </div>
                 </fieldset>
             </x-tollerus::panel>
