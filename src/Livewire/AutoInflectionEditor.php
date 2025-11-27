@@ -28,6 +28,7 @@ class AutoInflectionEditor extends Component
     private $cacheRoot = 'rules';
     public string $tabTarget = 'base';
     public string $tabPattern = 'transliterated';
+    public string $tabNeography = '';
     // Models
     #[Locked] public Language $language;
     #[Locked] public WordClassGroup $group;
@@ -74,8 +75,12 @@ class AutoInflectionEditor extends Component
     public function mount(Language $language, WordClassGroup $group, InflectionTableRow $row): void
     {
         $this->language = $language;
+        $this->language->loadMissing([
+            'neographies',
+        ]);
         $this->group = $group;
         $this->row = $row;
+        $this->tabNeography = (string)$this->language->primary_neography;
         $this->refreshRuleForm();
     }
 
@@ -97,7 +102,7 @@ class AutoInflectionEditor extends Component
         $this->ruleForm = [
             'row' => [
                 'morphTemplate' => $this->row->morph_template,
-                'srcParticle' => ($this->row->sourceParticle === null ? null : [
+                'srcParticle' => ($this->row->sourceParticle === null ? ['id' => null] : [
                     'id' => (string)$this->row->sourceParticle->id,
                     'transliterated' => $this->row->sourceParticle->transliterated,
                     'phonemic' => $this->row->sourceParticle->phonemic,

@@ -6,6 +6,7 @@
         },
         tabTarget: $wire.entangle('tabTarget'),
         tabPattern: $wire.entangle('tabPattern'),
+        tabNeography: $wire.entangle('tabNeography'),
         ruleForm: $wire.entangle('ruleForm'),
     }"
     @tab-target-switch.window="tabTarget = $event.detail.tabTarget;"
@@ -146,6 +147,19 @@
                                 <span>{{ __('tollerus::ui.in_type_representation', ['type' => $patternLocal]) }}</span>
                                 <span>&hellip;</span>
                             </h2>
+                            @if ($tabPatternName == 'native')
+                                <div>
+                                    <x-tollerus::inputs.select
+                                        id="tab_neography"
+                                        label="{{ __('tollerus::ui.neography') }}"
+                                        model="tabNeography"
+                                    >
+                                        @foreach ($language->neographies as $neography)
+                                            <option value="{{ (string)$neography->id }}" class="cursor-pointer" x-bind:selected="tabNeography=={{ (string)$neography->id }}">{{ $neography->name }}</option>
+                                        @endforeach
+                                    </x-tollerus::inputs.select>
+                                </div>
+                            @endif
                             <p>Lorem ipsum dolor sit amet.</p>
                         </x-tollerus::panel>
                     @endforeach
