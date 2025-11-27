@@ -206,4 +206,30 @@ class AutoInflectionEditor extends Component
     /**
      * Granular UI functions
      */
+    public function createRule(string $tabTarget, string $tabPattern, ?string $tabNeography = ''): void
+    {
+        try {
+            $targetType = MorphRuleTargetType::from($tabTarget . '_input');
+            $patternType = MorphRulePatternType::from($tabPattern);
+            $neographyId = (empty($tabNeography) ? null : (int)$tabNeography);
+            $nextPosition = collect($this->rules)
+                ->filter(fn ($r) => (
+                    $r->target_type == $targetType &&
+                    $r->pattern_type == $patternType &&
+                    $r->neography_id == $neographyId
+                ))->max('order') + 1;
+            $rule = $this->row->morphRules()->create([
+                'pattern' => '',
+                'replacement' => '',
+                'target_type' => $targetType,
+                'pattern_type' => $patternType,
+                'neography_id' => $neographyId,
+                'order' => $nextPosition,
+            ]);
+        } catch (\Throwable $e) {
+            $this->dispatch('rule-add-failure');
+            throw $e;
+        }
+        $this->refreshRuleForm();
+    }
 }

@@ -10,6 +10,9 @@
         size="small"
         title="{{ __('tollerus::ui.add_rule') }}"
         class="relative flex flex-row gap-2 justify-center items-center w-full"
+        @click="$wire.createRule('{{ $tabTargetName }}', '{{ $tabPatternName }}', '{{ $tabPatternName=='native' ? (string)$neography->id : '' }}');"
+        wire:loading.attr="disabled"
+        wire:target="createRule"
     >
         <x-tollerus::icons.plus/>
         <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_rule') }}</span>
