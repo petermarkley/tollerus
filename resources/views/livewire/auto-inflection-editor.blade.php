@@ -174,8 +174,14 @@
                                         @endforeach
                                     </x-tollerus::inputs.select>
                                 </div>
+                                @foreach ($language->neographies as $neography)
+                                    <div x-show="tabNeography=={{ (string)$neography->id }}">
+                                        @include('tollerus::livewire.auto-inflection-editor._rules')
+                                    </div>
+                                @endforeach
+                            @else
+                                @include('tollerus::livewire.auto-inflection-editor._rules')
                             @endif
-                            <p>Lorem ipsum dolor sit amet.</p>
                         </x-tollerus::panel>
                     @endforeach
                 </div>
