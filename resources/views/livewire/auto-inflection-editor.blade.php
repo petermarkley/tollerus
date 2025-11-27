@@ -27,14 +27,15 @@
                         <span>{{ __('tollerus::ui.base_row') }}</span>
                     </h3>
                     <div>
-                        <p class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm p-1">{{ $row->sourceBase->label }}</p>
+                        @if ($row->sourceBase)
+                            <p class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm p-1">{{ $row->sourceBase->label }}</p>
+                        @else
+                            <p class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm p-1 italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.none') }}</p>
+                        @endif
                     </div>
                     <p class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }}</p>
                     <div>
-                        <a href="{{ route('tollerus.admin.languages.inflection-tables', ['language' => $language->id, 'group' => $group->id]) }}" class="flex flex-row gap-2">
-                            <x-tollerus::icons.info/>
-                            <span>{{ __('tollerus::ui.edit_at_group_level') }}</span>
-                        </a>
+                        <a href="{{ route('tollerus.admin.languages.inflection-tables', ['language' => $language->id, 'group' => $group->id]) }}">{{ __('tollerus::ui.edit_at_group_level') }}</a>
                     </div>
                 </div>
                 <fieldset class="flex flex-col gap-2 items-start">
@@ -66,8 +67,8 @@
                     modelIsAlpine="true"
                     fieldName="morphTemplate"
                 />
-                <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.morph_template_description') }}</legend></div>
                 <x-tollerus::alert type="info" class="whitespace-nowrap">{{ __('tollerus::ui.morph_template_key') }}</x-tollerus::alert>
+                <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.morph_template_description') }}</legend></div>
             </fieldset>
         </x-tollerus::panel>
         <h1 class="font-bold text-2xl px-6 xl:px-0">{{ __('tollerus::ui.morph_rules') }}</h1>
