@@ -151,6 +151,14 @@ return [
    * because they might instead be prefixes, for example.
    */
   'base_row' => 'Base row',
+  'base_row_description' => 'Which form of the word should serve as the root, or starting point, for deriving other words forms?',
+  'particle_description' => 'What affix or combining form is added to make the :row?',
+  'edit_at_group_level' => 'Edit at group level',
+  'morph_template' => 'Morph template',
+  'morph_template_description' => 'After all rules below are applied to the base and particle, the results will be used in this substitution template to create the final word form. \'{B}\' = Base; \'{P}\' = Particle.',
+  'morph_rules' => 'Rules',
+  'applied_to_input' => 'Applied to :input',
+  'in_type_representation' => 'In :type representation',
   'base' => 'Base',
   'particle' => 'Particle',
   'transliterated' => 'Transliterated',

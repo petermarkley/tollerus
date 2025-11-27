@@ -60,21 +60,26 @@
         </h1>
         <div class="flex flex-col gap-6">
             <x-tollerus::panel>
-                <x-tollerus::inputs.select
-                    id="base_row"
-                    label="{{ __('tollerus::ui.base_row') }}"
-                    model="tableForm.baseRow"
-                    @change="$wire.updateBaseRow($el.value);"
-                >
-                    <option value="" class="cursor-pointer italic" x-bind:selected="tableForm.baseRow===null || tableForm.baseRow===''">{{ __('tollerus::ui.none') }}</option>
-                    <template x-for="(table, tableId) in tablesFiltered">
-                        <optgroup x-bind:label="table.label">
-                            <template x-for="(row, rowId) in table.rows">
-                                <option x-bind:value="rowId" class="cursor-pointer" x-text="row.label" x-bind:selected="tableForm.baseRow==rowId"></option>
+                <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
+                    <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }}</legend></div>
+                    <div>
+                        <x-tollerus::inputs.select
+                            id="base_row"
+                            label="{{ __('tollerus::ui.base_row') }}"
+                            model="tableForm.baseRow"
+                            @change="$wire.updateBaseRow($el.value);"
+                        >
+                            <option value="" class="cursor-pointer italic" x-bind:selected="tableForm.baseRow===null || tableForm.baseRow===''">{{ __('tollerus::ui.none') }}</option>
+                            <template x-for="(table, tableId) in tablesFiltered">
+                                <optgroup x-bind:label="table.label">
+                                    <template x-for="(row, rowId) in table.rows">
+                                        <option x-bind:value="rowId" class="cursor-pointer" x-text="row.label" x-bind:selected="tableForm.baseRow==rowId"></option>
+                                    </template>
+                                </optgroup>
                             </template>
-                        </optgroup>
-                    </template>
-                </x-tollerus::inputs.select>
+                        </x-tollerus::inputs.select>
+                    </div>
+                </fieldset>
             </x-tollerus::panel>
             <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
                 <template x-for="(table, tableId) in tablesFiltered">

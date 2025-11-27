@@ -89,6 +89,7 @@ class AutoInflectionEditor extends Component
             ['order', 'asc']
         ])->all();
         $this->row->loadMissing([
+            'sourceBase',
             'sourceParticle.nativeSpellings',
         ]);
         $primaryNeographyId = $this->language->primary_neography;
@@ -97,7 +98,7 @@ class AutoInflectionEditor extends Component
             'row' => [
                 'morphTemplate' => $this->row->morph_template,
                 'srcParticle' => ($this->row->sourceParticle === null ? null : [
-                    'id' => $this->row->sourceParticle->id,
+                    'id' => (string)$this->row->sourceParticle->id,
                     'transliterated' => $this->row->sourceParticle->transliterated,
                     'phonemic' => $this->row->sourceParticle->phonemic,
                     'primaryNativeSpelling' => ($primaryNeographyId === null ? null : $this->row
