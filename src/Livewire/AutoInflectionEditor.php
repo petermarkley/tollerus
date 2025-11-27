@@ -102,8 +102,9 @@ class AutoInflectionEditor extends Component
         $this->ruleForm = [
             'row' => [
                 'morphTemplate' => $this->row->morph_template,
-                'srcParticle' => ($this->row->sourceParticle === null ? ['id' => null] : [
+                'srcParticle' => ($this->row->sourceParticle === null ? ['id' => null, 'globalId' => ''] : [
                     'id' => (string)$this->row->sourceParticle->id,
+                    'globalId' => $this->row->sourceParticle->global_id,
                     'transliterated' => $this->row->sourceParticle->transliterated,
                     'phonemic' => $this->row->sourceParticle->phonemic,
                     'primaryNativeSpelling' => ($primaryNeographyId === null ? null : $this->row

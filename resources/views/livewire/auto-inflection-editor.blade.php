@@ -38,7 +38,7 @@
                     <h3 class="font-bold flex flex-row gap-4 items-center text-lg"><label for="src_particle">{{ __('tollerus::ui.particle') }}</label></h3>
                     <x-tollerus::inputs.text-saveable
                         idExpression="'src_particle'"
-                        model="ruleForm.row.srcParticle.id"
+                        model="ruleForm.row.srcParticle.globalId"
                         modelIsAlpine="true"
                         fieldName="srcParticle"
                     />
