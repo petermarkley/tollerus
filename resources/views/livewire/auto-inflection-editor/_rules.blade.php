@@ -6,7 +6,7 @@
     }
 @endphp
 <x-tollerus::pane class="flex flex-col gap-4 items-start">
-    <div x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
+    <div class="flex flex-col gap-4 items-start" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
         <template x-for="(rule, ruleId) in {{ $ruleList }}">
             <div
                 x-bind:id="'rule_' + ruleId"

@@ -3,23 +3,24 @@
 <script>
 document.addEventListener('alpine:init', () => {
     Alpine.store('reorderFunctions', {
+        positionProp: 'position',
         isFirstItem(parentObj, itemId) {
             let lowest = null;
             for (id in parentObj) {
-                if (lowest === null || parentObj[id].position < lowest) {
-                    lowest = parentObj[id].position;
+                if (lowest === null || parentObj[id][this.positionProp] < lowest) {
+                    lowest = parentObj[id][this.positionProp];
                 }
             }
-            return (parentObj[itemId].position == lowest);
+            return (parentObj[itemId][this.positionProp] == lowest);
         },
         isLastItem(parentObj, itemId) {
             let highest = null;
             for (id in parentObj) {
-                if (highest === null || parentObj[id].position > highest) {
-                    highest = parentObj[id].position;
+                if (highest === null || parentObj[id][this.positionProp] > highest) {
+                    highest = parentObj[id][this.positionProp];
                 }
             }
-            return (parentObj[itemId].position == highest);
+            return (parentObj[itemId][this.positionProp] == highest);
         },
         getNeighborId(parentObj, itemId, dir) {
             // Normalize input
@@ -30,9 +31,9 @@ document.addEventListener('alpine:init', () => {
             // Get sorted numeric arrays
             let itemsNumeric = [];
             for (id in parentObj) {
-                itemsNumeric.push({id: id, position: parentObj[id].position});
+                itemsNumeric.push({id: id, position: parentObj[id][this.positionProp]});
             }
-            itemsNumeric.sort((a, b) => a.position - b.position);
+            itemsNumeric.sort((a, b) => a[this.positionProp] - b[this.positionProp]);
             idsNumeric = itemsNumeric.map(item => item.id);
             // Get numeric indices
             itemIndex = idsNumeric.indexOf(itemId);

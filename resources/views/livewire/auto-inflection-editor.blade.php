@@ -25,6 +25,7 @@
         },
     }"
     @tab-target-switch.window="tabTarget = $event.detail.tabTarget;"
+    x-init="$store.reorderFunctions.positionProp = 'order';"
 >
     <div id="non-modal-content" class="flex flex-col gap-4">
         <h1 class="font-bold text-2xl px-6 xl:px-0">
