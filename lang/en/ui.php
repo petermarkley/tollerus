@@ -168,6 +168,8 @@ return [
   'native' => 'Native',
   'add_rule' => 'Add rule',
   'delete_rule' => 'Delete rule',
+  'move_rule_up' => 'Move rule up',
+  'move_rule_down' => 'Move rule down',
   'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
   'preview_of_thing' => 'Preview of :thing',
   'activate' => 'Activate',

@@ -232,4 +232,35 @@ class AutoInflectionEditor extends Component
         }
         $this->refreshRuleForm();
     }
+    function swapRules(string $targetName, string $patternName, string $neographyId, string $ruleId, string $neighborId): void
+    {
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($ruleId, $neighborId) {
+                // $tablesCollection = collect($this->tables);
+                // $tableModel    = $tablesCollection->firstWhere('id', $tableId);
+                // $neighborModel = $tablesCollection->firstWhere('id', $neighborId);
+                // $oldTablePosition    = (int) $this->tableForm[$tableId]['position'];
+                // $oldNeighborPosition = (int) $this->tableForm[$neighborId]['position'];
+                // /**
+                //  * Apparently the 'unique' constraint applies even within a transaction.
+                //  * So we need to carefully move one of the models out of the way first.
+                //  */
+                // $minPosition = $tablesCollection->min('position');
+                // $neighborModel->position = $minPosition - 1;
+                // $neighborModel->save();
+                // /**
+                //  * And finally we can just set and save both correct values.
+                //  */
+                // $tableModel->position = $oldNeighborPosition;
+                // $tableModel->save();
+                // $neighborModel->position = $oldTablePosition;
+                // $neighborModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('rule-swap-failure');
+            throw $e;
+        }
+        $this->refreshTableForm();
+    }
 }

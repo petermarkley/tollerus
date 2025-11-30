@@ -8,6 +8,21 @@
         tabPattern: $wire.entangle('tabPattern'),
         tabNeography: $wire.entangle('tabNeography'),
         ruleForm: $wire.entangle('ruleForm'),
+        moveRule(ruleList, ruleElem, ruleId, dir) {
+            neighborId = $store.reorderFunctions.getNeighborId(ruleList, ruleId, dir);
+            if (neighborId === null) {
+                return;
+            }
+            neighborElem = document.getElementById('rule_' + neighborId);
+            $store.reorderFunctions.swapItems(ruleElem, neighborElem);
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Livewire request
+                $wire.swapRules(ruleId, neighborId);
+            };
+            ruleElem.addEventListener('transitionend', onDone);
+        },
     }"
     @tab-target-switch.window="tabTarget = $event.detail.tabTarget;"
 >
@@ -189,3 +204,4 @@
         </div>
     </div>
 </div>
+<x-tollerus::reorder-script/>
