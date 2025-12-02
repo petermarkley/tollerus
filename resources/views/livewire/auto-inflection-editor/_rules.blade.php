@@ -20,7 +20,15 @@
                         type="inverse"
                         title="{{ __('tollerus::ui.move_rule_up') }}"
                         x-bind:disabled="animating || $store.reorderFunctions.isFirstItem({{ $ruleList }}, ruleId)"
-                        @click="animating=true; moveRule({{ $ruleList }}, $el.closest('[data-obj=&quot;rule&quot;]'), '{{ $tabTargetName }}', '{{ $tabPatternName }}', '{{ $tabPatternName=='native' ? (string)$neography->id : '' }}', ruleId, -1);"
+                        @click="animating=true; moveRule(
+                            {{ $ruleList }},
+                            $el.closest('[data-obj=&quot;rule&quot;]'),
+                            '{{ $tabTargetName }}',
+                            '{{ $tabPatternName }}',
+                            '{{ $tabPatternName=='native' ? (string)$neography->id : '' }}',
+                            ruleId,
+                            -1
+                        );"
                     >
                         <x-tollerus::icons.chevron-up class="h-8 w-8" />
                         <span class="sr-only">{{ __('tollerus::ui.move_rule_up') }}</span>
@@ -29,7 +37,15 @@
                         type="inverse"
                         title="{{ __('tollerus::ui.move_rule_down') }}"
                         x-bind:disabled="animating || $store.reorderFunctions.isLastItem({{ $ruleList }}, ruleId)"
-                        @click="animating=true; moveRule({{ $ruleList }}, $el.closest('[data-obj=&quot;rule&quot;]'), '{{ $tabTargetName }}', '{{ $tabPatternName }}', '{{ $tabPatternName=='native' ? (string)$neography->id : '' }}', ruleId, +1);"
+                        @click="animating=true; moveRule(
+                            {{ $ruleList }},
+                            $el.closest('[data-obj=&quot;rule&quot;]'),
+                            '{{ $tabTargetName }}',
+                            '{{ $tabPatternName }}',
+                            '{{ $tabPatternName=='native' ? (string)$neography->id : '' }}',
+                            ruleId,
+                            +1
+                        );"
                     >
                         <x-tollerus::icons.chevron-down class="h-8 w-8" />
                         <span class="sr-only">{{ __('tollerus::ui.move_rule_down') }}</span>
