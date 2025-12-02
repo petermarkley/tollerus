@@ -362,6 +362,58 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
+    function updateRow(string $tableId, string $rowId, string $propName, string $propVal, ?string $domId = ''): void
+    {
+        // Find model
+        $rowModel = $this->findInCache('row-update-failure', [
+            [
+                'id' => $tableId,
+                'objectType' => InflectionTable::class,
+                'failMessage' => ['tableId' => [__('tollerus::error.invalid_inflection_table')]],
+                'relation' => 'rows',
+            ],
+            [
+                'id' => $rowId,
+                'objectType' => InflectionTableRow::class,
+                'failMessage' => ['rowId' => [__('tollerus::error.invalid_inflection_table_row')]],
+            ],
+        ]);
+        // $propName whitelist
+        $allowedPropData = [
+            'label'        => ['type' => 'string', 'column' => 'label'],
+            'labelBrief'   => ['type' => 'string', 'column' => 'label_brief'],
+            'labelLong'    => ['type' => 'string', 'column' => 'label_long'],
+            'visible'      => ['type' => 'boolean', 'column' => 'visible'],
+            'showLabel'    => ['type' => 'boolean', 'column' => 'show_label'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('row-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'boolean':
+                $rowModel[$allowedPropData[$propName]['column']] = (bool) filter_var($propVal, FILTER_VALIDATE_BOOLEAN);
+            break;
+            case 'string':
+            default:
+                $rowModel[$allowedPropData[$propName]['column']] = $propVal;
+            break;
+        }
+        // Save to database
+        try {
+            $rowModel->save();
+        } catch (\Throwable $e) {
+            if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
+                $this->dispatch('text-save-failure', id: $domId);
+                throw \Illuminate\Validation\ValidationException::withMessages(['row.'.$propName => [__('tollerus::error.duplicate_of_row')]]);
+            } else {
+                $this->dispatch('row-update-failure');
+                throw $e;
+            }
+        }
+    }
     public function deleteRow(string $rowId): void
     {
         InflectionTableRow::findOrFail((int)$rowId)->delete();

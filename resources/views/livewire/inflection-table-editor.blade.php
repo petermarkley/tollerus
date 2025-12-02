@@ -314,14 +314,18 @@
                                                                     idExpression="'row_' + rowId + '_label'"
                                                                     model="row.label"
                                                                     fieldName="{{ __('tollerus::ui.label') }}"
-                                                                    showLabel="true" />
+                                                                    showLabel="true"
+                                                                    saveEvent="$wire.updateRow(tableId, rowId, 'label', document.getElementById(id).value, id);"
+                                                                />
                                                             </div>
                                                             <div class="lg:w-80">
                                                                 <x-tollerus::inputs.text-saveable
                                                                     idExpression="'row_' + rowId + '_label_brief'"
                                                                     model="row.labelBrief"
                                                                     fieldName="{{ __('tollerus::ui.abbreviation') }}"
-                                                                    showLabel="true" />
+                                                                    showLabel="true"
+                                                                    saveEvent="$wire.updateRow(tableId, rowId, 'labelBrief', document.getElementById(id).value, id);"
+                                                                />
                                                             </div>
                                                         </div>
                                                         <x-tollerus::inputs.button
@@ -346,14 +350,28 @@
                                                             idExpression="'row_' + rowId + '_label_long'"
                                                             model="row.labelLong"
                                                             fieldName="{{ __('tollerus::ui.label_long') }}"
-                                                            showLabel="true" />
+                                                            showLabel="true"
+                                                            saveEvent="$wire.updateRow(tableId, rowId, 'labelLong', document.getElementById(id).value, id);"
+                                                        />
                                                     </div>
                                                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
                                                         <div class="flex flex-col items-start">
-                                                            <x-tollerus::inputs.checkbox idExpression="'row_' + rowId + '_visible'" model="row.visible" modelIsAlpine="true" label="{{ __('tollerus::ui.visible') }}" />
+                                                            <x-tollerus::inputs.checkbox
+                                                                idExpression="'row_' + rowId + '_visible'"
+                                                                model="row.visible"
+                                                                modelIsAlpine="true"
+                                                                label="{{ __('tollerus::ui.visible') }}"
+                                                                @change="$wire.updateRow(tableId, rowId, 'visible', $el.checked, id);"
+                                                            />
                                                         </div>
                                                         <div class="flex flex-row justify-start">
-                                                            <x-tollerus::inputs.checkbox idExpression="'row_' + rowId + '_show_label'" model="row.showLabel" modelIsAlpine="true" label="{{ __('tollerus::ui.show_label') }}" />
+                                                            <x-tollerus::inputs.checkbox
+                                                                idExpression="'row_' + rowId + '_show_label'"
+                                                                model="row.showLabel"
+                                                                modelIsAlpine="true"
+                                                                label="{{ __('tollerus::ui.show_label') }}"
+                                                                @change="$wire.updateRow(tableId, rowId, 'showLabel', $el.checked, id);"
+                                                            />
                                                         </div>
                                                     </div>
                                                     <h4>{{ __('tollerus::ui.filters') }}</h4>
