@@ -31,7 +31,9 @@ document.addEventListener('alpine:init', () => {
             // Get sorted numeric arrays
             let itemsNumeric = [];
             for (id in parentObj) {
-                itemsNumeric.push({id: id, position: parentObj[id][this.positionProp]});
+                newItem = {id: id};
+                newItem[this.positionProp] = parentObj[id][this.positionProp];
+                itemsNumeric.push(newItem);
             }
             itemsNumeric.sort((a, b) => a[this.positionProp] - b[this.positionProp]);
             idsNumeric = itemsNumeric.map(item => item.id);
