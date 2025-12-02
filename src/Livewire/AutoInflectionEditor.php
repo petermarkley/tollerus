@@ -209,15 +209,13 @@ class AutoInflectionEditor extends Component
     public function createRule(string $tabTarget, string $tabPattern, ?string $tabNeography = ''): void
     {
         try {
+            // Get context
             $targetType = MorphRuleTargetType::from($tabTarget . '_input');
             $patternType = MorphRulePatternType::from($tabPattern);
             $neographyId = (empty($tabNeography) ? null : (int)$tabNeography);
-            $nextPosition = collect($this->rules)
-                ->filter(fn ($r) => (
-                    $r->target_type == $targetType &&
-                    $r->pattern_type == $patternType &&
-                    $r->neography_id == $neographyId
-                ))->max('order') + 1;
+            $rulesCollection = $this->getRulesCollection($targetType, $patternType, $neographyId);
+            $nextPosition = $rulesCollection->max('order') + 1;
+            // Create DB row
             $rule = $this->row->morphRules()->create([
                 'pattern' => '',
                 'replacement' => '',
@@ -232,35 +230,57 @@ class AutoInflectionEditor extends Component
         }
         $this->refreshRuleForm();
     }
-    function swapRules(string $targetName, string $patternName, string $neographyId, string $ruleId, string $neighborId): void
+    function swapRules(string $tabTarget, string $tabPattern, string $tabNeography, string $ruleId, string $neighborId): void
     {
         try {
+            // Get context
+            $targetType = MorphRuleTargetType::from($tabTarget . '_input');
+            $patternType = MorphRulePatternType::from($tabPattern);
+            $neographyId = (empty($tabNeography) ? null : (int)$tabNeography);
+            $rulesCollection = $this->getRulesCollection($targetType, $patternType, $neographyId);
+            if ($patternType == MorphRulePatternType::Native) {
+                $formArray = $this->ruleForm['rules'][$tabTarget][$tabPattern][(string)$tabNeography]['rules'];
+            } else {
+                $formArray = $this->ruleForm['rules'][$tabTarget][$tabPattern];
+            }
+            // Start DB transaction
             $connection = config('tollerus.connection', 'tollerus');
-            DB::connection($connection)->transaction(function () use ($ruleId, $neighborId) {
-                // $tablesCollection = collect($this->tables);
-                // $tableModel    = $tablesCollection->firstWhere('id', $tableId);
-                // $neighborModel = $tablesCollection->firstWhere('id', $neighborId);
-                // $oldTablePosition    = (int) $this->tableForm[$tableId]['position'];
-                // $oldNeighborPosition = (int) $this->tableForm[$neighborId]['position'];
-                // /**
-                //  * Apparently the 'unique' constraint applies even within a transaction.
-                //  * So we need to carefully move one of the models out of the way first.
-                //  */
-                // $minPosition = $tablesCollection->min('position');
-                // $neighborModel->position = $minPosition - 1;
-                // $neighborModel->save();
-                // /**
-                //  * And finally we can just set and save both correct values.
-                //  */
-                // $tableModel->position = $oldNeighborPosition;
-                // $tableModel->save();
-                // $neighborModel->position = $oldTablePosition;
-                // $neighborModel->save();
+            DB::connection($connection)->transaction(function () use ($rulesCollection, $formArray, $ruleId, $neighborId) {
+                $ruleModel     = $rulesCollection->firstWhere('id', $ruleId);
+                $neighborModel = $rulesCollection->firstWhere('id', $neighborId);
+                $oldRulePosition     = (int) $formArray[$ruleId]['order'];
+                $oldNeighborPosition = (int) $formArray[$neighborId]['order'];
+                /**
+                 * Apparently the 'unique' constraint applies even within a transaction.
+                 * So we need to carefully move one of the models out of the way first.
+                 */
+                $minPosition = $rulesCollection->min('order');
+                $neighborModel->order = $minPosition - 1;
+                $neighborModel->save();
+                /**
+                 * And finally we can just set and save both correct values.
+                 */
+                $ruleModel->order = $oldNeighborPosition;
+                $ruleModel->save();
+                $neighborModel->order = $oldRulePosition;
+                $neighborModel->save();
             });
         } catch (\Throwable $e) {
             $this->dispatch('rule-swap-failure');
             throw $e;
         }
-        $this->refreshTableForm();
+        $this->refreshRuleForm();
+    }
+
+    /**
+     * Utility functions
+     */
+    private function getRulesCollection(MorphRuleTargetType $targetType, MorphRulePatternType $patternType, int|null $neographyId): Collection
+    {
+        return collect($this->rules)->filter(fn ($r) => (
+            $r->target_type == $targetType &&
+            $r->pattern_type == $patternType &&
+            $r->neography_id == $neographyId
+        ));
     }
 }

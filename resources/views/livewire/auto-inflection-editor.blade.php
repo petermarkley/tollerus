@@ -8,7 +8,7 @@
         tabPattern: $wire.entangle('tabPattern'),
         tabNeography: $wire.entangle('tabNeography'),
         ruleForm: $wire.entangle('ruleForm'),
-        moveRule(ruleList, ruleElem, ruleId, dir) {
+        moveRule(ruleList, ruleElem, tabTarget, tabPattern, tabNeography, ruleId, dir) {
             neighborId = $store.reorderFunctions.getNeighborId(ruleList, ruleId, dir);
             if (neighborId === null) {
                 return;
@@ -19,7 +19,7 @@
                 // Listener should be ephemeral
                 event.target.removeEventListener('transitionend', onDone);
                 // Livewire request
-                $wire.swapRules(ruleId, neighborId);
+                $wire.swapRules(tabTarget, tabPattern, tabNeography, ruleId, neighborId);
             };
             ruleElem.addEventListener('transitionend', onDone);
         },
