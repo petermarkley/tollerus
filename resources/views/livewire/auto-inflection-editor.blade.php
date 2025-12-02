@@ -3,6 +3,7 @@
         msgs: {
             no_cancel: @js(__('tollerus::ui.no_cancel')),
             yes_delete: @js(__('tollerus::ui.yes_delete')),
+            delete_rule_confirmation: @js(__('tollerus::ui.delete_rule_confirmation')),
         },
         tabTarget: $wire.entangle('tabTarget'),
         tabPattern: $wire.entangle('tabPattern'),
@@ -26,6 +27,7 @@
     }"
     @tab-target-switch.window="tabTarget = $event.detail.tabTarget;"
     x-init="$store.reorderFunctions.positionProp = 'order';"
+    @rule-delete.window="$wire.deleteRule($event.detail.ruleId);"
 >
     <div id="non-modal-content" class="flex flex-col gap-4">
         <h1 class="font-bold text-2xl px-6 xl:px-0">
@@ -204,5 +206,6 @@
             @endforeach
         </div>
     </div>
+    <x-tollerus::modal/>
 </div>
 <x-tollerus::reorder-script/>

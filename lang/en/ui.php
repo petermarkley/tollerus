@@ -170,6 +170,8 @@ return [
   'delete_rule' => 'Delete rule',
   'move_rule_up' => 'Move rule up',
   'move_rule_down' => 'Move rule down',
+  'regex_pattern' => 'RegEx pattern',
+  'replace_with' => 'Replace with',
   'preset_notice' => 'You don\'t have any grammar groups! Add some manually, or to save work consider starting with a preset.',
   'preview_of_thing' => 'Preview of :thing',
   'activate' => 'Activate',
@@ -210,6 +212,7 @@ return [
   'delete_feature_value_confirmation' => 'About to delete an inflection feature value. Are you sure?',
   'delete_inflection_table_confirmation' => 'About to delete an inflection table. Are you sure?',
   'delete_inflection_row_confirmation' => 'About to delete an inflection row. Are you sure?',
+  'delete_rule_confirmation' => 'About to delete a morph rule. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *

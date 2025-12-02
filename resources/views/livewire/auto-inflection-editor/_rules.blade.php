@@ -6,7 +6,7 @@
     }
 @endphp
 <x-tollerus::pane class="flex flex-col gap-4 items-start">
-    <div class="flex flex-col gap-4 items-start" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
+    <div class="flex flex-col gap-4 items-start w-full" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
         <template x-for="(rule, ruleId) in {{ $ruleList }}">
             <div
                 x-bind:id="'rule_' + ruleId"
@@ -51,8 +51,41 @@
                         <span class="sr-only">{{ __('tollerus::ui.move_rule_down') }}</span>
                     </x-tollerus::inputs.button>
                 </x-tollerus::panel>
-                <x-tollerus::panel class="flex flex-col gap-6 flex-grow rounded-l-none">
-                    <p><code x-text="ruleId"></code></p><pre x-text="JSON.stringify(rule)"></pre>
+                <x-tollerus::panel class="flex flex-col sm:flex-row-reverse gap-4 items-stretch flex-grow rounded-l-none">
+                    <div class="flex flex-row sm:flex-col justify-end sm:justify-start w-auto">
+                        <x-tollerus::inputs.button
+                            type="inverse"
+                            size="small"
+                            class="align-middle"
+                            title="{{ __('tollerus::ui.delete_rule') }}"
+                            @click="$dispatch('open-modal', {
+                                message: msgs['delete_rule_confirmation'],
+                                buttons: [
+                                    { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                    { text: msgs.yes_delete, type: 'primary', clickEvent: 'rule-delete', payload: {ruleId: ruleId} }
+                                ]
+                            });"
+                        >
+                            <x-tollerus::icons.delete/>
+                            <label class="sr-only">{{ __('tollerus::ui.delete_rule') }}</label>
+                        </x-tollerus::inputs.button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 w-full">
+                        <div class="col-span-2 lg:col-span-1 flex flex-col justify-center">
+                            <x-tollerus::inputs.text-saveable
+                                idExpression="'rule_' + ruleId + '_pattern'"
+                                model="rule.pattern"
+                                fieldName="{{ __('tollerus::ui.regex_pattern') }}"
+                                showLabel="true" />
+                        </div>
+                        <div class="col-span-2 lg:col-span-1 flex flex-col justify-center">
+                            <x-tollerus::inputs.text-saveable
+                                idExpression="'rule_' + ruleId + '_replacement'"
+                                model="rule.replacement"
+                                fieldName="{{ __('tollerus::ui.replace_with') }}"
+                                showLabel="true" />
+                        </div>
+                    </div>
                 </x-tollerus::panel>
             </div>
         </template>

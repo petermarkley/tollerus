@@ -17,6 +17,7 @@ use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\InflectionTable;
 use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Language;
+use PeterMarkley\Tollerus\Models\MorphRule;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\Pivots\InflectionTableFilter;
 use PeterMarkley\Tollerus\Models\Pivots\InflectionTableRowFilter;
@@ -228,6 +229,11 @@ class AutoInflectionEditor extends Component
             $this->dispatch('rule-add-failure');
             throw $e;
         }
+        $this->refreshRuleForm();
+    }
+    public function deleteRule(string $ruleId): void
+    {
+        MorphRule::findOrFail((int)$ruleId)->delete();
         $this->refreshRuleForm();
     }
     function swapRules(string $tabTarget, string $tabPattern, string $tabNeography, string $ruleId, string $neighborId): void
