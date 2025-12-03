@@ -264,6 +264,35 @@ class AutoInflectionEditor extends Component
         }
         $this->refreshRuleForm();
     }
+    public function updateRule(string $ruleId, string $propName, string $propVal, ?string $domId = ''): void
+    {
+        // Find model
+        $ruleModel = $this->findInCache('row-update-failure', [
+            [
+                'id' => $ruleId,
+                'objectType' => MorphRule::class,
+                'failMessage' => ['ruleId' => [__('tollerus::error.invalid_morph_rule')]],
+            ],
+        ]);
+        // $propName whitelist
+        $allowedPropNames = [
+            'pattern',
+            'replacement',
+        ];
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('rule-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign value
+        $ruleModel[$propName] = $propVal;
+        // Save to database
+        try {
+            $ruleModel->save();
+        } catch (\Throwable $e) {
+            $this->dispatch('rule-update-failure');
+            throw $e;
+        }
+    }
     public function deleteRule(string $ruleId): void
     {
         MorphRule::findOrFail((int)$ruleId)->delete();

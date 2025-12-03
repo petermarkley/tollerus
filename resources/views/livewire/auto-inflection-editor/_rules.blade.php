@@ -77,14 +77,18 @@
                                 idExpression="'rule_' + ruleId + '_pattern'"
                                 model="rule.pattern"
                                 fieldName="{{ __('tollerus::ui.regex_pattern') }}"
-                                showLabel="true" />
+                                showLabel="true"
+                                saveEvent="$wire.updateRule(ruleId, 'pattern', document.getElementById(id).value, id);"
+                            />
                         </div>
                         <div class="col-span-2 lg:col-span-1 flex flex-col justify-center">
                             <x-tollerus::inputs.text-saveable
                                 idExpression="'rule_' + ruleId + '_replacement'"
                                 model="rule.replacement"
                                 fieldName="{{ __('tollerus::ui.replace_with') }}"
-                                showLabel="true" />
+                                showLabel="true"
+                                saveEvent="$wire.updateRule(ruleId, 'replacement', document.getElementById(id).value, id);"
+                            />
                         </div>
                     </div>
                 </x-tollerus::panel>

@@ -32,4 +32,5 @@ return [
      * inflection feature.
      */
     'invalid_src_particle' => 'Invalid source particle.',
+    'invalid_morph_rule' => 'Invalid morph rule.',
 ];
