@@ -14,6 +14,7 @@ use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
 use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
+use PeterMarkley\Tollerus\Models\GlobalId;
 use PeterMarkley\Tollerus\Models\InflectionTable;
 use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Language;
@@ -207,6 +208,38 @@ class AutoInflectionEditor extends Component
     /**
      * Granular UI functions
      */
+    public function updateRow(string $propName, string $propVal, ?string $domId = ''): void
+    {
+        // $propName whitelist
+        $allowedPropData = [
+            'srcParticle'   => ['type' => 'int', 'column' => 'src_particle'],
+            'morphTemplate' => ['type' => 'string', 'column' => 'morph_template'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('row-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately
+        if ($propName == 'srcParticle') {
+            try {
+                $srcParticle = GlobalId::resolveId($propVal);
+                $this->row->src_particle = $srcParticle->id;
+            } catch (\Throwable $e) {
+                $this->dispatch('text-save-failure', id: $domId);
+                throw \Illuminate\Validation\ValidationException::withMessages(['ruleForm.row.srcParticle.globalId' => [__('tollerus::error.invalid_src_particle')]]);
+            }
+        } else {
+            $this->row[$allowedPropData[$propName]['column']] = $propVal;
+        }
+        // Save to database
+        try {
+            $this->row->save();
+        } catch (\Throwable $e) {
+            $this->dispatch('row-update-failure');
+            throw $e;
+        }
+    }
     public function createRule(string $tabTarget, string $tabPattern, ?string $tabNeography = ''): void
     {
         try {

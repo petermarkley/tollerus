@@ -21,4 +21,15 @@ return [
     'duplicate_of_row' => 'This must be unique per inflection table.',
     'invalid_prop_name' => 'Invalid property name',
     'max_attempts_adding_unique_name' => 'Reached max attempts while trying to create unique object name.',
+    /**
+     * TRANSLATOR NOTE:
+     *
+     * "Source particle" here is an abstract term for basically a
+     * suffix or prefix, etc., used for making new word forms. For
+     * example the "-ing" suffix in "walking."
+     *
+     * This message is used in the context of configuring the auto-
+     * inflection feature.
+     */
+    'invalid_src_particle' => 'Invalid source particle.',
 ];

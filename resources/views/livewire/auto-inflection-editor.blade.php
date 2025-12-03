@@ -68,6 +68,7 @@
                         model="ruleForm.row.srcParticle.globalId"
                         modelIsAlpine="true"
                         fieldName="srcParticle"
+                        saveEvent="$wire.updateRow('srcParticle', document.getElementById(id).value, id);"
                     />
                     <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.particle_description', ['row' => $row->label]) }}</legend></div>
                 </fieldset>
@@ -84,6 +85,7 @@
                     model="ruleForm.row.morphTemplate"
                     modelIsAlpine="true"
                     fieldName="morphTemplate"
+                    saveEvent="$wire.updateRow('morphTemplate', document.getElementById(id).value, id);"
                 />
                 <x-tollerus::alert type="info" class="whitespace-nowrap">{{ __('tollerus::ui.morph_template_key') }}</x-tollerus::alert>
                 <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.morph_template_description') }}</legend></div>

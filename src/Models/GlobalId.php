@@ -27,7 +27,7 @@ final class GlobalId extends Model
     public function resolve(): ?Model
     {
         $class = $this->kind->model();
-        return $class::query()->find($this->id);
+        return $class::query()->firstWhere('global_id_raw', $this->global_id_raw);
     }
 
     /**
