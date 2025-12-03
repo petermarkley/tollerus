@@ -49,8 +49,8 @@ final class GlobalId extends Model
      *
      * Returns a nested collection shaped like:
      *   Collection{
-     *     GlobalIdKind::Entry  => Collection{ global_id(string) => Model },
-     *     GlobalIdKind::Lexeme => Collection{ global_id(string) => Model },
+     *     'entry'  => Collection{ global_id(string) => Model },
+     *     'lexeme' => Collection{ global_id(string) => Model },
      *     ...
      *   }
      *
@@ -85,7 +85,7 @@ final class GlobalId extends Model
         // run only one query for each kind
         $out = $byKind->map(function ($subset, $kind) {
             // fetch the appropriate model class
-            $class = $kind->model();
+            $class = GlobalIdKind::from($kind)->model();
 
             // flat array of IDs that belong to this kind
             $subsetIds = $subset->pluck('global_id_raw');
