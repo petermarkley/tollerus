@@ -249,4 +249,10 @@ return [
    *     Peter Markley. Licensed via LGPL v2.1"
    */
   'copyright_footer' => 'The [Tollerus software](:github_url) is copyright &copy; :year by Peter Markley.<br>Licensed via [LGPL v2.1](:lgpl_url)',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * These are other messages that also use Markdown ...
+   */
+  'regex_description' => 'Each rule represents a [Regular Expression](:regex_url) search-and-replace on the selected piece of text. Rules are applied top to bottom.',
 ];

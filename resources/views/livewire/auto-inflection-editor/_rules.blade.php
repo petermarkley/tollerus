@@ -6,6 +6,7 @@
     }
 @endphp
 <x-tollerus::pane class="flex flex-col gap-4 items-start">
+    <x-tollerus::alert type="info">{!! Str::markdown(__('tollerus::ui.regex_description', ['regex_url' => 'https://en.wikipedia.org/wiki/Regular_expression'])) !!}</x-tollerus::alert>
     <div class="flex flex-col gap-4 items-start w-full" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
         <template x-for="(rule, ruleId) in {{ $ruleList }}">
             <div
