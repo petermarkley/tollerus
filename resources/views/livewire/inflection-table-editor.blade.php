@@ -91,12 +91,12 @@
                 </fieldset>
             </x-tollerus::panel>
             <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-                <template x-for="(table, tableId) in tablesFiltered">
+                <template x-for="([tableId, table], i) in $store.reorderFunctions.sortItems(tablesFiltered)">
                     <div
                         x-bind:id="'table_' + tableId"
                         data-obj="table"
                         class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
-                        x-bind:style="'order: '+table.position"
+                        x-bind:style="'order: '+i"
                         @transitionend="$nextTick(() => {animating=false});"
                     >
                         <x-tollerus::panel class="px-3 py-12 flex flex-col gap-6 justify-start shrink-0 rounded-l-full rounded-r-none">
@@ -278,12 +278,12 @@
                                 </h3>
                                 <template x-if="Object.keys(table.rows).length > 0">
                                     <div class="flex flex-col gap-4 items-start" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-                                        <template x-for="(row, rowId) in table.rows">
+                                        <template x-for="([rowId, row], i) in $store.reorderFunctions.sortItems(table.rows)">
                                             <div
                                                 x-bind:id="'row_' + rowId"
                                                 data-obj="row"
                                                 class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
-                                                x-bind:style="'order: '+row.position"
+                                                x-bind:style="'order: '+i"
                                                 @transitionend="$nextTick(() => {animating=false});"
                                             >
                                                 <x-tollerus::panel class="px-3 py-8 flex flex-col gap-6 justify-start shrink-0 rounded-l-xl rounded-r-none">

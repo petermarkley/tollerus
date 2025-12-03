@@ -8,12 +8,12 @@
 <x-tollerus::pane class="flex flex-col gap-4 items-start">
     <x-tollerus::alert type="info">{!! Str::markdown(__('tollerus::ui.regex_description', ['regex_url' => 'https://en.wikipedia.org/wiki/Regular_expression'])) !!}</x-tollerus::alert>
     <div class="flex flex-col gap-4 items-start w-full" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-        <template x-for="(rule, ruleId) in {{ $ruleList }}">
+        <template x-for="([ruleId, rule], i) in $store.reorderFunctions.sortItems({{ $ruleList }})">
             <div
                 x-bind:id="'rule_' + ruleId"
                 data-obj="rule"
                 class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
-                x-bind:style="'order: '+rule.order"
+                x-bind:style="'order: '+i"
                 @transitionend="$nextTick(() => {animating=false});"
             >
                 <x-tollerus::panel class="px-3 py-12 flex flex-col gap-6 justify-start shrink-0 rounded-l-full rounded-r-none">

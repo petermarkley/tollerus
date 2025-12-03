@@ -4,6 +4,11 @@
 document.addEventListener('alpine:init', () => {
     Alpine.store('reorderFunctions', {
         positionProp: 'position',
+        sortItems(parentObj) {
+            return Object.entries(parentObj).sort((a, b) => {
+                return a[1][this.positionProp] - b[1][this.positionProp];
+            });
+        },
         isFirstItem(parentObj, itemId) {
             let lowest = null;
             for (id in parentObj) {
