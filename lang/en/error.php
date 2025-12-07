@@ -2,10 +2,25 @@
 
 return [
     'folder_conflict' => 'Unable to create folder because a file name conflicts.',
+    /**
+     * TRANSLATOR NOTE:
+     *
+     * A "neography" is a fictional writing system. ("Neo-"
+     * because someone made it up as a "new" idea.) The
+     * more familiar English terms are "script" or
+     * "alphabet."
+     *
+     * But script can have many more meanings depending on
+     * context (like a movie script, or a computer script)
+     * and "alphabet" excludes a variety of other kinds of
+     * writing system. That's why we prefer the term
+     * "neography" here.
+     */
     'font_missing' => 'Neography has no font information.',
     'file_conflict' => 'Unable to create file because it already exists.',
     'file_missing' => 'Unable to delete file because it\'s missing or is not a file.',
     'file_path_missing' => 'No public file path found.',
+    'svg_parse_error' => 'Error while parsing SVG font file.',
     /**
     * TRANSLATOR NOTE:
     *
