@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'folder_conflict' => 'Unable to create folder because a file name conflicts.',
+    'font_missing' => 'Neography has no font information.',
+    'file_conflict' => 'Unable to create file because it already exists.',
+    'file_missing' => 'Unable to delete file because it\'s missing or is not a file.',
+    'file_path_missing' => 'No public file path found.',
     /**
     * TRANSLATOR NOTE:
     *

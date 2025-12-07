@@ -5,9 +5,11 @@ namespace PeterMarkley\Tollerus\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
+use PeterMarkley\Tollerus\Enums\FontFormat;
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
 use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
+use PeterMarkley\Tollerus\Domain\Neography\Services\FontAssetService;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\Language;
@@ -33,7 +35,7 @@ class TollerusPopulate extends Command
     /**
      * Execute the console command.
      */
-    public function handle(LoadGrammarPreset $loadGrammarPreset)
+    public function handle(LoadGrammarPreset $loadGrammarPreset, FontAssetService $fontAssetService)
     {
         /**
          * Step 1: Generate language, neography, and grammar
@@ -42,7 +44,12 @@ class TollerusPopulate extends Command
         $loadGrammarPreset($language, 'english');
 
         /**
-         * Step 2: Define particles for auto-inflection
+         * Step 2: Publish font
+         */
+        $fontAssetService->publish(FontFormat::from('svg'), $language->primaryNeography);
+
+        /**
+         * Step 3: Define particles for auto-inflection
          */
 
         // Initialize some values with minimal queries
