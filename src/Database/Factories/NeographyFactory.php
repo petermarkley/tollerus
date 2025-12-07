@@ -161,7 +161,7 @@ class NeographyFactory extends Factory
          * Decide the list of codepoints
          */
         $first = 0xF2C00;
-        $last = $first + $num - 1;
+        $last = $first + $num; // Allocate 1 extra in case we want a gap
         $codepoints = collect(range($first, $last))
             ->map(
                 fn($ch) => mb_chr($ch,'UTF-8')
@@ -206,7 +206,7 @@ class NeographyFactory extends Factory
          *
          * A real conlang would devise its own tailored transliteration scheme
          * based on the range of phonemes present in the language, to optimally
-         * balance orthography vs. fluency in the target (i.e. Roman) alphabet.
+         * balance orthography vs. fluency in the target (e.g. Roman) alphabet.
          *
          * For a randomized model factory just for demo/dev/testing purposes,
          * that's overkill. That's why we're using this extremely dumb and sloppy
@@ -285,19 +285,21 @@ class NeographyFactory extends Factory
             $glyphGroups[1] = [];
             // Fill consonants
             $offset = ($vowelsFirst ? $vowelNum : 0);
+            $gap = ($vowelsFirst ? 1 : 0);
             $glyphGroups[(int)$vowelsFirst] = $consonantSounds
-                ->map(function ($item, $key) use ($codepoints, $offset, $vectors) {
+                ->map(function ($item, $key) use ($codepoints, $offset, $gap, $vectors) {
                     $i = $key+$offset;
-                    $item['codepoint'] = $codepoints[$i];
+                    $item['codepoint'] = $codepoints[$i + $gap];
                     $item['vector'] = $vectors[$i];
                     return $item;
                 })->toArray();
             // Fill vowels
             $offset = ($vowelsFirst ? 0 : $consonantNum);
+            $gap = ($vowelsFirst ? 0 : 1);
             $glyphGroups[(int)( ! $vowelsFirst)] = $vowelSounds
-                ->map(function ($item, $key) use ($codepoints, $offset, $vectors) {
+                ->map(function ($item, $key) use ($codepoints, $offset, $gap, $vectors) {
                     $i = $key+$offset;
-                    $item['codepoint'] = $codepoints[$i];
+                    $item['codepoint'] = $codepoints[$i + $gap];
                     $item['vector'] = $vectors[$i];
                     return $item;
                 })->toArray();

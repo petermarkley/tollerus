@@ -42,7 +42,7 @@ final class SvgToKeyboard
          */
         $glyphChunks = collect($svg->xpath('defs/font/glyph'))
             ->sort(fn ($a, $b) => mb_ord($a['unicode']) <=> mb_ord($b['unicode']))->values()
-            ->chunkWhile(fn ($g, $key, $chunk) => mb_ord($g['unicode']) !== mb_ord($chunk->last()['unicode']))
+            ->chunkWhile(fn ($g, $key, $chunk) => mb_ord($g['unicode']) === mb_ord($chunk->last()['unicode'])+1)
             ->map->values();
 
         // Generate keyboard data
