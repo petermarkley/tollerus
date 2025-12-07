@@ -12,6 +12,7 @@ class NeographyInputKey extends Model
     use HasTablePrefix;
     protected $table = 'neography_input_keys';
     public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * Model relations

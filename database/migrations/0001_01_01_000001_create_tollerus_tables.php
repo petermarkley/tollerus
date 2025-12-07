@@ -190,7 +190,7 @@ return new class extends Migration
             $table->string('glyph')->charset('utf8mb4')->nullable();
             $table->integer('position');
             $table->boolean('render_base'); // If true, glyph will render on a Unicode dotted circle
-            // ensure only one of each position per neography
+            // ensure only one of each position per keyboard
             $table->unique(['keyboard_id', 'position'], 'keyboard_position_unique');
         });
 

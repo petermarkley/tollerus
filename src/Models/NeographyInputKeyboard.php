@@ -12,6 +12,7 @@ class NeographyInputKeyboard extends Model
     use HasTablePrefix;
     protected $table = 'neography_input_keyboards';
     public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * Model relations

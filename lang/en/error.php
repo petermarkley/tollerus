@@ -21,6 +21,7 @@ return [
     'file_missing' => 'Unable to delete file because it\'s missing or is not a file.',
     'file_path_missing' => 'No public file path found.',
     'svg_parse_error' => 'Error while parsing SVG font file.',
+    'keyboards_already_exists' => 'Keyboards already exist.',
     /**
      * TRANSLATOR NOTE:
      *

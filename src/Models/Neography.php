@@ -41,6 +41,10 @@ class Neography extends Model
     {
         return $this->hasMany(NeographySection::class);
     }
+    public function keyboards(): HasMany
+    {
+        return $this->hasMany(NeographyInputKeyboard::class);
+    }
     public function glyphs(): HasMany
     {
         return $this->hasMany(NeographyGlyph::class);
