@@ -17,6 +17,7 @@ class NeographyGlyphGroup extends Model
     use HasFactory;
     protected $table = 'neography_glyph_groups';
     public $timestamps = false;
+    protected $guarded = [];
     protected $casts = ['type' => NeographyGlyphType::class];
 
     /**

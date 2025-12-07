@@ -18,6 +18,7 @@ class NeographyGlyph extends Model
     use HasFactory;
     protected $table = 'neography_glyphs';
     public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * Model relations

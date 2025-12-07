@@ -22,6 +22,16 @@ return [
     'file_path_missing' => 'No public file path found.',
     'svg_parse_error' => 'Error while parsing SVG font file.',
     /**
+     * TRANSLATOR NOTE:
+     *
+     * "Glyph" here is a term borrowed from the field of
+     * typography, referring to a shape of type inside a
+     * font. For a neography, it means a single letter or
+     * symbol in the alphabet (or other writing system).
+     */
+    'glyphs_already_exist' => 'Glyphs already exist.',
+    'section_has_glyph_groups' => 'Neography section already has glyph groups.',
+    /**
     * TRANSLATOR NOTE:
     *
     * "Preset", meaning a predefined configuration for user convenience.

@@ -17,6 +17,7 @@ class NeographySection extends Model
     use HasFactory;
     protected $table = 'neography_sections';
     public $timestamps = false;
+    protected $guarded = [];
     protected $casts = ['type' => NeographySectionType::class];
 
     /**

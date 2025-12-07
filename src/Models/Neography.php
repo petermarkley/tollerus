@@ -17,6 +17,7 @@ class Neography extends Model
     use HasFactory;
     protected $table = 'neographies';
     public $timestamps = false;
+    protected $guarded = [];
     protected $casts = [
         'direction_primary' => WritingDirection::class,
         'direction_secondary' => WritingDirection::class,
