@@ -225,7 +225,13 @@ class LanguageEditor extends Component
         try {
             // Validate
             $this->validate([
-                'infoForm.machine_name' => 'alpha_dash:ascii',
+                'infoForm.name' => [
+                    Rule::unique('PeterMarkley\Tollerus\Models\Language', 'name')->ignore($this->language->id),
+                ],
+                'infoForm.machine_name' => [
+                    'alpha_dash:ascii',
+                    Rule::unique('PeterMarkley\Tollerus\Models\Language', 'machine_name')->ignore($this->language->id),
+                ],
             ]);
             // Save to database
             $this->language->fill($this->infoForm);
