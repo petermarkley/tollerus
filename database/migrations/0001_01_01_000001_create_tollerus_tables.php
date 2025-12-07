@@ -35,6 +35,10 @@ return new class extends Migration
             $table->string('machine_name')->unique();
             $table->binary('font_svg', length: config('tollerus.max_font_size'))->nullable();
             $table->binary('font_ttf', length: config('tollerus.max_font_size'))->nullable();
+            $table->string('font_svg_file_path')->nullable();
+            $table->string('font_svg_url')->nullable();
+            $table->string('font_ttf_file_path')->nullable();
+            $table->string('font_ttf_url')->nullable();
             $table->enum('direction_primary', WritingDirection::values())
                 ->default(WritingDirection::LeftToRight->value);
             // This should always be perpendicular to the primary direction
