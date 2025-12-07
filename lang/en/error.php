@@ -31,6 +31,7 @@ return [
      * symbol in the alphabet (or other writing system).
      */
     'glyphs_already_exist' => 'Glyphs already exist.',
+    'glyphs_missing' => 'Neography has no glyphs.',
     'section_has_glyph_groups' => 'Neography section already has glyph groups.',
     /**
     * TRANSLATOR NOTE:
