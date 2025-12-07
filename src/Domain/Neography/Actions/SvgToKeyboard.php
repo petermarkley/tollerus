@@ -9,6 +9,10 @@ final class SvgToKeyboard
 {
     /**
      * This will import glyphs from the stored SVG font into NeographyInputKey objects.
+     *
+     * Note: The SVG parsing/chunking code here is repeated once in SvgToGlyphs. If
+     * there's any further refactoring or copying than that, consider moving this code
+     * into `src/Domain/Neography/Parsing/SvgGlyphExtractor.php` or similar.
      */
     public function __invoke(Neography $neography): int
     {
