@@ -13,5 +13,14 @@ enum WritingDirection: string
     {
         return array_column(self::cases(), 'value');
     }
-}
 
+    public function axis(): WritingAxisType
+    {
+        return match ($this) {
+            self::LeftToRight => WritingAxisType::Horizontal,
+            self::RightToLeft => WritingAxisType::Horizontal,
+            self::TopToBottom => WritingAxisType::Vertical,
+            self::BottomToTop => WritingAxisType::Vertical,
+        };
+    }
+}
