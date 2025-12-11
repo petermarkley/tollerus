@@ -83,7 +83,13 @@
                             }
                         @endphp
                         @if (count($glyphPreview[$neography->machine_name]) > 0)
-                            <x-tollerus::pane class="w-full max-h-28 overflow-hidden" role="img" aria-label="{{ __('tollerus::ui.glyphs') }}">
+                            <x-tollerus::pane
+                                class="w-full max-h-28 overflow-hidden"
+                                role="img"
+                                aria-label="{{ __('tollerus::ui.glyphs') }}"
+                                href="{{ route('tollerus.admin.neographies.edit', ['neography' => $neography]) }}"
+                                title="{{ __('tollerus::ui.edit_thing', ['thing' => $neography->name]) }}"
+                            >
                                 <div class="w-full max-h-28 flex {{ $flexStr }} justify-start items-baseline gap-2 mask-b-to-85%">
                                     @foreach ($glyphPreview[$neography->machine_name] as $glyph)
                                         {{-- Controller generates these with classes: 'h-12 w-auto' --}}
@@ -92,7 +98,7 @@
                                 </div>
                             </x-tollerus::pane>
                         @else
-                            <x-tollerus::missing-data>{{ __('tollerus::ui.no_glyphs') }}</x-tollerus::missing-data>
+                            <x-tollerus::missing-data href="{{ route('tollerus.admin.neographies.edit', ['neography' => $neography]) }}">{{ __('tollerus::ui.no_glyphs') }}</x-tollerus::missing-data>
                         @endif
                     </div>
                 </x-tollerus::panel>
