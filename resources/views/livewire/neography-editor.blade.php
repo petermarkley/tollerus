@@ -33,6 +33,19 @@
         <ul class="px-4 flex flex-row gap-4 justify-start items-end" role="tablist">
             <x-tollerus::inputs.tab
                 switcher="tab"
+                tabName="info"
+                aria-controls="tabpanel-info"
+                title="{{ __('tollerus::ui.info') }}"
+                @click="$store.tabFunctions.click(dirty, tab, 'info');"
+                @keydown.enter.prevent="$store.tabFunctions.click(dirty, tab, 'info');"
+                @keydown.space.prevent="$store.tabFunctions.click(dirty, tab, 'info');"
+            >
+                <x-tollerus::icons.info class="h-6"/>
+                <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.info') }}</span>
+                <span x-cloak x-show="tab=='info' && dirty">*</span>
+            </x-tollerus::inputs.tab>
+            <x-tollerus::inputs.tab
+                switcher="tab"
                 tabName="font"
                 aria-controls="tabpanel-font"
                 title="{{ __('tollerus::ui.font') }}"
@@ -71,6 +84,9 @@
                 <span x-cloak x-show="tab=='keyboards' && dirty">*</span>
             </x-tollerus::inputs.tab>
         </ul>
+
+        {{-- INFO TAB --}}
+        @include('tollerus::livewire.neography-editor._info')
 
         {{-- FONT TAB --}}
         @include('tollerus::livewire.neography-editor._font')
@@ -121,8 +137,11 @@ document.addEventListener('alpine:init', () => {
         },
         updateAddress(tab) {
             switch (tab) {
-                case 'font':
+                case 'info':
                     history.pushState({}, '', '{{ route('tollerus.admin.neographies.edit', [$neography]) }}');
+                break;
+                case 'font':
+                    history.pushState({}, '', '{{ route('tollerus.admin.neographies.edit.tab', [$neography, 'font']) }}');
                 break;
                 case 'glyphs':
                     history.pushState({}, '', '{{ route('tollerus.admin.neographies.edit.tab', [$neography, 'glyphs']) }}');

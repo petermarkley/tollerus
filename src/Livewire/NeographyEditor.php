@@ -18,7 +18,7 @@ class NeographyEditor extends Component
 {
     // use HasModelCache;
     // private $cacheRoot = '';
-    public string $tab = 'font';
+    public string $tab = 'info';
     // Models
     #[Locked] public Neography $neography;
     // UI input layer
@@ -42,7 +42,10 @@ class NeographyEditor extends Component
     public function mount(Neography $neography, ?string $tab = null): void
     {
         $this->neography = $neography;
-        $this->tab = $tab ?? 'font';
+        $this->tab = $tab ?? 'info';
+
+        // Info tab
+        // $this->refreshInfoForm();
 
         // Font tab
         // $this->refreshFontForm();
@@ -60,6 +63,9 @@ class NeographyEditor extends Component
     public function refreshForm(string $tab): void
     {
         switch ($tab) {
+            case 'info':
+                // $this->refreshInfoForm();
+            break;
             case 'font':
                 // $this->refreshFontForm();
             break;
@@ -75,6 +81,10 @@ class NeographyEditor extends Component
     /**
      * Tab-specific refresh functions
      */
+    // public function refreshInfoForm(): void
+    // {
+    //     //
+    // }
     // public function refreshFontForm(): void
     // {
     //     //

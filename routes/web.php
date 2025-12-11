@@ -54,7 +54,7 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                             Route::delete('/', [NeographyController::class, 'destroy'])->name('destroy');
                             Route::get('/', NeographyEditor::class)->name('edit');
                             Route::get('/{tab}', NeographyEditor::class)
-                                ->whereIn('tab', ['glyphs', 'keyboards'])
+                                ->whereIn('tab', ['font', 'glyphs', 'keyboards'])
                                 ->name('edit.tab');
                         });
                     });
