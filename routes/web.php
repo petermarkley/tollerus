@@ -48,7 +48,11 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                     ->as('neographies.')
                     ->group(function () {
                         Route::get('/', [NeographyController::class, 'index'])->name('index');
-                        Route::get('/{neography}', fn () => 'fixme')->name('edit');
+                        Route::post('/', [NeographyController::class, 'store'])->name('store');
+                        Route::prefix('/{neography}')->group(function () {
+                            Route::delete('/', [NeographyController::class, 'destroy'])->name('destroy');
+                            Route::get('/', fn () => 'fixme')->name('edit');
+                        });
                     });
             });
     });

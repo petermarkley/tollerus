@@ -4,6 +4,7 @@ return [
   'admin' => 'Admin',
   'language' => 'Language',
   'languages' => 'Languages',
+  'add_language' => 'Add language',
   /**
    * TRANSLATOR NOTE:
    *
@@ -20,6 +21,7 @@ return [
    */
   'neography' => 'Neography',
   'neographies' => 'Neographies',
+  'add_neography' => 'Add neography',
   'edit_neographies' => 'Edit neographies',
   'language_neographies_context_notice' => 'These options configure the neographies specifically for :language.',
   'edit_all_neographies' => 'Edit all neographies',
@@ -93,7 +95,6 @@ return [
   'delete_word_class' => 'Delete word class',
   'word_class' => 'Word class',
   'word_classes' => 'Word classes',
-  'add_language' => 'Add language',
   'abbreviation' => 'Abbreviation',
   'group_nameless' => '(group)',
   'features' => 'Features', // i.e. grammatical features or dimensions, for example tense / person / number
@@ -206,6 +207,7 @@ return [
   'no_cancel' => 'No, cancel',
   'yes_delete' => 'Yes, delete',
   'delete_language_confirmation' => 'Delete :name, along with :num entries?',
+  'delete_neography_confirmation' => 'Delete :name, along with :num native spellings?',
   'delete_word_class_group_confirmation' => 'About to delete grammar group. Are you sure?',
   'delete_word_class_confirmation' => 'About to delete word class. Are you sure?',
   'delete_feature_confirmation' => 'About to delete an inflection feature. Are you sure?',

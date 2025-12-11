@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 
+use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
 use PeterMarkley\Tollerus\Models\Neography;
 
 class NeographyController extends Controller
@@ -29,12 +30,49 @@ class NeographyController extends Controller
                 ]);
             return [$n->machine_name => $glyphs];
         })->all();
+        $deleteMsgs = $neographies
+            ->mapWithKeys(function ($n) {
+                $count = $n->nativeSpellings()->count();
+                return [$n->machine_name => __('tollerus::ui.delete_neography_confirmation', [
+                    'name' => $n->name,
+                    'num' => number_format($count),
+                ])];
+            })->all();
         return view('tollerus::admin.neographies.index', [
             'breadcrumbs' => [
                 ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
             ],
             'neographies' => $neographies,
             'glyphPreview' => $glyphPreview,
+            'deleteMsgs' => $deleteMsgs,
         ]);
+    }
+
+    /**
+     * Create new neography
+     */
+    public function store()
+    {
+        $neography = CreateWithUniqueName::handle(
+            startNum: Neography::count(),
+            createFunc: fn ($tryName) => Neography::create([
+                'name' => $tryName,
+                'machine_name' => strtr(mb_strtolower($tryName), [
+                    ' ' => '_',
+                    '(' => '',
+                    ')' => '',
+                ]),
+            ]),
+        );
+        return response()->json(['id' => $neography->id]);
+    }
+
+    /**
+     * Delete existing neography
+     */
+    public function destroy(Neography $neography)
+    {
+        $neography->delete();
+        return response()->noContent();
     }
 }

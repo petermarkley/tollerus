@@ -51,7 +51,7 @@ class Neography extends Model
     }
     public function nativeSpellings(): HasMany
     {
-        return $this->hasMany(NativeSpellings::class);
+        return $this->hasMany(NativeSpelling::class);
     }
 
     /**
