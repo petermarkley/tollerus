@@ -64,6 +64,8 @@ return [
   'load' => 'Load',
   'loading' => 'Loading ...',
   'info' => 'Info',
+  'font' => 'Font',
+  'keyboards' => 'Keyboards',
   'edit' => 'Edit',
   'edit_thing' => 'Edit :thing',
   'select' => 'Select',

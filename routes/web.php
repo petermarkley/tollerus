@@ -9,6 +9,7 @@ use PeterMarkley\Tollerus\Http\Controllers\NeographyController;
 use PeterMarkley\Tollerus\Livewire\AutoInflectionEditor;
 use PeterMarkley\Tollerus\Livewire\InflectionTableEditor;
 use PeterMarkley\Tollerus\Livewire\LanguageEditor;
+use PeterMarkley\Tollerus\Livewire\NeographyEditor;
 
 $baseMiddleware = Config::get('tollerus.middleware', ['web']);
 $adminMiddleware = collect(Config::get('tollerus.admin_middleware', []))
@@ -51,7 +52,10 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                         Route::post('/', [NeographyController::class, 'store'])->name('store');
                         Route::prefix('/{neography}')->group(function () {
                             Route::delete('/', [NeographyController::class, 'destroy'])->name('destroy');
-                            Route::get('/', fn () => 'fixme')->name('edit');
+                            Route::get('/', NeographyEditor::class)->name('edit');
+                            Route::get('/{tab}', NeographyEditor::class)
+                                ->whereIn('tab', ['glyphs', 'keyboards'])
+                                ->name('edit.tab');
                         });
                     });
             });
