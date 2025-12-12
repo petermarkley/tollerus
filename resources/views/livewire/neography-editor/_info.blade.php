@@ -48,7 +48,13 @@
                                 value="{{ $writingDirection['string'] }}"
                                 wire:model="infoForm.direction_primary"
                                 class="absolute w-full h-full inset-0 opacity-0 z-10 cursor-pointer disabled:cursor-not-allowed"
-                                @change="btn = 'save'; dirty=true;"
+                                @change="
+                                    btn = 'save';
+                                    dirty=true;
+                                    if (!@js( $writingDirection['secondaryOpts'] ).includes(infoForm.direction_secondary)) {
+                                        infoForm.direction_secondary = '{{ $writingDirection['secondaryOpts'][0] }}';
+                                    }
+                                "
                             />
                         </div>
                         <label for="direction_primary_{{ $writingDirection['string'] }}">{{ $writingDirection['local'] }}</label>
@@ -57,6 +63,40 @@
             </fieldset>
             <fieldset class="flex flex-col gap-4 items-start">
                 <div><legend class="font-bold text-base">{{ __('tollerus::ui.secondary') }}</legend></div>
+                @foreach ($writingDirectionOpts as $writingDirection)
+                    <div
+                        x-cloak x-show="@js( $writingDirection['secondaryOpts'] ).includes(infoForm.direction_primary)"
+                        class="flex flex-row gap-2 justify-start items-center"
+                    >
+                        <div class="inline-block align-middle w-6 h-6 relative group">
+                            @switch ($writingDirection['enum'])
+                                @case(\PeterMarkley\Tollerus\Enums\WritingDirection::LeftToRight)
+                                    <x-tollerus::icons.arrow-long-right class="{{ $radioStyle }}" />
+                                @break
+                                @case(\PeterMarkley\Tollerus\Enums\WritingDirection::RightToLeft)
+                                    <x-tollerus::icons.arrow-long-left class="{{ $radioStyle }}" />
+                                @break
+                                @case(\PeterMarkley\Tollerus\Enums\WritingDirection::TopToBottom)
+                                    <x-tollerus::icons.arrow-long-down class="{{ $radioStyle }}" />
+                                @break
+                                @case(\PeterMarkley\Tollerus\Enums\WritingDirection::BottomToTop)
+                                    <x-tollerus::icons.arrow-long-up class="{{ $radioStyle }}" />
+                                @break
+                            @endswitch
+                            <input
+                                type="radio"
+                                id="direction_secondary_{{ $writingDirection['string'] }}"
+                                name="direction_secondary"
+                                value="{{ $writingDirection['string'] }}"
+                                wire:model="infoForm.direction_secondary"
+                                class="absolute w-full h-full inset-0 opacity-0 z-10 cursor-pointer disabled:cursor-not-allowed"
+                                @change="btn = 'save'; dirty=true;"
+                                x-bind:disabled="!@js( $writingDirection['secondaryOpts'] ).includes(infoForm.direction_primary)"
+                            />
+                        </div>
+                        <label for="direction_secondary_{{ $writingDirection['string'] }}">{{ $writingDirection['local'] }}</label>
+                    </div>
+                @endforeach
             </fieldset>
         </div>
     </div>

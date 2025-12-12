@@ -153,6 +153,17 @@ class NeographyEditor extends Component
                     'alpha_dash:ascii',
                     Rule::unique('PeterMarkley\Tollerus\Models\Neography', 'machine_name')->ignore($this->neography->id),
                 ],
+                'infoForm.direction_primary' => [
+                    Rule::enum(WritingDirection::class),
+                ],
+                'infoForm.direction_secondary' => [
+                    Rule::enum(WritingDirection::class)->only(
+                        WritingDirection::from($this->infoForm['direction_primary'])
+                            ->axis()
+                            ->perpendicular()
+                            ->directions()
+                    ),
+                ],
             ]);
             // Save to database
             $this->neography->fill($this->infoForm);
