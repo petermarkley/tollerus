@@ -19,6 +19,7 @@
             document.activeElement.blur();
             this.tab = newTab;
         },
+        infoForm: $wire.entangle('infoForm'),
     }"
     @tab-switch.window="tab = $event.detail.tab; $store.tabFunctions.updateAddress($event.detail.tab);"
     @popstate.window="updateTabFromUrl();"
