@@ -50,6 +50,8 @@ return new class extends Migration
              * increments in the secondary direction.
              */
             $table->boolean('boustrophedon')->default(false);
+            $table->boolean('visible')
+                ->default(true);
         });
         
         $connection->create('languages', function (Blueprint $table) {

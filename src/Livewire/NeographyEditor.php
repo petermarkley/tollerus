@@ -22,7 +22,7 @@ class NeographyEditor extends Component
     // Models
     #[Locked] public Neography $neography;
     // UI input layer
-    // public array $infoForm = [];
+    public array $infoForm = [];
     // UI display properties
     // #[Locked] public array $nativeSpellingCounts = [];
 
@@ -45,7 +45,7 @@ class NeographyEditor extends Component
         $this->tab = $tab ?? 'info';
 
         // Info tab
-        // $this->refreshInfoForm();
+        $this->refreshInfoForm();
 
         // Font tab
         // $this->refreshFontForm();
@@ -64,7 +64,7 @@ class NeographyEditor extends Component
     {
         switch ($tab) {
             case 'info':
-                // $this->refreshInfoForm();
+                $this->refreshInfoForm();
             break;
             case 'font':
                 // $this->refreshFontForm();
@@ -77,14 +77,38 @@ class NeographyEditor extends Component
             break;
         }
     }
+    public function save(string $tab, string $afterSuccess = '', array $payload = []): void
+    {
+        switch ($tab) {
+            case 'info':
+                $this->infoSave($afterSuccess, $payload);
+            break;
+            // case 'font':
+            //     $this->fontSave($afterSuccess, $payload);
+            // break;
+            // case 'glyphs':
+            //     $this->glyphsSave($afterSuccess, $payload);
+            // break;
+            // case 'keyboards':
+            //     $this->keyboardsSave($afterSuccess, $payload);
+            // break;
+        }
+    }
 
     /**
      * Tab-specific refresh functions
      */
-    // public function refreshInfoForm(): void
-    // {
-    //     //
-    // }
+    public function refreshInfoForm(): void
+    {
+        $this->infoForm = [
+            'name'                => $this->neography->name,
+            'machine_name'        => $this->neography->machine_name,
+            'direction_primary'   => $this->neography->direction_primary->value,
+            'direction_secondary' => $this->neography->direction_secondary->value,
+            'boustrophedon'       => (bool)($this->neography->boustrophedon),
+            'visible'             => (bool)($this->neography->visible),
+        ];
+    }
     // public function refreshFontForm(): void
     // {
     //     //
@@ -97,4 +121,33 @@ class NeographyEditor extends Component
     // {
     //     //
     // }
+
+    /**
+     * Tab-specific save functions
+     */
+    public function infoSave(string $afterSuccess = '', array $payload = []): void
+    {
+        try {
+            // Validate
+            $this->validate([
+                'infoForm.name' => [
+                    Rule::unique('PeterMarkley\Tollerus\Models\Neography', 'name')->ignore($this->neography->id),
+                ],
+                'infoForm.machine_name' => [
+                    'alpha_dash:ascii',
+                    Rule::unique('PeterMarkley\Tollerus\Models\Neography', 'machine_name')->ignore($this->neography->id),
+                ],
+            ]);
+            // Save to database
+            $this->neography->fill($this->infoForm);
+            $this->neography->save();
+            // Refresh front-end state
+            $this->refreshInfoForm();
+            $this->dispatch('save-info-success', ['afterSuccess'=>$afterSuccess, 'payload'=>$payload]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('save-info-failure');
+            // Let error keep propagating
+            throw $e;
+        }
+    }
 }

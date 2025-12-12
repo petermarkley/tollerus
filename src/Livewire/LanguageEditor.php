@@ -136,9 +136,6 @@ class LanguageEditor extends Component
             case 'neographies':
                 $this->neographiesSave($afterSuccess, $payload);
             break;
-            case 'grammar':
-                $this->grammarSave($afterSuccess, $payload);
-            break;
         }
     }
 
@@ -287,10 +284,6 @@ class LanguageEditor extends Component
             // Let error keep propagating
             throw $e;
         }
-    }
-    public function grammarSave(): void
-    {
-        //
     }
 
     /**
