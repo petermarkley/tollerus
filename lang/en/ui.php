@@ -44,6 +44,8 @@ return [
   'right_to_left' => 'Right to left',
   'top_to_bottom' => 'Top to bottom',
   'bottom_to_top' => 'Bottom to top',
+  'direction_primary_description' => 'Direction within a line of text',
+  'direction_secondary_description' => 'Feed direction at line breaks (i.e. paragraph fill direction)',
   'incomlete_display_notice' => 'Not all possible settings will display correctly.',
   /**
    * TRANSLATOR NOTE:
