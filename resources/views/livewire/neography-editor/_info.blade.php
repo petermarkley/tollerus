@@ -24,7 +24,7 @@
                 ";
             @endphp
             <fieldset class="flex flex-col gap-4 items-start">
-                <h4 class="font-bold text-base">{{ __('tollerus::ui.primary') }}</h4>
+                <h4 class="font-bold text-base">{{ __('tollerus::ui.writing_direction_primary') }}</h4>
                 <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.direction_primary_description') }}</legend></div>
                 @foreach ($writingDirectionOpts as $writingDirection)
                     <div class="flex flex-row gap-2 justify-start items-center">
@@ -64,7 +64,7 @@
                 @endforeach
             </fieldset>
             <fieldset class="flex flex-col gap-4 items-start">
-                <h4 class="font-bold text-base">{{ __('tollerus::ui.secondary') }}</h4>
+                <h4 class="font-bold text-base">{{ __('tollerus::ui.writing_direction_secondary') }}</h4>
                 <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.direction_secondary_description') }}</legend></div>
                 @foreach ($writingDirectionOpts as $writingDirection)
                     <div
