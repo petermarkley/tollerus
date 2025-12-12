@@ -44,6 +44,16 @@ return [
   'right_to_left' => 'Right to left',
   'top_to_bottom' => 'Top to bottom',
   'bottom_to_top' => 'Bottom to top',
+  'incomlete_display_notice' => 'Not all possible settings will display correctly.',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Boustrophedon" is a Greek term meaning "as the ox
+   * plows," and refers to a writing mode where the
+   * direction switches on each line break.
+   * See here: https://en.wikipedia.org/wiki/Boustrophedon
+   */
+  'boustrophedon' => 'Boustrophedon',
   /**
    * TRANSLATOR NOTE:
    *
@@ -265,4 +275,5 @@ return [
    * These are other messages that also use Markdown ...
    */
   'regex_description' => 'Each rule represents a [Regular Expression](:regex_url) search-and-replace on the selected piece of text. Rules are applied top to bottom.',
+  'boustrophedon_description' => 'If checked, the writing direction will alternate with each new line. [More info](:wiki_url)',
 ];

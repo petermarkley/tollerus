@@ -9,9 +9,10 @@
             <x-tollerus::inputs.text id="machine_name" model="infoForm.machine_name" label="{{ __('tollerus::ui.machine_friendly') }}" @input="btn = 'save'; dirty=true;" />
         </div>
     </div>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 items-start">
         <h3 class="font-bold text-lg">{{ __('tollerus::ui.writing_direction') }}</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <x-tollerus::alert type="info">{{ __('tollerus::ui.incomlete_display_notice') }}</x-tollerus::alert>
+        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
             @php
                 $radioStyle = "rounded-lg bg-none border-2
                     border-zinc-600 group-has-hover:border-zinc-500 dark:border-zinc-500 group-has-hover:dark:border-zinc-400 group-has-checked:border-cyan-800 group-has-checked:group-has-hover:border-cyan-700 group-has-checked:dark:border-cyan-300 group-has-checked:group-has-hover:dark:border-cyan-200
@@ -99,6 +100,18 @@
                 @endforeach
             </fieldset>
         </div>
+        <fieldset class="flex flex-col md:flex-row items-start md:items-center justify-start gap-2 md:gap-4">
+            <div class="flex flex-row justify-start shrink-0">
+                <x-tollerus::inputs.checkbox
+                    idExpression="'boustrophedon'"
+                    model="infoForm.boustrophedon"
+                    modelIsAlpine="true"
+                    label="{{ __('tollerus::ui.boustrophedon') }}"
+                    @change="btn = 'save'; dirty=true;"
+                />
+            </div>
+            <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{!! Str::markdown(__('tollerus::ui.boustrophedon_description', ['wiki_url' => 'https://en.wikipedia.org/wiki/Boustrophedon'])) !!}</legend></div>
+        </fieldset>
     </div>
     <div class="flex flex-row justify-start gap-2">
         <x-tollerus::inputs.button type="secondary" x-bind:disabled="!dirty" @click="$wire.refreshInfoForm(); dirty=false;">{{ __('tollerus::ui.reset') }}</x-tollerus::inputs.button>
