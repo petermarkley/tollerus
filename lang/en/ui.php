@@ -52,6 +52,13 @@ return [
    * plows," and refers to a writing mode where the
    * direction switches on each line break.
    * See here: https://en.wikipedia.org/wiki/Boustrophedon
+   *
+   * Don't fuss too much if this single word is difficult
+   * to translate. It's just a checkbox label; it will
+   * appear next to the `boustrophedon_description` field
+   * (near the bottom of this document, in the Markdown
+   * section) where you can explain more fully and even
+   * link to the Wikipedia article.
    */
   'boustrophedon' => 'Boustrophedon',
   /**
