@@ -23,4 +23,14 @@ enum WritingDirection: string
             self::BottomToTop => WritingAxisType::Vertical,
         };
     }
+
+    public function localize(): string
+    {
+        return match ($this) {
+            self::LeftToRight => __('tollerus::ui.left_to_right'),
+            self::RightToLeft => __('tollerus::ui.right_to_left'),
+            self::TopToBottom => __('tollerus::ui.top_to_bottom'),
+            self::BottomToTop => __('tollerus::ui.bottom_to_top'),
+        };
+    }
 }

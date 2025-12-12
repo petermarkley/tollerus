@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Enums\WritingDirection;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
@@ -24,14 +25,14 @@ class NeographyEditor extends Component
     // UI input layer
     public array $infoForm = [];
     // UI display properties
-    // #[Locked] public array $nativeSpellingCounts = [];
+    #[Locked] public array $writingDirectionOpts = [];
 
     /**
      * Livewire hooks
      */
     public function render(): View
     {
-        return view('tollerus::livewire.neography-editor')
+        return view('tollerus::livewire.neography-editor', ['writingDirectionOpts' => $this->writingDirectionOpts])
             ->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
@@ -46,6 +47,16 @@ class NeographyEditor extends Component
 
         // Info tab
         $this->refreshInfoForm();
+        $this->writingDirectionOpts = collect(WritingDirection::values())
+            ->map(function ($d) {
+                $writingDirection = WritingDirection::from($d);
+                return [
+                    'string' => $d,
+                    'enum' => $writingDirection,
+                    'local' => $writingDirection->localize(),
+                ];
+            })
+            ->toArray();
 
         // Font tab
         // $this->refreshFontForm();

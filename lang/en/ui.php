@@ -38,6 +38,12 @@ return [
   'entries' => 'Entries', // Word entries in a dictionary
   'no_entries' => '(No Entries)',
   'none' => '(none)',
+  'writing_direction' => 'Writing direction',
+  'secondary' => 'Secondary',
+  'left_to_right' => 'Left to right',
+  'right_to_left' => 'Right to left',
+  'top_to_bottom' => 'Top to bottom',
+  'bottom_to_top' => 'Bottom to top',
   /**
    * TRANSLATOR NOTE:
    *
