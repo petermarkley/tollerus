@@ -47,14 +47,19 @@ class NeographyEditor extends Component
 
         // Info tab
         $this->refreshInfoForm();
-        $this->writingDirectionOpts = collect(WritingDirection::values())
-            ->map(function ($d) {
-                $writingDirection = WritingDirection::from($d);
-                return [
-                    'string' => $d,
-                    'enum' => $writingDirection,
-                    'local' => $writingDirection->localize(),
-                ];
+        $this->writingDirectionOpts = collect(WritingDirection::cases())
+            ->mapWithKeys(function ($direction) {
+                $directionString = $direction->value;
+                $secondaryDirectionOpts = $direction->axis()->perpendicular()->directions();
+                $secondaryDirectionStrs = collect($secondaryDirectionOpts)
+                    ->map(fn ($direction) => $direction->value)
+                    ->toArray();
+                return [$directionString => [
+                    'string' => $directionString,
+                    'enum' => $direction,
+                    'local' => $direction->localize(),
+                    'secondaryOpts' => $secondaryDirectionStrs,
+                ]];
             })
             ->toArray();
 

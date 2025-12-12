@@ -12,22 +12,21 @@
     <div class="flex flex-col gap-4">
         <h3 class="font-bold text-lg">{{ __('tollerus::ui.writing_direction') }}</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @php
+                $radioStyle = "rounded-lg bg-none border-2
+                    border-zinc-600 group-has-hover:border-zinc-500 dark:border-zinc-500 group-has-hover:dark:border-zinc-400 group-has-checked:border-cyan-800 group-has-checked:group-has-hover:border-cyan-700 group-has-checked:dark:border-cyan-300 group-has-checked:group-has-hover:dark:border-cyan-200
+                    text-zinc-600   group-has-hover:text-zinc-500   dark:text-zinc-500   group-has-hover:dark:text-zinc-400
+                    group-has-checked:text-white group-has-checked:group-has-hover:text-white group-has-checked:dark:text-zinc-800 group-has-checked:group-has-hover:dark:text-zinc-800
+                    group-has-checked:bg-cyan-800 group-has-checked:group-has-hover:bg-cyan-700 group-has-checked:dark:bg-cyan-300 group-has-checked:group-has-hover:dark:bg-cyan-200
+                    group-has-checked:dark:saturate-50
+                    group-has-focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white
+                ";
+            @endphp
             <fieldset class="flex flex-col gap-4 items-start">
                 <div><legend class="font-bold text-base">{{ __('tollerus::ui.primary') }}</legend></div>
                 @foreach ($writingDirectionOpts as $writingDirection)
                     <div class="flex flex-row gap-2 justify-start items-center">
                         <div class="inline-block align-middle w-6 h-6 relative group">
-                            @php
-                                $radioStyle = "rounded-lg bg-none border-2
-                                    border-zinc-600 group-has-hover:border-zinc-500 dark:border-zinc-500 group-has-hover:dark:border-zinc-400 group-has-checked:border-cyan-800 group-has-checked:group-has-hover:border-cyan-700 group-has-checked:dark:border-cyan-300 group-has-checked:group-has-hover:dark:border-cyan-200
-                                    text-zinc-600   group-has-hover:text-zinc-500   dark:text-zinc-500   group-has-hover:dark:text-zinc-400
-                                    group-has-checked:text-white group-has-checked:dark:text-zinc-800
-                                    group-has-checked:bg-cyan-800 group-has-checked:group-has-hover:bg-cyan-700 group-has-checked:dark:bg-cyan-300 group-has-checked:group-has-hover:dark:bg-cyan-200
-                                    group-has-checked:dark:saturate-50
-                                    group-has-disabled:text-zinc-300 group-has-disabled:dark:text-zinc-700 group-has-checked:group-has-hover:group-has-disabled:text-zinc-300 group-has-checked:group-has-hover:group-has-disabled:dark:text-zinc-700
-                                    group-has-focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white
-                                ";
-                            @endphp
                             @switch ($writingDirection['enum'])
                                 @case(\PeterMarkley\Tollerus\Enums\WritingDirection::LeftToRight)
                                     <x-tollerus::icons.arrow-long-right class="{{ $radioStyle }}" />
