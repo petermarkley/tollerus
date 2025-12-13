@@ -20,6 +20,7 @@
             this.tab = newTab;
         },
         infoForm: $wire.entangle('infoForm'),
+        fontForm: $wire.entangle('fontForm'),
     }"
     @tab-switch.window="tab = $event.detail.tab; $store.tabFunctions.updateAddress($event.detail.tab);"
     @popstate.window="updateTabFromUrl();"

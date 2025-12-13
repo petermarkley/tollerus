@@ -65,4 +65,5 @@ return [
      */
     'invalid_src_particle' => 'Invalid source particle.',
     'invalid_morph_rule' => 'Invalid morph rule.',
+    'asset_invalid' => 'Something is wrong with the public asset!',
 ];

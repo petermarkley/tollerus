@@ -76,6 +76,11 @@ return [
    */
   'scalable_vector_graphics' => 'Scalable Vector Graphics',
   'truetype_font' => 'TrueType Font',
+  'upload_file' => 'Upload file',
+  'delete_file' => 'Delete file',
+  'copy_to_clipboard' => 'Copy to clipboard',
+  'copied_to_clipboard' => 'Copied to clipboard',
+  'asset_url' => 'Asset URL',
   /**
    * TRANSLATOR NOTE:
    *

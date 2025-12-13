@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Enums\FontFormat;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
@@ -24,6 +25,7 @@ class NeographyEditor extends Component
     #[Locked] public Neography $neography;
     // UI input layer
     public array $infoForm = [];
+    public array $fontForm = [];
     // UI display properties
     #[Locked] public array $writingDirectionOpts = [];
 
@@ -64,7 +66,7 @@ class NeographyEditor extends Component
             ->toArray();
 
         // Font tab
-        // $this->refreshFontForm();
+        $this->refreshFontForm();
 
         // Glyphs tab
         // $this->refreshGlyphsForm();
@@ -83,7 +85,7 @@ class NeographyEditor extends Component
                 $this->refreshInfoForm();
             break;
             case 'font':
-                // $this->refreshFontForm();
+                $this->refreshFontForm();
             break;
             case 'glyphs':
                 // $this->refreshGlyphsForm();
@@ -125,10 +127,27 @@ class NeographyEditor extends Component
             'visible'             => (bool)($this->neography->visible),
         ];
     }
-    // public function refreshFontForm(): void
-    // {
-    //     //
-    // }
+    public function refreshFontForm(): void
+    {
+        $neography = $this->neography;
+        $this->fontForm = collect(FontFormat::cases())->mapWithKeys(function ($fontFormat) use ($neography) {
+            $path = $neography->{$fontFormat->pathColumn()};
+            $url = $neography->{$fontFormat->urlColumn()};
+            $published = (!empty($path) && !empty($url));
+            $mimeType = $fontFormat->mimeType();
+            if ($published && is_file($path) && mime_content_type($path) == $mimeType) {
+                $valid = true;
+            } else {
+                $valid = false;
+            }
+            return [$fontFormat->value => [
+                'blobExists' => !empty($neography->{$fontFormat->blobColumn()}),
+                'published' => $published,
+                'url' => $url,
+                'valid' => $valid,
+            ]];
+        })->toArray();
+    }
     // public function refreshGlyphsForm(): void
     // {
     //     //
