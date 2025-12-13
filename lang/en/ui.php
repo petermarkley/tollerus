@@ -64,6 +64,18 @@ return [
    * link to the Wikipedia article.
    */
   'boustrophedon' => 'Boustrophedon',
+  'svg_format' => 'SVG format',
+  'ttf_format' => 'TTF format',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * These are the full names for official file standards.
+   * See also:
+   * - https://en.wikipedia.org/wiki/SVG
+   * - https://en.wikipedia.org/wiki/TrueType
+   */
+  'scalable_vector_graphics' => 'Scalable Vector Graphics',
+  'truetype_font' => 'TrueType Font',
   /**
    * TRANSLATOR NOTE:
    *

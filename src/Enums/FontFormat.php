@@ -12,6 +12,9 @@ enum FontFormat: string
         return array_column(self::cases(), 'value');
     }
 
+    /**
+     * Text used by systems
+     */
     public function extension(): string
     {
         return match ($this) {
@@ -24,6 +27,31 @@ enum FontFormat: string
         return match ($this) {
             self::Svg => 'image/svg+xml',
             self::Ttf => 'font/ttf',
+        };
+    }
+
+    /**
+     * Text for human reading
+     */
+    public function nameBrief(): string
+    {
+        return match ($this) {
+            self::Svg => 'SVG',
+            self::Ttf => 'TTF',
+        };
+    }
+    public function localizeNameFull(): string
+    {
+        return match ($this) {
+            self::Svg => __('tollerus::ui.scalable_vector_graphics'),
+            self::Ttf => __('tollerus::ui.truetype_font'),
+        };
+    }
+    public function localizeFormat(): string
+    {
+        return match ($this) {
+            self::Svg => __('tollerus::ui.svg_format'),
+            self::Ttf => __('tollerus::ui.ttf_format'),
         };
     }
 
