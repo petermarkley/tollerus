@@ -21,6 +21,17 @@
         },
         infoForm: $wire.entangle('infoForm'),
         fontForm: $wire.entangle('fontForm'),
+        get hasFont() {
+            let fileFound = false;
+            for (let formatStr in this.fontForm) {
+                let format = this.fontForm[formatStr];
+                if (this.fontForm.hasOwnProperty(formatStr) && typeof format === 'object' && format.blobExists) {
+                    fileFound = true;
+                    break;
+                }
+            }
+            return fileFound;
+        },
     }"
     @tab-switch.window="tab = $event.detail.tab; $store.tabFunctions.updateAddress($event.detail.tab);"
     @popstate.window="updateTabFromUrl();"

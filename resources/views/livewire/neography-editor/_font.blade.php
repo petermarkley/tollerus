@@ -1,85 +1,99 @@
-<x-tollerus::panel id="tabpanel-font" role="tabpanel" x-cloak x-show="tab=='font'" class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-    @foreach(\PeterMarkley\Tollerus\Enums\FontFormat::cases() as $fontFormat)
-        <div class="flex flex-col gap-4 items-start">
-            <h3 class="font-bold text-lg">{{ $fontFormat->localizeFormat() }}</h3>
-            <template x-if="fontForm['{{ $fontFormat->value }}'].blobExists">
-                <div class="flex flex-col gap-2 items-center">
-                    <div class="flex flex-col justify-center items-center">
-                        <div class="relative">
-                            <x-tollerus::icons.document class="w-24 h-24"/>
-                            <x-tollerus::inputs.button
-                                type="secondary"
-                                size="small"
-                                class="absolute top-0 -right-6"
-                                title="{{ __('tollerus::ui.delete_file') }}"
-                            >
-                                <x-tollerus::icons.delete/>
-                                <span class="sr-only">{{ __('tollerus::ui.delete_file') }}</span>
-                            </x-tollerus::inputs.button>
-                        </div>
-                    </div>
-                    <template x-if="fontForm['{{ $fontFormat->value }}'].published">
-                        <div class="flex flex-col gap-2 items-center">
-                            <div
-                                x-data="{ id: $id('font_url') }"
-                                class="flex flex-row gap-2 border border-zinc-50 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-lg shadow p-2"
-                            >
-                                <div class="max-w-80 whitespace-nowrap overflow-hidden p-2 rounded inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 flex flex-col items-end">
-                                    <label x-bind:for="id" class="sr-only">{{ __('tollerus::ui.asset_url') }}</label>
-                                    <input
-                                        x-bind:id="id"
-                                        type="text"
-                                        x-bind:value="fontForm['{{ $fontFormat->value }}'].url"
-                                        class="text-right"
-                                        x-init="$nextTick(() => { $el.scrollLeft = $el.scrollWidth; });"
-                                    />
-                                </div>
+<x-tollerus::panel id="tabpanel-font" role="tabpanel" x-cloak x-show="tab=='font'" class="flex flex-col gap-4">
+    <template x-if="!hasFont">
+        <x-tollerus::alert type="info">
+            {!! Str::markdown(__('tollerus::ui.inkscape_svg_guide', [
+                'guide_url' => 'https://inkscape-manuals.readthedocs.io/en/latest/creating-custom-fonts.html',
+                'inkscape_url' => 'https://inkscape.org/',
+            ])) !!}
+            {!! Str::markdown(__('tollerus::ui.ucsur_tip', [
+                'pua_url' => 'https://en.wikipedia.org/wiki/Private_Use_Areas',
+                'ucsur_url' => 'https://www.kreativekorp.com/ucsur/',
+            ])) !!}
+        </x-tollerus::alert>
+    </template>
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+        @foreach(\PeterMarkley\Tollerus\Enums\FontFormat::cases() as $fontFormat)
+            <div class="flex flex-col gap-4 items-start">
+                <h3 class="font-bold text-lg">{{ $fontFormat->localizeFormat() }}</h3>
+                <template x-if="fontForm['{{ $fontFormat->value }}'].blobExists">
+                    <div class="flex flex-col gap-2 items-center">
+                        <div class="flex flex-col justify-center items-center">
+                            <div class="relative">
+                                <x-tollerus::icons.document class="w-24 h-24"/>
                                 <x-tollerus::inputs.button
-                                    type="inverse"
-                                    x-bind:title="(copied ? '{{ __('tollerus::ui.copied_to_clipboard') }}' : '{{ __('tollerus::ui.copy_to_clipboard') }}')"
-                                    x-data="{ copied: false }"
-                                    @click="if (await $store.clipboardFunctions.copy(id)) {copied=true; setTimeout(() => {copied=false;}, 2000);}"
-                                    x-bind:disabled="copied"
+                                    type="secondary"
+                                    size="small"
+                                    class="absolute top-0 -right-6"
+                                    title="{{ __('tollerus::ui.delete_file') }}"
                                 >
-                                    <template x-if="!copied">
-                                        <div>
-                                            <x-tollerus::icons.document-duplicate class="w-6 h-6"/>
-                                            <span class="sr-only">{{ __('tollerus::ui.copy_to_clipboard') }}</span>
-                                        </div>
-                                    </template>
-                                    <template x-if="copied">
-                                        <div>
-                                            <x-tollerus::icons.check class="w-6 h-6"/>
-                                            <span class="sr-only">{{ __('tollerus::ui.copied_to_clipboard') }}</span>
-                                        </div>
-                                    </template>
+                                    <x-tollerus::icons.delete/>
+                                    <span class="sr-only">{{ __('tollerus::ui.delete_file') }}</span>
                                 </x-tollerus::inputs.button>
                             </div>
-                            <template x-if="!fontForm['{{ $fontFormat->value }}'].valid">
-                                <x-tollerus::alert type="error">{{ __('tollerus::error.asset_invalid') }}</x-tollerus::alert>
-                            </template>
                         </div>
-                    </template>
-                    <template x-if="!fontForm['{{ $fontFormat->value }}'].published">
-                        <div>Lorem ipsum dolor sit amet.</div>
-                    </template>
-                </div>
-            </template>
-            <template x-if="!fontForm['{{ $fontFormat->value }}'].blobExists">
-                <div>
-                    <x-tollerus::inputs.missing-data
-                        size="medium"
-                        title="{{ __('tollerus::ui.upload_file') }}"
-                        class="relative flex flex-row gap-2 justify-center items-center w-full"
-                        @click=""
-                    >
-                        <x-tollerus::icons.plus/>
-                        <span>{{ __('tollerus::ui.upload_file') }}</span>
-                    </x-tollerus::inputs.missing-data>
-                </div>
-            </template>
-        </div>
-    @endforeach
+                        <template x-if="fontForm['{{ $fontFormat->value }}'].published">
+                            <div class="flex flex-col gap-2 items-center">
+                                <div
+                                    x-data="{ id: $id('font_url') }"
+                                    class="flex flex-row gap-2 border border-zinc-50 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-lg shadow p-2"
+                                >
+                                    <div class="max-w-80 whitespace-nowrap overflow-hidden p-2 rounded inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 flex flex-col items-end">
+                                        <label x-bind:for="id" class="sr-only">{{ __('tollerus::ui.asset_url') }}</label>
+                                        <input
+                                            x-bind:id="id"
+                                            type="text"
+                                            x-bind:value="fontForm['{{ $fontFormat->value }}'].url"
+                                            class="text-right"
+                                            x-init="$nextTick(() => { $el.scrollLeft = $el.scrollWidth; });"
+                                        />
+                                    </div>
+                                    <x-tollerus::inputs.button
+                                        type="inverse"
+                                        x-bind:title="(copied ? '{{ __('tollerus::ui.copied_to_clipboard') }}' : '{{ __('tollerus::ui.copy_to_clipboard') }}')"
+                                        x-data="{ copied: false }"
+                                        @click="if (await $store.clipboardFunctions.copy(id)) {copied=true; setTimeout(() => {copied=false;}, 2000);}"
+                                        x-bind:disabled="copied"
+                                    >
+                                        <template x-if="!copied">
+                                            <div>
+                                                <x-tollerus::icons.document-duplicate class="w-6 h-6"/>
+                                                <span class="sr-only">{{ __('tollerus::ui.copy_to_clipboard') }}</span>
+                                            </div>
+                                        </template>
+                                        <template x-if="copied">
+                                            <div>
+                                                <x-tollerus::icons.check class="w-6 h-6"/>
+                                                <span class="sr-only">{{ __('tollerus::ui.copied_to_clipboard') }}</span>
+                                            </div>
+                                        </template>
+                                    </x-tollerus::inputs.button>
+                                </div>
+                                <template x-if="!fontForm['{{ $fontFormat->value }}'].valid">
+                                    <x-tollerus::alert type="error">{{ __('tollerus::error.asset_invalid') }}</x-tollerus::alert>
+                                </template>
+                            </div>
+                        </template>
+                        <template x-if="!fontForm['{{ $fontFormat->value }}'].published">
+                            <div>Lorem ipsum dolor sit amet.</div>
+                        </template>
+                    </div>
+                </template>
+                <template x-if="!fontForm['{{ $fontFormat->value }}'].blobExists">
+                    <div>
+                        <x-tollerus::inputs.missing-data
+                            size="medium"
+                            title="{{ __('tollerus::ui.upload_file') }}"
+                            class="relative flex flex-row gap-2 justify-center items-center w-full"
+                            @click=""
+                        >
+                            <x-tollerus::icons.plus/>
+                            <span>{{ __('tollerus::ui.upload_file') }}</span>
+                        </x-tollerus::inputs.missing-data>
+                    </div>
+                </template>
+            </div>
+        @endforeach
+    </div>
 </x-tollerus::panel>
 @once
 @push('tollerus-scripts')

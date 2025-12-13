@@ -274,6 +274,7 @@ return [
   'table_fold_description' => 'When the table is wrapped (not stacked), should its label hide? Use if redundant with the table above it.',
   'rows_fold' => 'Rows labels are redundant',
   'rows_fold_description' => 'When the table stacks horizontally, should the row labels hide? Use if redundant with the table next to it.',
+
   /**
    * TRANSLATOR NOTE:
    *
@@ -296,11 +297,33 @@ return [
    *     Peter Markley. Licensed via LGPL v2.1"
    */
   'copyright_footer' => 'The [Tollerus software](:github_url) is copyright &copy; :year by Peter Markley.<br>Licensed via [LGPL v2.1](:lgpl_url)',
+
   /**
    * TRANSLATOR NOTE:
    *
    * These are other messages that also use Markdown ...
+   *
+   * If an English Wikipedia link is used, and an equivalent
+   * article exists in the target language, feel free to use
+   * that instead of the substitution token.
    */
+
+  // 'regex_url' = https://en.wikipedia.org/wiki/Regular_expression
   'regex_description' => 'Each rule represents a [Regular Expression](:regex_url) search-and-replace on the selected piece of text. Rules are applied top to bottom.',
+  // 'wiki_url' = https://en.wikipedia.org/wiki/Boustrophedon
   'boustrophedon_description' => 'If checked, the writing direction will alternate with each new line. [More info](:wiki_url)',
+  // 'guide_url'    = https://inkscape-manuals.readthedocs.io/en/latest/creating-custom-fonts.html
+  // 'inkscape_url' = https://inkscape.org/
+  'inkscape_svg_guide' => 'To make your initial SVG font, follow the instructions [here](:guide_url) using the free software [Inkscape](:inkscape_url). You can also export as a TTF.',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Conlang" is short for "constructed language," i.e. an
+   * artificial or fictional language. "Conscript" follows
+   * this pattern but for a script (i.e. an alphabet or
+   * writing system); it's another term for "neography."
+   */
+  // 'pua_url'   = https://en.wikipedia.org/wiki/Private_Use_Areas
+  // 'ucsur_url' = https://www.kreativekorp.com/ucsur/
+  'ucsur_tip' => 'Consider mapping your conlang glyphs to a [Unicode Private Use Area](:pua_url), perhaps a region not yet claimed in the [Under-ConScript Unicode Registry](:ucsur_url).',
 ];
