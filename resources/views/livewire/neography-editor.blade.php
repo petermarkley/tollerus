@@ -8,6 +8,7 @@
             saving: @js(__('tollerus::ui.saving')),
             no_cancel: @js(__('tollerus::ui.no_cancel')),
             yes_delete: @js(__('tollerus::ui.yes_delete')),
+            delete_font_file_confirmation: @js(__('tollerus::ui.delete_font_file_confirmation')),
         },
         tab: $wire.entangle('tab'),
         updateTabFromUrl() {
@@ -37,6 +38,7 @@
     @popstate.window="updateTabFromUrl();"
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
     @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
+    @font-delete.window="$wire.fontDelete($event.detail.fontFormat);"
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">

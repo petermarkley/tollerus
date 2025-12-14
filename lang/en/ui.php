@@ -261,6 +261,7 @@ return [
   'delete_inflection_table_confirmation' => 'About to delete an inflection table. Are you sure?',
   'delete_inflection_row_confirmation' => 'About to delete an inflection row. Are you sure?',
   'delete_rule_confirmation' => 'About to delete a morph rule. Are you sure?',
+  'delete_font_file_confirmation' => 'About to delete font file. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *

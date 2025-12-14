@@ -199,6 +199,23 @@ class NeographyEditor extends Component
     }
 
     /**
+     * Granular CRUD-type functions
+     */
+    public function fontDelete(FontFormat $fontFormat): void
+    {
+        $fontAssetService = new FontAssetService;
+        try {
+            $fontAssetService->delete($fontFormat, $this->neography);
+            $this->neography->{$fontFormat->blobColumn()} = null;
+            $this->neography->save();
+        } catch (\Throwable $e) {
+            $this->dispatch('font-delete-failure');
+            throw $e;
+        }
+        $this->refreshFontForm();
+    }
+
+    /**
      * Public utility functions
      */
     public function publishFont(FontFormat $fontFormat): void
