@@ -81,6 +81,7 @@ return [
   'copy_to_clipboard' => 'Copy to clipboard',
   'copied_to_clipboard' => 'Copied to clipboard',
   'asset_url' => 'Asset URL',
+  'get_url' => 'Get URL',
   /**
    * TRANSLATOR NOTE:
    *

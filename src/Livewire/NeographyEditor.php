@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Domain\Neography\Services\FontAssetService;
 use PeterMarkley\Tollerus\Enums\FontFormat;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
 use PeterMarkley\Tollerus\Models\Neography;
@@ -195,5 +196,20 @@ class NeographyEditor extends Component
             // Let error keep propagating
             throw $e;
         }
+    }
+
+    /**
+     * Public utility functions
+     */
+    public function publishFont(FontFormat $fontFormat): void
+    {
+        $fontAssetService = new FontAssetService;
+        try {
+            $fontAssetService->publish($fontFormat, $this->neography);
+        } catch (\Throwable $e) {
+            $this->dispatch('publish-font-failure');
+            throw $e;
+        }
+        $this->refreshFontForm();
     }
 }

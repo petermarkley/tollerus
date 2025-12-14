@@ -74,7 +74,16 @@
                             </div>
                         </template>
                         <template x-if="!fontForm['{{ $fontFormat->value }}'].published">
-                            <div>Lorem ipsum dolor sit amet.</div>
+                            <x-tollerus::inputs.button
+                                title="{{ __('tollerus::ui.get_url') }}"
+                                class="flex flex-row gap-2 items-center"
+                                @click="$wire.publishFont('{{ $fontFormat->value }}');"
+                                wire:loading.attr="disabled"
+                                wire:target="publishFont"
+                            >
+                                <x-tollerus::icons.link/>
+                                <span>{{ __('tollerus::ui.get_url') }}</span>
+                            </x-tollerus::inputs.button>
                         </template>
                     </div>
                 </template>
