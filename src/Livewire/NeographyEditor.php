@@ -4,6 +4,8 @@ namespace PeterMarkley\Tollerus\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\Locked;
+use Livewire\WithFileUploads;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +21,7 @@ use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class NeographyEditor extends Component
 {
+    use WithFileUploads;
     // use HasModelCache;
     // private $cacheRoot = '';
     public string $tab = 'info';
@@ -27,6 +30,7 @@ class NeographyEditor extends Component
     // UI input layer
     public array $infoForm = [];
     public array $fontForm = [];
+    public $fontFileUpload;
     // UI display properties
     #[Locked] public array $writingDirectionOpts = [];
 
@@ -74,6 +78,21 @@ class NeographyEditor extends Component
 
         // Keyboards tab
         // $this->refreshKeyboardsForm();
+    }
+    public function updatedFontFileUpload(TemporaryUploadedFile $file): void
+    {
+        $mimeType = $file->getMimeType();
+        try {
+            $fontFormat = collect(FontFormat::cases())->firstOrFail(fn ($f) => $f->mimeType() == $mimeType);
+        } catch (\Illuminate\Support\ItemNotFoundException $e) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['fontFileUpload' => [__('tollerus::error.invalid_file_mime_type')]]);
+        }
+        if ($file->getSize() > config('tollerus.max_font_size')) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['fontFileUpload' => [__('tollerus::error.file_too_big')]]);
+        }
+        $this->neography->{$fontFormat->blobColumn()} = $file->get();
+        $this->neography->save();
+        $this->publishFont($fontFormat);
     }
 
     /**
@@ -205,7 +224,9 @@ class NeographyEditor extends Component
     {
         $fontAssetService = new FontAssetService;
         try {
-            $fontAssetService->delete($fontFormat, $this->neography);
+            if (!empty($this->neography->{$fontFormat->pathColumn()})) {
+                $fontAssetService->delete($fontFormat, $this->neography);
+            }
             $this->neography->{$fontFormat->blobColumn()} = null;
             $this->neography->save();
         } catch (\Throwable $e) {
