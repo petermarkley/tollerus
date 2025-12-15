@@ -106,6 +106,9 @@
                             <span>{{ __('tollerus::ui.upload_file') }}</span>
                             <input x-bind:id="id" type="file" class="hidden" accept="{{ implode(', ', $fontFormat->mimeTypes()) }}" wire:model="fontUploads.{{ $fontFormat->value }}"/>
                         </label>
+                        @error("fontUploads.{$fontFormat->value}")
+                            <p class="text-red-700 dark:text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
                 </template>
             </div>
