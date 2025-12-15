@@ -22,11 +22,11 @@ enum FontFormat: string
             self::Ttf => 'ttf',
         };
     }
-    public function mimeType(): string
+    public function mimeTypes(): array
     {
         return match ($this) {
-            self::Svg => 'image/svg+xml',
-            self::Ttf => 'font/ttf',
+            self::Svg => ['image/svg+xml'],
+            self::Ttf => ['font/ttf'],
         };
     }
 

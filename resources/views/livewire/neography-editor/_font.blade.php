@@ -95,7 +95,7 @@
                     </div>
                 </template>
                 <template x-if="!fontForm['{{ $fontFormat->value }}'].blobExists">
-                    <div x-data="{ id: $id('file-input') }">
+                    <div x-data="{ id: $id('file-input') }" class="flex flex-col gap-2 items-start">
                         <label
                             size="medium"
                             title="{{ __('tollerus::ui.upload_file') }}"
@@ -104,7 +104,7 @@
                         >
                             <x-tollerus::icons.plus/>
                             <span>{{ __('tollerus::ui.upload_file') }}</span>
-                            <input x-bind:id="id" type="file" class="hidden" accept="{{ $fontFormat->mimeType() }}" wire:model="fontFileUpload"/>
+                            <input x-bind:id="id" type="file" class="hidden" accept="{{ implode(', ', $fontFormat->mimeTypes()) }}" wire:model="fontUploads.{{ $fontFormat->value }}"/>
                         </label>
                     </div>
                 </template>

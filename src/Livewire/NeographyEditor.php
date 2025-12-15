@@ -30,7 +30,7 @@ class NeographyEditor extends Component
     // UI input layer
     public array $infoForm = [];
     public array $fontForm = [];
-    public $fontFileUpload;
+    public array $fontUploads = [];
     // UI display properties
     #[Locked] public array $writingDirectionOpts = [];
 
@@ -79,12 +79,10 @@ class NeographyEditor extends Component
         // Keyboards tab
         // $this->refreshKeyboardsForm();
     }
-    public function updatedFontFileUpload(TemporaryUploadedFile $file): void
+    public function updatedFontUploads(TemporaryUploadedFile $file, string $key): void
     {
-        $mimeType = $file->getMimeType();
-        try {
-            $fontFormat = collect(FontFormat::cases())->firstOrFail(fn ($f) => $f->mimeType() == $mimeType);
-        } catch (\Illuminate\Support\ItemNotFoundException $e) {
+        $fontFormat = FontFormat::from($key);
+        if (!in_array($file->getMimeType(), $fontFormat->mimeTypes())) {
             throw \Illuminate\Validation\ValidationException::withMessages(['fontFileUpload' => [__('tollerus::error.invalid_file_mime_type')]]);
         }
         if ($file->getSize() > config('tollerus.max_font_size')) {
@@ -92,6 +90,7 @@ class NeographyEditor extends Component
         }
         $this->neography->{$fontFormat->blobColumn()} = $file->get();
         $this->neography->save();
+        $this->fontUploads[$key] = null;
         $this->publishFont($fontFormat);
     }
 
@@ -154,8 +153,8 @@ class NeographyEditor extends Component
             $path = $neography->{$fontFormat->pathColumn()};
             $url = $neography->{$fontFormat->urlColumn()};
             $published = (!empty($path) && !empty($url));
-            $mimeType = $fontFormat->mimeType();
-            if ($published && is_file($path) && mime_content_type($path) == $mimeType) {
+            $mimeTypes = $fontFormat->mimeTypes();
+            if ($published && is_file($path) && in_array(mime_content_type($path), $mimeTypes)) {
                 $valid = true;
             } else {
                 $valid = false;
