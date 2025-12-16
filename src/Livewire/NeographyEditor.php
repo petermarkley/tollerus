@@ -82,11 +82,13 @@ class NeographyEditor extends Component
     public function updatedFontUploads(TemporaryUploadedFile $file, string $key): void
     {
         $fontFormat = FontFormat::from($key);
-        if (!in_array($file->getMimeType(), $fontFormat->mimeTypes())) {
-            throw \Illuminate\Validation\ValidationException::withMessages(["fontUploads.$key" => [__('tollerus::error.invalid_file_mime_type')]]);
+        $mimeType = $file->getMimeType();
+        if (!in_array($mimeType, $fontFormat->mimeTypes())) {
+            throw \Illuminate\Validation\ValidationException::withMessages(["fontUploads.$key" => [__('tollerus::error.invalid_file_mime_type', ['mime_type' => $mimeType])]]);
         }
-        if ($file->getSize() > config('tollerus.max_font_size')) {
-            throw \Illuminate\Validation\ValidationException::withMessages(["fontUploads.$key" => [__('tollerus::error.file_too_big')]]);
+        $fileSize = $file->getSize();
+        if ($fileSize > config('tollerus.max_font_size')) {
+            throw \Illuminate\Validation\ValidationException::withMessages(["fontUploads.$key" => [__('tollerus::error.file_too_big', ['size' => $fileSize])]]);
         }
         $this->neography->{$fontFormat->blobColumn()} = $file->get();
         $this->neography->save();

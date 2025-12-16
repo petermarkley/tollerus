@@ -26,7 +26,7 @@ enum FontFormat: string
     {
         return match ($this) {
             self::Svg => ['image/svg+xml'],
-            self::Ttf => ['font/ttf'],
+            self::Ttf => ['font/ttf', 'font/sfnt'],
         };
     }
 

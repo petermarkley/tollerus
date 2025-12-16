@@ -66,6 +66,6 @@ return [
     'invalid_src_particle' => 'Invalid source particle',
     'invalid_morph_rule' => 'Invalid morph rule',
     'asset_invalid' => 'Something is wrong with the public asset!',
-    'invalid_file_mime_type' => 'Unknown file MIME type',
-    'file_too_big' => 'File size exceeds the configured maximum.',
+    'invalid_file_mime_type' => 'Unknown file MIME type :mime_type',
+    'file_too_big' => 'File size :size exceeds the configured maximum.',
 ];
