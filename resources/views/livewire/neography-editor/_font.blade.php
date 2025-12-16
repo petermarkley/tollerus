@@ -1,4 +1,14 @@
-<x-tollerus::panel id="tabpanel-font" role="tabpanel" x-cloak x-show="tab=='font'" class="flex flex-col gap-4">
+<x-tollerus::panel
+    id="tabpanel-font"
+    role="tabpanel"
+    x-cloak x-show="tab=='font'"
+    class="flex flex-col gap-4"
+    x-data="{ dragging: false }"
+    @drop.window.prevent.stop="dragging = false;"
+    @dragover.window.prevent.stop=""
+    @dragenter.window.prevent.stop="dragging = true;"
+    @dragleave.window.prevent.stop="dragging = false;"
+>
     <template x-if="!hasFont">
         <x-tollerus::alert type="info">
             {!! Str::markdown(__('tollerus::ui.inkscape_svg_guide', [
@@ -11,7 +21,8 @@
             ])) !!}
         </x-tollerus::alert>
     </template>
-    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div x-cloak x-show="dragging" class="w-[100vw] h-[100vh] bg-black/40 backdrop-blur-sm z-20 absolute inset-0 flex justify-center items-center"></div>
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 z-50">
         @foreach(\PeterMarkley\Tollerus\Enums\FontFormat::cases() as $fontFormat)
             <div class="flex flex-col gap-4 items-start">
                 <h3 class="font-bold text-lg">{{ $fontFormat->localizeFormat() }}</h3>
@@ -97,10 +108,10 @@
                 <template x-if="!fontForm['{{ $fontFormat->value }}'].blobExists">
                     <div x-data="{ id: $id('file-input') }" class="flex flex-col gap-2 items-start">
                         <label
-                            size="medium"
                             title="{{ __('tollerus::ui.upload_file') }}"
-                            class="relative flex flex-row gap-2 justify-center items-center p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500 text-sm text-zinc-500 dark:text-zinc-400 italic text-center w-80 lg:w-120 h-40 cursor-pointer hover:bg-zinc-100 hover:dark:bg-zinc-700 hover:text-zinc-500 hover:dark:text-zinc-400"
-                            @click=""
+                            class="relative flex flex-row gap-2 justify-center items-center p-4 rounded-lg inset-shadow-sm border-dashed border-2 border-zinc-300 dark:border-zinc-500 text-sm text-zinc-500 dark:text-zinc-400 italic text-center w-80 lg:w-120 h-40 cursor-pointer bg-white dark:bg-zinc-800 hover:bg-zinc-100 hover:dark:bg-zinc-700 hover:text-zinc-500 hover:dark:text-zinc-400"
+                            @drop.prevent.stop="files=$event.dataTransfer.files; if (files.length==1) {@this.upload('fontUploads.{{ $fontFormat->value }}', files[0]);} dragging=false;"
+                            @dragover.prevent.stop=""
                         >
                             <x-tollerus::icons.plus/>
                             <span>{{ __('tollerus::ui.upload_file') }}</span>
