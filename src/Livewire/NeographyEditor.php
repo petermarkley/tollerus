@@ -174,13 +174,16 @@ class NeographyEditor extends Component
     }
     public function refreshGlyphsForm(): void
     {
+        $neography = $this->neography;
         $this->sects = $this->neography->sections->sortBy('position')->all();
-        $this->glyphsForm = collect($this->sects)->mapWithKeys(function ($sect) {
+        $this->glyphsForm = collect($this->sects)->mapWithKeys(function ($sect) use ($neography) {
             return [$sect->id => [
                 'type' => ($sect->type === null ? null : $sect->type->value),
                 'name' => $sect->name,
                 'intro' => $sect->intro,
                 'position' => $sect->position,
+                'editUrl' => route('tollerus.admin.neographies.glyphs.edit', ['neography' => $neography, 'sect' => $sect]),
+                'editUrlText' => __('tollerus::ui.edit_thing', ['thing' => $sect->name]),
             ]];
         })->toArray();
     }

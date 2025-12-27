@@ -56,6 +56,11 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                             Route::get('/{tab}', NeographyEditor::class)
                                 ->whereIn('tab', ['font', 'glyphs', 'keyboards'])
                                 ->name('edit.tab');
+                            Route::prefix('glyphs/{sect}')
+                                ->as('glyphs.')
+                                ->group(function () {
+                                    Route::get('/', fn () => 'fixme')->name('edit');
+                                });
                         });
                     });
             });

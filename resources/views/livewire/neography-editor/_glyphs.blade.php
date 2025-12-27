@@ -33,25 +33,40 @@
                 </x-tollerus::panel>
                 <x-tollerus::panel class="flex flex-col gap-6 flex-grow rounded-l-none">
                     <h2 class="flex flex-row gap-2 items-center justify-between">
-                        <div class="font-bold text-xl flex flex-row gap-2 items-center">
+                        <a
+                            class="text-zinc-900 dark:text-zinc-300 font-bold text-xl flex flex-row gap-2 items-center"
+                            x-bind:title="sect.editUrlText"
+                            x-bind:href="sect.editUrl"
+                        >
                             <x-tollerus::icons.bookmark class="h-8"/>
                             <span x-text="sect.name" x-bind:class="{ 'font-normal italic': sect.name.length==0 }"></span>
+                        </a>
+                        <div class="flex flex-row gap-2 items-center">
+                            <x-tollerus::button
+                                type="secondary"
+                                size="small"
+                                x-bind:title="sect.editUrlText"
+                                x-bind:href="sect.editUrl"
+                            >
+                                <x-tollerus::icons.edit class="h-6 w-6"/>
+                                <span class="sr-only" x-text="sect.editUrlText"></span>
+                            </x-tollerus::button>
+                            <x-tollerus::inputs.button
+                                type="secondary"
+                                size="small"
+                                title="{{ __('tollerus::ui.delete_section') }}"
+                                @click="$dispatch('open-modal', {
+                                    message: msgs['delete_section_confirmation'],
+                                    buttons: [
+                                        { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                        { text: msgs.yes_delete, type: 'primary', clickEvent: 'sect-delete', payload: {sectId: sectId} }
+                                    ]
+                                });"
+                            >
+                                <x-tollerus::icons.delete/>
+                                <span class="sr-only">{{ __('tollerus::ui.delete_section') }}</span>
+                            </x-tollerus::inputs.button>
                         </div>
-                        <x-tollerus::inputs.button
-                            type="secondary"
-                            size="small"
-                            title="{{ __('tollerus::ui.delete_section') }}"
-                            @click="$dispatch('open-modal', {
-                                message: msgs['delete_section_confirmation'],
-                                buttons: [
-                                    { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
-                                    { text: msgs.yes_delete, type: 'primary', clickEvent: 'sect-delete', payload: {sectId: sectId} }
-                                ]
-                            });"
-                        >
-                            <x-tollerus::icons.delete/>
-                            <span class="sr-only">{{ __('tollerus::ui.delete_section') }}</span>
-                        </x-tollerus::inputs.button>
                     </h2>
                 </x-tollerus::panel>
             </div>
