@@ -68,6 +68,15 @@
                             </x-tollerus::inputs.button>
                         </div>
                     </h2>
+                    <x-tollerus::pane
+                        class="w-full max-h-20 flex-grow overflow-hidden"
+                        x-bind:title="sect.editUrlText"
+                        x-bind:href="sect.editUrl"
+                        href="#"
+                    >
+                        <div class="w-full max-h-20 flex-grow flex flex-col gap-2 mask-b-to-85%" x-html="sect.intro">
+                        </div>
+                    </x-tollerus::pane>
                 </x-tollerus::panel>
             </div>
         </template>
