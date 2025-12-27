@@ -17,6 +17,7 @@ use PeterMarkley\Tollerus\Domain\Neography\Services\FontAssetService;
 use PeterMarkley\Tollerus\Enums\FontFormat;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
 use PeterMarkley\Tollerus\Models\Neography;
+use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class NeographyEditor extends Component
@@ -27,10 +28,12 @@ class NeographyEditor extends Component
     public string $tab = 'info';
     // Models
     #[Locked] public Neography $neography;
+    #[Locked] public array $sects;
     // UI input layer
     public array $infoForm = [];
     public array $fontForm = [];
     public array $fontUploads = [];
+    public array $glyphsForm = [];
     // UI display properties
     #[Locked] public array $writingDirectionOpts = [];
 
@@ -74,7 +77,7 @@ class NeographyEditor extends Component
         $this->refreshFontForm();
 
         // Glyphs tab
-        // $this->refreshGlyphsForm();
+        $this->refreshGlyphsForm();
 
         // Keyboards tab
         // $this->refreshKeyboardsForm();
@@ -109,7 +112,7 @@ class NeographyEditor extends Component
                 $this->refreshFontForm();
             break;
             case 'glyphs':
-                // $this->refreshGlyphsForm();
+                $this->refreshGlyphsForm();
             break;
             case 'keyboards':
                 // $this->refreshKeyboardsForm();
@@ -169,10 +172,18 @@ class NeographyEditor extends Component
             ]];
         })->toArray();
     }
-    // public function refreshGlyphsForm(): void
-    // {
-    //     //
-    // }
+    public function refreshGlyphsForm(): void
+    {
+        $this->sects = $this->neography->sections->sortBy('position')->all();
+        $this->glyphsForm = collect($this->sects)->mapWithKeys(function ($sect) {
+            return [$sect->id => [
+                'type' => ($sect->type === null ? null : $sect->type->value),
+                'name' => $sect->name,
+                'intro' => $sect->intro,
+                'position' => $sect->position,
+            ]];
+        })->toArray();
+    }
     // public function refreshKeyboardsForm(): void
     // {
     //     //
@@ -235,6 +246,63 @@ class NeographyEditor extends Component
             throw $e;
         }
         $this->refreshFontForm();
+    }
+    public function createSection(): void
+    {
+        try {
+            $nextPosition = collect($this->sects)->max('position') + 1;
+            $sect = CreateWithUniqueName::handle(
+                startNum: $this->neography->sections()->count(),
+                createFunc: fn ($tryName) => $this->neography->sections()->create([
+                    'name' => $tryName,
+                    'position' => $nextPosition,
+                ]),
+            );
+        } catch (\Throwable $e) {
+            $this->dispatch('sect-add-failure');
+            throw $e;
+        }
+        $this->refreshGlyphsForm();
+    }
+    public function updateSection(): void
+    {
+        //
+    }
+    public function deleteSection(string $sectId): void
+    {
+        NeographySection::findOrFail((int)$sectId)->delete();
+        $this->refreshGlyphsForm();
+    }
+    function swapSections(string $sectId, string $neighborId): void
+    {
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($sectId, $neighborId) {
+                $sectsCollection = collect($this->sects);
+                $sectModel     = $sectsCollection->firstWhere('id', $sectId);
+                $neighborModel = $sectsCollection->firstWhere('id', $neighborId);
+                $oldSectPosition     = (int) $this->glyphsForm[$sectId]['position'];
+                $oldNeighborPosition = (int) $this->glyphsForm[$neighborId]['position'];
+                /**
+                 * Apparently the 'unique' constraint applies even within a transaction.
+                 * So we need to carefully move one of the models out of the way first.
+                 */
+                $minPosition = $sectsCollection->min('position');
+                $neighborModel->position = $minPosition - 1;
+                $neighborModel->save();
+                /**
+                 * And finally we can just set and save both correct values.
+                 */
+                $sectModel->position = $oldNeighborPosition;
+                $sectModel->save();
+                $neighborModel->position = $oldSectPosition;
+                $neighborModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('sect-swap-failure');
+            throw $e;
+        }
+        $this->refreshGlyphsForm();
     }
 
     /**

@@ -48,6 +48,7 @@ return [
   'direction_primary_description' => 'Direction within a line of text',
   'direction_secondary_description' => 'Feed direction at line breaks (i.e. paragraph fill direction)',
   'incomlete_display_notice' => 'Not all possible settings will display correctly.',
+  'sections' => 'Sections',
   /**
    * TRANSLATOR NOTE:
    *
@@ -167,6 +168,11 @@ return [
   'move_row_up' => 'Move row up',
   'move_row_down' => 'Move row down',
   'row_name' => 'Row ":name"',
+  'no_sections' => 'No sections',
+  'add_section' => 'Add section',
+  'delete_section' => 'Delete section',
+  'move_section_up' => 'Move section up',
+  'move_section_down' => 'Move section down',
   /**
    * TRANSLATOR NOTE:
    *
@@ -262,6 +268,7 @@ return [
   'delete_inflection_row_confirmation' => 'About to delete an inflection row. Are you sure?',
   'delete_rule_confirmation' => 'About to delete a morph rule. Are you sure?',
   'delete_font_file_confirmation' => 'About to delete font file. Are you sure?',
+  'delete_section_confirmation' => 'About to delete neography section. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *

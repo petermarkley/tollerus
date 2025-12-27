@@ -9,6 +9,7 @@
             no_cancel: @js(__('tollerus::ui.no_cancel')),
             yes_delete: @js(__('tollerus::ui.yes_delete')),
             delete_font_file_confirmation: @js(__('tollerus::ui.delete_font_file_confirmation')),
+            delete_section_confirmation: @js(__('tollerus::ui.delete_section_confirmation')),
         },
         tab: $wire.entangle('tab'),
         updateTabFromUrl() {
@@ -33,12 +34,29 @@
             }
             return fileFound;
         },
+        glyphsForm: $wire.entangle('glyphsForm'),
+        moveSection(sectElem, sectId, dir) {
+            neighborId = $store.reorderFunctions.getNeighborId(this.glyphsForm, sectId, dir);
+            if (neighborId === null) {
+                return;
+            }
+            neighborElem = document.getElementById('sect_' + neighborId);
+            $store.reorderFunctions.swapItems(sectElem, neighborElem);
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Livewire request
+                $wire.swapSections(sectId, neighborId);
+            };
+            sectElem.addEventListener('transitionend', onDone);
+        },
     }"
     @tab-switch.window="tab = $event.detail.tab; $store.tabFunctions.updateAddress($event.detail.tab);"
     @popstate.window="updateTabFromUrl();"
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
     @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
     @font-delete.window="$wire.fontDelete($event.detail.fontFormat);"
+    @sect-delete.window="$wire.deleteSection($event.detail.sectId);"
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
@@ -115,6 +133,7 @@
     </div>
     <x-tollerus::modal/>
 </div>
+<x-tollerus::reorder-script/>
 @once
 @push('tollerus-scripts')
 <script>
