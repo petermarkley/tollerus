@@ -14,8 +14,8 @@
         tab: $wire.entangle('tab'),
         updateTabFromUrl() {
             const parts = window.location.pathname.split('/');
-            const last = parts.pop() || 'font';
-            newTab = ['font','glyphs','keyboards'].includes(last) ? last : 'font';
+            const last = parts.pop() || 'info';
+            newTab = ['info','font','glyphs','keyboards'].includes(last) ? last : 'info';
             $wire.refreshForm(this.tab);
             this.dirty=false;
             document.activeElement.blur();
