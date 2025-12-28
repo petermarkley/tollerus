@@ -52,7 +52,10 @@ final class SvgToGlyphs
         // Get section
         $section = $neography->sections()->first();
         if ($section === null) {
-            $section = $neography->sections()->create(['position' => 0]);
+            $section = $neography->sections()->create([
+                'name' => __('tollerus::ui.untitled'),
+                'position' => 0,
+            ]);
         }
         if ($section->glyphGroups()->count() > 0) {
             throw new \RuntimeException(__('tollerus::error.section_has_glyph_groups'));
