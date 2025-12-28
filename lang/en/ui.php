@@ -53,6 +53,21 @@ return [
   /**
    * TRANSLATOR NOTE:
    *
+   * "Type" as in kind or classification. This will be
+   * used with neography sections and the glyphs within.
+   *
+   * Just below this are translations for each enumerated
+   * type of those things.
+   */
+  'type' => 'Type',
+  'alphabet' => 'Alphabet',
+  'numerals' => 'Numerals',
+  'symbol' => 'Symbol', // e.g. a letter or character
+  'mark' => 'Mark', // e.g. an apostrophe or accent mark
+  'numeral' => 'Numeral',
+  /**
+   * TRANSLATOR NOTE:
+   *
    * "Boustrophedon" is a Greek term meaning "as the ox
    * plows," and refers to a writing mode where the
    * direction switches on each line break.

@@ -52,7 +52,27 @@
             <span>{{ $sect->name }}</span>
         </h1>
         <x-tollerus::panel class="flex flex-col gap-6">
-            Lorem ipsum dolor sit amet.
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <x-tollerus::inputs.text-saveable
+                    showLabel="true"
+                    idExpression="'sect_name'"
+                    model="infoForm.name"
+                    fieldName="{{ __('tollerus::ui.name') }}"
+                    saveEvent="$wire.updateSection('name', document.getElementById(id).value, id);"
+                />
+                <x-tollerus::inputs.select
+                    id="sect_type"
+                    label="{{ __('tollerus::ui.type') }}"
+                    showLabel="true"
+                    model="infoForm.type"
+                    @change="$wire.updateSection('type', $el.value, 'sect_type');"
+                >
+                    <option value="" class="cursor-pointer italic" x-bind:selected="infoForm.type===null || infoForm.type===''">{{ __('tollerus::ui.none') }}</option>
+                    @foreach ($sectTypes as $sectType)
+                        <option value="{{ $sectType['string'] }}" class="cursor-pointer" selected="infoForm.type=='{{ $sectType['string'] }}'">{{ $sectType['local'] }}</option>
+                    @endforeach
+                </x-tollerus::inputs.select>
+            </div>
         </x-tollerus::panel>
         <div class="flex flex-col gap-6">
             <h1 class="font-bold text-2xl px-6 xl:px-0">

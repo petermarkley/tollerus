@@ -71,8 +71,7 @@ class NeographyEditor extends Component
                     'local' => $direction->localize(),
                     'secondaryOpts' => $secondaryDirectionStrs,
                 ]];
-            })
-            ->toArray();
+            })->toArray();
 
         // Font tab
         $this->refreshFontForm();

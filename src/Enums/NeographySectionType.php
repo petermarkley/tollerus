@@ -11,5 +11,13 @@ enum NeographySectionType: string
     {
         return array_column(self::cases(), 'value');
     }
+
+    public function localize(): string
+    {
+        return match ($this) {
+            self::Alphabet => __('tollerus::ui.alphabet'),
+            self::Numerals => __('tollerus::ui.numerals'),
+        };
+    }
 }
 

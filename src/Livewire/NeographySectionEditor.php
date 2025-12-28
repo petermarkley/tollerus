@@ -11,6 +11,8 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
+use PeterMarkley\Tollerus\Enums\NeographySectionType;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\NeographyGlyph;
 use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
@@ -28,14 +30,19 @@ class NeographySectionEditor extends Component
     // UI input layer
     public array $infoForm = [];
     public array $groupsForm = [];
+    // UI display properties
+    #[Locked] public array $glyphTypes = [];
+    #[Locked] public array $sectTypes = [];
 
     /**
      * Livewire hooks
      */
     public function render(): View
     {
-        return view('tollerus::livewire.neography-section-editor')
-            ->layout('tollerus::components.layout', [
+        return view('tollerus::livewire.neography-section-editor', [
+                'glyphTypes' => $this->glyphTypes,
+                'sectTypes' => $this->sectTypes,
+            ])->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.neographies.index'), 'text' => __('tollerus::ui.neographies')],
@@ -47,6 +54,25 @@ class NeographySectionEditor extends Component
     {
         $this->neography = $neography;
         $this->sect = $sect;
+
+        $this->glyphTypes = collect(NeographyGlyphType::cases())
+            ->mapWithKeys(function ($type) {
+                $typeStr = $type->value;
+                return [$typeStr => [
+                    'string' => $typeStr,
+                    'enum' => $type,
+                    'local' => $type->localize(),
+                ]];
+            })->toArray();
+        $this->sectTypes = collect(NeographySectionType::cases())
+            ->mapWithKeys(function ($type) {
+                $typeStr = $type->value;
+                return [$typeStr => [
+                    'string' => $typeStr,
+                    'enum' => $type,
+                    'local' => $type->localize(),
+                ]];
+            })->toArray();
 
         $this->refreshForm();
     }
@@ -132,6 +158,10 @@ class NeographySectionEditor extends Component
     /**
      * Granular CRUD-type functions
      */
+    public function updateSection(string $propName, string $propVal, ?string $domId = ''): void
+    {
+        //
+    }
     public function createGroup(): void
     {
         $nextPosition = collect($this->groups)->max('position') + 1;
