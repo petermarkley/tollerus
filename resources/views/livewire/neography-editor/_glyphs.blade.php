@@ -16,12 +16,12 @@
             </x-tollerus::alert>
             <x-tollerus::inputs.button
                 x-text="msgs[btn]"
-                @click="btn = 'extracting'; $wire.extractFromSvg();"
-                @extract-button-failure.window="btn = 'extract_from_svg';"
-                @extract-button-success.window="btn = 'extract_from_svg';"
+                @click="btn = 'extracting'; $wire.extractSvgToGlyphs();"
+                @svgtoglyphs-failure.window="btn = 'extract_from_svg';"
+                @svgtoglyphs-success.window="btn = 'extract_from_svg';"
                 x-bind:disabled="!fontForm.{{ \PeterMarkley\Tollerus\Enums\FontFormat::Svg->value }}.blobExists"
                 wire:loading.attr="disabled"
-                wire:target="extractFromSvg"
+                wire:target="extractSvgToGlyphs"
             />
         </div>
     </template>

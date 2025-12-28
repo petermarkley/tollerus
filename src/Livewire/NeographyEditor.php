@@ -269,10 +269,6 @@ class NeographyEditor extends Component
         }
         $this->refreshGlyphsForm();
     }
-    public function updateSection(): void
-    {
-        //
-    }
     public function deleteSection(string $sectId): void
     {
         NeographySection::findOrFail((int)$sectId)->delete();
@@ -324,15 +320,15 @@ class NeographyEditor extends Component
         }
         $this->refreshFontForm();
     }
-    public function extractFromSvg(): void
+    public function extractSvgToGlyphs(): void
     {
         $extractAction = new SvgToGlyphs;
         try {
             $extractAction($this->neography);
             $this->refreshGlyphsForm();
-            $this->dispatch('extract-button-success');
+            $this->dispatch('svgtoglyphs-success');
         } catch (\Throwable $e) {
-            $this->dispatch('extract-button-failure');
+            $this->dispatch('svgtoglyphs-failure');
             return;
         }
     }
