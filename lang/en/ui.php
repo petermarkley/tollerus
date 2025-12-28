@@ -173,6 +173,9 @@ return [
   'delete_section' => 'Delete section',
   'move_section_up' => 'Move section up',
   'move_section_down' => 'Move section down',
+  'svg_to_glyphs_notice' => 'You don\'t have any neography sections! Add some manually, or extract glyphs from your SVG font.',
+  'extract_from_svg' => 'Extract from SVG',
+  'extracting' => 'Extracting ...',
   /**
    * TRANSLATOR NOTE:
    *
@@ -335,4 +338,6 @@ return [
   // 'pua_url'   = https://en.wikipedia.org/wiki/Private_Use_Areas
   // 'ucsur_url' = https://www.kreativekorp.com/ucsur/
   'ucsur_tip' => 'Consider mapping your conlang glyphs to a [Unicode Private Use Area](:pua_url), perhaps a region not yet claimed in the [Under-ConScript Unicode Registry](:ucsur_url).',
+  // 'font_url' = (generated inside Laravel)
+  'svg_to_glyphs_notice_no_font' => 'You don\'t have any neography sections! Add some manually, or extract glyphs from your SVG font. (For extraction, you\'ll need to add a font [here](:font_url).)',
 ];

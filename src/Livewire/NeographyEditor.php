@@ -13,6 +13,7 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Domain\Neography\Actions\SvgToGlyphs;
 use PeterMarkley\Tollerus\Domain\Neography\Services\FontAssetService;
 use PeterMarkley\Tollerus\Enums\FontFormat;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
@@ -186,6 +187,7 @@ class NeographyEditor extends Component
                 'editUrlText' => __('tollerus::ui.edit_thing', ['thing' => $sect->name]),
             ]];
         })->toArray();
+        // dd($this->glyphsForm);
     }
     // public function refreshKeyboardsForm(): void
     // {
@@ -321,5 +323,17 @@ class NeographyEditor extends Component
             throw $e;
         }
         $this->refreshFontForm();
+    }
+    public function extractFromSvg(): void
+    {
+        $extractAction = new SvgToGlyphs;
+        try {
+            $extractAction($this->neography);
+            $this->refreshGlyphsForm();
+            $this->dispatch('extract-button-success');
+        } catch (\Throwable $e) {
+            $this->dispatch('extract-button-failure');
+            return;
+        }
     }
 }

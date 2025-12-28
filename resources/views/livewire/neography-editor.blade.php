@@ -8,6 +8,8 @@
             saving: @js(__('tollerus::ui.saving')),
             no_cancel: @js(__('tollerus::ui.no_cancel')),
             yes_delete: @js(__('tollerus::ui.yes_delete')),
+            extract_from_svg: @js(__('tollerus::ui.extract_from_svg')),
+            extracting: @js(__('tollerus::ui.extracting')),
             delete_font_file_confirmation: @js(__('tollerus::ui.delete_font_file_confirmation')),
             delete_section_confirmation: @js(__('tollerus::ui.delete_section_confirmation')),
         },
