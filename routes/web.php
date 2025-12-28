@@ -10,6 +10,7 @@ use PeterMarkley\Tollerus\Livewire\AutoInflectionEditor;
 use PeterMarkley\Tollerus\Livewire\InflectionTableEditor;
 use PeterMarkley\Tollerus\Livewire\LanguageEditor;
 use PeterMarkley\Tollerus\Livewire\NeographyEditor;
+use PeterMarkley\Tollerus\Livewire\NeographySectionEditor;
 
 $baseMiddleware = Config::get('tollerus.middleware', ['web']);
 $adminMiddleware = collect(Config::get('tollerus.admin_middleware', []))
@@ -59,7 +60,7 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                             Route::prefix('glyphs/{sect}')
                                 ->as('glyphs.')
                                 ->group(function () {
-                                    Route::get('/', fn () => 'fixme')->name('edit');
+                                    Route::get('/', NeographySectionEditor::class)->name('edit');
                                 });
                         });
                     });

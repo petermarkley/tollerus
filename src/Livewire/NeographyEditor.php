@@ -187,7 +187,6 @@ class NeographyEditor extends Component
                 'editUrlText' => __('tollerus::ui.edit_thing', ['thing' => $sect->name]),
             ]];
         })->toArray();
-        // dd($this->glyphsForm);
     }
     // public function refreshKeyboardsForm(): void
     // {

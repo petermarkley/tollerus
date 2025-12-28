@@ -49,6 +49,7 @@ return [
   'direction_secondary_description' => 'Feed direction at line breaks (i.e. paragraph fill direction)',
   'incomlete_display_notice' => 'Not all possible settings will display correctly.',
   'sections' => 'Sections',
+  'glyph_groups' => 'Glyph groups',
   /**
    * TRANSLATOR NOTE:
    *
@@ -168,11 +169,14 @@ return [
   'move_row_up' => 'Move row up',
   'move_row_down' => 'Move row down',
   'row_name' => 'Row ":name"',
-  'no_sections' => 'No sections',
   'add_section' => 'Add section',
   'delete_section' => 'Delete section',
   'move_section_up' => 'Move section up',
   'move_section_down' => 'Move section down',
+  'add_glyph_group' => 'Add glyph group',
+  'delete_glyph_group' => 'Delete glyph group',
+  'move_glyph_group_up' => 'Move glyph group up',
+  'move_glyph_group_down' => 'Move glyph group down',
   'svg_to_glyphs_notice' => 'You don\'t have any neography sections! Add some manually, or extract glyphs from your SVG font.',
   'extract_from_svg' => 'Extract from SVG',
   'extracting' => 'Extracting ...',
@@ -272,6 +276,7 @@ return [
   'delete_rule_confirmation' => 'About to delete a morph rule. Are you sure?',
   'delete_font_file_confirmation' => 'About to delete font file. Are you sure?',
   'delete_section_confirmation' => 'About to delete neography section. Are you sure?',
+  'delete_glyph_group_confirmation' => 'About to delete glyph group. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *
