@@ -12,14 +12,15 @@ use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
 use PeterMarkley\Tollerus\Models\Neography;
+use PeterMarkley\Tollerus\Models\NeographyGlyph;
 use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
 use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class NeographySectionEditor extends Component
 {
-    // use HasModelCache;
-    // private $cacheRoot = '';
+    use HasModelCache;
+    private $cacheRoot = 'groups';
     // Models
     #[Locked] public Neography $neography;
     #[Locked] public NeographySection $sect;
@@ -55,6 +56,9 @@ class NeographySectionEditor extends Component
      */
     public function refreshForm(): void
     {
+        $this->sect->loadMissing([
+            'glyphGroups.glyphs'
+        ]);
         $this->groups = $this->sect->glyphGroups->sortBy('position')->all();
         $this->infoForm = [
             'type' => ($this->sect->type === null ? null : $this->sect->type->value),
@@ -70,6 +74,7 @@ class NeographySectionEditor extends Component
                     ->mapWithKeys(function ($glyph) {
                         return [$glyph->id => [
                             'global_id'      => $glyph->global_id,
+                            'position'       => $glyph->position,
                             'render_base'    => (bool)($glyph->render_base),
                             'glyph'          => $glyph->glyph,
                             'transliterated' => $glyph->transliterated,
@@ -167,6 +172,60 @@ class NeographySectionEditor extends Component
             });
         } catch (\Throwable $e) {
             $this->dispatch('group-swap-failure');
+            throw $e;
+        }
+        $this->refreshForm();
+    }
+    public function createGlyph(string $groupId): void
+    {
+        // Find model
+        $groupModel = $this->findInCache('glyph-add-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => NeographyGlyphGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
+            ],
+        ]);
+        // Create glyph
+        $nextPosition = $groupModel->glyphs->max('position') + 1;
+        $groupModel->glyphs()->create([
+            'neography_id' => $this->neography->id,
+            'position' => $nextPosition,
+        ]);
+        $this->refreshForm();
+    }
+    public function deleteGlyph(string $glyphId): void
+    {
+        NeographyGlyph::findOrFail((int)$glyphId)->delete();
+        $this->refreshForm();
+    }
+    function swapGlyphs(string $groupId, string $glyphId, string $neighborId): void
+    {
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($groupId, $glyphId, $neighborId) {
+                $groupModel = collect($this->groups)->firstWhere('id', $groupId);
+                $glyphModel    = $groupModel->glyphs->firstWhere('id', $glyphId);
+                $neighborModel = $groupModel->glyphs->firstWhere('id', $neighborId);
+                $oldGlyphPosition    = (int) $this->groupsForm[$groupId]['glyphs'][$glyphId]['position'];
+                $oldNeighborPosition = (int) $this->groupsForm[$groupId]['glyphs'][$neighborId]['position'];
+                /**
+                 * Apparently the 'unique' constraint applies even within a transaction.
+                 * So we need to carefully move one of the models out of the way first.
+                 */
+                $minPosition = $groupModel->glyphs->min('position');
+                $neighborModel->position = $minPosition - 1;
+                $neighborModel->save();
+                /**
+                 * And finally we can just set and save both correct values.
+                 */
+                $glyphModel->position = $oldNeighborPosition;
+                $glyphModel->save();
+                $neighborModel->position = $oldGlyphPosition;
+                $neighborModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('glyph-swap-failure');
             throw $e;
         }
         $this->refreshForm();

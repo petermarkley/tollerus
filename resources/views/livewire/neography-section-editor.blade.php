@@ -9,6 +9,7 @@
             no_cancel: @js(__('tollerus::ui.no_cancel')),
             yes_delete: @js(__('tollerus::ui.yes_delete')),
             delete_glyph_group_confirmation: @js(__('tollerus::ui.delete_glyph_group_confirmation')),
+            delete_glyph_confirmation: @js(__('tollerus::ui.delete_glyph_confirmation')),
         },
         infoForm: $wire.entangle('infoForm'),
         groupsForm: $wire.entangle('groupsForm'),
@@ -27,8 +28,24 @@
             };
             groupElem.addEventListener('transitionend', onDone);
         },
+        moveGlyph(groupId, glyphElem, glyphId, dir) {
+            neighborId = $store.reorderFunctions.getNeighborId(this.groupsForm[groupId].glyphs, glyphId, dir);
+            if (neighborId === null) {
+                return;
+            }
+            neighborElem = document.getElementById('glyph_' + neighborId);
+            $store.reorderFunctions.swapItems(glyphElem, neighborElem);
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Livewire request
+                $wire.swapGlyphs(groupId, glyphId, neighborId);
+            };
+            glyphElem.addEventListener('transitionend', onDone);
+        },
     }"
     @group-delete.window="$wire.deleteGroup($event.detail.groupId);"
+    @glyph-delete.window="$wire.deleteGlyph($event.detail.glyphId);"
 >
     <div id="non-modal-content" class="flex flex-col gap-6">
         <h1 class="font-bold text-2xl px-6 xl:px-0">
@@ -95,8 +112,78 @@
                                         </x-tollerus::inputs.button>
                                     </div>
                                 </div>
-                                <x-tollerus::pane>
-                                    Lorem ipsum dolor sit amet.
+                                <x-tollerus::pane class="flex flex-col gap-4 items-start">
+                                    <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
+                                        <span>{{ __('tollerus::ui.glyphs') }}</span>
+                                    </h3>
+                                    <template x-if="Object.keys(group.glyphs).length > 0">
+                                        <div class="flex flex-col gap-4 items-start" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
+                                            <template x-for="([glyphId, glyph], i) in $store.reorderFunctions.sortItems(group.glyphs)">
+                                                <div
+                                                    x-bind:id="'glyph_' + glyphId"
+                                                    data-obj="glyph"
+                                                    class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
+                                                    x-bind:style="'order: '+i"
+                                                    @transitionend="$nextTick(() => {animating=false});"
+                                                >
+                                                    <x-tollerus::panel class="px-3 py-8 flex flex-col gap-6 justify-start shrink-0 rounded-l-xl rounded-r-none">
+                                                        <x-tollerus::inputs.button
+                                                            type="inverse"
+                                                            title="{{ __('tollerus::ui.move_glyph_earlier') }}"
+                                                            x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(group.glyphs, glyphId)"
+                                                            @click="animating=true; moveGlyph(groupId, $el.closest('[data-obj=&quot;glyph&quot;]'), glyphId, -1);"
+                                                        >
+                                                            <x-tollerus::icons.chevron-up class="h-8 w-8" />
+                                                            <span class="sr-only">{{ __('tollerus::ui.move_glyph_earlier') }}</span>
+                                                        </x-tollerus::inputs.button>
+                                                        <x-tollerus::inputs.button
+                                                            type="inverse"
+                                                            title="{{ __('tollerus::ui.move_glyph_later') }}"
+                                                            x-bind:disabled="animating || $store.reorderFunctions.isLastItem(group.glyphs, glyphId)"
+                                                            @click="animating=true; moveGlyph(groupId, $el.closest('[data-obj=&quot;glyph&quot;]'), glyphId, +1);"
+                                                        >
+                                                            <x-tollerus::icons.chevron-down class="h-8 w-8" />
+                                                            <span class="sr-only">{{ __('tollerus::ui.move_glyph_later') }}</span>
+                                                        </x-tollerus::inputs.button>
+                                                    </x-tollerus::panel>
+                                                    <x-tollerus::panel class="flex flex-col gap-4 items-start rounded-l-none">
+                                                        <div class="flex flex-row gap-4 justify-between items-start lg:items-center w-full">
+                                                            <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center flex-grow">
+                                                                Lorem ipsum
+                                                            </div>
+                                                            <x-tollerus::inputs.button
+                                                                type="inverse"
+                                                                size="small"
+                                                                class="align-middle"
+                                                                title="{{ __('tollerus::ui.delete_glyph') }}"
+                                                                @click="$dispatch('open-modal', {
+                                                                    message: msgs['delete_glyph_confirmation'],
+                                                                    buttons: [
+                                                                        { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                                                        { text: msgs.yes_delete, type: 'primary', clickEvent: 'glyph-delete', payload: {glyphId: glyphId} }
+                                                                    ]
+                                                                });"
+                                                            >
+                                                                <x-tollerus::icons.delete/>
+                                                                <label class="sr-only">{{ __('tollerus::ui.delete_glyph') }}</label>
+                                                            </x-tollerus::inputs.button>
+                                                        </div>
+                                                    </x-tollerus::panel>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <x-tollerus::inputs.missing-data
+                                        size="small"
+                                        title="{{ __('tollerus::ui.add_glyph') }}"
+                                        class="relative flex flex-row gap-2 justify-center items-center w-full"
+                                        @click="$wire.createGlyph(groupId);"
+                                        wire:loading.attr="disabled"
+                                        wire:target="createGlyph"
+                                    >
+                                        <x-tollerus::icons.plus/>
+                                        <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_glyph') }}</span>
+                                    </x-tollerus::inputs.missing-data>
                                 </x-tollerus::pane>
                             </x-tollerus::panel>
                         </div>

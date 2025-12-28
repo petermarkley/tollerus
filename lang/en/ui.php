@@ -177,6 +177,10 @@ return [
   'delete_glyph_group' => 'Delete glyph group',
   'move_glyph_group_up' => 'Move glyph group up',
   'move_glyph_group_down' => 'Move glyph group down',
+  'add_glyph' => 'Add glyph',
+  'delete_glyph' => 'Delete glyph',
+  'move_glyph_earlier' => 'Move glyph earlier',
+  'move_glyph_later' => 'Move glyph later',
   'svg_to_glyphs_notice' => 'You don\'t have any neography sections! Add some manually, or extract glyphs from your SVG font.',
   'extract_from_svg' => 'Extract from SVG',
   'extracting' => 'Extracting ...',
@@ -277,6 +281,7 @@ return [
   'delete_font_file_confirmation' => 'About to delete font file. Are you sure?',
   'delete_section_confirmation' => 'About to delete neography section. Are you sure?',
   'delete_glyph_group_confirmation' => 'About to delete glyph group. Are you sure?',
+  'delete_glyph_confirmation' => 'About to delete glyph. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *
