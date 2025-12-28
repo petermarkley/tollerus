@@ -160,7 +160,44 @@ class NeographySectionEditor extends Component
      */
     public function updateSection(string $propName, string $propVal, ?string $domId = ''): void
     {
-        //
+        // $propName whitelist
+        $allowedPropData = [
+            'type'  => ['type' => 'enum', 'enumClass' => NeographySectionType::class, 'column' => 'type'],
+            'name'  => ['type' => 'string', 'column' => 'name'],
+            // 'intro' => ['type' => 'string', 'column' => 'intro'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('sect-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'enum':
+                if (empty($propVal)) {
+                    $this->sect[$allowedPropData[$propName]['column']] = null;
+                } else {
+                    $enumInst = $allowedPropData[$propName]['enumClass']::from($propVal);
+                    $this->sect[$allowedPropData[$propName]['column']] = $enumInst;
+                }
+            break;
+            case 'string':
+            default:
+                $this->sect[$allowedPropData[$propName]['column']] = $propVal;
+            break;
+        }
+        // Save to database
+        try {
+            $this->sect->save();
+        } catch (\Throwable $e) {
+            if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
+                $this->dispatch('text-save-failure', id: $domId);
+                throw \Illuminate\Validation\ValidationException::withMessages(['infoForm.'.$propName => [__('tollerus::error.duplicate_of_unique')]]);
+            } else {
+                $this->dispatch('sect-update-failure');
+                throw $e;
+            }
+        }
     }
     public function createGroup(): void
     {
