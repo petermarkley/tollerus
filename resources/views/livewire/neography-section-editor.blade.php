@@ -73,6 +73,19 @@
                     @endforeach
                 </x-tollerus::inputs.select>
             </div>
+            <div class="flex flex-col gap-4">
+                <x-tollerus::inputs.textarea id="intro" model="infoForm.intro" label="{{ __('tollerus::ui.intro') }}" @input="btn = 'save'; dirty=true;" />
+            </div>
+            <div class="flex flex-row justify-start gap-2">
+                <x-tollerus::inputs.button
+                    @click="btn = 'saving'; $wire.infoSave();"
+                    x-bind:disabled="!dirty"
+                    wire:loading.attr="disabled"
+                    wire:target="infoSave"
+                    @save-info-success.window="btn = 'saved'; dirty=false;"
+                    @save-info-failure.window="btn = 'save';"
+                    x-text="msgs[btn]" />
+            </div>
         </x-tollerus::panel>
         <div class="flex flex-col gap-6">
             <h1 class="font-bold text-2xl px-6 xl:px-0">

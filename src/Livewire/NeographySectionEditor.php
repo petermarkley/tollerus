@@ -118,42 +118,27 @@ class NeographySectionEditor extends Component
     /**
      * Save function
      */
-    // public function infoSave(string $afterSuccess = '', array $payload = []): void
-    // {
-    //     try {
-    //         // Validate
-    //         $this->validate([
-    //             'infoForm.name' => [
-    //                 Rule::unique('PeterMarkley\Tollerus\Models\Neography', 'name')->ignore($this->neography->id),
-    //             ],
-    //             'infoForm.machine_name' => [
-    //                 'alpha_dash:ascii',
-    //                 Rule::unique('PeterMarkley\Tollerus\Models\Neography', 'machine_name')->ignore($this->neography->id),
-    //             ],
-    //             'infoForm.direction_primary' => [
-    //                 Rule::enum(WritingDirection::class),
-    //             ],
-    //             'infoForm.direction_secondary' => [
-    //                 Rule::enum(WritingDirection::class)->only(
-    //                     WritingDirection::from($this->infoForm['direction_primary'])
-    //                         ->axis()
-    //                         ->perpendicular()
-    //                         ->directions()
-    //                 ),
-    //             ],
-    //         ]);
-    //         // Save to database
-    //         $this->neography->fill($this->infoForm);
-    //         $this->neography->save();
-    //         // Refresh front-end state
-    //         $this->refreshInfoForm();
-    //         $this->dispatch('save-info-success', ['afterSuccess'=>$afterSuccess, 'payload'=>$payload]);
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         $this->dispatch('save-info-failure');
-    //         // Let error keep propagating
-    //         throw $e;
-    //     }
-    // }
+    public function infoSave(): void
+    {
+        try {
+            // Validate
+            // $this->validate([
+            //     'infoForm.name' => [
+            //         Rule::unique('PeterMarkley\Tollerus\Models\Neography', 'name')->ignore($this->neography->id),
+            //     ],
+            // ]);
+            // Save to database
+            $this->sect->intro = $this->infoForm['intro'];
+            $this->sect->save();
+            // Refresh front-end state
+            $this->refreshForm();
+            $this->dispatch('save-info-success');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('save-info-failure');
+            // Let error keep propagating
+            throw $e;
+        }
+    }
 
     /**
      * Granular CRUD-type functions
