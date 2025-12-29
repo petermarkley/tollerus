@@ -228,6 +228,12 @@
                                                                 <label class="sr-only">{{ __('tollerus::ui.delete_glyph') }}</label>
                                                             </x-tollerus::inputs.button>
                                                         </div>
+                                                        <div class="flex flex-col w-full">
+                                                            <p class="flex flex-row gap-4 items-center">
+                                                                <span>{{ __('tollerus::ui.public_id') }}</span>
+                                                                <span x-text="glyph.globalId" class="font-mono"></span>
+                                                            </p>
+                                                        </div>
                                                         <div class="flex flex-col md:flex-row lg:flex-col items-start gap-4 w-full">
                                                             <div class="flex flex-col gap-2 items-start w-full">
                                                                 <h3 class="font-bold text-lg">{{ __('tollerus::ui.direct_meaning') }}</h3>

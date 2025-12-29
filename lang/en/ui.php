@@ -138,6 +138,7 @@ return [
   'direct_meaning' => 'Direct meaning',
   'spoken_form' => 'Spoken form',
   'note' => 'Note',
+  'public_id' => 'Public ID',
   'visible' => 'Visible',
   'name' => 'Name',
   'human_friendly' => 'Human-friendly',
