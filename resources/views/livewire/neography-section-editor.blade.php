@@ -202,6 +202,8 @@
                                                                     model="glyph.glyph"
                                                                     fieldName="{{ __('tollerus::ui.unicode') }}"
                                                                     saveEvent="$wire.updateGlyph(groupId, glyphId, 'glyph', document.getElementById(id).value, id);"
+                                                                    height="67px"
+                                                                    class="text-6xl"
                                                                 />
                                                                 <x-tollerus::inputs.text-saveable
                                                                     showLabel="true"

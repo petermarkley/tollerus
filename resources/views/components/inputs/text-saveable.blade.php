@@ -5,6 +5,7 @@
     'fieldName' => '',
     'showLabel' => false,
     'saveEvent' => '',
+    'height' => '',
 ])
 <div
     x-data="{ id: {{ $idExpression }}, editing: false, originalValue: {{ $model }} }"
@@ -17,7 +18,22 @@
     @endif
     <template x-if="editing">
         <div class="flex flex-row gap-2 justify-start items-center flex-grow">
-            <x-tollerus::inputs.text x-bind:id="id" model="{{ $model }}" :modelIsAlpine="$modelIsAlpine" />
+            @if (empty($height))
+                <x-tollerus::inputs.text
+                    x-bind:id="id"
+                    model="{{ $model }}"
+                    :modelIsAlpine="$modelIsAlpine"
+                    {{ $attributes }}
+                />
+            @else
+                <x-tollerus::inputs.text
+                    x-bind:id="id"
+                    model="{{ $model }}"
+                    :modelIsAlpine="$modelIsAlpine"
+                    {{ $attributes }}
+                    style="height:{{ $height }};"
+                />
+            @endif
             <x-tollerus::inputs.button
                 type="primary"
                 size="small"
@@ -39,9 +55,14 @@
         </div>
     </template>
     <template x-if="!editing">
-        <div class="flex flex-row gap-2 justify-start items-center p-2 rounded-lg border border-zinc-100/40 bg-zinc-100/80 dark:border-zinc-700/10 dark:bg-zinc-700/20">
-            <template x-if="{{ $model }}!==null && {{ $model }}.length>0"><span x-text="{{ $model }}"></span></template>
-            <template x-if="{{ $model }}===null || {{ $model }}.length==0"><span class="italic text-zinc-500 dark:text-zinc-500">({{ __('tollerus::ui.empty') }})</span></template>
+        <div
+            class="flex flex-row gap-2 justify-start items-center p-2 rounded-lg border border-zinc-100/40 bg-zinc-100/80 dark:border-zinc-700/10 dark:bg-zinc-700/20"
+            @if (!empty($height))
+                style="height:{{ $height }};"
+            @endif
+        >
+            <template x-if="{{ $model }}!==null && {{ $model }}.length>0"><span x-text="{{ $model }}" {{ $attributes }}></span></template>
+            <template x-if="{{ $model }}===null || {{ $model }}.length==0"><span {{ $attributes->merge(['class' => 'italic text-zinc-500 dark:text-zinc-500']) }}>({{ __('tollerus::ui.empty') }})</span></template>
             <x-tollerus::inputs.button
                 type="inverse"
                 size="small"
