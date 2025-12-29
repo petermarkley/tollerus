@@ -14,6 +14,7 @@
             {!! Str::markdown(__('tollerus::ui.inkscape_svg_guide', [
                 'guide_url' => 'https://inkscape-manuals.readthedocs.io/en/latest/creating-custom-fonts.html',
                 'inkscape_url' => 'https://inkscape.org/',
+                'fontforge_url' => 'https://fontforge.org/',
             ])) !!}
             {!! Str::markdown(__('tollerus::ui.ucsur_tip', [
                 'pua_url' => 'https://en.wikipedia.org/wiki/Private_Use_Areas',

@@ -379,9 +379,10 @@ return [
   'regex_description' => 'Each rule represents a [Regular Expression](:regex_url) search-and-replace on the selected piece of text. Rules are applied top to bottom.',
   // 'wiki_url' = https://en.wikipedia.org/wiki/Boustrophedon
   'boustrophedon_description' => 'If checked, the writing direction will alternate with each new line. [More info](:wiki_url)',
-  // 'guide_url'    = https://inkscape-manuals.readthedocs.io/en/latest/creating-custom-fonts.html
-  // 'inkscape_url' = https://inkscape.org/
-  'inkscape_svg_guide' => 'To make your initial SVG font, follow the instructions [here](:guide_url) using the free software [Inkscape](:inkscape_url). You can also export as a TTF.',
+  // 'guide_url'     = https://inkscape-manuals.readthedocs.io/en/latest/creating-custom-fonts.html
+  // 'inkscape_url'  = https://inkscape.org/
+  // 'fontforge_url' = https://fontforge.org/
+  'inkscape_svg_guide' => 'To make your initial SVG font, follow the instructions [here](:guide_url) using the free software [Inkscape](:inkscape_url). (You can then convert this to other formats using [FontForge](:fontforge_url).)',
   /**
    * TRANSLATOR NOTE:
    *
