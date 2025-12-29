@@ -257,7 +257,7 @@ class InflectionTableEditor extends Component
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages(['table.'.$propName => [__('tollerus::error.duplicate_of_unique')]]);
+                throw \Illuminate\Validation\ValidationException::withMessages(['table.'.$propName => [__('tollerus::error.duplicate_of_unique_per_group')]]);
             } else {
                 $this->dispatch('table-update-failure');
                 throw $e;

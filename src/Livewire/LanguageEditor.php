@@ -374,8 +374,8 @@ class LanguageEditor extends Component
                 $this->dispatch('text-save-success', id: $domId);
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
                 $error = match ($propName) {
-                    'name' => ['wordClass.name' => [__('tollerus::error.duplicate_of_unique')]],
-                    'name_brief' => ['wordClass.nameBrief' => [__('tollerus::error.duplicate_of_unique')]],
+                    'name' => ['wordClass.name' => [__('tollerus::error.duplicate_of_unique_per_group')]],
+                    'name_brief' => ['wordClass.nameBrief' => [__('tollerus::error.duplicate_of_unique_per_group')]],
                 };
                 $this->dispatch('text-save-failure', id: $domId);
                 throw \Illuminate\Validation\ValidationException::withMessages($error);
@@ -431,8 +431,8 @@ class LanguageEditor extends Component
                 $this->refreshGrammarForm();
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
                 $error = match ($propName) {
-                    'name' => ['feature.name' => [__('tollerus::error.duplicate_of_unique')]],
-                    'name_brief' => ['feature.nameBrief' => [__('tollerus::error.duplicate_of_unique')]],
+                    'name' => ['feature.name' => [__('tollerus::error.duplicate_of_unique_per_group')]],
+                    'name_brief' => ['feature.nameBrief' => [__('tollerus::error.duplicate_of_unique_per_group')]],
                 };
                 $this->dispatch('text-save-failure', id: $domId);
                 throw \Illuminate\Validation\ValidationException::withMessages($error);
@@ -500,8 +500,8 @@ class LanguageEditor extends Component
                 $this->refreshGrammarForm();
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
                 $error = match ($propName) {
-                    'name' => ['featureValue.name' => [__('tollerus::error.duplicate_of_unique')]],
-                    'name_brief' => ['featureValue.nameBrief' => [__('tollerus::error.duplicate_of_unique')]],
+                    'name' => ['featureValue.name' => [__('tollerus::error.duplicate_of_unique_per_group')]],
+                    'name_brief' => ['featureValue.nameBrief' => [__('tollerus::error.duplicate_of_unique_per_group')]],
                 };
                 $this->dispatch('text-save-failure', id: $domId);
                 throw \Illuminate\Validation\ValidationException::withMessages($error);

@@ -124,7 +124,7 @@ class NeographySectionEditor extends Component
             // Validate
             // $this->validate([
             //     'infoForm.name' => [
-            //         Rule::unique('PeterMarkley\Tollerus\Models\Neography', 'name')->ignore($this->neography->id),
+            //         Rule::unique('PeterMarkley\Tollerus\Models\NeographySection', 'name')->ignore($this->sect->id),
             //     ],
             // ]);
             // Save to database
@@ -177,7 +177,7 @@ class NeographySectionEditor extends Component
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages(['infoForm.'.$propName => [__('tollerus::error.duplicate_of_unique')]]);
+                throw \Illuminate\Validation\ValidationException::withMessages(['infoForm.'.$propName => [__('tollerus::error.duplicate_of_unique_per_section')]]);
             } else {
                 $this->dispatch('sect-update-failure');
                 throw $e;
