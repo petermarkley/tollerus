@@ -296,7 +296,7 @@ class NeographySectionEditor extends Component
         // Save to database
         try {
             $glyphModel->save();
-            $this->refreshForm();
+            $this->refreshForm(); // This is needed because 'glyph' and 'glyphHex' both access the same DB column
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);
