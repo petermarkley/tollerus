@@ -195,7 +195,7 @@
                                                     </x-tollerus::panel>
                                                     <x-tollerus::panel class="flex flex-col gap-4 items-start rounded-l-none flex-grow">
                                                         <div class="flex flex-row gap-4 justify-between items-start lg:items-center w-full">
-                                                            <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center flex-grow">
+                                                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-grow">
                                                                 <x-tollerus::inputs.text-saveable
                                                                     showLabel="true"
                                                                     idExpression="'glyph_' + glyphId"
@@ -227,6 +227,71 @@
                                                                 <x-tollerus::icons.delete/>
                                                                 <label class="sr-only">{{ __('tollerus::ui.delete_glyph') }}</label>
                                                             </x-tollerus::inputs.button>
+                                                        </div>
+                                                        <div class="flex flex-col md:flex-row lg:flex-col items-start gap-4 w-full">
+                                                            <div class="flex flex-col gap-2 items-start w-full">
+                                                                <h3 class="font-bold text-lg">{{ __('tollerus::ui.direct_meaning') }}</h3>
+                                                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 w-full">
+                                                                    <div class="flex flex-row justify-start items-center">
+                                                                        <x-tollerus::inputs.checkbox
+                                                                            idExpression="'glyph_' + glyphId + '_render_base'"
+                                                                            model="glyph.renderBase"
+                                                                            modelIsAlpine="true"
+                                                                            label="{{ __('tollerus::ui.render_on_base') }}"
+                                                                            @change="$wire.updateGlyph(groupId, glyphId, 'renderBase', $el.checked, id);"
+                                                                        />
+                                                                    </div>
+                                                                    <x-tollerus::inputs.text-saveable
+                                                                        showLabel="true"
+                                                                        idExpression="'glyph_' + glyphId + '_transliterated'"
+                                                                        model="glyph.transliterated"
+                                                                        fieldName="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
+                                                                        saveEvent="$wire.updateGlyph(groupId, glyphId, 'transliterated', document.getElementById(id).value, id);"
+                                                                    />
+                                                                    <x-tollerus::inputs.text-saveable
+                                                                        showLabel="true"
+                                                                        idExpression="'glyph_' + glyphId + '_phonemic'"
+                                                                        model="glyph.phonemic"
+                                                                        fieldName="{{ __('tollerus::ui.phonemic') }}"
+                                                                        saveEvent="$wire.updateGlyph(groupId, glyphId, 'phonemic', document.getElementById(id).value, id);"
+                                                                    />
+                                                                    <div class="col-span-1 lg:col-span-3">
+                                                                        <x-tollerus::inputs.text-saveable
+                                                                            showLabel="true"
+                                                                            idExpression="'glyph_' + glyphId + '_note'"
+                                                                            model="glyph.note"
+                                                                            fieldName="{{ __('tollerus::ui.note') }}"
+                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'note', document.getElementById(id).value, id);"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="flex flex-col gap-2 items-start w-full">
+                                                                <h3 class="font-bold text-lg">{{ __('tollerus::ui.spoken_form') }}</h3>
+                                                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 w-full">
+                                                                    <x-tollerus::inputs.text-saveable
+                                                                        showLabel="true"
+                                                                        idExpression="'glyph_' + glyphId + '_pronunciation_transliterated'"
+                                                                        model="glyph.pronunciationTransliterated"
+                                                                        fieldName="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
+                                                                        saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationTransliterated', document.getElementById(id).value, id);"
+                                                                    />
+                                                                    <x-tollerus::inputs.text-saveable
+                                                                        showLabel="true"
+                                                                        idExpression="'glyph_' + glyphId + '_pronunciation_phonemic'"
+                                                                        model="glyph.pronunciationPhonemic"
+                                                                        fieldName="{{ __('tollerus::ui.phonemic') }}"
+                                                                        saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationPhonemic', document.getElementById(id).value, id);"
+                                                                    />
+                                                                    <x-tollerus::inputs.text-saveable
+                                                                        showLabel="true"
+                                                                        idExpression="'glyph_' + glyphId + '_pronunciation_native'"
+                                                                        model="glyph.pronunciationNative"
+                                                                        fieldName="{{ __('tollerus::ui.native') }}"
+                                                                        saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationNative', document.getElementById(id).value, id);"
+                                                                    />
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </x-tollerus::panel>
                                                 </div>

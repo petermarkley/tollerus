@@ -18,6 +18,10 @@ return [
    * and "alphabet" excludes a variety of other kinds of
    * writing system. That's why we prefer the term
    * "neography" here.
+   *
+   * (Another term is "conscript," used later in the
+   * name "ConScript Unicode Registry." It's a synonym
+   * for neography.)
    */
   'neography' => 'Neography',
   'neographies' => 'Neographies',
@@ -48,25 +52,6 @@ return [
   'direction_primary_description' => 'Direction within a line of text',
   'direction_secondary_description' => 'Feed direction at line breaks (i.e. paragraph fill direction)',
   'incomlete_display_notice' => 'Not all possible settings will display correctly.',
-  'sections' => 'Sections',
-  'glyph_groups' => 'Glyph groups',
-  'unicode' => 'Unicode',
-  'hexadecimal' => 'Hexadecimal',
-  /**
-   * TRANSLATOR NOTE:
-   *
-   * "Type" as in kind or classification. This will be
-   * used with neography sections and the glyphs within.
-   *
-   * Just below this are translations for each enumerated
-   * type of those things.
-   */
-  'type' => 'Type',
-  'alphabet' => 'Alphabet',
-  'numerals' => 'Numerals',
-  'symbol' => 'Symbol', // e.g. a letter or character
-  'mark' => 'Mark', // e.g. an apostrophe or accent mark
-  'numeral' => 'Numeral',
   /**
    * TRANSLATOR NOTE:
    *
@@ -112,6 +97,47 @@ return [
   'glyphs' => 'Glyphs',
   'glyph' => 'Glyph',
   'no_glyphs' => '(No Glyphs)',
+  'sections' => 'Sections',
+  'glyph_groups' => 'Glyph groups',
+  'unicode' => 'Unicode',
+  'hexadecimal' => 'Hexadecimal',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Type" as in kind or classification. This will be
+   * used with neography sections and the glyphs within.
+   *
+   * Just below this are translations for each enumerated
+   * type of those things.
+   */
+  'type' => 'Type',
+  'alphabet' => 'Alphabet',
+  'numerals' => 'Numerals',
+  'symbol' => 'Symbol', // e.g. a letter or character
+  'mark' => 'Mark', // e.g. an apostrophe or accent mark
+  'numeral' => 'Numeral',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Render on base" as in, render the given glyph over
+   * a Unicode "dotted circle" (U+25CC). Used for mark
+   * glyphs that need a placeholder base for display (like
+   * accents or diacritics, etc).
+   */
+  'render_on_base' => 'Render on base?',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Direct meaning" / "Spoken form"
+   *
+   * These are headings for settings inside a glyph. The
+   * "spoken form" is for when a glyph encodes something
+   * beyond mere sound, for example a numeral. (Like how
+   * the numeral '1' is pronounced as "one.")
+   */
+  'direct_meaning' => 'Direct meaning',
+  'spoken_form' => 'Spoken form',
+  'note' => 'Note',
   'visible' => 'Visible',
   'name' => 'Name',
   'human_friendly' => 'Human-friendly',
