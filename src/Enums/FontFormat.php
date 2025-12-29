@@ -13,7 +13,7 @@ enum FontFormat: string
     }
 
     /**
-     * Text used by systems
+     * System info
      */
     public function extension(): string
     {
@@ -27,6 +27,32 @@ enum FontFormat: string
         return match ($this) {
             self::Svg => ['image/svg+xml'],
             self::Ttf => ['font/ttf', 'font/sfnt'],
+        };
+    }
+    public function cssFormatKey(): string
+    {
+        /**
+         * For use with a CSS `src` property inside
+         * a `@font-face` rule.
+         *
+         * See here:
+         * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@font-face/src#font_formats
+         */
+        return match ($this) {
+            self::Svg => 'svg',
+            self::Ttf => 'truetype',
+        };
+    }
+    public function preferenceOrder(): int
+    {
+        /**
+         * Used for sorting so that best / most
+         * compatible formats are shown to browsers
+         * first. Lower number = more preferred.
+         */
+        return match ($this) {
+            self::Svg => 5,
+            self::Ttf => 0,
         };
     }
 
