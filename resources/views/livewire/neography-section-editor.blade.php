@@ -150,7 +150,7 @@
                                         <span>{{ __('tollerus::ui.glyphs') }}</span>
                                     </h3>
                                     <template x-if="Object.keys(group.glyphs).length > 0">
-                                        <div class="flex flex-col gap-4 items-start" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
+                                        <div class="flex flex-col gap-4 items-start w-full" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
                                             <template x-for="([glyphId, glyph], i) in $store.reorderFunctions.sortItems(group.glyphs)">
                                                 <div
                                                     x-bind:id="'glyph_' + glyphId"
@@ -179,10 +179,23 @@
                                                             <span class="sr-only">{{ __('tollerus::ui.move_glyph_later') }}</span>
                                                         </x-tollerus::inputs.button>
                                                     </x-tollerus::panel>
-                                                    <x-tollerus::panel class="flex flex-col gap-4 items-start rounded-l-none">
+                                                    <x-tollerus::panel class="flex flex-col gap-4 items-start rounded-l-none flex-grow">
                                                         <div class="flex flex-row gap-4 justify-between items-start lg:items-center w-full">
                                                             <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center flex-grow">
-                                                                Lorem ipsum
+                                                                <x-tollerus::inputs.text-saveable
+                                                                    showLabel="true"
+                                                                    idExpression="'glyph_' + glyphId"
+                                                                    model="glyph.glyph"
+                                                                    fieldName="{{ __('tollerus::ui.unicode') }}"
+                                                                    saveEvent="$wire.updateGlyph(groupId, glyphId, 'glyph', document.getElementById(id).value, id);"
+                                                                />
+                                                                <x-tollerus::inputs.text-saveable
+                                                                    showLabel="true"
+                                                                    idExpression="'glyph_' + glyphId + '_hex'"
+                                                                    model="glyph.glyphHex"
+                                                                    fieldName="{{ __('tollerus::ui.hexadecimal') }}"
+                                                                    saveEvent="$wire.updateGlyph(groupId, glyphId, 'glyphHex', document.getElementById(id).value, id);"
+                                                                />
                                                             </div>
                                                             <x-tollerus::inputs.button
                                                                 type="inverse"

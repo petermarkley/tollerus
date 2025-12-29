@@ -99,15 +99,16 @@ class NeographySectionEditor extends Component
                     ->sortBy('position')
                     ->mapWithKeys(function ($glyph) {
                         return [$glyph->id => [
-                            'global_id'      => $glyph->global_id,
+                            'globalId'       => $glyph->global_id,
                             'position'       => $glyph->position,
-                            'render_base'    => (bool)($glyph->render_base),
+                            'renderBase'     => (bool)($glyph->render_base),
                             'glyph'          => $glyph->glyph,
+                            'glyphHex'       => dechex(mb_ord($glyph->glyph, 'UTF-8')),
                             'transliterated' => $glyph->transliterated,
                             'phonemic'       => $glyph->phonemic,
-                            'pronunciation_transliterated' => $glyph->pronunciation_transliterated,
-                            'pronunciation_phonemic'       => $glyph->pronunciation_phonemic,
-                            'pronunciation_native'         => $glyph->pronunciation_native,
+                            'pronunciationTransliterated' => $glyph->pronunciation_transliterated,
+                            'pronunciationPhonemic'       => $glyph->pronunciation_phonemic,
+                            'pronunciationNative'         => $glyph->pronunciation_native,
                             'note' => $glyph->note,
                         ]];
                     })->toArray(),
@@ -245,6 +246,66 @@ class NeographySectionEditor extends Component
             'position' => $nextPosition,
         ]);
         $this->refreshForm();
+    }
+    public function updateGlyph(string $groupId, string $glyphId, string $propName, string $propVal, ?string $domId = ''): void
+    {
+        // Find model
+        $glyphModel = $this->findInCache('glyph-update-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => NeographyGlyphGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
+                'relation' => 'glyphs',
+            ],
+            [
+                'id' => $glyphId,
+                'objectType' => NeographyGlyph::class,
+                'failMessage' => ['glyphId' => [__('tollerus::error.invalid_glyph')]],
+            ],
+        ]);
+        // $propName whitelist
+        $allowedPropData = [
+            'renderBase'     => ['type' => 'boolean', 'column' => 'render_base'],
+            'glyph'          => ['type' => 'string', 'column' => 'glyph'],
+            'glyphHex'       => ['type' => 'hex', 'column' => 'glyph'],
+            'transliterated' => ['type' => 'string', 'column' => 'transliterated'],
+            'phonemic'       => ['type' => 'string', 'column' => 'phonemic'],
+            'pronunciationTransliterated' => ['type' => 'string', 'column' => 'pronunciation_transliterated'],
+            'pronunciationPhonemic'       => ['type' => 'string', 'column' => 'pronunciation_phonemic'],
+            'pronunciationNative'         => ['type' => 'string', 'column' => 'pronunciation_native'],
+            'note' => ['type' => 'string', 'column' => 'note'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('glyph-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'boolean':
+                $glyphModel[$allowedPropData[$propName]['column']] = (bool) filter_var($propVal, FILTER_VALIDATE_BOOLEAN);
+            break;
+            case 'hex':
+                $glyphModel[$allowedPropData[$propName]['column']] = mb_chr(hexdec($propVal));
+            break;
+            case 'string':
+            default:
+                $glyphModel[$allowedPropData[$propName]['column']] = $propVal;
+            break;
+        }
+        // Save to database
+        try {
+            $glyphModel->save();
+            $this->refreshForm();
+        } catch (\Throwable $e) {
+            if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
+                $this->dispatch('text-save-failure', id: $domId);
+                throw \Illuminate\Validation\ValidationException::withMessages(['glyph.'.$propName => [__('tollerus::error.duplicate_of_glyph')]]);
+            } else {
+                $this->dispatch('glyph-update-failure');
+                throw $e;
+            }
+        }
     }
     public function deleteGlyph(string $glyphId): void
     {

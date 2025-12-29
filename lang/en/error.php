@@ -52,8 +52,10 @@ return [
     'invalid_inflection_table' => 'Invalid inflection table ID',
     'invalid_inflection_table_row' => 'Invalid inflection row ID',
     'duplicate_of_row' => 'This must be unique per inflection table.',
+    'duplicate_of_glyph' => 'This must be unique per glyph group.',
     'invalid_prop_name' => 'Invalid property name',
     'invalid_glyph_group' => 'Invalid glyph group ID',
+    'invalid_glyph' => 'Invalid glyph ID',
     'max_attempts_adding_unique_name' => 'Reached max attempts while trying to create unique object name.',
     /**
      * TRANSLATOR NOTE:

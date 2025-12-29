@@ -50,6 +50,8 @@ return [
   'incomlete_display_notice' => 'Not all possible settings will display correctly.',
   'sections' => 'Sections',
   'glyph_groups' => 'Glyph groups',
+  'unicode' => 'Unicode',
+  'hexadecimal' => 'Hexadecimal',
   /**
    * TRANSLATOR NOTE:
    *
@@ -108,6 +110,7 @@ return [
    * symbol in the alphabet (or other writing system).
    */
   'glyphs' => 'Glyphs',
+  'glyph' => 'Glyph',
   'no_glyphs' => '(No Glyphs)',
   'visible' => 'Visible',
   'name' => 'Name',
