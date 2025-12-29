@@ -185,7 +185,7 @@
                             @if ($tabPatternName == 'native')
                                 <div>
                                     <x-tollerus::inputs.select
-                                        id="tab_neography"
+                                        idExpression="'tab_neography'"
                                         label="{{ __('tollerus::ui.neography') }}"
                                         model="tabNeography"
                                     >

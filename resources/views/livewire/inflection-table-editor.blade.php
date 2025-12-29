@@ -71,7 +71,7 @@
                         <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }} {{ __('tollerus::ui.used_in_auto_inflection') }}</legend></div>
                         <div>
                             <x-tollerus::inputs.select
-                                id="base_row"
+                                idExpression="'base_row'"
                                 label="{{ __('tollerus::ui.base_row') }}"
                                 showLabel="false"
                                 model="tableForm.baseRow"

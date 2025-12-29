@@ -61,11 +61,11 @@
                     saveEvent="$wire.updateSection('name', document.getElementById(id).value, id);"
                 />
                 <x-tollerus::inputs.select
-                    id="sect_type"
+                    idExpression="'sect_type'"
                     label="{{ __('tollerus::ui.type') }}"
                     showLabel="true"
                     model="infoForm.type"
-                    @change="$wire.updateSection('type', $el.value, 'sect_type');"
+                    @change="$wire.updateSection('type', $el.value, id);"
                 >
                     <option value="" class="cursor-pointer italic" x-bind:selected="infoForm.type===null || infoForm.type===''">{{ __('tollerus::ui.none') }}</option>
                     @foreach ($sectTypes as $sectType)
@@ -144,6 +144,20 @@
                                             <span class="sr-only">{{ __('tollerus::ui.delete_glyph_group') }}</span>
                                         </x-tollerus::inputs.button>
                                     </div>
+                                </div>
+                                <div>
+                                    <x-tollerus::inputs.select
+                                        idExpression="'group_' + groupId + '_type'"
+                                        label="{{ __('tollerus::ui.type') }}"
+                                        showLabel="true"
+                                        model="group.type"
+                                        @change="$wire.updateGroup(groupId, 'type', $el.value, id);"
+                                    >
+                                        <option value="" class="cursor-pointer italic" x-bind:selected="group.type===null || group.type===''">{{ __('tollerus::ui.none') }}</option>
+                                        @foreach ($glyphTypes as $glyphType)
+                                            <option value="{{ $glyphType['string'] }}" class="cursor-pointer" selected="group.type=='{{ $glyphType['string'] }}'">{{ $glyphType['local'] }}</option>
+                                        @endforeach
+                                    </x-tollerus::inputs.select>
                                 </div>
                                 <x-tollerus::pane class="flex flex-col gap-4 items-start">
                                     <h3 class="font-bold flex flex-row gap-4 items-center text-lg">

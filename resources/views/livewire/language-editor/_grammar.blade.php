@@ -4,7 +4,7 @@
             <p>{{ __('tollerus::ui.preset_notice') }}</p>
         </x-tollerus::alert>
         <div class="flex flex-col gap-4 items-start">
-            <x-tollerus::inputs.select id="preset" :options="$presetSelectOpts" label="{{ __('tollerus::ui.preset') }}" model="preset"/>
+            <x-tollerus::inputs.select idExpression="'preset'" :options="$presetSelectOpts" label="{{ __('tollerus::ui.preset') }}" model="preset"/>
             <template x-if="preset.length > 0">
                 <div class="flex flex-col items-start gap-4">
                     <h3 class="font-bold text-lg" x-text="$wire.presetData[preset]['previewHeading']"></h3>

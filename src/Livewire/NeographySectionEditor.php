@@ -193,6 +193,44 @@ class NeographySectionEditor extends Component
         ]);
         $this->refreshForm();
     }
+    public function updateGroup(string $groupId, string $propName, string $propVal, ?string $domId = ''): void
+    {
+        // Find model
+        $groupModel = $this->findInCache('group-update-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => NeographyGlyphGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
+            ],
+        ]);
+        // $propName whitelist
+        $allowedPropData = [
+            'type'  => ['type' => 'enum', 'enumClass' => NeographyGlyphType::class, 'column' => 'type'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('group-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'enum':
+                if (empty($propVal)) {
+                    $groupModel[$allowedPropData[$propName]['column']] = null;
+                } else {
+                    $enumInst = $allowedPropData[$propName]['enumClass']::from($propVal);
+                    $groupModel[$allowedPropData[$propName]['column']] = $enumInst;
+                }
+            break;
+        }
+        // Save to database
+        try {
+            $groupModel->save();
+        } catch (\Throwable $e) {
+            $this->dispatch('group-update-failure');
+            throw $e;
+        }
+    }
     public function deleteGroup(string $groupId): void
     {
         NeographyGlyphGroup::findOrFail((int)$groupId)->delete();
