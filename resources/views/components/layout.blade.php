@@ -5,6 +5,9 @@
         <link rel="stylesheet" href="{{ asset('vendor/tollerus/tollerus.css') }}">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <script src="{{ asset('vendor/tollerus/tollerus.js') }}" defer></script>
+        @if(!empty($tollerusNeographyFontCss))
+            <style>{!! $tollerusNeographyFontCss !!}</style>
+        @endif
     </head>
     <body class="bg-gradient-to-b from-zinc-300 to-zinc-300 bg-repeat-x dark:from-zinc-800 dark:to-zinc-900 relative -z-20 w-full">
         <div class="w-full h-full absolute -z-10 pointer-events-none bg-gradient-to-b from-zinc-300 to-zinc-400 bg-repeat-x mask-[url(/vendor/tollerus/bg.svg)] mask-size-[400px] mask-alpha mask-repeat dark:from-zinc-800 dark:to-zinc-800 opacity-50 dark:opacity-100" role="none" aria-hidden="true"></div>

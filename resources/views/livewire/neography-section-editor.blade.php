@@ -203,7 +203,7 @@
                                                                     fieldName="{{ __('tollerus::ui.unicode') }}"
                                                                     saveEvent="$wire.updateGlyph(groupId, glyphId, 'glyph', document.getElementById(id).value, id);"
                                                                     height="67px"
-                                                                    class="text-6xl"
+                                                                    class="text-6xl tollerus_{{ $neography->machine_name }}"
                                                                 />
                                                                 <x-tollerus::inputs.text-saveable
                                                                     showLabel="true"

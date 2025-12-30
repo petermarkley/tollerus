@@ -6,12 +6,14 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 
 use PeterMarkley\Tollerus\Console\Commands\TollerusImport;
 use PeterMarkley\Tollerus\Console\Commands\TollerusPopulate;
 use PeterMarkley\Tollerus\Console\Commands\TollerusAssetsGenerate;
 use PeterMarkley\Tollerus\Console\Commands\TollerusInstall;
+use PeterMarkley\Tollerus\Domain\Neography\Services\FontCssService;
 
 class TollerusServiceProvider extends ServiceProvider
 {
@@ -56,6 +58,10 @@ class TollerusServiceProvider extends ServiceProvider
 		$this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
 		$this->loadViewsFrom(__DIR__.'/../../resources/views', 'tollerus');
 		Blade::anonymousComponentNamespace('tollerus::components', 'tollerus');
+		// This computed style needs to be injected into all Tollerus layouts
+		View::composer('tollerus::components.layout', function ($view) {
+			$view->with('tollerusNeographyFontCss', app(FontCssService::class)->getAllFontFaceStyles());
+		});
 		// Expose Livewire component classes
 		Livewire::component('tollerus.language-editor', \PeterMarkley\Tollerus\Livewire\LanguageEditor::class);
 		Livewire::component('tollerus.neography-editor', \PeterMarkley\Tollerus\Livewire\NeographyEditor::class);
