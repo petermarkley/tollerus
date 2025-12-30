@@ -198,7 +198,7 @@
                                                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-grow border-2 rounded-lg p-2 border-zinc-200 dark:border-zinc-600">
                                                                 <x-tollerus::inputs.text-saveable
                                                                     showLabel="true"
-                                                                    idExpression="'glyph_' + glyphId"
+                                                                    idExpression="'glyph_' + glyphId + '_unicode'"
                                                                     model="glyph.glyph"
                                                                     fieldName="{{ __('tollerus::ui.unicode') }}"
                                                                     saveEvent="$wire.updateGlyph(groupId, glyphId, 'glyph', document.getElementById(id).value, id);"

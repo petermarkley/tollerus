@@ -98,12 +98,18 @@ class NeographySectionEditor extends Component
                 'glyphs' => $group->glyphs
                     ->sortBy('position')
                     ->mapWithKeys(function ($glyph) {
+                        $glyphLen = mb_strlen($glyph->glyph, 'UTF-8');
+                        $glyphChars = [];
+                        for ($i=0; $i < $glyphLen; $i++) {
+                            $glyphChars[] = dechex(mb_ord(mb_substr($glyph->glyph, $i, 1, 'UTF-8'), 'UTF-8'));
+                        }
+                        $glyphHex = implode(', ', $glyphChars);
                         return [$glyph->id => [
                             'globalId'       => $glyph->global_id,
                             'position'       => $glyph->position,
                             'renderBase'     => (bool)($glyph->render_base),
                             'glyph'          => $glyph->glyph,
-                            'glyphHex'       => dechex(mb_ord($glyph->glyph, 'UTF-8')),
+                            'glyphHex'       => $glyphHex,
                             'transliterated' => $glyph->transliterated,
                             'phonemic'       => $glyph->phonemic,
                             'pronunciationTransliterated' => $glyph->pronunciation_transliterated,
@@ -324,7 +330,13 @@ class NeographySectionEditor extends Component
                 $glyphModel[$allowedPropData[$propName]['column']] = (bool) filter_var($propVal, FILTER_VALIDATE_BOOLEAN);
             break;
             case 'hex':
-                $glyphModel[$allowedPropData[$propName]['column']] = mb_chr(hexdec($propVal));
+                $valClean = str_replace(' ', '', $propVal);
+                $valChars = explode(',', $valClean);
+                $glyphChars = '';
+                foreach ($valChars as $char) {
+                    $glyphChars .= mb_chr(hexdec($char));
+                }
+                $glyphModel[$allowedPropData[$propName]['column']] = $glyphChars;
             break;
             case 'string':
             default:
