@@ -33,6 +33,7 @@ class NeographySectionEditor extends Component
     // UI display properties
     #[Locked] public array $glyphTypes = [];
     #[Locked] public array $sectTypes = [];
+    #[Locked] public array $allSects = [];
 
     /**
      * Livewire hooks
@@ -120,6 +121,28 @@ class NeographySectionEditor extends Component
                     })->toArray(),
             ]];
         })->toArray();
+
+        $this->neography->loadMissing([
+            'sections.glyphGroups.glyphs'
+        ]);
+        $this->allSects = $this->neography->sections->sortBy('position')
+            ->map(function ($sect) {
+                return [
+                    'name' => $sect->name,
+                    'id' => $sect->id,
+                    'isThis' => $sect->id == $this->sect->id,
+                    'groups' => $sect->glyphGroups->sortBy('position')
+                        ->map(function ($group) {
+                            return [
+                                'id' => $group->id,
+                                'glyphs' => $group->glyphs
+                                    ->sortBy('position')
+                                    ->pluck('glyph')
+                                    ->toArray(),
+                            ];
+                        })->toArray(),
+                ];
+            })->toArray();
     }
 
     /**
@@ -242,7 +265,7 @@ class NeographySectionEditor extends Component
         NeographyGlyphGroup::findOrFail((int)$groupId)->delete();
         $this->refreshForm();
     }
-    function swapGroups(string $groupId, string $neighborId): void
+    public function swapGroups(string $groupId, string $neighborId): void
     {
         try {
             $connection = config('tollerus.connection', 'tollerus');
@@ -362,7 +385,7 @@ class NeographySectionEditor extends Component
         NeographyGlyph::findOrFail((int)$glyphId)->delete();
         $this->refreshForm();
     }
-    function swapGlyphs(string $groupId, string $glyphId, string $neighborId): void
+    public function swapGlyphs(string $groupId, string $glyphId, string $neighborId): void
     {
         try {
             $connection = config('tollerus.connection', 'tollerus');
@@ -392,5 +415,10 @@ class NeographySectionEditor extends Component
             throw $e;
         }
         $this->refreshForm();
+    }
+    public function transferGlyph(string $groupId, string $glyphId, string $destSect, string $destGroup): void
+    {
+        dd($groupId, $glyphId, $destSect, $destGroup);
+        //
     }
 }

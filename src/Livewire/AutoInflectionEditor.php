@@ -298,7 +298,7 @@ class AutoInflectionEditor extends Component
         MorphRule::findOrFail((int)$ruleId)->delete();
         $this->refreshRuleForm();
     }
-    function swapRules(string $tabTarget, string $tabPattern, string $tabNeography, string $ruleId, string $neighborId): void
+    public function swapRules(string $tabTarget, string $tabPattern, string $tabNeography, string $ruleId, string $neighborId): void
     {
         try {
             // Get context

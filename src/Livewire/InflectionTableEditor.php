@@ -155,7 +155,7 @@ class InflectionTableEditor extends Component
     /**
      * Granular UI functions
      */
-    function updateBaseRow(string $val): void
+    public function updateBaseRow(string $val): void
     {
         try {
             $connection = config('tollerus.connection', 'tollerus');
@@ -195,7 +195,7 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
-    function createTable(): void
+    public function createTable(): void
     {
         try {
             $nextPosition = collect($this->tables)->max('position') + 1;
@@ -216,7 +216,7 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
-    function updateTable(string $tableId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateTable(string $tableId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
         $tableModel = $this->findInCache('table-update-failure', [
@@ -269,7 +269,7 @@ class InflectionTableEditor extends Component
         InflectionTable::findOrFail((int)$tableId)->delete();
         $this->refreshTableForm();
     }
-    function swapTables(string $tableId, string $neighborId): void
+    public function swapTables(string $tableId, string $neighborId): void
     {
         try {
             $connection = config('tollerus.connection', 'tollerus');
@@ -300,7 +300,7 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
-    function addTableFilter(string $tableId, string $valueId): void
+    public function addTableFilter(string $tableId, string $valueId): void
     {
         // Find models
         $tableModel = $this->findInCache('table-filter-add-failure', [
@@ -328,7 +328,7 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
-    function removeTableFilter(string $tableId, string $valueId): void
+    public function removeTableFilter(string $tableId, string $valueId): void
     {
         InflectionTableFilter::where('inflect_table_id', (int)$tableId)
             ->where('value_id', (int)$valueId)
@@ -336,7 +336,7 @@ class InflectionTableEditor extends Component
             ->delete();
         $this->refreshTableForm();
     }
-    function createRow(string $tableId): void
+    public function createRow(string $tableId): void
     {
         // Find model
         $tableModel = $this->findInCache('row-add-failure', [
@@ -362,7 +362,7 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
-    function updateRow(string $tableId, string $rowId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateRow(string $tableId, string $rowId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
         $rowModel = $this->findInCache('row-update-failure', [
@@ -419,7 +419,7 @@ class InflectionTableEditor extends Component
         InflectionTableRow::findOrFail((int)$rowId)->delete();
         $this->refreshTableForm();
     }
-    function swapRows(string $tableId, string $rowId, string $neighborId): void
+    public function swapRows(string $tableId, string $rowId, string $neighborId): void
     {
         try {
             $connection = config('tollerus.connection', 'tollerus');
@@ -450,7 +450,7 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
-    function addRowFilter(string $tableId, string $rowId, string $valueId): void
+    public function addRowFilter(string $tableId, string $rowId, string $valueId): void
     {
         // Find models
         $rowModel = $this->findInCache('row-filter-add-failure', [
@@ -484,7 +484,7 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
-    function removeRowFilter(string $rowId, string $valueId): void
+    public function removeRowFilter(string $rowId, string $valueId): void
     {
         InflectionTableRowFilter::where('inflect_table_row_id', (int)$rowId)
             ->where('value_id', (int)$valueId)

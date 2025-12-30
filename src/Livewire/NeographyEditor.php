@@ -272,7 +272,7 @@ class NeographyEditor extends Component
         NeographySection::findOrFail((int)$sectId)->delete();
         $this->refreshGlyphsForm();
     }
-    function swapSections(string $sectId, string $neighborId): void
+    public function swapSections(string $sectId, string $neighborId): void
     {
         try {
             $connection = config('tollerus.connection', 'tollerus');

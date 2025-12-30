@@ -6,6 +6,8 @@
             save: @js(__('tollerus::ui.save')),
             saved: @js(__('tollerus::ui.saved')),
             saving: @js(__('tollerus::ui.saving')),
+            group_nameless: @js(__('tollerus::ui.group_nameless')),
+            glyphs: @js(__('tollerus::ui.glyphs')),
             no_cancel: @js(__('tollerus::ui.no_cancel')),
             yes_delete: @js(__('tollerus::ui.yes_delete')),
             delete_glyph_group_confirmation: @js(__('tollerus::ui.delete_glyph_group_confirmation')),
@@ -13,6 +15,7 @@
         },
         infoForm: $wire.entangle('infoForm'),
         groupsForm: $wire.entangle('groupsForm'),
+        allSects: $wire.entangle('allSects'),
         moveGroup(groupElem, groupId, dir) {
             neighborId = $store.reorderFunctions.getNeighborId(this.groupsForm, groupId, dir);
             if (neighborId === null) {
@@ -301,6 +304,32 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <x-tollerus::inputs.dropdown class="relative w-full">
+                                                            <x-slot:button>
+                                                                <x-tollerus::inputs.button
+                                                                    type="secondary"
+                                                                    title="{{ __('tollerus::ui.transfer_to') }}"
+                                                                    @click="open=true"
+                                                                >
+                                                                    <span>{{ __('tollerus::ui.transfer_to') }}</span>
+                                                                </x-tollerus::inputs.button>
+                                                            </x-slot:button>
+                                                            <template x-for="destSect in allSects">
+                                                                <div class="flex flex-col items-start">
+                                                                    <span x-text="destSect.name" class="italic opacity-50"></span>
+                                                                    <template x-for="destGroup in destSect.groups">
+                                                                        <x-tollerus::inputs.button
+                                                                            type="inverse"
+                                                                            size="small"
+                                                                            x-bind:class="{'ml-4': true, 'line-through': destGroup.glyphs.includes(glyph.glyph)}"
+                                                                            x-bind:disabled="destGroup.glyphs.includes(glyph.glyph)"
+                                                                            x-text="msgs['group_nameless'] + ' - ' + destGroup.glyphs.length + ' ' + msgs['glyphs']"
+                                                                            @click="open=false; $wire.transferGlyph(groupId, glyphId, destSect.id, destGroup.id);"
+                                                                        />
+                                                                    </template>
+                                                                </div>
+                                                            </template>
+                                                        </x-tollerus::inputs.dropdown>
                                                     </x-tollerus::panel>
                                                 </div>
                                             </template>

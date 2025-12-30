@@ -119,10 +119,10 @@ return [
   /**
    * TRANSLATOR NOTE:
    *
-   * "Render on base" as in, render the given glyph over
-   * a Unicode "dotted circle" (U+25CC). Used for mark
-   * glyphs that need a placeholder base for display (like
-   * accents or diacritics, etc).
+   * "Render on base" as in, render the given glyph over a
+   * Unicode "dotted circle" (U+25CC). Used for mark glyphs
+   * that need a placeholder base for display (like accents
+   * or diacritics, etc).
    */
   'render_on_base' => 'Render on base?',
   /**
@@ -139,6 +139,22 @@ return [
   'spoken_form' => 'Spoken form',
   'note' => 'Note',
   'public_id' => 'Public ID',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Transfer" as in move or transplant an object from one
+   * place to another. Used for moving glyphs across groups
+   * or neography sections.
+   *
+   * We avoid the term "move" just to help distinguish from
+   * the smaller "move up"/"move down" actions in the same
+   * UI (see below) that change glyph order within a group.
+   *
+   * The ellipsis (...) is because, unlike the reorder
+   * buttons, this button will open a dialogue prompting
+   * the user to select a destination.
+   */
+  'transfer_to' => 'Transfer to ...',
   'visible' => 'Visible',
   'name' => 'Name',
   'human_friendly' => 'Human-friendly',
@@ -220,6 +236,13 @@ return [
   'move_section_down' => 'Move section down',
   'add_glyph_group' => 'Add glyph group',
   'delete_glyph_group' => 'Delete glyph group',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * These are the "move up"/"move down" actions
+   * mentioned earlier, that contrast with the
+   * "transfer to ..." action.
+   */
   'move_glyph_group_up' => 'Move glyph group up',
   'move_glyph_group_down' => 'Move glyph group down',
   'add_glyph' => 'Add glyph',
