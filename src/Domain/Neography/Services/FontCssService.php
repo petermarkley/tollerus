@@ -2,12 +2,16 @@
 
 namespace PeterMarkley\Tollerus\Domain\Neography\Services;
 
+use Illuminate\Support\Facades\Cache;
+
 use PeterMarkley\Tollerus\Enums\FontFormat;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
 use PeterMarkley\Tollerus\Models\Neography;
 
 final class FontCssService
 {
+    public const string CACHE_KEY = 'tollerus:neography-font-css';
+
     /**
      * If the given Neography has a published font, this returns
      * the CSS to define a custom font face for it.
@@ -65,11 +69,24 @@ final class FontCssService
     /**
      * Get CSS for all neographies
      */
-    public function getAllFontFaceStyles(): string
+    public function getAllFontFaceStyles(bool $skipCache = false): string
     {
-        $neographies = Neography::all();
-        return $neographies
-            ->map(fn ($n) => $this->getFontFaceStyle($n))
-            ->implode("\n");
+        if ($skipCache) {
+            $this->forgetCache();
+        }
+        return Cache::rememberForever(self::CACHE_KEY, function () {
+            $neographies = Neography::all();
+            return $neographies
+                ->map(fn ($n) => $this->getFontFaceStyle($n))
+                ->implode("\n");
+        });
+    }
+
+    /**
+     * Purge cache
+     */
+    public function forgetCache(): void
+    {
+        Cache::forget(self::CACHE_KEY);
     }
 }
