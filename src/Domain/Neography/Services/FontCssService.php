@@ -10,7 +10,8 @@ use PeterMarkley\Tollerus\Models\Neography;
 
 final class FontCssService
 {
-    public const string CACHE_KEY = 'tollerus:neography-font-css';
+    public const string ADMIN_CACHE_KEY  = 'tollerus:admin-neography-font-css';
+    public const string PUBLIC_CACHE_KEY = 'tollerus:public-neography-font-css';
 
     /**
      * If the given Neography has a published font, this returns
@@ -69,13 +70,25 @@ final class FontCssService
     /**
      * Get CSS for all neographies
      */
-    public function getAllFontFaceStyles(bool $skipCache = false): string
+    public function getAllAdminFontFaceStyles(bool $skipCache = false): string
     {
         if ($skipCache) {
             $this->forgetCache();
         }
-        return Cache::rememberForever(self::CACHE_KEY, function () {
+        return Cache::rememberForever(self::ADMIN_CACHE_KEY, function () {
             $neographies = Neography::all();
+            return $neographies
+                ->map(fn ($n) => $this->getFontFaceStyle($n))
+                ->implode("\n");
+        });
+    }
+    public function getAllPublicFontFaceStyles(bool $skipCache = false): string
+    {
+        if ($skipCache) {
+            $this->forgetCache();
+        }
+        return Cache::rememberForever(self::PUBLIC_CACHE_KEY, function () {
+            $neographies = Neography::where('visible', true)->get();
             return $neographies
                 ->map(fn ($n) => $this->getFontFaceStyle($n))
                 ->implode("\n");
@@ -85,8 +98,9 @@ final class FontCssService
     /**
      * Purge cache
      */
-    public function forgetCache(): void
+    public static function forgetCache(): void
     {
-        Cache::forget(self::CACHE_KEY);
+        Cache::forget(self::ADMIN_CACHE_KEY);
+        Cache::forget(self::PUBLIC_CACHE_KEY);
     }
 }

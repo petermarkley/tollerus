@@ -13,7 +13,6 @@ use PeterMarkley\Tollerus\Console\Commands\TollerusImport;
 use PeterMarkley\Tollerus\Console\Commands\TollerusPopulate;
 use PeterMarkley\Tollerus\Console\Commands\TollerusAssetsGenerate;
 use PeterMarkley\Tollerus\Console\Commands\TollerusInstall;
-use PeterMarkley\Tollerus\Domain\Neography\Services\FontCssService;
 
 class TollerusServiceProvider extends ServiceProvider
 {
@@ -60,7 +59,7 @@ class TollerusServiceProvider extends ServiceProvider
 		Blade::anonymousComponentNamespace('tollerus::components', 'tollerus');
 		// This computed style needs to be injected into all Tollerus layouts
 		View::composer('tollerus::components.layout', function ($view) {
-			$view->with('tollerusNeographyFontCss', app(FontCssService::class)->getAllFontFaceStyles());
+			$view->with('tollerusNeographyFontCss', app(\PeterMarkley\Tollerus\Domain\Neography\Services\FontCssService::class)->getAllAdminFontFaceStyles());
 		});
 		// Expose Livewire component classes
 		Livewire::component('tollerus.language-editor', \PeterMarkley\Tollerus\Livewire\LanguageEditor::class);
@@ -68,6 +67,8 @@ class TollerusServiceProvider extends ServiceProvider
 		Livewire::component('tollerus.neography-section-editor', \PeterMarkley\Tollerus\Livewire\NeographySectionEditor::class);
 		Livewire::component('tollerus.inflection-table-editor', \PeterMarkley\Tollerus\Livewire\InflectionTableEditor::class);
 		Livewire::component('tollerus.auto-inflection-editor', \PeterMarkley\Tollerus\Livewire\AutoInflectionEditor::class);
+		// Model observers
+		\PeterMarkley\Tollerus\Models\Neography::observe(\PeterMarkley\Tollerus\Observers\NeographyObserver::class);
 		// UI localization
 		$this->loadTranslationsFrom(__DIR__.'/../../lang', 'tollerus');
 	}
