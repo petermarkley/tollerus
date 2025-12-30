@@ -195,7 +195,7 @@
                                                     </x-tollerus::panel>
                                                     <x-tollerus::panel class="flex flex-col gap-4 items-start rounded-l-none flex-grow">
                                                         <div class="flex flex-row gap-4 justify-between items-start lg:items-center w-full">
-                                                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-grow">
+                                                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-grow border-2 rounded-lg p-2 border-zinc-200 dark:border-zinc-600">
                                                                 <x-tollerus::inputs.text-saveable
                                                                     showLabel="true"
                                                                     idExpression="'glyph_' + glyphId"
