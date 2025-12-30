@@ -61,4 +61,15 @@ final class FontCssService
 
         return $style;
     }
+
+    /**
+     * Get CSS for all neographies
+     */
+    public function getAllFontFaceStyles(): string
+    {
+        $neographies = Neography::all();
+        return $neographies
+            ->map(fn ($n) => $this->getFontFaceStyle($n))
+            ->implode("\n");
+    }
 }
