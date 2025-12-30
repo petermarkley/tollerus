@@ -1,8 +1,10 @@
 @php
     if ($tabPatternName == 'native') {
         $ruleList = "ruleForm.rules.{$tabTargetName}.{$tabPatternName}['" . (string)$neography->id . "'].rules";
+        $inputStyle = "tollerus_{$neography->machine_name}";
     } else {
         $ruleList = "ruleForm.rules.{$tabTargetName}.{$tabPatternName}";
+        $inputStyle = '';
     }
 @endphp
 <x-tollerus::pane class="flex flex-col gap-4 items-start">
@@ -79,6 +81,7 @@
                                 fieldName="{{ __('tollerus::ui.regex_pattern') }}"
                                 showLabel="true"
                                 saveEvent="$wire.updateRule(ruleId, 'pattern', document.getElementById(id).value, id);"
+                                class="{{ $inputStyle }}"
                             />
                         </div>
                         <div class="col-span-2 lg:col-span-1 flex flex-col justify-center">
@@ -88,6 +91,7 @@
                                 fieldName="{{ __('tollerus::ui.replace_with') }}"
                                 showLabel="true"
                                 saveEvent="$wire.updateRule(ruleId, 'replacement', document.getElementById(id).value, id);"
+                                class="{{ $inputStyle }}"
                             />
                         </div>
                     </div>
