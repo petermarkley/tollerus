@@ -54,6 +54,7 @@ return [
     'duplicate_of_row' => 'This must be unique per inflection table.',
     'duplicate_of_glyph' => 'This must be unique per glyph group.',
     'invalid_prop_name' => 'Invalid property name',
+    'invalid_neography_section' => 'Invalid neography section ID',
     'invalid_glyph_group' => 'Invalid glyph group ID',
     'invalid_glyph' => 'Invalid glyph ID',
     'max_attempts_adding_unique_name' => 'Reached max attempts while trying to create unique object name.',

@@ -418,7 +418,73 @@ class NeographySectionEditor extends Component
     }
     public function transferGlyph(string $groupId, string $glyphId, string $destSect, string $destGroup): void
     {
-        dd($groupId, $glyphId, $destSect, $destGroup);
-        //
+        // Basic sanity check
+        if ($groupId == $destGroup) {
+            $this->dispatch('glyph-transfer-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['destGroup' => [__('tollerus::error.invalid_glyph_group')]]);
+        }
+        // Find models
+        $groupModel = $this->findInCache('glyph-transfer-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => NeographyGlyphGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
+            ],
+        ]);
+        $glyphModel = $this->findInCache('glyph-transfer-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => NeographyGlyphGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
+                'relation' => 'glyphs',
+            ],
+            [
+                'id' => $glyphId,
+                'objectType' => NeographyGlyph::class,
+                'failMessage' => ['glyphId' => [__('tollerus::error.invalid_glyph')]],
+            ],
+        ]);
+        // Transfer glyph
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($groupId, $groupModel, $glyphId, $glyphModel, $destSect, $destGroup) {
+                /**
+                 * These aren't necessarily in our fancy model cache
+                 */
+                $destSectModel = $this->neography->sections->firstWhere('id', (int)$destSect);
+                if (!($destSectModel instanceof NeographySection)) {
+                    $this->dispatch('glyph-transfer-failure');
+                    throw \Illuminate\Validation\ValidationException::withMessages(['destSect' => [__('tollerus::error.invalid_neography_section')]]);
+                }
+                $destGroupModel = $destSectModel->glyphGroups->firstWhere('id', (int)$destGroup);
+                if (!($destGroupModel instanceof NeographyGlyphGroup)) {
+                    $this->dispatch('glyph-transfer-failure');
+                    throw \Illuminate\Validation\ValidationException::withMessages(['destGroup' => [__('tollerus::error.invalid_glyph_group')]]);
+                }
+                /**
+                 * To safely transplant the glyph, we have to make sure that during
+                 * the transition its 'position' property doesn't conflict with any
+                 * in EITHER group.
+                 */
+                $minPosition = min(
+                    $groupModel->glyphs->min('position'),
+                    $destGroupModel->glyphs->min('position')
+                );
+                $nextPosition = $destGroupModel->glyphs->max('position') + 1;
+                // Move to universally safe position
+                $glyphModel->position = $minPosition - 1;
+                $glyphModel->save();
+                // Transplant to destination group
+                $glyphModel->group_id = $destGroupModel->id;
+                $glyphModel->save();
+                // Move to final position in new group
+                $glyphModel->position = $nextPosition;
+                $glyphModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('glyph-transfer-failure');
+            throw $e;
+        }
+        $this->refreshForm();
     }
 }
