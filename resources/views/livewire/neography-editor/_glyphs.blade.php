@@ -1,4 +1,7 @@
 <div id="tabpanel-glyphs" role="tabpanel" x-cloak x-show="tab=='glyphs'" class="flex flex-col gap-6 border-t-4 border-white dark:border-zinc-800 pt-4">
+    <div class="flex flex-col gap-2 italic text-zinc-700 dark:text-zinc-400">
+        {!! Str::markdown(__('tollerus::ui.glyphs_tab_description')) !!}
+    </div>
     <h1 class="font-bold text-2xl px-6 xl:px-0">
         <span>{{ __('tollerus::ui.sections') }}</span>
     </h1>

@@ -420,4 +420,16 @@ return [
   'ucsur_tip' => 'Consider mapping your conlang glyphs to a [Unicode Private Use Area](:pua_url), perhaps a region not yet claimed in the [Under-ConScript Unicode Registry](:ucsur_url).',
   // 'font_url' = (generated inside Laravel)
   'svg_to_glyphs_notice_no_font' => 'You don\'t have any neography sections! Add some manually, or extract glyphs from your SVG font. (For extraction, you\'ll need to add a font [here](:font_url).)',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * Here we use double-newline characters "\n\n" as a
+   * paragraph break. (In PHP this escape sequence only
+   * works in a string with double-quotes "".)
+   *
+   * There's also some bold print, marked with
+   * **double-asterisks,** used here for emphasis.
+   */
+  'glyphs_tab_description' => "These settings define your neography's **public-facing primer material.**\n\nFor example, if your font has typographical variants that aren't meaningful to a reader, they can be omitted. In this tab, the goal is to document the neography and help someone learn it.",
+  'keyboard_tab_description' => "These settings define an internal input utility that lets you **type using your own neography.**\n\nIn most cases you'll want one keyboard button for each glyph in your font. (Because what's the point of a glyph that you can't type?)",
 ];
