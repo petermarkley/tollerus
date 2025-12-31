@@ -254,6 +254,7 @@ class InflectionTableEditor extends Component
         // Save to database
         try {
             $tableModel->save();
+            $this->dispatch('text-save-success', id: $domId);
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);
@@ -404,6 +405,7 @@ class InflectionTableEditor extends Component
         // Save to database
         try {
             $rowModel->save();
+            $this->dispatch('text-save-success', id: $domId);
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);

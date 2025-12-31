@@ -204,6 +204,7 @@ class NeographySectionEditor extends Component
         // Save to database
         try {
             $this->sect->save();
+            $this->dispatch('text-save-success', id: $domId);
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);
@@ -255,6 +256,7 @@ class NeographySectionEditor extends Component
         // Save to database
         try {
             $groupModel->save();
+            $this->dispatch('text-save-success', id: $domId);
         } catch (\Throwable $e) {
             $this->dispatch('group-update-failure');
             throw $e;
@@ -370,6 +372,7 @@ class NeographySectionEditor extends Component
         try {
             $glyphModel->save();
             $this->refreshForm(); // This is needed because 'glyph' and 'glyphHex' both access the same DB column
+            $this->dispatch('text-save-success', id: $domId);
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);

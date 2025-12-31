@@ -429,6 +429,7 @@ class LanguageEditor extends Component
                 $featureModel[$propName] = $propVal;
                 $featureModel->save();
                 $this->refreshGrammarForm();
+                $this->dispatch('text-save-success', id: $domId);
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
                 $error = match ($propName) {
                     'name' => ['feature.name' => [__('tollerus::error.duplicate_of_unique_per_group')]],
@@ -498,6 +499,7 @@ class LanguageEditor extends Component
                 $featureValueModel[$propName] = $propVal;
                 $featureValueModel->save();
                 $this->refreshGrammarForm();
+                $this->dispatch('text-save-success', id: $domId);
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
                 $error = match ($propName) {
                     'name' => ['featureValue.name' => [__('tollerus::error.duplicate_of_unique_per_group')]],

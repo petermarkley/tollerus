@@ -235,6 +235,7 @@ class AutoInflectionEditor extends Component
         // Save to database
         try {
             $this->row->save();
+            $this->dispatch('text-save-success', id: $domId);
         } catch (\Throwable $e) {
             $this->dispatch('row-update-failure');
             throw $e;
@@ -288,6 +289,7 @@ class AutoInflectionEditor extends Component
         // Save to database
         try {
             $ruleModel->save();
+            $this->dispatch('text-save-success', id: $domId);
         } catch (\Throwable $e) {
             $this->dispatch('rule-update-failure');
             throw $e;
