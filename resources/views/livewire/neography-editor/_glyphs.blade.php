@@ -110,7 +110,7 @@
         </div>
     </template>
     <x-tollerus::inputs.missing-data
-        size="medium"
+        size="medium" floating="true"
         title="{{ __('tollerus::ui.add_section') }}"
         class="relative flex flex-row gap-2 justify-center items-center w-full"
         @click="$wire.createSection();"

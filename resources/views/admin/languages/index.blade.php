@@ -131,7 +131,7 @@
                 </x-tollerus::panel>
             @endforeach
             <x-tollerus::inputs.missing-data
-                size="medium"
+                size="medium" floating="true"
                 title="{{ __('tollerus::ui.add_language') }}"
                 class="relative flex flex-row gap-2 justify-center items-center w-full"
                 @click="$store.languages.create();"
