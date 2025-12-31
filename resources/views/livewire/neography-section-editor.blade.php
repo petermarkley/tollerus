@@ -17,11 +17,11 @@
         groupsForm: $wire.entangle('groupsForm'),
         allSects: $wire.entangle('allSects'),
         moveGroup(groupElem, groupId, dir) {
-            neighborId = $store.reorderFunctions.getNeighborId(this.groupsForm, groupId, dir);
+            let neighborId = $store.reorderFunctions.getNeighborId(this.groupsForm, groupId, dir);
             if (neighborId === null) {
                 return;
             }
-            neighborElem = document.getElementById('group_' + neighborId);
+            let neighborElem = document.getElementById('group_' + neighborId);
             $store.reorderFunctions.swapItems(groupElem, neighborElem);
             const onDone = (event) => {
                 // Listener should be ephemeral
@@ -32,11 +32,11 @@
             groupElem.addEventListener('transitionend', onDone);
         },
         moveGlyph(groupId, glyphElem, glyphId, dir) {
-            neighborId = $store.reorderFunctions.getNeighborId(this.groupsForm[groupId].glyphs, glyphId, dir);
+            let neighborId = $store.reorderFunctions.getNeighborId(this.groupsForm[groupId].glyphs, glyphId, dir);
             if (neighborId === null) {
                 return;
             }
-            neighborElem = document.getElementById('glyph_' + neighborId);
+            let neighborElem = document.getElementById('glyph_' + neighborId);
             $store.reorderFunctions.swapItems(glyphElem, neighborElem);
             const onDone = (event) => {
                 // Listener should be ephemeral

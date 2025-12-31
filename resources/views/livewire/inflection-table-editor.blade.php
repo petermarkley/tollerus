@@ -20,11 +20,11 @@
             return Object.fromEntries(Object.entries(this.tableForm).filter(([k, v]) => !isNaN(k)));
         },
         moveTable(tableElem, tableId, dir) {
-            neighborId = $store.reorderFunctions.getNeighborId(this.tablesFiltered, tableId, dir);
+            let neighborId = $store.reorderFunctions.getNeighborId(this.tablesFiltered, tableId, dir);
             if (neighborId === null) {
                 return;
             }
-            neighborElem = document.getElementById('table_' + neighborId);
+            let neighborElem = document.getElementById('table_' + neighborId);
             $store.reorderFunctions.swapItems(tableElem, neighborElem);
             const onDone = (event) => {
                 // Listener should be ephemeral
@@ -35,11 +35,11 @@
             tableElem.addEventListener('transitionend', onDone);
         },
         moveRow(tableId, rowElem, rowId, dir) {
-            neighborId = $store.reorderFunctions.getNeighborId(this.tableForm[tableId].rows, rowId, dir);
+            let neighborId = $store.reorderFunctions.getNeighborId(this.tableForm[tableId].rows, rowId, dir);
             if (neighborId === null) {
                 return;
             }
-            neighborElem = document.getElementById('row_' + neighborId);
+            let neighborElem = document.getElementById('row_' + neighborId);
             $store.reorderFunctions.swapItems(rowElem, neighborElem);
             const onDone = (event) => {
                 // Listener should be ephemeral

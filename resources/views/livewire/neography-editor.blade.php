@@ -38,11 +38,11 @@
         },
         glyphsForm: $wire.entangle('glyphsForm'),
         moveSection(sectElem, sectId, dir) {
-            neighborId = $store.reorderFunctions.getNeighborId(this.glyphsForm, sectId, dir);
+            let neighborId = $store.reorderFunctions.getNeighborId(this.glyphsForm, sectId, dir);
             if (neighborId === null) {
                 return;
             }
-            neighborElem = document.getElementById('sect_' + neighborId);
+            let neighborElem = document.getElementById('sect_' + neighborId);
             $store.reorderFunctions.swapItems(sectElem, neighborElem);
             const onDone = (event) => {
                 // Listener should be ephemeral

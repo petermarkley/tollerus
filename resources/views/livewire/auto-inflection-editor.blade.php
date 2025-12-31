@@ -10,11 +10,11 @@
         tabNeography: $wire.entangle('tabNeography'),
         ruleForm: $wire.entangle('ruleForm'),
         moveRule(ruleList, ruleElem, tabTarget, tabPattern, tabNeography, ruleId, dir) {
-            neighborId = $store.reorderFunctions.getNeighborId(ruleList, ruleId, dir);
+            let neighborId = $store.reorderFunctions.getNeighborId(ruleList, ruleId, dir);
             if (neighborId === null) {
                 return;
             }
-            neighborElem = document.getElementById('rule_' + neighborId);
+            let neighborElem = document.getElementById('rule_' + neighborId);
             $store.reorderFunctions.swapItems(ruleElem, neighborElem);
             const onDone = (event) => {
                 // Listener should be ephemeral

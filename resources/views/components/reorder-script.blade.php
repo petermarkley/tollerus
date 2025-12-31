@@ -11,7 +11,7 @@ document.addEventListener('alpine:init', () => {
         },
         isFirstItem(parentObj, itemId) {
             let lowest = null;
-            for (id in parentObj) {
+            for (let id in parentObj) {
                 if (lowest === null || parentObj[id][this.positionProp] < lowest) {
                     lowest = parentObj[id][this.positionProp];
                 }
@@ -20,7 +20,7 @@ document.addEventListener('alpine:init', () => {
         },
         isLastItem(parentObj, itemId) {
             let highest = null;
-            for (id in parentObj) {
+            for (let id in parentObj) {
                 if (highest === null || parentObj[id][this.positionProp] > highest) {
                     highest = parentObj[id][this.positionProp];
                 }
@@ -35,19 +35,19 @@ document.addEventListener('alpine:init', () => {
             dir = Math.round(dir / Math.abs(dir));
             // Get sorted numeric arrays
             let itemsNumeric = [];
-            for (id in parentObj) {
-                newItem = {id: id};
+            for (let id in parentObj) {
+                let newItem = {id: id};
                 newItem[this.positionProp] = parentObj[id][this.positionProp];
                 itemsNumeric.push(newItem);
             }
             itemsNumeric.sort((a, b) => a[this.positionProp] - b[this.positionProp]);
-            idsNumeric = itemsNumeric.map(item => item.id);
+            let idsNumeric = itemsNumeric.map(item => item.id);
             // Get numeric indices
-            itemIndex = idsNumeric.indexOf(itemId);
+            let itemIndex = idsNumeric.indexOf(itemId);
             if (itemIndex < 0) {
                 return null;
             }
-            neighborIndex = itemIndex + dir;
+            let neighborIndex = itemIndex + dir;
             if (neighborIndex < 0 || neighborIndex >= itemsNumeric.length) {
                 return null;
             }
@@ -56,19 +56,19 @@ document.addEventListener('alpine:init', () => {
         },
         swapItems(itemElem, neighborElem) {
             // Measure
-            itemRect = itemElem.getBoundingClientRect();
-            neighborRect = neighborElem.getBoundingClientRect();
+            let itemRect = itemElem.getBoundingClientRect();
+            let neighborRect = neighborElem.getBoundingClientRect();
             // Calculate
             if (itemRect.y > neighborRect.y) {
                 // Item is moving upward
-                itemMove = neighborRect.y - itemRect.y;
-                gap = Math.abs(itemMove) - neighborRect.height;
-                neighborMove = itemRect.height + gap;
+                var itemMove = neighborRect.y - itemRect.y;
+                var gap = Math.abs(itemMove) - neighborRect.height;
+                var neighborMove = itemRect.height + gap;
             } else {
                 // Item is moving downward
-                neighborMove = itemRect.y - neighborRect.y;
-                gap = Math.abs(neighborMove) - itemRect.height;
-                itemMove = neighborRect.height + gap;
+                var neighborMove = itemRect.y - neighborRect.y;
+                var gap = Math.abs(neighborMove) - itemRect.height;
+                var itemMove = neighborRect.height + gap;
             }
             // Begin animation
             itemElem.style.transform = `translateY(${itemMove}px)`;
