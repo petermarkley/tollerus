@@ -122,7 +122,11 @@ class NeographySectionEditor extends Component
             ]];
         })->toArray();
 
-        $this->neography->loadMissing([
+        /**
+         * We're not using `loadMissing()` here because we
+         * actually need a guaranteed-fresh set.
+         */
+        $this->neography->load([
             'sections.glyphGroups.glyphs'
         ]);
         $this->allSects = $this->neography->sections->sortBy('position')
