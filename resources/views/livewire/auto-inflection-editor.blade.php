@@ -51,7 +51,7 @@
                             <p class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm p-1 italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.none') }}</p>
                         @endif
                     </div>
-                    <p class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }}</p>
+                    <p class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }}</p>
                     <div>
                         <a href="{{ route('tollerus.admin.languages.inflection-tables', ['language' => $language->id, 'group' => $group->id]) }}">{{ __('tollerus::ui.edit_at_group_level') }}</a>
                     </div>
@@ -70,7 +70,7 @@
                         fieldName="srcParticle"
                         saveEvent="$wire.updateRow('srcParticle', document.getElementById(id).value, id);"
                     />
-                    <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.particle_description', ['row' => $row->label]) }}</legend></div>
+                    <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.particle_description', ['row' => $row->label]) }}</legend></div>
                 </fieldset>
             </div>
             <fieldset class="flex flex-col gap-2 items-start">
@@ -88,7 +88,7 @@
                     saveEvent="$wire.updateRow('morphTemplate', document.getElementById(id).value, id);"
                 />
                 <x-tollerus::alert type="info" class="whitespace-nowrap">{{ __('tollerus::ui.morph_template_key') }}</x-tollerus::alert>
-                <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.morph_template_description') }}</legend></div>
+                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.morph_template_description') }}</legend></div>
             </fieldset>
         </x-tollerus::panel>
         <h1 class="font-bold text-2xl px-6 xl:px-0">{{ __('tollerus::ui.morph_rules') }}</h1>

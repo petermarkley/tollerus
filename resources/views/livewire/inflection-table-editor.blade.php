@@ -68,7 +68,7 @@
                         </label>
                     </h3>
                     <div class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                        <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }} {{ __('tollerus::ui.used_in_auto_inflection') }}</legend></div>
+                        <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }} {{ __('tollerus::ui.used_in_auto_inflection') }}</legend></div>
                         <div>
                             <x-tollerus::inputs.select
                                 idExpression="'base_row'"
@@ -169,7 +169,7 @@
                                 </div>
                             </div>
                             <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                                <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['stack_description']"></legend></div>
+                                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['stack_description']"></legend></div>
                                 <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
                                     <x-tollerus::inputs.checkbox
                                         idExpression="'table_' + tableId + '_stack'"
@@ -181,7 +181,7 @@
                                 </div>
                             </fieldset>
                             <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                                <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['align_on_stack_description']"></legend></div>
+                                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['align_on_stack_description']"></legend></div>
                                 <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
                                     <x-tollerus::inputs.checkbox
                                         idExpression="'table_' + tableId + '_align_on_stack'"
@@ -193,7 +193,7 @@
                                 </div>
                             </fieldset>
                             <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                                <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['table_fold_description']"></legend></div>
+                                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['table_fold_description']"></legend></div>
                                 <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
                                     <x-tollerus::inputs.checkbox
                                         idExpression="'table_' + tableId + '_table_fold'"
@@ -205,7 +205,7 @@
                                 </div>
                             </fieldset>
                             <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                                <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500" x-text="msgs['rows_fold_description']"></legend></div>
+                                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['rows_fold_description']"></legend></div>
                                 <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
                                     <x-tollerus::inputs.checkbox
                                         idExpression="'table_' + tableId + '_rows_fold'"

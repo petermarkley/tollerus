@@ -25,7 +25,7 @@
             @endphp
             <fieldset class="flex flex-col gap-4 items-start">
                 <h4 class="font-bold text-base">{{ __('tollerus::ui.writing_direction_primary') }}</h4>
-                <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.direction_primary_description') }}</legend></div>
+                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.direction_primary_description') }}</legend></div>
                 @foreach ($writingDirectionOpts as $writingDirection)
                     <div class="flex flex-row gap-2 justify-start items-center">
                         <div class="inline-block align-middle w-6 h-6 relative group">
@@ -65,7 +65,7 @@
             </fieldset>
             <fieldset class="flex flex-col gap-4 items-start">
                 <h4 class="font-bold text-base">{{ __('tollerus::ui.writing_direction_secondary') }}</h4>
-                <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{{ __('tollerus::ui.direction_secondary_description') }}</legend></div>
+                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.direction_secondary_description') }}</legend></div>
                 @foreach ($writingDirectionOpts as $writingDirection)
                     <div
                         x-cloak x-show="@js( $writingDirection['secondaryOpts'] ).includes(infoForm.direction_primary)"
@@ -112,7 +112,7 @@
                     @change="btn = 'save'; dirty=true;"
                 />
             </div>
-            <div><legend class="font-normal italic text-zinc-700 dark:text-zinc-500">{!! Str::markdown(__('tollerus::ui.boustrophedon_description', ['wiki_url' => 'https://en.wikipedia.org/wiki/Boustrophedon'])) !!}</legend></div>
+            <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{!! Str::markdown(__('tollerus::ui.boustrophedon_description', ['wiki_url' => 'https://en.wikipedia.org/wiki/Boustrophedon'])) !!}</legend></div>
         </fieldset>
     </div>
     <div class="flex flex-row justify-start gap-2">
