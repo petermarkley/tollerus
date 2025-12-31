@@ -83,7 +83,7 @@ class NeographySectionEditor extends Component
      */
     public function refreshForm(): void
     {
-        $this->sect->loadMissing([
+        $this->sect->load([
             'glyphGroups.glyphs'
         ]);
         $this->groups = $this->sect->glyphGroups->sortBy('position')->all();
@@ -419,6 +419,60 @@ class NeographySectionEditor extends Component
             });
         } catch (\Throwable $e) {
             $this->dispatch('glyph-swap-failure');
+            throw $e;
+        }
+        $this->refreshForm();
+    }
+    public function transferGroup(string $groupId, string $destSect): void
+    {
+        // Basic sanity check
+        if ($this->sect->id == $destSect) {
+            $this->dispatch('group-transfer-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['destSect' => [__('tollerus::error.invalid_neography_section')]]);
+        }
+        // Find models
+        $sectModel = $this->sect;
+        $groupModel = $this->findInCache('group-transfer-failure', [
+            [
+                'id' => $groupId,
+                'objectType' => NeographyGlyphGroup::class,
+                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
+            ],
+        ]);
+        // Transfer group
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($sectModel, $groupId, $groupModel, $destSect) {
+                /**
+                 * These aren't necessarily in our fancy model cache
+                 */
+                $destSectModel = $this->neography->sections->firstWhere('id', (int)$destSect);
+                if (!($destSectModel instanceof NeographySection)) {
+                    $this->dispatch('group-transfer-failure');
+                    throw \Illuminate\Validation\ValidationException::withMessages(['destSect' => [__('tollerus::error.invalid_neography_section')]]);
+                }
+                /**
+                 * To safely transplant the group, we have to make sure that during
+                 * the transition its 'position' property doesn't conflict with any
+                 * in EITHER section.
+                 */
+                $minPosition = min(
+                    $sectModel->glyphGroups->min('position'),
+                    $destSectModel->glyphGroups->min('position')
+                );
+                $nextPosition = $destSectModel->glyphGroups->max('position') + 1;
+                // Move to universally safe position
+                $groupModel->position = $minPosition - 1;
+                $groupModel->save();
+                // Transplant to destination section
+                $groupModel->section_id = $destSectModel->id;
+                $groupModel->save();
+                // Move to final position in new section
+                $groupModel->position = $nextPosition;
+                $groupModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('group-transfer-failure');
             throw $e;
         }
         $this->refreshForm();

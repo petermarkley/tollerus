@@ -155,6 +155,7 @@ return [
    * the user to select a destination.
    */
   'transfer_to' => 'Transfer to ...',
+  'transfer_group_to' => 'Transfer group to ...',
   'visible' => 'Visible',
   'name' => 'Name',
   'human_friendly' => 'Human-friendly',

@@ -154,7 +154,7 @@
                                         </x-tollerus::inputs.button>
                                     </div>
                                 </div>
-                                <div>
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-grow">
                                     <x-tollerus::inputs.select
                                         idExpression="'group_' + groupId + '_type'"
                                         label="{{ __('tollerus::ui.type') }}"
@@ -167,6 +167,27 @@
                                             <option value="{{ $glyphType['string'] }}" class="cursor-pointer" selected="group.type=='{{ $glyphType['string'] }}'">{{ $glyphType['local'] }}</option>
                                         @endforeach
                                     </x-tollerus::inputs.select>
+                                    <x-tollerus::inputs.dropdown class="relative w-full">
+                                        <x-slot:button>
+                                            <x-tollerus::inputs.button
+                                                type="secondary"
+                                                title="{{ __('tollerus::ui.transfer_group_to') }}"
+                                                @click="open=true"
+                                            >
+                                                <span>{{ __('tollerus::ui.transfer_group_to') }}</span>
+                                            </x-tollerus::inputs.button>
+                                        </x-slot:button>
+                                        <template x-for="destSect in allSects">
+                                            <x-tollerus::inputs.button
+                                                type="inverse"
+                                                size="small"
+                                                x-bind:class="{'ml-4': true, 'line-through': destSect.isThis}"
+                                                x-bind:disabled="destSect.isThis"
+                                                x-text="destSect.name"
+                                                @click="open=false; $wire.transferGroup(groupId, destSect.id);"
+                                            />
+                                        </template>
+                                    </x-tollerus::inputs.dropdown>
                                 </div>
                                 <x-tollerus::pane class="flex flex-col gap-4 items-start">
                                     <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
