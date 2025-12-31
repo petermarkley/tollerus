@@ -46,9 +46,15 @@
             };
             glyphElem.addEventListener('transitionend', onDone);
         },
+        deleteItem(id) {
+            let e = document.getElementById(id);
+            if (e) {
+                e.remove();
+            }
+        },
     }"
-    @group-delete.window="$wire.deleteGroup($event.detail.groupId);"
-    @glyph-delete.window="$wire.deleteGlyph($event.detail.glyphId);"
+    @group-delete.window="deleteItem('group_'+$event.detail.groupId); $wire.deleteGroup($event.detail.groupId);"
+    @glyph-delete.window="deleteItem('glyph_'+$event.detail.glyphId); $wire.deleteGlyph($event.detail.glyphId);"
 >
     <div id="non-modal-content" class="flex flex-col gap-6">
         <h1 class="font-bold text-2xl px-6 xl:px-0">

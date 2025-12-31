@@ -10,6 +10,9 @@ document.addEventListener('alpine:init', () => {
             });
         },
         isFirstItem(parentObj, itemId) {
+            if (typeof parentObj[itemId] === "undefined") {
+                return true;
+            }
             let lowest = null;
             for (let id in parentObj) {
                 if (lowest === null || parentObj[id][this.positionProp] < lowest) {
@@ -19,6 +22,9 @@ document.addEventListener('alpine:init', () => {
             return (parentObj[itemId][this.positionProp] == lowest);
         },
         isLastItem(parentObj, itemId) {
+            if (typeof parentObj[itemId] === "undefined") {
+                return true;
+            }
             let highest = null;
             for (let id in parentObj) {
                 if (highest === null || parentObj[id][this.positionProp] > highest) {
