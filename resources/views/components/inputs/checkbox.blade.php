@@ -7,7 +7,10 @@
   'modelIsAlpine' => false,
   'checked' => false,
 ])
-<div class="flex flex-col gap-1 items-center">
+<div
+    x-data="{ id: {{ $idExpression }} }"
+    class="flex flex-col gap-1 items-center"
+>
     <div class="flex flex-row gap-4 justify-start items-center">
         <label
             @if (!empty($id) && empty($idExpression))
