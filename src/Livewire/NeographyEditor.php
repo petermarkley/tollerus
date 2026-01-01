@@ -255,21 +255,6 @@ class NeographyEditor extends Component
     /**
      * Granular CRUD-type functions
      */
-    public function fontDelete(FontFormat $fontFormat): void
-    {
-        $fontAssetService = new FontAssetService;
-        try {
-            if (!empty($this->neography->{$fontFormat->pathColumn()})) {
-                $fontAssetService->delete($fontFormat, $this->neography);
-            }
-            $this->neography->{$fontFormat->blobColumn()} = null;
-            $this->neography->save();
-        } catch (\Throwable $e) {
-            $this->dispatch('font-delete-failure');
-            throw $e;
-        }
-        $this->refreshFontForm();
-    }
     public function createSection(): void
     {
         try {
@@ -598,6 +583,21 @@ class NeographyEditor extends Component
             $fontAssetService->publish($fontFormat, $this->neography);
         } catch (\Throwable $e) {
             $this->dispatch('publish-font-failure');
+            throw $e;
+        }
+        $this->refreshFontForm();
+    }
+    public function deleteFont(FontFormat $fontFormat): void
+    {
+        $fontAssetService = new FontAssetService;
+        try {
+            if (!empty($this->neography->{$fontFormat->pathColumn()})) {
+                $fontAssetService->delete($fontFormat, $this->neography);
+            }
+            $this->neography->{$fontFormat->blobColumn()} = null;
+            $this->neography->save();
+        } catch (\Throwable $e) {
+            $this->dispatch('font-delete-failure');
             throw $e;
         }
         $this->refreshFontForm();

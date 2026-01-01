@@ -100,7 +100,7 @@
     @popstate.window="updateTabFromUrl();"
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
     @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
-    @font-delete.window="$wire.fontDelete($event.detail.fontFormat);"
+    @font-delete.window="$wire.deleteFont($event.detail.fontFormat);"
     @sect-delete.window="deleteItem('sect_'+$event.detail.sectId); $wire.deleteSection($event.detail.sectId);"
     @keyboard-delete.window="deleteItem('keyboard_'+$event.detail.keyboardId); $wire.deleteKeyboard($event.detail.keyboardId);"
     @key-delete.window="deleteItem('key_'+$event.detail.keyId); $wire.deleteKey($event.detail.keyId);"
