@@ -67,6 +67,7 @@
                             >
                                 <x-tollerus::icons.bookmark class="h-8"/>
                                 <span x-text="sect.name" x-bind:class="{ 'font-normal italic': sect.name.length==0 }"></span>
+                                <span x-text="sect.glyphCount" class="block font-bold text-lg tracking-tighter bg-zinc-900 dark:bg-zinc-300 text-white dark:text-zinc-800 rounded-full w-7 h-7 flex justify-center items-center text-center"></span>
                             </a>
                             <div class="flex flex-row gap-2 items-center">
                                 <x-tollerus::button
