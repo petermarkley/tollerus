@@ -8,7 +8,11 @@
   'checked' => false,
 ])
 <div
-    x-data="{ id: {{ $idExpression }} }"
+    @if (!empty($id) && empty($idExpression))
+        x-data="{ id: {{ $id }} }"
+    @else
+        x-data="{ id: {{ $idExpression }} }"
+    @endif
     class="flex flex-col gap-1 items-center"
 >
     <div class="flex flex-row gap-4 justify-start items-center">
