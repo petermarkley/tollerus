@@ -29,6 +29,12 @@ final class SvgToKeyboard
         if ($svg === false) {
             throw new \RuntimeException(__('tollerus::error.svg_parse_error'));
         }
+        $namespaces = $svg->getDocNamespaces();
+        $nsPre = '';
+        if (isset($namespaces[''])) {
+            $nsPre = 'svg';
+            $svg->registerXPathNamespace($nsPre, $namespaces['']);
+        }
 
         // Sort and separate into contiguous chunks
         /**
@@ -44,7 +50,7 @@ final class SvgToKeyboard
          *     [ 0xF2C04, 0xF2C05 ]
          *   ]
          */
-        $glyphChunks = collect($svg->xpath('defs/font/glyph'))
+        $glyphChunks = collect($svg->xpath(($nsPre?$nsPre.':':'').'defs/'.($nsPre?$nsPre.':':'').'font/'.($nsPre?$nsPre.':':'').'glyph'))
             ->sort(fn ($a, $b) => mb_ord($a['unicode']) <=> mb_ord($b['unicode']))->values()
             ->chunkWhile(fn ($g, $key, $chunk) => mb_ord($g['unicode']) === mb_ord($chunk->last()['unicode'])+1)
             ->map->values();
