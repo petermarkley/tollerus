@@ -21,13 +21,15 @@ use PeterMarkley\Tollerus\Enums\FontFormat;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\NeographySection;
+use PeterMarkley\Tollerus\Models\NeographyInputKey;
+use PeterMarkley\Tollerus\Models\NeographyInputKeyboard;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class NeographyEditor extends Component
 {
     use WithFileUploads;
-    // use HasModelCache;
-    // private $cacheRoot = '';
+    use HasModelCache;
+    private $cacheRoot = 'keyboards';
     public string $tab = 'info';
     // Models
     #[Locked] public Neography $neography;
@@ -323,39 +325,267 @@ class NeographyEditor extends Component
     }
     public function createKeyboard(): void
     {
-        //
+        try {
+            $nextPosition = collect($this->keyboards)->max('position') + 1;
+            $keyboard = $this->neography->keyboards()->create([
+                'position' => $nextPosition,
+                'width' => 10,
+            ]);
+        } catch (\Throwable $e) {
+            $this->dispatch('keyboard-add-failure');
+            throw $e;
+        }
+        $this->refreshKeyboardsForm();
     }
-    public function updateKeyboard(string $keyboardId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateKeyboard(string $keyboardId, string $propName, mixed $propVal, ?string $domId = ''): void
     {
-        //
+        // Find model
+        $keyboardModel = $this->findInCache('keyboard-update-failure', [
+            [
+                'id' => $keyboardId,
+                'objectType' => NeographyInputKeyboard::class,
+                'failMessage' => ['keyboardId' => [__('tollerus::error.invalid_keyboard')]],
+            ],
+        ]);
+        // $propName whitelist
+        $allowedPropData = [
+            'width'  => ['type' => 'int', 'column' => 'width'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('keyboard-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'int':
+                $keyboardModel[$allowedPropData[$propName]['column']] = (int)($propVal);
+            break;
+        }
+        // Save to database
+        try {
+            $keyboardModel->save();
+            $this->dispatch('text-save-success', id: $domId);
+        } catch (\Throwable $e) {
+            $this->dispatch('keyboard-update-failure');
+            throw $e;
+        }
     }
     public function deleteKeyboard(string $keyboardId): void
     {
-        //
+        NeographyInputKeyboard::findOrFail((int)$keyboardId)->delete();
+        $this->refreshKeyboardsForm();
     }
     public function swapKeyboards(string $keyboardId, string $neighborId): void
     {
-        //
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($keyboardId, $neighborId) {
+                $keyboardsCollection = collect($this->keyboards);
+                $keyboardModel = $keyboardsCollection->firstWhere('id', $keyboardId);
+                $neighborModel = $keyboardsCollection->firstWhere('id', $neighborId);
+                $oldKeyboardPosition = (int) $this->keysForm[$keyboardId]['position'];
+                $oldNeighborPosition = (int) $this->keysForm[$neighborId]['position'];
+                /**
+                 * Apparently the 'unique' constraint applies even within a transaction.
+                 * So we need to carefully move one of the models out of the way first.
+                 */
+                $minPosition = $keyboardsCollection->min('position');
+                $neighborModel->position = $minPosition - 1;
+                $neighborModel->save();
+                /**
+                 * And finally we can just set and save both correct values.
+                 */
+                $keyboardModel->position = $oldNeighborPosition;
+                $keyboardModel->save();
+                $neighborModel->position = $oldKeyboardPosition;
+                $neighborModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('keyboard-swap-failure');
+            throw $e;
+        }
+        $this->refreshKeyboardsForm();
     }
     public function createKey(string $keyboardId): void
     {
-        //
+        // Find model
+        $keyboardModel = $this->findInCache('keyboard-update-failure', [
+            [
+                'id' => $keyboardId,
+                'objectType' => NeographyInputKeyboard::class,
+                'failMessage' => ['keyboardId' => [__('tollerus::error.invalid_keyboard')]],
+            ],
+        ]);
+        // Create glyph
+        $nextPosition = $keyboardModel->inputKeys->max('position') + 1;
+        $keyboardModel->inputKeys()->create([
+            'position' => $nextPosition,
+        ]);
+        $this->refreshKeyboardsForm();
     }
     public function updateKey(string $keyboardId, string $keyId, string $propName, string $propVal, ?string $domId = ''): void
     {
-        //
+        // Find model
+        $keyModel = $this->findInCache('key-update-failure', [
+            [
+                'id' => $keyboardId,
+                'objectType' => NeographyInputKeyboard::class,
+                'failMessage' => ['keyboardId' => [__('tollerus::error.invalid_keyboard')]],
+                'relation' => 'inputKeys',
+            ],
+            [
+                'id' => $keyId,
+                'objectType' => NeographyInputKey::class,
+                'failMessage' => ['keyId' => [__('tollerus::error.invalid_key')]],
+            ],
+        ]);
+        // $propName whitelist
+        $allowedPropData = [
+            'label'      => ['type' => 'string', 'column' => 'label'],
+            'glyph'      => ['type' => 'string', 'column' => 'glyph'],
+            'glyphHex'   => ['type' => 'hex', 'column' => 'glyph'],
+            'renderBase' => ['type' => 'boolean', 'column' => 'render_base'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('key-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'boolean':
+                $keyModel[$allowedPropData[$propName]['column']] = (bool) filter_var($propVal, FILTER_VALIDATE_BOOLEAN);
+            break;
+            case 'hex':
+                $valClean = str_replace(' ', '', $propVal);
+                $valChars = explode(',', $valClean);
+                $glyphChars = '';
+                foreach ($valChars as $char) {
+                    $glyphChars .= mb_chr(hexdec($char));
+                }
+                $keyModel[$allowedPropData[$propName]['column']] = $glyphChars;
+            break;
+            case 'string':
+            default:
+                $keyModel[$allowedPropData[$propName]['column']] = $propVal;
+            break;
+        }
+        // Save to database
+        try {
+            $keyModel->save();
+            $this->refreshKeyboardsForm(); // This is needed because 'glyph' and 'glyphHex' both access the same DB column
+            $this->dispatch('text-save-success', id: $domId);
+        } catch (\Throwable $e) {
+            if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
+                $this->dispatch('text-save-failure', id: $domId);
+                throw \Illuminate\Validation\ValidationException::withMessages(['key.'.$propName => [__('tollerus::error.duplicate_of_key')]]);
+            } else {
+                $this->dispatch('key-update-failure');
+                throw $e;
+            }
+        }
     }
     public function deleteKey(string $keyId): void
     {
-        //
+        NeographyInputKey::findOrFail((int)$keyId)->delete();
+        $this->refreshKeyboardsForm();
     }
     public function swapKeys(string $keyboardId, string $keyId, string $neighborId): void
     {
-        //
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($keyboardId, $keyId, $neighborId) {
+                $keyboardModel = collect($this->keyboards)->firstWhere('id', $keyboardId);
+                $keyModel      = $keyboardModel->inputKeys->firstWhere('id', $keyId);
+                $neighborModel = $keyboardModel->inputKeys->firstWhere('id', $neighborId);
+                $oldKeyPosition      = (int) $this->keysForm[$keyboardId]['keys'][$keyId]['position'];
+                $oldNeighborPosition = (int) $this->keysForm[$keyboardId]['keys'][$neighborId]['position'];
+                /**
+                 * Apparently the 'unique' constraint applies even within a transaction.
+                 * So we need to carefully move one of the models out of the way first.
+                 */
+                $minPosition = $keyboardModel->inputKeys->min('position');
+                $neighborModel->position = $minPosition - 1;
+                $neighborModel->save();
+                /**
+                 * And finally we can just set and save both correct values.
+                 */
+                $keyModel->position = $oldNeighborPosition;
+                $keyModel->save();
+                $neighborModel->position = $oldKeyPosition;
+                $neighborModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('key-swap-failure');
+            throw $e;
+        }
+        $this->refreshKeyboardsForm();
     }
     public function transferKey(string $keyboardId, string $keyId, string $destKeyboard): void
     {
-        //
+        // Basic sanity check
+        if ($keyboardId == $destKeyboard) {
+            $this->dispatch('key-transfer-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['destKeyboard' => [__('tollerus::error.invalid_keyboard')]]);
+        }
+        // Find models
+        $keyboardModel = $this->findInCache('key-transfer-failure', [
+            [
+                'id' => $keyboardId,
+                'objectType' => NeographyInputKeyboard::class,
+                'failMessage' => ['keyboardId' => [__('tollerus::error.invalid_keyboard')]],
+            ],
+        ]);
+        $destKeyboardModel = $this->findInCache('key-transfer-failure', [
+            [
+                'id' => $destKeyboard,
+                'objectType' => NeographyInputKeyboard::class,
+                'failMessage' => ['destKeyboard' => [__('tollerus::error.invalid_keyboard')]],
+            ],
+        ]);
+        $keyModel = $this->findInCache('key-transfer-failure', [
+            [
+                'id' => $keyboardId,
+                'objectType' => NeographyInputKeyboard::class,
+                'failMessage' => ['keyboardId' => [__('tollerus::error.invalid_keyboard')]],
+                'relation' => 'inputKeys',
+            ],
+            [
+                'id' => $keyId,
+                'objectType' => NeographyInputKey::class,
+                'failMessage' => ['keyId' => [__('tollerus::error.invalid_key')]],
+            ],
+        ]);
+        // Transfer key
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($keyboardId, $keyboardModel, $keyId, $keyModel, $destKeyboard, $destKeyboardModel) {
+                /**
+                 * To safely transplant the key, we have to make sure that during
+                 * the transition its 'position' property doesn't conflict with any
+                 * in EITHER keyboard.
+                 */
+                $minPosition = min(
+                    $keyboardModel->inputKeys->min('position'),
+                    $destKeyboardModel->inputKeys->min('position')
+                );
+                $nextPosition = $destKeyboardModel->inputKeys->max('position') + 1;
+                // Move to universally safe position
+                $keyModel->position = $minPosition - 1;
+                $keyModel->save();
+                // Transplant to destination keyboard
+                $keyModel->keyboard_id = $destKeyboardModel->id;
+                $keyModel->save();
+                // Move to final position in new keyboard
+                $keyModel->position = $nextPosition;
+                $keyModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('key-transfer-failure');
+            throw $e;
+        }
+        $this->refreshKeyboardsForm();
     }
 
     /**

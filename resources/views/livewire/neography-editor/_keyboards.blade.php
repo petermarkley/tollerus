@@ -41,7 +41,7 @@
     </template>
     <template x-if="Object.keys(keysForm).length > 0">
         <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-            <template x-for="([keyboardId, keyboard], i) in $store.reorderFunctions.sortItems(keysForm)">
+            <template x-for="([keyboardId, keyboard], i) in $store.reorderFunctions.sortItems(keysForm)" :key="keyboardId">
                 <div
                     x-bind:id="'keyboard_' + keyboardId"
                     data-obj="keyboard"
@@ -108,7 +108,7 @@
                             </h3>
                             <template x-if="Object.keys(keyboard.keys).length > 0">
                                 <div class="flex flex-col gap-4 items-start w-full" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-                                    <template x-for="([keyId, key], i) in $store.reorderFunctions.sortItems(keyboard.keys)">
+                                    <template x-for="([keyId, key], i) in $store.reorderFunctions.sortItems(keyboard.keys)" :key="keyId">
                                         <div
                                             x-bind:id="'key_' + keyId"
                                             data-obj="key"

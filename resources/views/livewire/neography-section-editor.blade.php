@@ -102,7 +102,7 @@
             </h1>
             <template x-if="Object.keys(groupsForm).length > 0">
                 <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-                    <template x-for="([groupId, group], i) in $store.reorderFunctions.sortItems(groupsForm)">
+                    <template x-for="([groupId, group], i) in $store.reorderFunctions.sortItems(groupsForm)" :key="groupId">
                         <div
                             x-bind:id="'group_' + groupId"
                             data-obj="group"
@@ -195,7 +195,7 @@
                                     </h3>
                                     <template x-if="Object.keys(group.glyphs).length > 0">
                                         <div class="flex flex-col gap-4 items-start w-full" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-                                            <template x-for="([glyphId, glyph], i) in $store.reorderFunctions.sortItems(group.glyphs)">
+                                            <template x-for="([glyphId, glyph], i) in $store.reorderFunctions.sortItems(group.glyphs)" :key="glyphId">
                                                 <div
                                                     x-bind:id="'glyph_' + glyphId"
                                                     data-obj="glyph"

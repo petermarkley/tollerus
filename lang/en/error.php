@@ -57,6 +57,9 @@ return [
     'invalid_neography_section' => 'Invalid neography section ID',
     'invalid_glyph_group' => 'Invalid glyph group ID',
     'invalid_glyph' => 'Invalid glyph ID',
+    'invalid_keyboard' => 'Invalid keyboard ID',
+    'invalid_key' => 'Invalid key ID', // "Key" as in a button on a computer keyboard
+    'duplicate_of_key' => 'This must be unique per keyboard.',
     'max_attempts_adding_unique_name' => 'Reached max attempts while trying to create unique object name.',
     /**
      * TRANSLATOR NOTE:
