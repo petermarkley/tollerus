@@ -40,7 +40,7 @@
         </div>
     </template>
     <template x-if="Object.keys(keysForm).length > 0">
-        <x-tollerus::drawer open="false" rootClass="w-full" class="flex flex-col gap-4 w-full">
+        <x-tollerus::drawer open="true" rootClass="w-full" class="flex flex-col gap-4 w-full">
             <x-slot:heading-button>
                 <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl rounded-bl bg-zinc-500 dark:bg-zinc-400 group-has-hover:bg-zinc-400 group-has-hover:dark:bg-zinc-300 text-white dark:text-zinc-800">
                     <x-tollerus::icons.eye-slash x-show="!drawerOpen" />
@@ -51,7 +51,15 @@
             <x-slot:heading>
                 <div class="flex-grow border-b-2 border-zinc-500 dark:border-zinc-400"></div>
             </x-slot:heading>
-            <div class="flex flex-col gap-4 p-6">
+            <div class="flex flex-col gap-1 items-start">
+                <textarea
+                    id="keyboard_preview_output"
+                    x-ref="keyboard_preview_output"
+                    rows="3"
+                    class="border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600 text-2xl tollerus_{{ $neography->machine_name }}"
+                ></textarea>
+            </div>
+            <div class="flex flex-col gap-4 px-6">
                 <template x-for="([keyboardId, keyboard], i) in $store.reorderFunctions.sortItems(keysForm)" :key="keyboardId">
                     <div class="w-full grid gap-1" x-bind:style="
                         'grid-template-columns: repeat(' + keyboard.width + ', minmax(0, 1fr));' +
@@ -70,6 +78,8 @@
                                         'transform-[translateX(16%)] hover:transform-[translate(16%,-6cqw)] focus:transform-[translate(16%,-6cqw)] active:transform-[translate(16%,6cqw)]': rowCycle == 1,
                                         'transform-[translateX(-16%)] hover:transform-[translate(-16%,-6cqw)] focus:transform-[translate(-16%,-6cqw)] active:transform-[translate(-16%,6cqw)]': rowCycle == 2,
                                     }"
+                                    x-bind:data-glyph="key.glyph"
+                                    @click="let e = $refs.keyboard_preview_output; e.value = e.value + $el.dataset.glyph;"
                                 >
                                     <span x-text="key.label" class="text-[20cqw]"></span>
                                     <span x-text="key.glyph" class="text-[60cqw] tollerus_{{ $neography->machine_name }}"></span>
