@@ -1,12 +1,12 @@
 <div id="tabpanel-glyphs" role="tabpanel" x-cloak x-show="tab=='glyphs'" class="flex flex-col gap-6 border-t-4 border-white dark:border-zinc-800 pt-4">
-    <div class="flex flex-col gap-2 italic text-zinc-700 dark:text-zinc-400">
+    <div class="flex flex-col gap-2 italic text-zinc-700 dark:text-zinc-400 px-6 xl:px-0">
         {!! Str::markdown(__('tollerus::ui.glyphs_tab_description')) !!}
     </div>
     <h1 class="font-bold text-2xl px-6 xl:px-0">
         <span>{{ __('tollerus::ui.sections') }}</span>
     </h1>
     <template x-if="Object.keys(glyphsForm).length == 0">
-        <div class="flex flex-col gap-4 items-start w-full" x-data="{ btn: 'extract_from_svg' }">
+        <div class="flex flex-col gap-4 items-start w-full px-6 xl:px-0" x-data="{ btn: 'extract_from_svg' }">
             <x-tollerus::alert>
                 <template x-if="fontForm.{{ \PeterMarkley\Tollerus\Enums\FontFormat::Svg->value }}.blobExists">
                     <p class="m-0">{{ __('tollerus::ui.svg_to_glyphs_notice') }}</p>
@@ -109,15 +109,17 @@
             </template>
         </div>
     </template>
-    <x-tollerus::inputs.missing-data
-        size="medium" floating="true"
-        title="{{ __('tollerus::ui.add_section') }}"
-        class="relative flex flex-row gap-2 justify-center items-center w-full"
-        @click="$wire.createSection();"
-        wire:loading.attr="disabled"
-        wire:target="createSection"
-    >
-        <x-tollerus::icons.plus/>
-        <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_section') }}</span>
-    </x-tollerus::inputs.missing-data>
+    <div class="px-6 xl:px-0">
+        <x-tollerus::inputs.missing-data
+            size="medium" floating="true"
+            title="{{ __('tollerus::ui.add_section') }}"
+            class="relative flex flex-row gap-2 justify-center items-center w-full"
+            @click="$wire.createSection();"
+            wire:loading.attr="disabled"
+            wire:target="createSection"
+        >
+            <x-tollerus::icons.plus/>
+            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_section') }}</span>
+        </x-tollerus::inputs.missing-data>
+    </div>
 </div>

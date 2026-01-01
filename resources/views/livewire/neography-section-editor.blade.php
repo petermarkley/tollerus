@@ -379,17 +379,19 @@
                     </template>
                 </div>
             </template>
-            <x-tollerus::inputs.missing-data
-                size="medium" floating="true"
-                title="{{ __('tollerus::ui.add_glyph_group') }}"
-                class="relative flex flex-row gap-2 justify-center items-center w-full"
-                @click="$wire.createGroup();"
-                wire:loading.attr="disabled"
-                wire:target="createGroup"
-            >
-                <x-tollerus::icons.plus/>
-                <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_glyph_group') }}</span>
-            </x-tollerus::inputs.missing-data>
+            <div class="px-6 xl:px-0">
+                <x-tollerus::inputs.missing-data
+                    size="medium" floating="true"
+                    title="{{ __('tollerus::ui.add_glyph_group') }}"
+                    class="relative flex flex-row gap-2 justify-center items-center w-full"
+                    @click="$wire.createGroup();"
+                    wire:loading.attr="disabled"
+                    wire:target="createGroup"
+                >
+                    <x-tollerus::icons.plus/>
+                    <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_glyph_group') }}</span>
+                </x-tollerus::inputs.missing-data>
+            </div>
         </div>
     </div>
     <x-tollerus::modal/>

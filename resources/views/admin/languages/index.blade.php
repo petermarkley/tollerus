@@ -130,15 +130,17 @@
                     </div>
                 </x-tollerus::panel>
             @endforeach
-            <x-tollerus::inputs.missing-data
-                size="medium" floating="true"
-                title="{{ __('tollerus::ui.add_language') }}"
-                class="relative flex flex-row gap-2 justify-center items-center w-full"
-                @click="$store.languages.create();"
-            >
-                <x-tollerus::icons.plus/>
-                <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_language') }}</span>
-            </x-tollerus::inputs.missing-data>
+            <div class="px-6 xl:px-0">
+                <x-tollerus::inputs.missing-data
+                    size="medium" floating="true"
+                    title="{{ __('tollerus::ui.add_language') }}"
+                    class="relative flex flex-row gap-2 justify-center items-center w-full"
+                    @click="$store.languages.create();"
+                >
+                    <x-tollerus::icons.plus/>
+                    <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_language') }}</span>
+                </x-tollerus::inputs.missing-data>
+            </div>
         </div>
     </div>
     <x-tollerus::modal/>

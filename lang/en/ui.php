@@ -250,9 +250,35 @@ return [
   'delete_glyph' => 'Delete glyph',
   'move_glyph_earlier' => 'Move glyph earlier',
   'move_glyph_later' => 'Move glyph later',
+  'keyboard' => 'Keyboard',
+  'add_keyboard' => 'Add keyboard',
+  'delete_keyboard' => 'Delete keyboard',
+  'move_keyboard_up' => 'Move keyboard up',
+  'move_keyboard_down' => 'Move keyboard down',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * These next few messages have "key" as in a
+   * button on a computer keyboard.
+   */
+  'keys' => 'Keys',
+  'add_key' => 'Add key',
+  'delete_key' => 'Delete key',
+  'move_key_earlier' => 'Move key earlier',
+  'move_key_later' => 'Move key later',
   'svg_to_glyphs_notice' => 'You don\'t have any neography sections! Add some manually, or extract glyphs from your SVG font.',
+  'no_keyboard_notice' => 'You don\'t have any keyboards! Add one manually, or use one of the helper functions below.',
   'extract_from_svg' => 'Extract from SVG',
   'extracting' => 'Extracting ...',
+  'import_from_glyphs' => 'Import from glyphs',
+  'importing' => 'Importing ...',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Width" here refers to the number of buttons/keys in
+   * each row of a keybaord.
+   */
+  'width' => 'Width',
   /**
    * TRANSLATOR NOTE:
    *
@@ -351,6 +377,8 @@ return [
   'delete_section_confirmation' => 'About to delete neography section. Are you sure?',
   'delete_glyph_group_confirmation' => 'About to delete glyph group. Are you sure?',
   'delete_glyph_confirmation' => 'About to delete glyph. Are you sure?',
+  'delete_keyboard_confirmation' => 'About to delete keyboard. Are you sure?',
+  'delete_key_confirmation' => 'About to delete key. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *
@@ -420,6 +448,10 @@ return [
   'ucsur_tip' => 'Consider mapping your conlang glyphs to a [Unicode Private Use Area](:pua_url), perhaps a region not yet claimed in the [Under-ConScript Unicode Registry](:ucsur_url).',
   // 'font_url' = (generated inside Laravel)
   'svg_to_glyphs_notice_no_font' => 'You don\'t have any neography sections! Add some manually, or extract glyphs from your SVG font. (For extraction, you\'ll need to add a font [here](:font_url).)',
+  // 'font_url' = (generated inside Laravel)
+  'no_keyboard_notice_from_svg' => 'This will make keys out of the codepoints in your [SVG font](:font_url) (recommended).',
+  // 'glyphs_url' = (generated inside Laravel)
+  'no_keyboard_notice_from_glyphs' => 'This will make keys out of the glyphs in your ["Glyphs" tab](:glyphs_url) (sometimes incomplete).',
   /**
    * TRANSLATOR NOTE:
    *

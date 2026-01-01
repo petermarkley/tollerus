@@ -8,10 +8,16 @@
             saving: @js(__('tollerus::ui.saving')),
             no_cancel: @js(__('tollerus::ui.no_cancel')),
             yes_delete: @js(__('tollerus::ui.yes_delete')),
+            keyboard: @js(__('tollerus::ui.keyboard')),
+            keys: @js(__('tollerus::ui.keys')),
             extract_from_svg: @js(__('tollerus::ui.extract_from_svg')),
             extracting: @js(__('tollerus::ui.extracting')),
+            import_from_glyphs: @js(__('tollerus::ui.import_from_glyphs')),
+            importing: @js(__('tollerus::ui.importing')),
             delete_font_file_confirmation: @js(__('tollerus::ui.delete_font_file_confirmation')),
             delete_section_confirmation: @js(__('tollerus::ui.delete_section_confirmation')),
+            delete_keyboard_confirmation: @js(__('tollerus::ui.delete_keyboard_confirmation')),
+            delete_key_confirmation: @js(__('tollerus::ui.delete_key_confirmation')),
         },
         tab: $wire.entangle('tab'),
         updateTabFromUrl() {
@@ -37,6 +43,7 @@
             return fileFound;
         },
         glyphsForm: $wire.entangle('glyphsForm'),
+        keysForm: $wire.entangle('keysForm'),
         moveSection(sectElem, sectId, dir) {
             let neighborId = $store.reorderFunctions.getNeighborId(this.glyphsForm, sectId, dir);
             if (neighborId === null) {
@@ -52,13 +59,51 @@
             };
             sectElem.addEventListener('transitionend', onDone);
         },
+        moveKeyboard(keyboardElem, keyboardId, dir) {
+            let neighborId = $store.reorderFunctions.getNeighborId(this.keysForm, keyboardId, dir);
+            if (neighborId === null) {
+                return;
+            }
+            let neighborElem = document.getElementById('keyboard_' + neighborId);
+            $store.reorderFunctions.swapItems(keyboardElem, neighborElem);
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Livewire request
+                $wire.swapKeyboards(keyboardId, neighborId);
+            };
+            keyboardElem.addEventListener('transitionend', onDone);
+        },
+        moveKey(keyboardId, keyElem, keyId, dir) {
+            let neighborId = $store.reorderFunctions.getNeighborId(this.keysForm[keyboardId].keys, keyId, dir);
+            if (neighborId === null) {
+                return;
+            }
+            let neighborElem = document.getElementById('key_' + neighborId);
+            $store.reorderFunctions.swapItems(keyElem, neighborElem);
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Livewire request
+                $wire.swapKeys(keyboardId, keyId, neighborId);
+            };
+            keyElem.addEventListener('transitionend', onDone);
+        },
+        deleteItem(id) {
+            let e = document.getElementById(id);
+            if (e) {
+                e.remove();
+            }
+        },
     }"
     @tab-switch.window="tab = $event.detail.tab; $store.tabFunctions.updateAddress($event.detail.tab);"
     @popstate.window="updateTabFromUrl();"
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
     @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
     @font-delete.window="$wire.fontDelete($event.detail.fontFormat);"
-    @sect-delete.window="$wire.deleteSection($event.detail.sectId);"
+    @sect-delete.window="deleteItem('sect_'+$event.detail.sectId); $wire.deleteSection($event.detail.sectId);"
+    @keyboard-delete.window="deleteItem('keyboard_'+$event.detail.keyboardId); $wire.deleteKeyboard($event.detail.keyboardId);"
+    @key-delete.window="deleteItem('key_'+$event.detail.keyId); $wire.deleteKey($event.detail.keyId);"
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">

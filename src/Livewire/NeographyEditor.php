@@ -13,7 +13,9 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Domain\Neography\Actions\GlyphsToKeyboard;
 use PeterMarkley\Tollerus\Domain\Neography\Actions\SvgToGlyphs;
+use PeterMarkley\Tollerus\Domain\Neography\Actions\SvgToKeyboard;
 use PeterMarkley\Tollerus\Domain\Neography\Services\FontAssetService;
 use PeterMarkley\Tollerus\Enums\FontFormat;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
@@ -30,11 +32,13 @@ class NeographyEditor extends Component
     // Models
     #[Locked] public Neography $neography;
     #[Locked] public array $sects;
+    #[Locked] public array $keyboards;
     // UI input layer
     public array $infoForm = [];
     public array $fontForm = [];
     public array $fontUploads = [];
     public array $glyphsForm = [];
+    public array $keysForm = [];
     // UI display properties
     #[Locked] public array $writingDirectionOpts = [];
 
@@ -80,7 +84,7 @@ class NeographyEditor extends Component
         $this->refreshGlyphsForm();
 
         // Keyboards tab
-        // $this->refreshKeyboardsForm();
+        $this->refreshKeyboardsForm();
     }
     public function updatedFontUploads(TemporaryUploadedFile $file, string $key): void
     {
@@ -115,7 +119,7 @@ class NeographyEditor extends Component
                 $this->refreshGlyphsForm();
             break;
             case 'keyboards':
-                // $this->refreshKeyboardsForm();
+                $this->refreshKeyboardsForm();
             break;
         }
     }
@@ -125,15 +129,6 @@ class NeographyEditor extends Component
             case 'info':
                 $this->infoSave($afterSuccess, $payload);
             break;
-            // case 'font':
-            //     $this->fontSave($afterSuccess, $payload);
-            // break;
-            // case 'glyphs':
-            //     $this->glyphsSave($afterSuccess, $payload);
-            // break;
-            // case 'keyboards':
-            //     $this->keyboardsSave($afterSuccess, $payload);
-            // break;
         }
     }
 
@@ -187,10 +182,33 @@ class NeographyEditor extends Component
             ]];
         })->toArray();
     }
-    // public function refreshKeyboardsForm(): void
-    // {
-    //     //
-    // }
+    public function refreshKeyboardsForm(): void
+    {
+        $this->keyboards = $this->neography->keyboards->sortBy('position')->all();
+        $this->keysForm = collect($this->keyboards)->mapWithKeys(function ($keyboard) {
+            return [$keyboard->id => [
+                'position' => $keyboard->position,
+                'width'    => (string)($keyboard->width), // FIXME - should support actual numbers
+                'keys'     => $keyboard->inputKeys
+                    ->sortBy('position')
+                    ->mapWithKeys(function ($key) {
+                        $glyphLen = mb_strlen($key->glyph, 'UTF-8');
+                        $glyphChars = [];
+                        for ($i=0; $i < $glyphLen; $i++) {
+                            $glyphChars[] = dechex(mb_ord(mb_substr($key->glyph, $i, 1, 'UTF-8'), 'UTF-8'));
+                        }
+                        $glyphHex = implode(', ', $glyphChars);
+                        return [$key->id => [
+                            'label'      => $key->label,
+                            'glyph'      => $key->glyph,
+                            'glyphHex'   => $glyphHex,
+                            'position'   => $key->position,
+                            'renderBase' => (bool)($key->render_base),
+                        ]];
+                    })->toArray(),
+            ]];
+        })->toArray();
+    }
 
     /**
      * Tab-specific save functions
@@ -303,6 +321,42 @@ class NeographyEditor extends Component
         }
         $this->refreshGlyphsForm();
     }
+    public function createKeyboard(): void
+    {
+        //
+    }
+    public function updateKeyboard(string $keyboardId, string $propName, string $propVal, ?string $domId = ''): void
+    {
+        //
+    }
+    public function deleteKeyboard(string $keyboardId): void
+    {
+        //
+    }
+    public function swapKeyboards(string $keyboardId, string $neighborId): void
+    {
+        //
+    }
+    public function createKey(string $keyboardId): void
+    {
+        //
+    }
+    public function updateKey(string $keyboardId, string $keyId, string $propName, string $propVal, ?string $domId = ''): void
+    {
+        //
+    }
+    public function deleteKey(string $keyId): void
+    {
+        //
+    }
+    public function swapKeys(string $keyboardId, string $keyId, string $neighborId): void
+    {
+        //
+    }
+    public function transferKey(string $keyboardId, string $keyId, string $destKeyboard): void
+    {
+        //
+    }
 
     /**
      * Public utility functions
@@ -327,6 +381,30 @@ class NeographyEditor extends Component
             $this->dispatch('svgtoglyphs-success');
         } catch (\Throwable $e) {
             $this->dispatch('svgtoglyphs-failure');
+            return;
+        }
+    }
+    public function extractSvgToKeyboard(): void
+    {
+        $extractAction = new SvgToKeyboard;
+        try {
+            $extractAction($this->neography);
+            $this->refreshKeyboardsForm();
+            $this->dispatch('svgtokeys-success');
+        } catch (\Throwable $e) {
+            $this->dispatch('svgtokeys-failure');
+            return;
+        }
+    }
+    public function importGlyphsToKeyboard(): void
+    {
+        $importAction = new GlyphsToKeyboard;
+        try {
+            $importAction($this->neography);
+            $this->refreshKeyboardsForm();
+            $this->dispatch('glyphstokeys-success');
+        } catch (\Throwable $e) {
+            $this->dispatch('glyphstokeys-failure');
             return;
         }
     }
