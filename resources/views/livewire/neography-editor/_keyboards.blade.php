@@ -93,8 +93,8 @@
                             </div>
                         </div>
                         <div>
-                            {{-- FIXME - adjust text-saveable to allow <input type="number"/> --}}
                             <x-tollerus::inputs.text-saveable
+                                type="number" min="1" max="40"
                                 showLabel="true"
                                 idExpression="'keyboard_' + keyboardId + '_width'"
                                 model="keyboard.width"

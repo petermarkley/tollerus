@@ -6,6 +6,7 @@
     'showLabel' => false,
     'saveEvent' => '',
     'height' => '',
+    'type' => 'text',
 ])
 <div
     x-data="{ id: {{ $idExpression }}, editing: false, originalValue: {{ $model }} }"
@@ -23,6 +24,7 @@
                     x-bind:id="id"
                     model="{{ $model }}"
                     :modelIsAlpine="$modelIsAlpine"
+                    :type="$type"
                     {{ $attributes }}
                 />
             @else
@@ -30,6 +32,7 @@
                     x-bind:id="id"
                     model="{{ $model }}"
                     :modelIsAlpine="$modelIsAlpine"
+                    :type="$type"
                     {{ $attributes }}
                     style="height:{{ $height }};"
                 />

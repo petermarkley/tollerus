@@ -3,6 +3,7 @@
     'label' => '',
     'model' => '',
     'modelIsAlpine' => false,
+    'type' => 'text',
 ])
 <div class="flex flex-col gap-1 items-start flex-grow">
     @if (empty($label))
@@ -11,10 +12,10 @@
         <label for="{{ $id }}">{{ $label }}</label>
     @endif
     @if (empty($model))
-        <input type="text" {{ $attributes->merge(['class' => 'border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600']) }}>
+        <input type="{{ $type }}" {{ $attributes->merge(['class' => 'border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600']) }}>
     @else
         <input
-            type="text"
+            type="{{ $type }}"
             id="{{ $id }}"
             @if (filter_var($modelIsAlpine, FILTER_VALIDATE_BOOLEAN))
                 x-model="{{ $model }}"

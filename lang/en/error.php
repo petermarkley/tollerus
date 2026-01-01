@@ -59,6 +59,7 @@ return [
     'invalid_glyph' => 'Invalid glyph ID',
     'invalid_keyboard' => 'Invalid keyboard ID',
     'invalid_key' => 'Invalid key ID', // "Key" as in a button on a computer keyboard
+    'number_out_of_range' => 'Number is out of range.',
     'duplicate_of_key' => 'This must be unique per keyboard.',
     'max_attempts_adding_unique_name' => 'Reached max attempts while trying to create unique object name.',
     /**

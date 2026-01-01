@@ -194,7 +194,7 @@ class NeographyEditor extends Component
         $this->keysForm = collect($this->keyboards)->mapWithKeys(function ($keyboard) {
             return [$keyboard->id => [
                 'position' => $keyboard->position,
-                'width'    => (string)($keyboard->width), // FIXME - should support actual numbers
+                'width'    => (string)($keyboard->width),
                 'keys'     => $keyboard->inputKeys
                     ->sortBy('position')
                     ->mapWithKeys(function ($key) {
@@ -338,7 +338,7 @@ class NeographyEditor extends Component
         ]);
         // $propName whitelist
         $allowedPropData = [
-            'width'  => ['type' => 'int', 'column' => 'width'],
+            'width'  => ['type' => 'int', 'column' => 'width', 'min' => 1, 'max' => 40],
         ];
         $allowedPropNames = array_keys($allowedPropData);
         if (!in_array($propName, $allowedPropNames, true)) {
@@ -348,7 +348,12 @@ class NeographyEditor extends Component
         // Assign appropriately by type
         switch ($allowedPropData[$propName]['type']) {
             case 'int':
-                $keyboardModel[$allowedPropData[$propName]['column']] = (int)($propVal);
+                $num = (int)($propVal);
+                if ($num < $allowedPropData[$propName]['min'] || $num > $allowedPropData[$propName]['max']) {
+                    $this->dispatch('text-save-failure', id: $domId);
+                    throw \Illuminate\Validation\ValidationException::withMessages(['keyboard.'.$propName => [__('tollerus::error.number_out_of_range')]]);
+                }
+                $keyboardModel[$allowedPropData[$propName]['column']] = $num;
             break;
         }
         // Save to database
