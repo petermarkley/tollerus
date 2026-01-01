@@ -82,7 +82,12 @@
                                     @click="let e = $refs.keyboard_preview_output; e.value = e.value + $el.dataset.glyph;"
                                 >
                                     <span x-text="key.label" class="text-[20cqw]"></span>
-                                    <span x-text="key.glyph" class="text-[60cqw] tollerus_{{ $neography->machine_name }}"></span>
+                                    <template x-if="key.renderBase">
+                                        <span x-text="'\u25CC' + key.glyph" class="text-[60cqw] tollerus_{{ $neography->machine_name }}"></span>
+                                    </template>
+                                    <template x-if="!key.renderBase">
+                                        <span x-text="key.glyph" class="text-[60cqw] tollerus_{{ $neography->machine_name }}"></span>
+                                    </template>
                                     <span x-text="key.glyphHex" class="text-[15cqw] font-mono text-zinc-500 dark:text-zinc-500"></span>
                                 </button>
                             </div>
