@@ -40,6 +40,49 @@
         </div>
     </template>
     <template x-if="Object.keys(keysForm).length > 0">
+        <x-tollerus::drawer open="false" rootClass="w-full" class="flex flex-col gap-4 w-full">
+            <x-slot:heading-button>
+                <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl rounded-bl bg-zinc-500 dark:bg-zinc-400 group-has-hover:bg-zinc-400 group-has-hover:dark:bg-zinc-300 text-white dark:text-zinc-800">
+                    <x-tollerus::icons.eye-slash x-show="!drawerOpen" />
+                    <x-tollerus::icons.eye x-show="drawerOpen" />
+                    <span>{{ __('tollerus::ui.preview_of_keyboard') }}</span>
+                </div>
+            </x-slot:heading-button>
+            <x-slot:heading>
+                <div class="flex-grow border-b-2 border-zinc-500 dark:border-zinc-400"></div>
+            </x-slot:heading>
+            <div class="flex flex-col gap-4 p-6">
+                <template x-for="([keyboardId, keyboard], i) in $store.reorderFunctions.sortItems(keysForm)" :key="keyboardId">
+                    <div class="w-full grid gap-1" x-bind:style="
+                        'grid-template-columns: repeat(' + keyboard.width + ', minmax(0, 1fr));' +
+                        'max-width: min(1200px, ' + 80*keyboard.width + 'px);'
+                    ">
+                        <template x-for="([keyId, key], i) in $store.reorderFunctions.sortItems(keyboard.keys)" :key="keyId">
+                            <div
+                                x-data="{ rowCycle: 0 }"
+                                x-effect="rowCycle = Math.trunc(i / keyboard.width) % 3;"
+                                class="w-full @container"
+                            >
+                                <button
+                                    class="w-full flex flex-col justify-between items-center bg-white dark:bg-zinc-800 rounded-[20cqw] shadow-lg p-1 border border-b-[10cqw] border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 cursor-pointer hover:dark:bg-zinc-700"
+                                    x-bind:class="{
+                                        'hover:transform-[translateY(-6cqw)] focus:transform-[translateY(-6cqw)] active:transform-[translateY(6cqw)]': rowCycle == 0,
+                                        'transform-[translateX(16%)] hover:transform-[translate(16%,-6cqw)] focus:transform-[translate(16%,-6cqw)] active:transform-[translate(16%,6cqw)]': rowCycle == 1,
+                                        'transform-[translateX(-16%)] hover:transform-[translate(-16%,-6cqw)] focus:transform-[translate(-16%,-6cqw)] active:transform-[translate(-16%,6cqw)]': rowCycle == 2,
+                                    }"
+                                >
+                                    <span x-text="key.label" class="text-[20cqw]"></span>
+                                    <span x-text="key.glyph" class="text-[60cqw] tollerus_{{ $neography->machine_name }}"></span>
+                                    <span x-text="key.glyphHex" class="text-[15cqw] font-mono text-zinc-500 dark:text-zinc-500"></span>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </x-tollerus::drawer>
+    </template>
+    <template x-if="Object.keys(keysForm).length > 0">
         <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
             <template x-for="([keyboardId, keyboard], i) in $store.reorderFunctions.sortItems(keysForm)" :key="keyboardId">
                 <div

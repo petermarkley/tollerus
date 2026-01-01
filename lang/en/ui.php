@@ -251,6 +251,7 @@ return [
   'move_glyph_earlier' => 'Move glyph earlier',
   'move_glyph_later' => 'Move glyph later',
   'keyboard' => 'Keyboard',
+  'preview_of_keyboard' => 'Preview of keyboard',
   'add_keyboard' => 'Add keyboard',
   'delete_keyboard' => 'Delete keyboard',
   'move_keyboard_up' => 'Move keyboard up',
