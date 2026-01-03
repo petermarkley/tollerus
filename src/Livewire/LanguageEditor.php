@@ -157,6 +157,12 @@ class LanguageEditor extends Component
             break;
         }
     }
+    public function setSortBy(string $sortBy): void
+    {
+        if (in_array($sortBy, ['transliterated', 'native'])) {
+            $this->sortBy = $sortBy;
+        }
+    }
 
     /**
      * Tab-specific refresh functions

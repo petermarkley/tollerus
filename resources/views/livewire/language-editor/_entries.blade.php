@@ -7,6 +7,8 @@
                 title="{{ __('tollerus::ui.sort_by_transliterated', ['transliterated' => config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))]) }}"
                 x-bind:disabled="{{ ($sortBy=='transliterated' ? 'true':'false') }}"
                 class="flex flex-row gap-2 items-center"
+                wire:click="setSortBy('transliterated')"
+                wire:loading.attr="disabled"
             >
                 <x-tollerus::icons.bars-arrow-down/>
                 <span>{{ __('tollerus::ui.sort_by_transliterated', ['transliterated' => config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))]) }}</span>
@@ -16,6 +18,8 @@
                 title="{{ __('tollerus::ui.sort_by_native') }}"
                 x-bind:disabled="{{ ($sortBy=='native' ? 'true':'false') }}"
                 class="flex flex-row gap-2 items-center"
+                wire:click="setSortBy('native')"
+                wire:loading.attr="disabled"
             >
                 <x-tollerus::icons.bars-arrow-down/>
                 <span>{{ __('tollerus::ui.sort_by_native') }}</span>
