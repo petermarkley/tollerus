@@ -399,6 +399,19 @@ return [
   'previous' => 'Previous',
   'next' => 'Next',
   'last' => 'Last',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * The word 'transliterated' in this phrase is configurable
+   * by the user, so that e.g. in English it can say "Roman."
+   *
+   * See `Config::get('local_transliteration_target')`. This
+   * config value will be given as the substitution token, or
+   * if missing then the value of localization key
+   * `transliterated` (here in this file, above).
+   */
+  'sort_by_transliterated' => 'Sort by :transliterated',
+  'sort_by_native' => 'Sort by native',
 
   /**
    * TRANSLATOR NOTE:

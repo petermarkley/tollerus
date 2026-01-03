@@ -39,6 +39,7 @@ class LanguageEditor extends Component
     public array $infoForm = [];
     public array $neographiesForm = [];
     public array $grammarForm = [];
+    public string $sortBy = 'transliterated';
     // UI display properties
     #[Locked] public array $nativeSpellingCounts = [];
     #[Locked] public array $presetData = [];
@@ -63,6 +64,7 @@ class LanguageEditor extends Component
                 'presetSelectOpts' => $this->presetSelectOpts,
                 'paginator' => $paginator,
                 'language' => $this->language,
+                'sortBy' => $this->sortBy,
             ])->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
