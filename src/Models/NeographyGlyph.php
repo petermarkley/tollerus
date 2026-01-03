@@ -36,7 +36,7 @@ class NeographyGlyph extends Model
      * Find the SVG data of this glyph. Return it as a
      * standalone SVG image, or null on failure
      */
-    public function getSvg(string $classes = null): string|null
+    public function getSvg(?string $classes = null): string|null
     {
         // Initialize
         $neography = $this->neography;
