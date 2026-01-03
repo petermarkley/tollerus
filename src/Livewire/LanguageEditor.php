@@ -58,7 +58,7 @@ class LanguageEditor extends Component
             })->with([
                 'nativeSpellings' => fn ($q) => $q->where('neography_id', $neographyId)
             ])->orderBy('transliterated')
-            ->paginate(50);
+            ->paginate(48);
         return view('tollerus::livewire.language-editor', [
                 'presetSelectOpts' => $this->presetSelectOpts,
                 'paginator' => $paginator,
