@@ -235,7 +235,8 @@ return new class extends Migration
             $table->boolean('render_base'); // If true, glyph will render on a Unicode dotted circle
             $table->string('glyph')
                 ->charset('utf8mb4')
-                ->collation('utf8mb4_bin'); // This is needed for the unique constraint below.
+                ->collation('utf8mb4_bin') // This is needed for the unique constraint below.
+                ->nullable();
             $table->string('transliterated')->nullable();
             $table->string('phonemic')->charset('utf8mb4')->nullable();
             $table->string('pronunciation_transliterated')->nullable();
