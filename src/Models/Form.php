@@ -58,6 +58,20 @@ class Form extends Model
     }
 
     /**
+     * Convenience method(s) expected by the application
+     */
+    public function primaryNativeSpelling(): ?NativeSpelling
+    {
+        $this->loadMissing(['language.primaryNeography']);
+        $neographyId = $this->language?->primaryNeography?->id;
+        if ($this->relationLoaded('nativeSpellings')) {
+            return $this->nativeSpellings->firstWhere('neography_id', $neographyId);
+        } else {
+            return $this->nativeSpellings()->where('neography_id', $neographyId)->first();
+        }
+    }
+
+    /**
      * Factory override
      */
     protected static function newFactory()

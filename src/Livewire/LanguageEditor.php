@@ -49,15 +49,20 @@ class LanguageEditor extends Component
      */
     public function render(): View
     {
+        $neographyId = $this->language->primaryNeography?->id;
+        $paginator = $this->language->forms()
+            ->whereExists(function ($query) {
+                $query->select(\DB::raw(1))
+                ->from('entries')
+                ->whereColumn('entries.primary_form', 'forms.id');
+            })->with([
+                'nativeSpellings' => fn ($q) => $q->where('neography_id', $neographyId)
+            ])->orderBy('transliterated')
+            ->paginate(50);
         return view('tollerus::livewire.language-editor', [
                 'presetSelectOpts' => $this->presetSelectOpts,
-                'entriesPaginator' => $this->language->forms()
-                    ->whereExists(function ($query) {
-                        $query->select(\DB::raw(1))
-                        ->from('entries')
-                        ->whereColumn('entries.primary_form', 'forms.id');
-                    })->orderBy('transliterated')
-                    ->paginate(50),
+                'paginator' => $paginator,
+                'language' => $this->language,
             ])->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
@@ -68,6 +73,7 @@ class LanguageEditor extends Component
     public function mount(Language $language, ?string $tab = null): void
     {
         $this->language = $language;
+        $this->language->loadMissing(['primaryNeography']);
         $this->tab = $tab ?? 'info';
 
         // Info tab
