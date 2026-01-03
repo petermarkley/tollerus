@@ -2,7 +2,7 @@
     <p>Lorem ipsum dolor sit amet.</p>
     <x-tollerus::pane class="flex flex-col gap-4">
         <div>&hellip;</div>
-        <div class="h-auto md:h-240 lg:h-120 flex flex-col justify-start items-start flex-nowrap md:flex-wrap gap-2">
+        <div class="h-auto md:h-200 lg:h-102 flex flex-col justify-start items-start flex-nowrap md:flex-wrap gap-2">
             @foreach ($paginator->items() as $form)
                 @php
                     $nativeSpelling = $form->primaryNativeSpelling();
