@@ -394,6 +394,11 @@ return [
   'table_fold_description' => 'When the table is wrapped (not stacked), should its label hide? Use if redundant with the table above it.',
   'rows_fold' => 'Rows labels are redundant',
   'rows_fold_description' => 'When the table stacks horizontally, should the row labels hide? Use if redundant with the table next to it.',
+  'pagination_navigation' => 'Pagination Navigation',
+  'first' => 'First',
+  'previous' => 'Previous',
+  'next' => 'Next',
+  'last' => 'Last',
 
   /**
    * TRANSLATOR NOTE:

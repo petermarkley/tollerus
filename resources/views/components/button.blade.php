@@ -23,4 +23,7 @@
             @break;
         @endswitch
     @break;
+    @case('inverse')
+        <a {{ $attributes->merge(['class' => 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-500 hover:dark:text-zinc-300 font-bold cursor-pointer disabled:cursor-not-allowed disabled:font-normal disabled:text-zinc-300 disabled:dark:text-zinc-600']) }}>{{ $slot }}</a>
+    @break;
 @endswitch

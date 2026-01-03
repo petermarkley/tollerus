@@ -4,6 +4,8 @@ namespace PeterMarkley\Tollerus\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\Locked;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +26,7 @@ use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class LanguageEditor extends Component
 {
+    use WithPagination, WithoutUrlPagination;
     use HasModelCache;
     private $cacheRoot = 'wordClassGroups';
     public string $tab = 'info';
@@ -46,8 +49,16 @@ class LanguageEditor extends Component
      */
     public function render(): View
     {
-        return view('tollerus::livewire.language-editor', ['presetSelectOpts' => $this->presetSelectOpts])
-            ->layout('tollerus::components.layout', [
+        return view('tollerus::livewire.language-editor', [
+                'presetSelectOpts' => $this->presetSelectOpts,
+                'entriesPaginator' => $this->language->forms()
+                    ->whereExists(function ($query) {
+                        $query->select(\DB::raw(1))
+                        ->from('entries')
+                        ->whereColumn('entries.primary_form', 'forms.id');
+                    })->orderBy('transliterated')
+                    ->paginate(50),
+            ])->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.languages.index'), 'text' => __('tollerus::ui.languages')],
