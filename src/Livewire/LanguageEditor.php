@@ -51,15 +51,26 @@ class LanguageEditor extends Component
     public function render(): View
     {
         $neographyId = $this->language->primaryNeography?->id;
-        $paginator = $this->language->forms()
+        $formsQuery = $this->language->forms()
             ->whereExists(function ($query) {
                 $query->select(\DB::raw(1))
                 ->from('entries')
                 ->whereColumn('entries.primary_form', 'forms.id');
             })->with([
                 'nativeSpellings' => fn ($q) => $q->where('neography_id', $neographyId)
-            ])->orderBy('transliterated')
-            ->paginate(48);
+            ]);
+        switch ($this->sortBy) {
+            case 'transliterated':
+                $formsQuery->orderBy('transliterated');
+            break;
+            case 'native':
+                $formsQuery->leftJoin('native_spellings as ns', function ($join) use ($neographyId) {
+                    $join->on('ns.form_id', '=', 'forms.id')
+                        ->where('ns.neography_id', '=', $neographyId);
+                })->orderBy('ns.sort_key');
+            break;
+        }
+        $paginator = $formsQuery->paginate(48);
         return view('tollerus::livewire.language-editor', [
                 'presetSelectOpts' => $this->presetSelectOpts,
                 'paginator' => $paginator,
@@ -161,6 +172,7 @@ class LanguageEditor extends Component
     {
         if (in_array($sortBy, ['transliterated', 'native'])) {
             $this->sortBy = $sortBy;
+            $this->resetPage();
         }
     }
 

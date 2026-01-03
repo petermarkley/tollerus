@@ -242,6 +242,10 @@ return new class extends Migration
             $table->string('pronunciation_phonemic')->charset('utf8mb4')->nullable();
             $table->string('pronunciation_native')->charset('utf8mb4')->nullable();
             $table->string('note')->charset('utf8mb4')->nullable();
+            // special column for canonical glyph order per neography
+            $table->unsignedSmallInteger('canonical_rank')->nullable();
+            $table->unique(['neography_id', 'canonical_rank'], 'neography_canonical_rank_unique');
+            $table->index(['neography_id', 'canonical_rank'], 'neography_canonical_rank_idx');
             // ensure only one of each glyph per group
             $table->unique(['group_id', 'glyph'], 'group_glyph_unique');
             // ensure only one of each position per group
@@ -453,6 +457,12 @@ return new class extends Migration
                 ->references('id')->on('neographies')
                 ->cascadeOnDelete();
             $table->string('spelling')->charset('utf8mb4');
+            // special column for native sorting
+            $table->string('sort_key', 2048)
+                ->charset('ascii')
+                ->collation('ascii_bin')
+                ->nullable();
+            $table->index(['neography_id', 'sort_key'], 'native_spellings_neography_sort_key_idx');
             // ensure only one of each native spelling per `form`
             $table->unique(['form_id', 'neography_id'], 'form_neography_unique');
         });
