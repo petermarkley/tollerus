@@ -244,7 +244,7 @@ return new class extends Migration
             $table->string('pronunciation_native')->charset('utf8mb4')->nullable();
             $table->string('note')->charset('utf8mb4')->nullable();
             // special column for canonical glyph order per neography
-            $table->unsignedSmallInteger('canonical_rank')->nullable();
+            $table->unsignedInteger('canonical_rank')->nullable();
             $table->unique(['neography_id', 'canonical_rank'], 'neography_canonical_rank_unique');
             $table->index(['neography_id', 'canonical_rank'], 'neography_canonical_rank_idx');
             // ensure only one of each glyph per group
