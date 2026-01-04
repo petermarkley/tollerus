@@ -69,6 +69,9 @@ class TollerusServiceProvider extends ServiceProvider
 		Livewire::component('tollerus.auto-inflection-editor', \PeterMarkley\Tollerus\Livewire\AutoInflectionEditor::class);
 		// Model observers
 		\PeterMarkley\Tollerus\Models\Neography::observe(\PeterMarkley\Tollerus\Observers\NeographyObserver::class);
+		\PeterMarkley\Tollerus\Models\NeographySection::observe(\PeterMarkley\Tollerus\Observers\NeographySectionObserver::class);
+		\PeterMarkley\Tollerus\Models\NeographyGlyphGroup::observe(\PeterMarkley\Tollerus\Observers\NeographyGlyphGroupObserver::class);
+		\PeterMarkley\Tollerus\Models\NeographyGlyph::observe(\PeterMarkley\Tollerus\Observers\NeographyGlyphObserver::class);
 		// UI localization
 		$this->loadTranslationsFrom(__DIR__.'/../../lang', 'tollerus');
 	}
