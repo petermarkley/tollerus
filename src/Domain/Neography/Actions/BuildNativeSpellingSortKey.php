@@ -12,23 +12,23 @@ final class BuildNativeSpellingSortKey
     /**
      * This will populate the `native_spellings.sort_key` column.
      */
-    public function __invoke(NativeSpelling $nativeSpelling, ?Collection $canonicalGlyphs = null): void
+    public function __invoke(NativeSpelling $nativeSpelling, ?Collection $rankLookup = null): void
     {
         $nativeSpelling->loadMissing(['neography.glyphs']);
         $neography = $nativeSpelling->neography;
 
         // Establish native definition of 'alphabetical'
-        if ($canonicalGlyphs === null) {
+        if ($rankLookup === null) {
             $canonicalGlyphs = $neography->glyphs
                 ->where('render_base', false) // Skip marks
                 ->whereNotNull('canonical_rank')
                 ->sortBy('canonical_rank');
+            $rankLookup = $canonicalGlyphs->pluck('canonical_rank', 'glyph'); // Results in: [glyph => rank]
         }
 
         // Prepare some data
         $padLen = BuildGlyphCanonicalRanks::SEGMENT_WIDTH * 3;
         $spellingChars = mb_str_split($nativeSpelling->spelling, 1, 'UTF-8');
-        $rankLookup = $canonicalGlyphs->pluck('canonical_rank', 'glyph'); // Results in: [glyph => rank]
 
         // Build sort key
         $rankSequence = collect($spellingChars)
