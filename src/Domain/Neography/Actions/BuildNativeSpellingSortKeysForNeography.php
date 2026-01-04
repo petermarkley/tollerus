@@ -16,14 +16,9 @@ final class BuildNativeSpellingSortKeysForNeography
             'glyphs',
             'nativeSpellings',
         ]);
-        // Pre-load this once and pass as a parameter to save work
-        $canonicalGlyphs = $neography->glyphs
-            ->where('render_base', false) // Skip marks
-            ->whereNotNull('canonical_rank')
-            ->sortBy('canonical_rank');
-        $rankLookup = $canonicalGlyphs->pluck('canonical_rank', 'glyph'); // Results in: [glyph => rank]
         foreach ($neography->nativeSpellings as $nativeSpelling) {
-            app(BuildNativeSpellingSortKey::class)($nativeSpelling, $rankLookup);
+            app(BuildNativeSpellingSortKey::class)($nativeSpelling);
         }
+        BuildNativeSpellingSortKey::clearRankLookup($neography->id);
     }
 }
