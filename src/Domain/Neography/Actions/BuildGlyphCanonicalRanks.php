@@ -20,6 +20,17 @@ final class BuildGlyphCanonicalRanks
         return DB::connection($connection)->transaction(function () use ($neography) {
             $count = 0;
             $neography->loadMissing(['sections.glyphGroups.glyphs']);
+            /**
+             * To avoid violating the unique constraint, let's null all
+             * of them before recalculating.
+             */
+            foreach ($neography->sections as $sect) {
+                foreach ($sect->glyphGroups as $group) {
+                    foreach ($group->glyphs as $glyph) {
+                        NeographyGlyph::whereKey($glyph->id)->update(['canonical_rank' => null]);
+                    }
+                }
+            }
             $w = 10 ** self::SEGMENT_WIDTH;
             foreach ($neography->sections as $sect) {
                 foreach ($sect->glyphGroups as $group) {

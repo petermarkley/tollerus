@@ -2,12 +2,14 @@
 
 namespace PeterMarkley\Tollerus\Observers;
 
+use Illuminate\Support\Facades\DB;
+
 use PeterMarkley\Tollerus\Domain\Neography\Actions\BuildGlyphCanonicalRanks;
 use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
 
 class NeographyGlyphGroupObserver
 {
-    private static array $alreadyRan = [];
+    private static array $scheduled = [];
 
     public function created(NeographyGlyphGroup $group): void
     {
@@ -25,11 +27,13 @@ class NeographyGlyphGroupObserver
     {
         $group->loadMissing(['section.neography']);
         $neography = $group->section->neography;
-        if (isset(self::$alreadyRan[$neography->id])) {
+        if (isset(self::$scheduled[$neography->id])) {
             // Only call action once per request
             return;
         }
-        self::$alreadyRan[$neography->id] = true;
-        app(BuildGlyphCanonicalRanks::class)($neography);
+        self::$scheduled[$neography->id] = true;
+        DB::afterCommit(function () use ($neography) {
+            app(BuildGlyphCanonicalRanks::class)($neography->fresh());
+        });
     }
 }
