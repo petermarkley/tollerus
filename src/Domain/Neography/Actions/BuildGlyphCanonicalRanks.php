@@ -2,6 +2,8 @@
 
 namespace PeterMarkley\Tollerus\Domain\Neography\Actions;
 
+use Illuminate\Support\Facades\DB;
+use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\NeographyGlyph;
 
 final class BuildGlyphCanonicalRanks
@@ -9,19 +11,28 @@ final class BuildGlyphCanonicalRanks
     private const SEGMENT_WIDTH = 4;
 
     /**
-     * This will populate the `neography_glyphs.canonical_rank` column.
+     * This will populate the `neography_glyphs.canonical_rank` column for
+     * all the glyphs in the given neography.
      */
-    public function __invoke(NeographyGlyph $glyph): void
+    public function __invoke(Neography $neography): int
     {
-        // Find relevant models
-        $glyph->loadMissing(['group.section']);
-        $group = $glyph->group;
-        $sect = $group->section;
-        // Calculate rank
-        $w = 10 ** self::SEGMENT_WIDTH;
-        $rank = $glyph->position
-            + $group->position * $w
-            + $sect->position * ($w ** 2);
-        NeographyGlyph::whereKey($glyph->id)->update(['canonical_rank' => $rank]);
+        $connection = config('tollerus.connection', 'tollerus');
+        return DB::connection($connection)->transaction(function () use ($neography) {
+            $count = 0;
+            $neography->loadMissing(['sections.glyphGroups.glyphs']);
+            $w = 10 ** self::SEGMENT_WIDTH;
+            foreach ($neography->sections as $sect) {
+                foreach ($sect->glyphGroups as $group) {
+                    foreach ($group->glyphs as $glyph) {
+                        $rank = $glyph->position
+                            + $group->position * $w
+                            + $sect->position * ($w ** 2);
+                        NeographyGlyph::whereKey($glyph->id)->update(['canonical_rank' => $rank]);
+                        $count++;
+                    }
+                }
+            }
+            return $count;
+        });
     }
 }

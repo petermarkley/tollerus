@@ -2,35 +2,34 @@
 
 namespace PeterMarkley\Tollerus\Observers;
 
-use Illuminate\Support\Facades\DB;
-
 use PeterMarkley\Tollerus\Domain\Neography\Actions\BuildGlyphCanonicalRanks;
 use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
 
 class NeographyGlyphGroupObserver
 {
+    private static array $alreadyRan = [];
+
     public function created(NeographyGlyphGroup $group): void
     {
         $this->buildRank($group);
     }
+
     public function updated(NeographyGlyphGroup $group): void
     {
         if ($group->wasChanged(['position', 'section_id'])) {
             $this->buildRank($group);
         }
     }
-    private function buildRank(NeographyGlyphGroup $group): int
+
+    private function buildRank(NeographyGlyphGroup $group): void
     {
-        $action = new BuildGlyphCanonicalRanks;
-        $group->loadMissing(['section.glyphGroups.glyphs.group.section']);
-        $glyphs = $group->section->glyphGroups->flatMap->glyphs;
-        return DB::connection($connection)->transaction(function () use ($glyphs, $action) {
-            $count = 0;
-            foreach ($glyphs as $glyph) {
-                $action($glyph);
-                $count++;
-            }
-            return $count;
-        });
+        $group->loadMissing(['section.neography']);
+        $neography = $group->section->neography;
+        if (isset(self::$alreadyRan[$neography->id])) {
+            // Only call action once per request
+            return;
+        }
+        self::$alreadyRan[$neography->id] = true;
+        app(BuildGlyphCanonicalRanks::class)($neography);
     }
 }

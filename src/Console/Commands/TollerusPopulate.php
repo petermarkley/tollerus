@@ -10,11 +10,13 @@ use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
 use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
 use PeterMarkley\Tollerus\Domain\Neography\Services\FontAssetService;
+use PeterMarkley\Tollerus\Domain\Neography\Actions\BuildGlyphCanonicalRanks;
 use PeterMarkley\Tollerus\Domain\Neography\Actions\SvgToKeyboard;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
+use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\WordClass;
 
 class TollerusPopulate extends Command
@@ -46,6 +48,10 @@ class TollerusPopulate extends Command
          */
         $language = Language::factory()->withNeography()->create();
         $loadGrammarPreset($language, 'english');
+        // Build canonical glyph order for neographies
+        foreach (Neography::all() as $neography) {
+            app(BuildGlyphCanonicalRanks::class)($neography);
+        }
 
         /**
          * Step 2: Run actions

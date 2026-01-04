@@ -5,6 +5,7 @@ namespace PeterMarkley\Tollerus\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 
+use PeterMarkley\Tollerus\Domain\Neography\Actions\BuildGlyphCanonicalRanks;
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
 use PeterMarkley\Tollerus\Enums\NeographySectionType;
 use PeterMarkley\Tollerus\Models\Entry;
@@ -330,6 +331,8 @@ class FileImportSeeder extends Seeder
             'neography_id' => $this->currentNeo->id,
         ]);
         $pivot->save();
+        // Calculate canonical glyph order
+        app(BuildGlyphCanonicalRanks::class)($this->currentNeo);
     }
 
     /**
