@@ -8,7 +8,7 @@ use PeterMarkley\Tollerus\Models\NeographyGlyph;
 
 final class BuildGlyphCanonicalRanks
 {
-    private const SEGMENT_WIDTH = 4;
+    public const SEGMENT_WIDTH = 4;
 
     /**
      * This will populate the `neography_glyphs.canonical_rank` column for

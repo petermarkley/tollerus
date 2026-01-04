@@ -72,6 +72,7 @@ class TollerusServiceProvider extends ServiceProvider
 		\PeterMarkley\Tollerus\Models\NeographySection::observe(\PeterMarkley\Tollerus\Observers\NeographySectionObserver::class);
 		\PeterMarkley\Tollerus\Models\NeographyGlyphGroup::observe(\PeterMarkley\Tollerus\Observers\NeographyGlyphGroupObserver::class);
 		\PeterMarkley\Tollerus\Models\NeographyGlyph::observe(\PeterMarkley\Tollerus\Observers\NeographyGlyphObserver::class);
+		\PeterMarkley\Tollerus\Models\NativeSpelling::observe(\PeterMarkley\Tollerus\Observers\NativeSpellingObserver::class);
 		// UI localization
 		$this->loadTranslationsFrom(__DIR__.'/../../lang', 'tollerus');
 	}
