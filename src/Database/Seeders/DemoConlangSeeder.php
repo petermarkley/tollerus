@@ -27,7 +27,7 @@ use PeterMarkley\Tollerus\Models\WordClass;
  *
  *   php artisan tollerus:populate
  */
-class GeneratedConlangSeeder extends Seeder
+class DemoConlangSeeder extends Seeder
 {
     public function run(): void
     {

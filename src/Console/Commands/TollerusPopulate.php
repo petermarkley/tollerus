@@ -4,7 +4,7 @@ namespace PeterMarkley\Tollerus\Console\Commands;
 
 use Illuminate\Console\Command;
 
-use PeterMarkley\Tollerus\Database\Seeders\GeneratedConlangSeeder;
+use PeterMarkley\Tollerus\Database\Seeders\DemoConlangSeeder;
 
 class TollerusPopulate extends Command
 {
@@ -20,13 +20,13 @@ class TollerusPopulate extends Command
      *
      * @var string
      */
-    protected $description = 'Generate random conlang data for dev/testing.';
+    protected $description = 'Procedurally generate a full demo conlang: phonology, neography, grammar, lexicon, and entries.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        (new GeneratedConlangSeeder)->run();
+        (new DemoConlangSeeder)->run();
     }
 }
