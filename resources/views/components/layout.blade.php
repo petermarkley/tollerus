@@ -15,8 +15,10 @@
         <div class="flex flex-col gap-4 w-full items-stretch h-full min-h-screen">
             <header class="w-full py-2 bg-white dark:bg-zinc-800 shadow">
                 <div class="md:max-w-[1200px] mx-auto px-6 xl:px-0">
-                    <x-tollerus::logo.mono class="h-6 block dark:hidden text-zinc-700"/>
-                    <x-tollerus::logo.mono light class="h-6 hidden dark:block"/>
+                    <a href="{{ route('tollerus.admin.index') }}" class="text-zinc-900 dark:text-zinc-300 hover:text-zinc-900 hover:dark:text-zinc-300">
+                        <x-tollerus::logo.mono class="h-6 block dark:hidden text-zinc-700"/>
+                        <x-tollerus::logo.mono light class="h-6 hidden dark:block"/>
+                    </a>
                 </div>
             </header>
             @if (isset($breadcrumbs))

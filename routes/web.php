@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 
-use PeterMarkley\Tollerus\Http\Controllers\HelloController;
+use PeterMarkley\Tollerus\Http\Controllers\AdminController;
 use PeterMarkley\Tollerus\Http\Controllers\LanguageController;
 use PeterMarkley\Tollerus\Http\Controllers\NeographyController;
 use PeterMarkley\Tollerus\Livewire\AutoInflectionEditor;
@@ -21,14 +21,14 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
     ->middleware($baseMiddleware)
     ->group(function () use ($adminMiddleware) {
 
-        Route::get('/', [HelloController::class, 'index'])->name('hello');
+        Route::get('/', fn () => redirect(route('tollerus.admin.index')));
 
         // Routes for the admin area of the app
         Route::prefix('admin')
             ->as('admin.')
             ->middleware($adminMiddleware)
             ->group(function () {
-                Route::get('/', [HelloController::class, 'index'])->name('index');
+                Route::get('/', [AdminController::class, 'index'])->name('index');
                 Route::prefix('languages')
                     ->as('languages.')
                     ->group(function () {

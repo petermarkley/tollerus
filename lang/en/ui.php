@@ -1,6 +1,26 @@
 <?php
 
 return [
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Conlang" is short for "constructed language," i.e. an
+   * artificial or fictional language. "Tollerus" is the
+   * name of this software package.
+   */
+  'tollerus_welcome' => 'Welcome to Tollerus, the Laravel system for conlang dictionaries!',
+  'tollerus_admin_area' => 'Tollerus Admin Area',
+  'how_to_use' => 'How to use',
+  'coming_soon' => '(This is coming soon!)',
+  'tollerus_on_github' => 'Tollerus on GitHub',
+  /**
+   * TRANSLATOR NOTE:
+   *
+   * "Peter Markley" -- that's me, the author of this
+   * software. 👋😊
+   */
+  'peter_markleys_portfolio' => 'Peter Markley\'s Portfolio',
+  'start_here' => 'Start here!',
   'admin' => 'Admin',
   'language' => 'Language',
   'languages' => 'Languages',
