@@ -20,7 +20,7 @@ use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\WordClass;
 
 /**
- * Generates a procedurally constructed demo conlang:
+ * Procedurally generates a full demo conlang:
  * phonology, neography, grammar, lexicon, and entries.
  *
  * To run from console:
