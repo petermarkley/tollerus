@@ -18,9 +18,9 @@ class LanguageFactory extends Factory
     /**
      * This will allow easily passing the Language name to the Neography
      */
-    public function withNeography(): static
+    public function withNeography($pauseQueue = false): static
     {
-        return $this->afterCreating(function (Language $langModel) {
+        return $this->afterCreating(function (Language $langModel) use ($pauseQueue) {
             // Create the Neography, with custom name
             $neoModel = Neography::factory()
                 ->withGlyphSet(
@@ -28,7 +28,7 @@ class LanguageFactory extends Factory
                     name: $langModel->name,
                     num: mt_rand(15, 30),
                     mix: ! (bool) mt_rand(0,2), // true 1/3rd of the time
-                )->create();
+                )->create(['sort_keys_job_queued' => $pauseQueue]);
             // Add connection between Neography and Language
             $pivot = new LanguageNeography([
                 'language_id' => $langModel->id,

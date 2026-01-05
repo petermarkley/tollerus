@@ -133,6 +133,10 @@ class FileImportSeeder extends Seeder
             $this->currentFileKey = $key;
             $this->readLanguage($langXML);
         }
+        // Allow queued jobs again
+        foreach (Neography::all() as $neography) {
+            Neography::whereKey($neography->id)->update(['sort_keys_job_queued' => false]);
+        }
     }
 
     /**
@@ -288,6 +292,7 @@ class FileImportSeeder extends Seeder
         } else {
             // If none found, create one
             $this->currentNeo = new Neography();
+            $this->currentNeo->sort_keys_job_queued = true; // Pause queued jobs until we're done
             $this->currentNeo->machine_name = $neoName;
             if (isset($neoXML['human'])) {
                 $this->currentNeo->name = $neoXML['human']->__toString();

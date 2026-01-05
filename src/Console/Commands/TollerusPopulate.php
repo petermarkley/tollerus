@@ -46,7 +46,7 @@ class TollerusPopulate extends Command
         /**
          * Step 1: Generate language, neography, and grammar
          */
-        $language = Language::factory()->withNeography()->create();
+        $language = Language::factory()->withNeography(pauseQueue: true)->create();
         $loadGrammarPreset($language, 'english');
         // Build canonical glyph order for neographies
         foreach (Neography::all() as $neography) {
@@ -158,5 +158,9 @@ class TollerusPopulate extends Command
             ->withLexemes($language)
             ->count(150)
             ->create();
+        // Allow queued jobs again
+        foreach (Neography::all() as $neography) {
+            Neography::whereKey($neography->id)->update(['sort_keys_job_queued' => false]);
+        }
     }
 }
