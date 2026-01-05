@@ -69,6 +69,21 @@ return [
 
     /**
      * =========================================================
+     *                   SYS-ADMIN CONFIG
+     * =========================================================
+     */
+
+    /**
+     * Should Tollerus dispatch queued jobs, or just run
+     * everything synchronously?
+     *
+     * (If your app's `config('queue.default')` is 'sync'
+     * anyway, this doesn't matter.)
+     */
+    'enable_queue' => true,
+
+    /**
+     * =========================================================
      *                    DATABASE CONFIG
      * =========================================================
      */

@@ -52,6 +52,7 @@ return new class extends Migration
             $table->boolean('boustrophedon')->default(false);
             $table->boolean('visible')
                 ->default(true);
+            $table->boolean('sort_keys_job_queued')->default(false);
         });
         
         $connection->create('languages', function (Blueprint $table) {
