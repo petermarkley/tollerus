@@ -52,6 +52,11 @@ class LanguageEditor extends Component
     public function render(): View
     {
         $neographyId = $this->language->primaryNeography?->id;
+        /**
+         * It's best if we do all of our data prep and sorting
+         * in the database here, because we're paginating the
+         * result.
+         */
         $entriesQuery = $this->language->entries()
             ->leftJoin('forms as pf', 'pf.id', '=', 'entries.primary_form')
             ->leftJoin('native_spellings as ns', function ($join) use ($neographyId) {
@@ -63,6 +68,7 @@ class LanguageEditor extends Component
                 'ns.spelling as native',
                 'ns.sort_key as sort_key',
             ]);
+        // Set the sort method
         switch ($this->sortBy) {
             case 'transliterated':
                 $entriesQuery->orderBy('pf.transliterated');
@@ -71,6 +77,7 @@ class LanguageEditor extends Component
                 $entriesQuery->orderBy('ns.sort_key');
             break;
         }
+        // Run the query
         $paginator = $entriesQuery->paginate(48);
         return view('tollerus::livewire.language-editor', [
                 'presetSelectOpts' => $this->presetSelectOpts,
