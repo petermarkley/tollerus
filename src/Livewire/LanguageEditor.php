@@ -7,6 +7,7 @@ use Livewire\Attributes\Locked;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -51,26 +52,26 @@ class LanguageEditor extends Component
     public function render(): View
     {
         $neographyId = $this->language->primaryNeography?->id;
-        $formsQuery = $this->language->forms()
-            ->whereExists(function ($query) {
-                $query->select(\DB::raw(1))
-                ->from('entries')
-                ->whereColumn('entries.primary_form', 'forms.id');
-            })->with([
-                'nativeSpellings' => fn ($q) => $q->where('neography_id', $neographyId)
+        $entriesQuery = $this->language->entries()
+            ->leftJoin('forms as pf', 'pf.id', '=', 'entries.primary_form')
+            ->leftJoin('native_spellings as ns', function ($join) use ($neographyId) {
+                $join->on('ns.form_id', '=', 'pf.id');
+                $join->where('ns.neography_id', '=', $neographyId ?? -1);
+            })->select([
+                'entries.*',
+                'pf.transliterated as transliterated',
+                'ns.spelling as native',
+                'ns.sort_key as sort_key',
             ]);
         switch ($this->sortBy) {
             case 'transliterated':
-                $formsQuery->orderBy('transliterated');
+                $entriesQuery->orderBy('pf.transliterated');
             break;
             case 'native':
-                $formsQuery->leftJoin('native_spellings as ns', function ($join) use ($neographyId) {
-                    $join->on('ns.form_id', '=', 'forms.id')
-                        ->where('ns.neography_id', '=', $neographyId);
-                })->orderBy('ns.sort_key');
+                $entriesQuery->orderBy('ns.sort_key');
             break;
         }
-        $paginator = $formsQuery->paginate(48);
+        $paginator = $entriesQuery->paginate(48);
         return view('tollerus::livewire.language-editor', [
                 'presetSelectOpts' => $this->presetSelectOpts,
                 'paginator' => $paginator,

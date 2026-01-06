@@ -26,18 +26,23 @@
             </x-tollerus::inputs.button>
         </div>
         <div class="p-4 h-auto md:h-200 lg:h-104 flex flex-col justify-start items-start flex-nowrap md:flex-wrap gap-2 border-y-2 border-zinc-200 dark:border-zinc-700">
-            @foreach ($paginator->items() as $form)
-                @php
-                    $nativeSpelling = $form->primaryNativeSpelling();
-                @endphp
+            @foreach ($paginator->items() as $entry)
                 <x-tollerus::button
                     type="inverse"
                     href="#"
                 >
-                    <div class="flex flex-row gap-4 justify-start items-center">
-                        <span>{{ $form->transliterated }}</span>
-                        <span class="tollerus_{{ $language->primaryNeography->machine_name }}">{{ $nativeSpelling->spelling }}</span>
-                    </div>
+                    @if ($entry['transliterated'])
+                        <div class="flex flex-row gap-4 justify-start items-center">
+                            <span>{{ $entry['transliterated'] }}</span>
+                            @if ($language->primaryNeography)
+                                <span class="tollerus_{{ $language->primaryNeography->machine_name }}">{{ $entry['native'] }}</span>
+                            @else
+                                <span>{{ $entry['native'] }}</span>
+                            @endif
+                        </div>
+                    @else
+                        <span class="italic font-normal">{{ __('tollerus::ui.entry_nameless') }}</span>
+                    @endif
                 </x-tollerus::button>
             @endforeach
         </div>

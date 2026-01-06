@@ -61,6 +61,7 @@ return [
   'no_grammar' => '(No Grammar)',
   'entries' => 'Entries', // Word entries in a dictionary
   'no_entries' => '(No Entries)',
+  'entry_nameless' => '(entry)',
   'none' => '(none)',
   'writing_direction' => 'Writing direction',
   'writing_direction_primary' => 'Primary',
