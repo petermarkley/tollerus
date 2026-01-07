@@ -1,5 +1,12 @@
-<div>
+<div class="w-full flex flex-row gap-4 justify-center items-center">
     @if ($paginator->hasPages())
+        <div class="hidden md:block">
+            <p class="italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.pagination_showing_numbers', [
+                'start' => ($paginator->currentPage()-1)*$paginator->perPage() + 1,
+                'end' => ($paginator->currentPage() == $paginator->lastPage() ? $paginator->total() : $paginator->currentPage()*$paginator->perPage()),
+                'total' => $paginator->total(),
+            ]) }}</p>
+        </div>
         <nav role="navigation" aria-label="{{ __('tollerus::ui.pagination_navigation') }}" class="flex flex-row gap-2 justify-center items-center">
             @if ($paginator->onFirstPage())
                 <x-tollerus::inputs.button type="inverse" title="{{ __('tollerus::ui.first') }}" disabled>

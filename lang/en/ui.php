@@ -76,6 +76,13 @@ return [
   /**
    * TRANSLATOR NOTE:
    *
+   * This prints at the bottom of a page with paginated
+   * results, telling what numbers of items are shown.
+   */
+  'pagination_showing_numbers' => 'Showing :start-:end of :total',
+  /**
+   * TRANSLATOR NOTE:
+   *
    * "Boustrophedon" is a Greek term meaning "as the ox
    * plows," and refers to a writing mode where the
    * direction switches on each line break.
