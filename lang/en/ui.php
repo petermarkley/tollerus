@@ -511,6 +511,6 @@ return [
    * There's also some bold print, marked with
    * **double-asterisks,** used here for emphasis.
    */
-  'glyphs_tab_description' => "These settings define your neography's **public-facing primer material.**\n\nFor example, if your font has typographical variants that aren't meaningful to a reader, they can be omitted. In this tab, the goal is to document the neography and help someone learn it.",
+  'glyphs_tab_description' => "These settings define your neography's **canonical glyph order** (or \"alphabetic order\"), and its **public-facing primer material**.\n\nFor example, if your font has typographical variants that aren't meaningful to a reader, or marks that aren't counted alphabetically, they can often be omitted here. In this tab, the goal is to document the neography and help someone learn it.",
   'keyboard_tab_description' => "These settings define an input utility that lets you **type using your own neography.**\n\nIn most cases you'll want one keyboard button for each glyph in your font. (Because what's the point of a glyph that you can't type?)",
 ];
