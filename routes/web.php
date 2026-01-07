@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 
 use PeterMarkley\Tollerus\Http\Controllers\AdminController;
+use PeterMarkley\Tollerus\Http\Controllers\EntryController;
 use PeterMarkley\Tollerus\Http\Controllers\LanguageController;
 use PeterMarkley\Tollerus\Http\Controllers\NeographyController;
 use PeterMarkley\Tollerus\Livewire\AutoInflectionEditor;
@@ -44,10 +45,11 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                                 Route::get('/inflection-tables', InflectionTableEditor::class)->name('inflection-tables');
                                 Route::get('/inflection-rows/{row}/auto', AutoInflectionEditor::class)->name('auto-inflection');
                             });
-                            Route::prefix('entries/{entry}')
-                                ->as('entry.')
+                            Route::prefix('entries')
+                                ->as('entries.')
                                 ->group(function () {
-                                    Route::get('/', fn () => 'fixme')->name('edit');
+                                    Route::post('/', [EntryController::class, 'store'])->name('store');
+                                    Route::get('/{entry}', fn () => 'fixme')->name('edit');
                                 });
                         });
                     });

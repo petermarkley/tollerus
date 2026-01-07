@@ -265,6 +265,8 @@ return [
   'move_section_down' => 'Move section down',
   'add_glyph_group' => 'Add glyph group',
   'delete_glyph_group' => 'Delete glyph group',
+  'add_entry' => 'Add entry',
+  'delete_entry' => 'Delete entry',
   /**
    * TRANSLATOR NOTE:
    *
