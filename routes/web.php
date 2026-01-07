@@ -44,6 +44,11 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                                 Route::get('/inflection-tables', InflectionTableEditor::class)->name('inflection-tables');
                                 Route::get('/inflection-rows/{row}/auto', AutoInflectionEditor::class)->name('auto-inflection');
                             });
+                            Route::prefix('entries/{entry}')
+                                ->as('entry.')
+                                ->group(function () {
+                                    Route::get('/', fn () => 'fixme')->name('edit');
+                                });
                         });
                     });
                 Route::prefix('neographies')

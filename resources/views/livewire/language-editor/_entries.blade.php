@@ -29,7 +29,7 @@
             @foreach ($paginator->items() as $entry)
                 <x-tollerus::button
                     type="inverse"
-                    href="#"
+                    href="{{ route('tollerus.admin.languages.entry.edit', ['language' => $language, 'entry' => $entry]) }}"
                 >
                     @if ($entry['transliterated'])
                         <div class="flex flex-row gap-4 justify-start items-center">
