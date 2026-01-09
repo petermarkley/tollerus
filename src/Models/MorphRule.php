@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
-use PeterMarkley\Tollerus\Enums\PatternType;
+use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 
 class MorphRule extends Model
@@ -18,7 +18,7 @@ class MorphRule extends Model
     public $timestamps = false;
     protected $casts = [
         'target_type' => MorphRuleTargetType::class,
-        'pattern_type' => PatternType::class,
+        'pattern_type' => MorphRulePatternType::class,
     ];
     protected $guarded = [];
 
@@ -50,17 +50,17 @@ class MorphRule extends Model
     #[Scope]
     protected function onTransliterated(Builder $query): void
     {
-        $query->where('pattern_type', PatternType::Transliterated);
+        $query->where('pattern_type', MorphRulePatternType::Transliterated);
     }
     #[Scope]
     protected function onPhonemic(Builder $query): void
     {
-        $query->where('pattern_type', PatternType::Phonemic);
+        $query->where('pattern_type', MorphRulePatternType::Phonemic);
     }
     #[Scope]
     protected function onNative(Builder $query, int $neographyId): void
     {
-        $query->where('pattern_type', PatternType::Native)
+        $query->where('pattern_type', MorphRulePatternType::Native)
             ->where('neography_id', $neographyId);
     }
 }

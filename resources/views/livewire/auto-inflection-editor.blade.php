@@ -174,7 +174,7 @@
                             @php
                                 $targetStr = $tabTargetName . '_input';
                                 $targetLocal = \PeterMarkley\Tollerus\Enums\MorphRuleTargetType::from($targetStr)->localize();
-                                $patternLocal = \PeterMarkley\Tollerus\Enums\PatternType::from($tabPatternName)->localize();
+                                $patternLocal = \PeterMarkley\Tollerus\Enums\MorphRulePatternType::from($tabPatternName)->localize();
                             @endphp
                             <h2 class="font-bold text-xl flex flex-row gap-4 items-baseline">
                                 <span>{{ __('tollerus::ui.applied_to_input', ['input' => $targetLocal]) }}</span>

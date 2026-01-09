@@ -2,7 +2,7 @@
 
 namespace PeterMarkley\Tollerus\Domain\Morphology\Services;
 
-use PeterMarkley\Tollerus\Enums\PatternType;
+use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Domain\Morphology\DTO\AutoInflectorInput;
 use PeterMarkley\Tollerus\Models\InflectionTableRow;
 
@@ -13,7 +13,7 @@ final class AutoInflector
     public function __construct(
         InflectionTableRow $row,
         string $base,
-        PatternType $type,
+        MorphRulePatternType $type,
         int $neographyId = null,
     ) {
         $this->input = AutoInflectorInput::fromRow(
