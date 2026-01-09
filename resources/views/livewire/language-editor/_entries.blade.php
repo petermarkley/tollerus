@@ -11,6 +11,7 @@
                         <select
                             id="search_type"
                             wire:model="searchType"
+                            title="{{ __('tollerus::ui.search_type') }}"
                             class="bg-white dark:bg-zinc-800 hover:bg-zinc-100 hover:dark:bg-zinc-700 cursor-pointer py-2 px-4 h-11 flex justify-center items-center appearance-none rounded-l-[22px] rounded-r-lg pr-6 font-bold border-2 border-zinc-500 dark:border-zinc-400"
                         >
                             @foreach (\PeterMarkley\Tollerus\Enums\SearchType::cases() as $thisSearchType)
