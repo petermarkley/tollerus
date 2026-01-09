@@ -4,7 +4,7 @@
             <div class="p-2 flex flex-col md:flex-row gap-2 justify-center items-center">
                 <form
                     wire:submit="search"
-                    class="w-80 h-14 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-full p-1 flex flex-row gap-1 items-stretch shadow-md"
+                    class="w-full h-14 bg-white dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-full p-1 flex flex-row gap-1 items-stretch shadow-md"
                 >
                     <div class="relative flex justify-center items-center">
                         <label for="search_type" class="sr-only">{{ __('tollerus::ui.search_type') }}</label>
@@ -42,7 +42,7 @@
                         </x-tollerus::inputs.button>
                     </div>
                 </form>
-                <div class="flex flex-row gap-2 justify-center items-center">
+                <div class="flex flex-row gap-2 justify-center items-center shrink-0 whitespace-nowrap">
                     <x-tollerus::inputs.button
                         type="secondary"
                         title="{{ __('tollerus::ui.sort_by_transliterated', ['transliterated' => config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))]) }}"
