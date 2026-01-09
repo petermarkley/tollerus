@@ -14,7 +14,7 @@
                             class="bg-white dark:bg-zinc-800 hover:bg-zinc-100 hover:dark:bg-zinc-700 cursor-pointer py-2 px-4 h-11 flex justify-center items-center appearance-none rounded-l-[22px] rounded-r-lg pr-6 font-bold border-2 border-zinc-500 dark:border-zinc-400"
                         >
                             @foreach (\PeterMarkley\Tollerus\Enums\SearchType::cases() as $thisSearchType)
-                                <option value="{{ $thisSearchType->value }}" @if($searchType=='$thisSearchType->value') selected @endif>{{ mb_ucfirst($thisSearchType->localize()) }}</option>
+                                <option value="{{ $thisSearchType->value }}">{{ mb_ucfirst($thisSearchType->localize()) }}</option>
                             @endforeach
                         </select>
                         <x-tollerus::icons.triangle class="absolute pointer-events-none right-2 top-1/2 scale-[80%] rotate-90 -translate-y-1/2" />
