@@ -25,6 +25,7 @@
                             model="searchStr"
                             modelIsAlpine="false"
                             class="appearance-none w-full border-x-none border-y-none"
+                            placeholder="{{ __('tollerus::ui.search_for_entry') }}"
                         >
                             <label for="search_string" class="sr-only">{{ __('tollerus::ui.search_term') }}</label>
                         </x-tollerus::inputs.text>

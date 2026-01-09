@@ -170,15 +170,15 @@ return [
   'definition' => 'Definition', // i.e. the meaning of a word
   /**
    * TRANSLATOR NOTE:
-   *
    * "Search type" is the label for a setting on a search
    * bar for word entries. It lets the user pick
    * 'transliterated', 'native', or 'definition' as the thing
    * that they're searching.
-   *
-   * "Search term" is of course what the user types in the
-   * search bar.
-   */
+  *
+  * "Search term" is what the user types in the search bar.
+  * "Search for entry ..." is a placeholder in the text box.
+  */
+  'search_for_entry' => 'Search for entry ...',
   'search_type' => 'Search type',
   'search_term' => 'Search term',
   'submit_search' => 'Submit search',
