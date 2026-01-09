@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 use PeterMarkley\Tollerus\Enums\FontFormat;
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
-use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
+use PeterMarkley\Tollerus\Enums\PatternType;
 use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
 use PeterMarkley\Tollerus\Domain\Neography\Services\FontAssetService;
 use PeterMarkley\Tollerus\Domain\Neography\Actions\BuildGlyphCanonicalRanks;
@@ -124,20 +124,20 @@ class DemoConlangSeeder extends Seeder
             $row->morphRules()->create([
                 'pattern' => $pattern,
                 'target_type' => MorphRuleTargetType::BaseInput,
-                'pattern_type' => MorphRulePatternType::Transliterated,
+                'pattern_type' => PatternType::Transliterated,
                 'order' => 1,
             ]);
             $row->morphRules()->create([
                 'pattern' => $pattern,
                 'target_type' => MorphRuleTargetType::BaseInput,
-                'pattern_type' => MorphRulePatternType::Phonemic,
+                'pattern_type' => PatternType::Phonemic,
                 'order' => 1,
             ]);
             $row->morphRules()->create([
                 'pattern' => $pattern,
                 'neography_id' => $language->primary_neography,
                 'target_type' => MorphRuleTargetType::BaseInput,
-                'pattern_type' => MorphRulePatternType::Native,
+                'pattern_type' => PatternType::Native,
                 'order' => 1,
             ]);
         }

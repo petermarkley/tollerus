@@ -11,7 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
-use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
+use PeterMarkley\Tollerus\Enums\PatternType;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\GlobalId;
@@ -122,7 +122,7 @@ class AutoInflectionEditor extends Component
                     'transliterated' => $rulesCollection
                         ->filter(fn ($r) => (
                             $r->target_type == MorphRuleTargetType::BaseInput &&
-                            $r->pattern_type == MorphRulePatternType::Transliterated
+                            $r->pattern_type == PatternType::Transliterated
                         ))->sortBy('order')->mapWithKeys(fn ($rule) => [
                             $rule->id => [
                                 'pattern' => $rule->pattern,
@@ -133,7 +133,7 @@ class AutoInflectionEditor extends Component
                     'phonemic' => $rulesCollection
                         ->filter(fn ($r) => (
                             $r->target_type == MorphRuleTargetType::BaseInput &&
-                            $r->pattern_type == MorphRulePatternType::Phonemic
+                            $r->pattern_type == PatternType::Phonemic
                         ))->sortBy('order')->mapWithKeys(fn ($rule) => [
                             $rule->id => [
                                 'pattern' => $rule->pattern,
@@ -147,7 +147,7 @@ class AutoInflectionEditor extends Component
                             'rules' => $rulesCollection
                                 ->filter(fn ($r) => (
                                     $r->target_type == MorphRuleTargetType::BaseInput &&
-                                    $r->pattern_type == MorphRulePatternType::Native &&
+                                    $r->pattern_type == PatternType::Native &&
                                     $r->neography_id == $neography->id
                                 ))->sortBy('order')->mapWithKeys(fn ($rule) => [
                                     $rule->id => [
@@ -163,7 +163,7 @@ class AutoInflectionEditor extends Component
                     'transliterated' => $rulesCollection
                         ->filter(fn ($r) => (
                             $r->target_type == MorphRuleTargetType::ParticleInput &&
-                            $r->pattern_type == MorphRulePatternType::Transliterated
+                            $r->pattern_type == PatternType::Transliterated
                         ))->sortBy('order')->mapWithKeys(fn ($rule) => [
                             $rule->id => [
                                 'pattern' => $rule->pattern,
@@ -174,7 +174,7 @@ class AutoInflectionEditor extends Component
                     'phonemic' => $rulesCollection
                         ->filter(fn ($r) => (
                             $r->target_type == MorphRuleTargetType::ParticleInput &&
-                            $r->pattern_type == MorphRulePatternType::Phonemic
+                            $r->pattern_type == PatternType::Phonemic
                         ))->sortBy('order')->mapWithKeys(fn ($rule) => [
                             $rule->id => [
                                 'pattern' => $rule->pattern,
@@ -188,7 +188,7 @@ class AutoInflectionEditor extends Component
                             'rules' => $rulesCollection
                                 ->filter(fn ($r) => (
                                     $r->target_type == MorphRuleTargetType::ParticleInput &&
-                                    $r->pattern_type == MorphRulePatternType::Native &&
+                                    $r->pattern_type == PatternType::Native &&
                                     $r->neography_id == $neography->id
                                 ))->sortBy('order')->mapWithKeys(fn ($rule) => [
                                     $rule->id => [
@@ -246,7 +246,7 @@ class AutoInflectionEditor extends Component
         try {
             // Get context
             $targetType = MorphRuleTargetType::from($tabTarget . '_input');
-            $patternType = MorphRulePatternType::from($tabPattern);
+            $patternType = PatternType::from($tabPattern);
             $neographyId = (empty($tabNeography) ? null : (int)$tabNeography);
             $rulesCollection = $this->getRulesCollection($targetType, $patternType, $neographyId);
             $nextPosition = $rulesCollection->max('order') + 1;
@@ -305,10 +305,10 @@ class AutoInflectionEditor extends Component
         try {
             // Get context
             $targetType = MorphRuleTargetType::from($tabTarget . '_input');
-            $patternType = MorphRulePatternType::from($tabPattern);
+            $patternType = PatternType::from($tabPattern);
             $neographyId = (empty($tabNeography) ? null : (int)$tabNeography);
             $rulesCollection = $this->getRulesCollection($targetType, $patternType, $neographyId);
-            if ($patternType == MorphRulePatternType::Native) {
+            if ($patternType == PatternType::Native) {
                 $formArray = $this->ruleForm['rules'][$tabTarget][$tabPattern][(string)$tabNeography]['rules'];
             } else {
                 $formArray = $this->ruleForm['rules'][$tabTarget][$tabPattern];
@@ -345,7 +345,7 @@ class AutoInflectionEditor extends Component
     /**
      * Utility functions
      */
-    private function getRulesCollection(MorphRuleTargetType $targetType, MorphRulePatternType $patternType, int|null $neographyId): Collection
+    private function getRulesCollection(MorphRuleTargetType $targetType, PatternType $patternType, int|null $neographyId): Collection
     {
         return collect($this->rules)->filter(fn ($r) => (
             $r->target_type == $targetType &&

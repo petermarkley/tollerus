@@ -5,9 +5,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use PeterMarkley\Tollerus\Enums\GlobalIdKind;
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
-use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Enums\NeographySectionType;
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
+use PeterMarkley\Tollerus\Enums\PatternType;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
 
 return new class extends Migration
@@ -629,7 +629,7 @@ return new class extends Migration
                 ->references('id')->on('neographies')
                 ->cascadeOnDelete();
             $table->enum('target_type', MorphRuleTargetType::values());
-            $table->enum('pattern_type', MorphRulePatternType::values());
+            $table->enum('pattern_type', PatternType::values());
             /**
              * This defines the order in which the calls to preg_replace()
              * should happen on a given inflection row.

@@ -2,7 +2,7 @@
 
 namespace PeterMarkley\Tollerus\Enums;
 
-enum MorphRulePatternType: string
+enum PatternType: string
 {
     case Transliterated = 'transliterated';
     case Phonemic = 'phonemic';

@@ -2,8 +2,8 @@
 
 namespace PeterMarkley\Tollerus\Domain\Morphology\DTO;
 
-use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
+use PeterMarkley\Tollerus\Enums\PatternType;
 use PeterMarkley\Tollerus\Models\InflectionTableRow;
 
 final class AutoInflectorInput
@@ -33,8 +33,8 @@ final class AutoInflectorInput
      *
      * Each call to this DTO class collects the morph rules for one
      * base-particle pair. A single word form is expected to call it
-     * 3 or more times, varying MorphRulePatternType and/or
-     * neographyId each time.
+     * 3 or more times, varying PatternType and/or neographyId each
+     * time.
      *
      * The DTO takes this form:
      * {
@@ -60,9 +60,9 @@ final class AutoInflectorInput
     public static function fromRow(
         InflectionTableRow $row,
         string $base,
-        MorphRulePatternType $type,
+        PatternType $type,
         /**
-         * This is only used if $type = MorphRulePatternType::Native
+         * This is only used if $type = PatternType::Native
          */
         int $neographyId = null,
     ): self
@@ -70,7 +70,7 @@ final class AutoInflectorInput
         if ($row->src_particle === null) {
             throw new \LogicException('Can\'t auto-inflect with a null source particle.');
         }
-        if ($type == MorphRulePatternType::Native && $neographyId === null) {
+        if ($type == PatternType::Native && $neographyId === null) {
             throw new \InvalidArgumentException('AutoInflector called in Native mode with a null neographyId.');
         }
         $row->loadMissing([
@@ -79,9 +79,9 @@ final class AutoInflectorInput
         ]);
         $form = $row->sourceParticle;
         $particleString = match($type) {
-            MorphRulePatternType::Transliterated => $form->transliterated,
-            MorphRulePatternType::Phonemic => $form->phonemic,
-            MorphRulePatternType::Native => $form
+            PatternType::Transliterated => $form->transliterated,
+            PatternType::Phonemic => $form->phonemic,
+            PatternType::Native => $form
                 ->nativeSpellings
                 ->first(fn($t)=>$t->neography_id==$neographyId)
                 ->spelling ?? null,

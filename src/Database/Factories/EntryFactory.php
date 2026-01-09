@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 use PeterMarkley\Tollerus\Domain\Morphology\Services\AutoInflector;
-use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
+use PeterMarkley\Tollerus\Enums\PatternType;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
@@ -118,12 +118,12 @@ class EntryFactory extends Factory
                             $transliterated = new AutoInflector(
                                 row: $row,
                                 base: $baseForm->transliterated,
-                                type: MorphRulePatternType::Transliterated,
+                                type: PatternType::Transliterated,
                             )->inflect();
                             $phonemic = new AutoInflector(
                                 row: $row,
                                 base: $baseForm->phonemic,
-                                type: MorphRulePatternType::Phonemic,
+                                type: PatternType::Phonemic,
                             )->inflect();
                             $form = Form::factory()
                                 ->for($lexeme)
@@ -138,7 +138,7 @@ class EntryFactory extends Factory
                                     base: $baseForm->nativeSpellings
                                         ->first(fn($t)=>$t->neography_id===$neography->id)
                                         ->spelling,
-                                    type: MorphRulePatternType::Native,
+                                    type: PatternType::Native,
                                     neographyId: $neography->id,
                                 )->inflect();
                                 NativeSpelling::factory()
