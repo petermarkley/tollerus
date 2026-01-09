@@ -41,6 +41,8 @@ class LanguageEditor extends Component
     public array $neographiesForm = [];
     public array $grammarForm = [];
     public string $sortBy = 'transliterated';
+    public string $searchStr = '';
+    public string $searchType = 'transliterated';
     // UI display properties
     #[Locked] public array $nativeSpellingCounts = [];
     #[Locked] public array $presetData = [];
@@ -84,6 +86,8 @@ class LanguageEditor extends Component
                 'paginator' => $paginator,
                 'language' => $this->language,
                 'sortBy' => $this->sortBy,
+                'searchType' => $this->searchType,
+                'searchStr' => $this->searchStr,
             ])->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
@@ -146,6 +150,11 @@ class LanguageEditor extends Component
         $this->presetSelectOpts = collect($this->presetData)
             ->mapWithKeys(fn ($p, $k) => [$k => $p['name']])
             ->toArray();
+    }
+
+    public function search()
+    {
+        $this->resetPage();
     }
 
     /**

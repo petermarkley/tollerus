@@ -12,7 +12,7 @@
         <label for="{{ $id }}">{{ $label }}</label>
     @endif
     @if (empty($model))
-        <input type="{{ $type }}" {{ $attributes->merge(['class' => 'border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600']) }}>
+        <input type="{{ $type }}" {{ $attributes->merge(['class' => 'border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600']) }} />
     @else
         <input
             type="{{ $type }}"

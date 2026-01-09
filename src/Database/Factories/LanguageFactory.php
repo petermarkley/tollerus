@@ -93,7 +93,7 @@ class LanguageFactory extends Factory
 
         return [
             'machine' => strtolower($name),
-            'human' => ucfirst($name)
+            'human' => mb_ucfirst($name)
         ];
     }
 

@@ -171,6 +171,20 @@ return [
   /**
    * TRANSLATOR NOTE:
    *
+   * "Search type" is the label for a setting on a search
+   * bar for word entries. It lets the user pick
+   * 'transliterated', 'native', or 'definition' as the thing
+   * that they're searching.
+   *
+   * "Search term" is of course what the user types in the
+   * search bar.
+   */
+  'search_type' => 'Search type',
+  'search_term' => 'Search term',
+  'submit_search' => 'Submit search',
+  /**
+   * TRANSLATOR NOTE:
+   *
    * "Transfer" as in move or transplant an object from one
    * place to another. Used for moving glyphs across groups
    * or neography sections.
