@@ -167,6 +167,7 @@ return [
   'spoken_form' => 'Spoken form',
   'note' => 'Note',
   'public_id' => 'Public ID',
+  'definition' => 'Definition', // i.e. the meaning of a word
   /**
    * TRANSLATOR NOTE:
    *
