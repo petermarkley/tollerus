@@ -59,7 +59,8 @@ return [
   'no_neographies' => '(No Neographies)',
   'grammar' => 'Grammar',
   'no_grammar' => '(No Grammar)',
-  'entries' => 'Entries', // Word entries in a dictionary
+  'entry' => 'Entry', // A word entry in a dictionary
+  'entries' => 'Entries',
   'no_entries' => '(No Entries)',
   'entry_nameless' => '(entry)',
   'none' => '(none)',
@@ -168,6 +169,7 @@ return [
   'note' => 'Note',
   'public_id' => 'Public ID',
   'definition' => 'Definition', // i.e. the meaning of a word
+  'word_origin' => 'Word origin',
   /**
    * TRANSLATOR NOTE:
    * "Search type" is the label for a setting on a search
@@ -283,6 +285,8 @@ return [
   'delete_glyph_group' => 'Delete glyph group',
   'add_entry' => 'Add entry',
   'delete_entry' => 'Delete entry',
+  'move_word_class_up' => 'Move word class up',
+  'move_word_class_down' => 'Move word class down',
   /**
    * TRANSLATOR NOTE:
    *
@@ -426,6 +430,7 @@ return [
   'delete_glyph_confirmation' => 'About to delete glyph. Are you sure?',
   'delete_keyboard_confirmation' => 'About to delete keyboard. Are you sure?',
   'delete_key_confirmation' => 'About to delete key. Are you sure?',
+  'delete_entry_confirmation' => 'About to delete entry. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *

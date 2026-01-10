@@ -50,7 +50,10 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                                 ->as('entries.')
                                 ->group(function () {
                                     Route::post('/', [EntryController::class, 'store'])->name('store');
-                                    Route::get('/{entry}', EntryEditor::class)->name('edit');
+                                    Route::prefix('{entry}')->group(function () {
+                                        Route::delete('/', [EntryController::class, 'destroy'])->name('destroy');
+                                        Route::get('/', EntryEditor::class)->name('edit');
+                                    });
                                 });
                         });
                     });

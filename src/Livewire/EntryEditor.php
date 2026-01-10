@@ -57,7 +57,20 @@ class EntryEditor extends Component
      */
     public function refreshForm(): void
     {
-        // $this->infoForm = $this->language->toArray();
+        $this->entry->loadMissing([
+            'lexemes.wordClass',
+            'lexemes.forms.nativeSpellings',
+            'lexemes.senses.subsenses',
+        ]);
+        $this->infoForm = [
+            'etym' => $this->entry->etym,
+            'lexemes' => $this->entry->lexemes->mapWithKeys(function ($lexeme) {
+                return [$lexeme->id => [
+                    'wordClassName' => $lexeme->wordClass->name,
+                    'position' => $lexeme->position,
+                ]];
+            }),
+        ];
     }
     public function infoSave(string $afterSuccess = '', array $payload = []): void
     {
@@ -89,6 +102,14 @@ class EntryEditor extends Component
      * Granular CRUD-type functions
      */
     public function createLexeme(): void
+    {
+        //
+    }
+    public function deleteLexeme(string $lexemeId): void
+    {
+        //
+    }
+    public function swapLexemes(string $lexemeId, string $neighborId): void
     {
         //
     }
