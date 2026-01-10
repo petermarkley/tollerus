@@ -37,7 +37,7 @@
                             size="small"
                             htmlType="submit"
                             title="{{ __('tollerus::ui.submit_search') }}"
-                            class="w-10 h-10 my-1 mr-1 rounded-l-full rounded-r-full flex justify-center items-center"
+                            class="w-10 h-10 my-1 mr-[0.125rem] rounded-l-full rounded-r-full flex justify-center items-center"
                         >
                             <x-tollerus::icons.magnifying-glass class="w-7 h-7"/>
                             <span class="sr-only">{{ __('tollerus::ui.submit_search') }}</span>
