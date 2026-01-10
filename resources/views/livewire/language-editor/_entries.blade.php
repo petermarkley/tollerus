@@ -1,5 +1,5 @@
 <x-tollerus::panel id="tabpanel-entries" role="tabpanel" x-cloak x-show="tab=='entries'" class="flex flex-col gap-6">
-    @if (count($paginator->items()) > 0)
+    @if ($hasEntries)
         <x-tollerus::pane withPadding="false" class="flex flex-col">
             <div class="p-2 flex flex-col md:flex-row gap-2 justify-center items-center">
                 <form
@@ -70,25 +70,29 @@
                 </div>
             </div>
             <div class="p-4 h-auto md:h-200 lg:h-104 flex flex-col justify-start items-start flex-nowrap md:flex-wrap gap-2 border-y-2 border-zinc-200 dark:border-zinc-700">
-                @foreach ($paginator->items() as $entry)
-                    <x-tollerus::button
-                        type="inverse"
-                        href="{{ route('tollerus.admin.languages.entries.edit', ['language' => $language, 'entry' => $entry]) }}"
-                    >
-                        @if ($entry['transliterated'])
-                            <div class="flex flex-row gap-4 justify-start items-center">
-                                <span>{{ $entry['transliterated'] }}</span>
-                                @if ($language->primaryNeography)
-                                    <span class="tollerus_{{ $language->primaryNeography->machine_name }}">{{ $entry['native'] }}</span>
-                                @else
-                                    <span>{{ $entry['native'] }}</span>
-                                @endif
-                            </div>
-                        @else
-                            <span class="italic font-normal">{{ __('tollerus::ui.entry_nameless') }}</span>
-                        @endif
-                    </x-tollerus::button>
-                @endforeach
+                @if (count($paginator->items()) > 0)
+                    @foreach ($paginator->items() as $entry)
+                        <x-tollerus::button
+                            type="inverse"
+                            href="{{ route('tollerus.admin.languages.entries.edit', ['language' => $language, 'entry' => $entry]) }}"
+                        >
+                            @if ($entry['transliterated'])
+                                <div class="flex flex-row gap-4 justify-start items-center">
+                                    <span>{{ $entry['transliterated'] }}</span>
+                                    @if ($language->primaryNeography)
+                                        <span class="tollerus_{{ $language->primaryNeography->machine_name }}">{{ $entry['native'] }}</span>
+                                    @else
+                                        <span>{{ $entry['native'] }}</span>
+                                    @endif
+                                </div>
+                            @else
+                                <span class="italic font-normal">{{ __('tollerus::ui.entry_nameless') }}</span>
+                            @endif
+                        </x-tollerus::button>
+                    @endforeach
+                @else
+                    <span class="italic text-zinc-700 dark:text-zinc-400">{{ __('tollerus::ui.no_results') }}</span>
+                @endif
             </div>
             <div class="p-4">
                 {{ $paginator->links('tollerus::components.pagination-links', data: ['scrollTo' => false]) }}

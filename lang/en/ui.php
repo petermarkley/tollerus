@@ -182,6 +182,7 @@ return [
   'search_type' => 'Search type',
   'search_term' => 'Search term',
   'submit_search' => 'Submit search',
+  'no_results' => '(No results)',
   /**
    * TRANSLATOR NOTE:
    *

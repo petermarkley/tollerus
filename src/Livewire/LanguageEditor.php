@@ -14,6 +14,7 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Enums\SearchType;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Language;
@@ -59,6 +60,7 @@ class LanguageEditor extends Component
          * in the database here, because we're paginating the
          * result.
          */
+        $hasEntries = $this->language->entries()->exists();
         $entriesQuery = $this->language->entries()
             ->leftJoin('forms as pf', 'pf.id', '=', 'entries.primary_form')
             ->leftJoin('native_spellings as ns', function ($join) use ($neographyId) {
@@ -79,12 +81,27 @@ class LanguageEditor extends Component
                 $entriesQuery->orderBy('ns.sort_key');
             break;
         }
+        // Search filter
+        if (!empty($this->searchStr)) {
+            switch (SearchType::from($this->searchType)) {
+                case SearchType::Transliterated:
+                    $entriesQuery->where('pf.transliterated', 'like', '%'.$this->searchStr.'%');
+                break;
+                case SearchType::Native:
+                    $entriesQuery->where('ns.spelling', 'like', '%'.$this->searchStr.'%');
+                break;
+                case SearchType::Definition:
+                    // FIXME
+                break;
+            }
+        }
         // Run the query
         $paginator = $entriesQuery->paginate(48);
         return view('tollerus::livewire.language-editor', [
                 'presetSelectOpts' => $this->presetSelectOpts,
                 'paginator' => $paginator,
                 'language' => $this->language,
+                'hasEntries' => $hasEntries,
                 'sortBy' => $this->sortBy,
                 'searchType' => $this->searchType,
                 'searchStr' => $this->searchStr,
