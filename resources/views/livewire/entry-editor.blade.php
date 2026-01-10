@@ -106,7 +106,7 @@
                         <x-tollerus::panel class="flex flex-col gap-6 flex-grow rounded-l-none">
                             <h2 class="flex flex-row gap-2 items-center justify-between">
                                 <div class="font-bold text-xl flex flex-row gap-2 items-center">
-                                    <x-tollerus::icons.lightbulb class="h-8"/>
+                                    <x-tollerus::icons.lightbulb />
                                     <span x-text="lexeme.wordClassName" x-bind:class="{ 'font-normal italic': lexeme.wordClassName.length==0 }"></span>
                                 </div>
                                 <x-tollerus::inputs.button
