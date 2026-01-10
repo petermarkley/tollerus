@@ -7,7 +7,6 @@ use Livewire\Attributes\Locked;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;

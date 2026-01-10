@@ -8,6 +8,7 @@ use PeterMarkley\Tollerus\Http\Controllers\EntryController;
 use PeterMarkley\Tollerus\Http\Controllers\LanguageController;
 use PeterMarkley\Tollerus\Http\Controllers\NeographyController;
 use PeterMarkley\Tollerus\Livewire\AutoInflectionEditor;
+use PeterMarkley\Tollerus\Livewire\EntryEditor;
 use PeterMarkley\Tollerus\Livewire\InflectionTableEditor;
 use PeterMarkley\Tollerus\Livewire\LanguageEditor;
 use PeterMarkley\Tollerus\Livewire\NeographyEditor;
@@ -49,7 +50,7 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                                 ->as('entries.')
                                 ->group(function () {
                                     Route::post('/', [EntryController::class, 'store'])->name('store');
-                                    Route::get('/{entry}', fn () => 'fixme')->name('edit');
+                                    Route::get('/{entry}', EntryEditor::class)->name('edit');
                                 });
                         });
                     });
