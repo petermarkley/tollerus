@@ -25,6 +25,7 @@ class EntryEditor extends Component
     // UI input layer
     public array $infoForm = [];
     // UI display properties
+    #[Locked] public array $wordClassGroups = [];
 
     /**
      * Livewire hooks
@@ -66,11 +67,31 @@ class EntryEditor extends Component
             'etym' => $this->entry->etym,
             'lexemes' => $this->entry->lexemes->mapWithKeys(function ($lexeme) {
                 return [$lexeme->id => [
+                    'wordClassId' => $lexeme->wordClass->id,
                     'wordClassName' => $lexeme->wordClass->name,
                     'position' => $lexeme->position,
                 ]];
             }),
         ];
+        $this->language->loadMissing([
+            'wordClassGroups.wordClasses',
+            'wordClassGroups.primaryClass',
+        ]);
+        $this->wordClassGroups = $this->language->wordClassGroups->sortBy('id')->map(function ($group) {
+            if ($group->primaryClass === null) {
+                $groupName = __('tollerus::ui.group_nameless');
+            } else {
+                $groupName = $group->primaryClass->name;
+            }
+            return [
+                'id' => $group->id,
+                'name' => $groupName,
+                'classes' => $group->wordClasses->sortBy('id')->map(fn ($class) => [
+                    'id' => $class->id,
+                    'name' => $class->name,
+                ])->toArray(),
+            ];
+        })->toArray();
     }
     public function infoSave(string $afterSuccess = '', array $payload = []): void
     {
@@ -101,7 +122,7 @@ class EntryEditor extends Component
     /**
      * Granular CRUD-type functions
      */
-    public function createLexeme(): void
+    public function createLexeme(string $wordClassId): void
     {
         //
     }

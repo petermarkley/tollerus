@@ -12,6 +12,7 @@
             delete_word_class_confirmation: @js(__('tollerus::ui.delete_word_class_confirmation')),
         },
         infoForm: $wire.entangle('infoForm'),
+        wordClassGroups: $wire.entangle('wordClassGroups'),
         moveLexeme(lexemeElem, lexemeId, dir) {
             let neighborId = $store.reorderFunctions.getNeighborId(this.infoForm.lexemes, lexemeId, dir);
             if (neighborId === null) {
@@ -133,17 +134,34 @@
                 </template>
             </div>
             <div class="px-6 xl:px-0">
-                <x-tollerus::inputs.missing-data
-                    size="medium" floating="true"
-                    title="{{ __('tollerus::ui.add_word_class') }}"
-                    class="relative flex flex-row gap-2 justify-center items-center w-full"
-                    @click="$wire.createLexeme();"
-                    wire:loading.attr="disabled"
-                    wire:target="createLexeme"
-                >
-                    <x-tollerus::icons.plus/>
-                    <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_word_class') }}</span>
-                </x-tollerus::inputs.missing-data>
+                <x-tollerus::inputs.dropdown class="relative w-full">
+                    <x-slot:button>
+                        <x-tollerus::inputs.missing-data
+                            size="medium" floating="true"
+                            title="{{ __('tollerus::ui.add_word_class') }}"
+                            class="relative flex flex-row gap-2 justify-center items-center w-full"
+                            @click="open=true"
+                        >
+                            <x-tollerus::icons.plus/>
+                            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_word_class') }}</span>
+                        </x-tollerus::inputs.missing-data>
+                    </x-slot:button>
+                    <template x-for="wordClassGroup in wordClassGroups">
+                        <div class="flex flex-col items-start">
+                            <span class="italic opacity-50">{{ __('tollerus::ui.group_nameless') }}</span>
+                            <template x-for="wordClass in wordClassGroup.classes">
+                                <x-tollerus::inputs.button
+                                    type="inverse"
+                                    size="small"
+                                    x-bind:class="{'ml-4': true, 'line-through': Object.values(infoForm.lexemes).map((l)=>l.wordClassId).includes(wordClass.id)}"
+                                    x-bind:disabled="Object.values(infoForm.lexemes).map((l)=>l.wordClassId).includes(wordClass.id);"
+                                    x-text="wordClass.name"
+                                    @click="open=false; $wire.createLexeme(wordClass.id);"
+                                />
+                            </template>
+                        </div>
+                    </template>
+                </x-tollerus::inputs.dropdown>
             </div>
         </div>
     </div>
