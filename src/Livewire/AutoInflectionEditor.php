@@ -76,6 +76,9 @@ class AutoInflectionEditor extends Component
     }
     public function mount(Language $language, WordClassGroup $wordClassGroup, InflectionTableRow $row): void
     {
+        if ($wordClassGroup->language_id != $language->id) {
+            abort(404);
+        }
         $row->loadMissing('inflectionTable');
         if ($row->inflectionTable->word_class_group_id != $wordClassGroup->id) {
             abort(404);
