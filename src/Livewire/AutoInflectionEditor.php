@@ -76,13 +76,36 @@ class AutoInflectionEditor extends Component
     }
     public function mount(Language $language, WordClassGroup $wordClassGroup, InflectionTableRow $row): void
     {
+        /**
+         * `/tollerus/admin/languages/{language}/grammar/{wordClassGroup}/inflection-rows/{row}/auto`
+         *
+         * We can't use `->scopeBindings()` on this route, because the
+         * user-friendly URL flattens the hierarchy of WordClassGroup >
+         * InflectionTable > InflectionTableRow, skipping over tables.
+         * (Because we handle tables as a single unit at
+         * `grammar/{wordClassGroup}/inflection-tables`, with no
+         * dedicated page per table.)
+         *
+         * Since there's no foreign key reference in the row object
+         * pointing to its grandparent word class group, the database
+         * schema makes it very awkward to have a model relation for
+         * this or therefore a scoped model binding.
+         *
+         * As a consequence of all that, we now have to manually
+         * validate the model bindings for this page, across the entire
+         * hierarchy. Not a big deal, but it's worth understanding
+         * why we have to do this here.
+         */
+        // Validate binding for Language > WordClassGroup
         if ($wordClassGroup->language_id != $language->id) {
             abort(404);
         }
+        // Validate binding for WordClassGroup >> InflectionTableRow
         $row->loadMissing('inflectionTable');
         if ($row->inflectionTable->word_class_group_id != $wordClassGroup->id) {
             abort(404);
         }
+
         $this->language = $language;
         $this->language->loadMissing([
             'neographies',

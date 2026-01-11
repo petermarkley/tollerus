@@ -46,6 +46,11 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                                 Route::get('/inflection-tables', InflectionTableEditor::class)
                                     ->scopeBindings()
                                     ->name('inflection-tables');
+                                /**
+                                 * We can't use `->scopeBindings()` here. See comment in
+                                 * Livewire class `mount()` method, where we manually
+                                 * validate the model bindings.
+                                 */
                                 Route::get('/inflection-rows/{row}/auto', AutoInflectionEditor::class)->name('auto-inflection');
                             });
                             Route::prefix('entries')
