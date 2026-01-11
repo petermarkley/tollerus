@@ -97,13 +97,8 @@ class LanguageEditor extends Component
         // Run the query
         $paginator = $entriesQuery->paginate(48);
         return view('tollerus::livewire.language-editor', [
-                'presetSelectOpts' => $this->presetSelectOpts,
                 'paginator' => $paginator,
-                'language' => $this->language,
                 'hasEntries' => $hasEntries,
-                'sortBy' => $this->sortBy,
-                'searchType' => $this->searchType,
-                'searchStr' => $this->searchStr,
             ])->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],

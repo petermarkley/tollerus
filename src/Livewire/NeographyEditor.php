@@ -49,7 +49,7 @@ class NeographyEditor extends Component
      */
     public function render(): View
     {
-        return view('tollerus::livewire.neography-editor', ['writingDirectionOpts' => $this->writingDirectionOpts])
+        return view('tollerus::livewire.neography-editor')
             ->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],

@@ -40,10 +40,8 @@ class NeographySectionEditor extends Component
      */
     public function render(): View
     {
-        return view('tollerus::livewire.neography-section-editor', [
-                'glyphTypes' => $this->glyphTypes,
-                'sectTypes' => $this->sectTypes,
-            ])->layout('tollerus::components.layout', [
+        return view('tollerus::livewire.neography-section-editor')
+            ->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.neographies.index'), 'text' => __('tollerus::ui.neographies')],
