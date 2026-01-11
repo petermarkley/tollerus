@@ -49,10 +49,10 @@ class NeographySectionEditor extends Component
                 ],
             ])->title($this->sect->name);
     }
-    public function mount(Neography $neography, NeographySection $sect): void
+    public function mount(Neography $neography, NeographySection $section): void
     {
         $this->neography = $neography;
-        $this->sect = $sect;
+        $this->sect = $section;
 
         $this->glyphTypes = collect(NeographyGlyphType::cases())
             ->mapWithKeys(function ($type) {

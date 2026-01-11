@@ -69,18 +69,22 @@ class AutoInflectionEditor extends Component
                     ]), 'text' => $this->language->name],
                     ['href' => route('tollerus.admin.languages.inflection-tables', [
                         'language' => $this->language->id,
-                        'group' => $this->group->id,
+                        'wordClassGroup' => $this->group->id,
                     ]), 'text' => mb_ucfirst($groupName) . ' ' . __('tollerus::ui.inflection_tables')],
                 ],
             ])->title($pageTitle);
     }
-    public function mount(Language $language, WordClassGroup $group, InflectionTableRow $row): void
+    public function mount(Language $language, WordClassGroup $wordClassGroup, InflectionTableRow $row): void
     {
+        $row->loadMissing('inflectionTable');
+        if ($row->inflectionTable->word_class_group_id != $wordClassGroup->id) {
+            abort(404);
+        }
         $this->language = $language;
         $this->language->loadMissing([
             'neographies',
         ]);
-        $this->group = $group;
+        $this->group = $wordClassGroup;
         $this->row = $row;
         $this->tabNeography = (string)$this->language->primary_neography;
         $this->refreshRuleForm();

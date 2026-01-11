@@ -182,7 +182,7 @@ class NeographyEditor extends Component
                 'name' => $sect->name,
                 'intro' => $sect->intro,
                 'position' => $sect->position,
-                'editUrl' => route('tollerus.admin.neographies.glyphs.edit', ['neography' => $neography, 'sect' => $sect]),
+                'editUrl' => route('tollerus.admin.neographies.glyphs.edit', ['neography' => $neography, 'section' => $sect]),
                 'editUrlText' => __('tollerus::ui.edit_thing', ['thing' => $sect->name]),
                 'glyphCount' => $sect->glyphGroups->flatMap->glyphs->count(),
             ]];

@@ -42,8 +42,10 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                             Route::get('/{tab}', LanguageEditor::class)
                                 ->whereIn('tab', ['neographies', 'grammar', 'entries'])
                                 ->name('edit.tab');
-                            Route::prefix('grammar/{group}')->group(function () {
-                                Route::get('/inflection-tables', InflectionTableEditor::class)->name('inflection-tables');
+                            Route::prefix('grammar/{wordClassGroup}')->group(function () {
+                                Route::get('/inflection-tables', InflectionTableEditor::class)
+                                    ->scopeBindings()
+                                    ->name('inflection-tables');
                                 Route::get('/inflection-rows/{row}/auto', AutoInflectionEditor::class)->name('auto-inflection');
                             });
                             Route::prefix('entries')
@@ -68,7 +70,7 @@ Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
                             Route::get('/{tab}', NeographyEditor::class)
                                 ->whereIn('tab', ['font', 'glyphs', 'keyboards'])
                                 ->name('edit.tab');
-                            Route::prefix('glyphs/{sect}')
+                            Route::prefix('glyphs/{section}')->scopeBindings()
                                 ->as('glyphs.')
                                 ->group(function () {
                                     Route::get('/', NeographySectionEditor::class)->name('edit');

@@ -61,10 +61,10 @@ class InflectionTableEditor extends Component
                 ],
             ])->title($pageTitle);
     }
-    public function mount(Language $language, WordClassGroup $group): void
+    public function mount(Language $language, WordClassGroup $wordClassGroup): void
     {
         $this->language = $language;
-        $this->group = $group;
+        $this->group = $wordClassGroup;
         $this->refreshTableForm();
     }
 
@@ -130,7 +130,7 @@ class InflectionTableEditor extends Component
                         })->toArray(),
                         'autoInflectionUrl' => route('tollerus.admin.languages.auto-inflection', [
                             'language' => $this->language,
-                            'group' => $this->group,
+                            'wordClassGroup' => $this->group,
                             'row' => $row,
                         ]),
                     ]];
