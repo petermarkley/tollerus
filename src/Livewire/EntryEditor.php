@@ -44,10 +44,10 @@ class EntryEditor extends Component
                 ],
             ])->title(mb_ucfirst($this->entry->primaryForm->transliterated));
     }
-    public function mount(Entry $entry): void
+    public function mount(Language $language, Entry $entry): void
     {
         $this->entry = $entry;
-        $this->language = $entry->language;
+        $this->language = $language;
 
         $this->refreshForm();
     }
