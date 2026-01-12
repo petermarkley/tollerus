@@ -72,11 +72,13 @@
                         >
                             <option value="" class="cursor-pointer italic" x-bind:selected="infoForm.primaryForm===null || infoForm.primaryForm===''">{{ __('tollerus::ui.none') }}</option>
                             <template x-for="([lexemeId, lexeme], i) in $store.reorderFunctions.sortItems(infoForm.lexemes)">
-                                <optgroup x-bind:label="lexeme.wordClassName">
-                                    <template x-for="(form, formId) in lexeme.forms">
-                                        <option x-bind:value="formId" class="cursor-pointer" x-text="form.transliterated" x-bind:selected="infoForm.primaryForm==formId"></option>
-                                    </template>
-                                </optgroup>
+                                <template x-if="Object.values(lexeme.forms).length > 0">
+                                    <optgroup x-bind:label="lexeme.wordClassName">
+                                        <template x-for="(form, formId) in lexeme.forms">
+                                            <option x-bind:value="formId" class="cursor-pointer" x-text="form.transliterated" x-bind:selected="infoForm.primaryForm==formId"></option>
+                                        </template>
+                                    </optgroup>
+                                </template>
                             </template>
                         </x-tollerus::inputs.select>
                     </div>
