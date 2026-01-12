@@ -488,6 +488,7 @@ return [
    */
   'sort_by_transliterated' => 'Sort by :transliterated',
   'sort_by_native' => 'Sort by native',
+  'native_spelling' => 'Native spelling',
 
   /**
    * TRANSLATOR NOTE:

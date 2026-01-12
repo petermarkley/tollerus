@@ -226,6 +226,22 @@
                                                 />
                                             </div>
                                         </div>
+                                        <table>
+                                            <tbody>
+                                                <template x-for="nativeSpelling in form.nativeSpellings">
+                                                    <tr>
+                                                        <th scope="row" x-text="nativeSpelling.neographyName" class="font-normal text-right pr-2 py-1"></th>
+                                                        <td class="text-left pr-2 py-1 w-60">
+                                                            <x-tollerus::inputs.text-saveable
+                                                                idExpression="'native_spelling_' + nativeSpelling.neographyId"
+                                                                model="nativeSpelling.spelling"
+                                                                fieldName="{{ __('tollerus::ui.native_spelling') }}"
+                                                                saveEvent="$wire.updateNativeSpelling(lexemeId, formId, nativeSpelling.neographyId, nativeSpelling.nativeSpellingId, document.getElementById(id).value, id);" />
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
                                         <h4>{{ __('tollerus::ui.inflection_values') }}</h4>
                                         <div class="pl-12 flex flex-col gap-2 items-start w-full">
                                             <ul class="flex flex-row flex-wrap gap-2">

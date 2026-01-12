@@ -73,7 +73,11 @@ class EntryEditor extends Component
      */
     public function refreshForm(): void
     {
-        $this->language->loadMissing(['wordClasses']);
+        $this->language->loadMissing([
+            'neographies',
+            'wordClasses',
+        ]);
+        $neographies = $this->language->neographies;
         $this->entry->load([
             'lexemes.wordClass',
             'lexemes.forms.inflectionValues.feature',
@@ -84,20 +88,28 @@ class EntryEditor extends Component
         $this->infoForm = [
             'primaryForm' => $this->entry->primary_form,
             'etym' => $this->entry->etym,
-            'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) {
+            'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) use ($neographies) {
                 return [$lexeme->id => [
                     'globalId' => $lexeme->global_id,
                     'wordClassId' => $lexeme->wordClass->id,
                     'wordClassName' => $lexeme->wordClass->name,
                     'wordClassGroupId' => $lexeme->wordClass->group_id,
                     'position' => $lexeme->position,
-                    'forms' => $lexeme->forms->mapWithKeys(function ($form) {
+                    'forms' => $lexeme->forms->mapWithKeys(function ($form) use ($neographies) {
                         return [$form->id => [
                             'globalId' => $form->global_id,
                             'transliterated' => $form->transliterated,
                             'phonemic' => $form->phonemic,
                             'irregular' => (bool)($form->irregular),
-                            'nativeSpellings' => [], // FIXME
+                            'nativeSpellings' => $neographies->sortBy('machine_name')->map(function ($n) use ($form) {
+                                $nativeSpelling = $form->nativeSpellings->firstWhere('neography_id', $n->id);
+                                return [
+                                    'nativeSpellingId' => ($nativeSpelling===null? null : $nativeSpelling->id),
+                                    'neographyId' => $n->id,
+                                    'neographyName' => $n->name,
+                                    'spelling' => ($nativeSpelling===null? null : $nativeSpelling->spelling),
+                                ];
+                            })->toArray(),
                             'inflectionValues' => $form->inflectionValues->mapWithKeys(function ($value) {
                                 return [$value->id => [
                                     'featureId'   => $value->feature->id,
@@ -412,5 +424,9 @@ class EntryEditor extends Component
             ->firstOrFail()
             ->delete();
         $this->refreshForm();
+    }
+    public function updateNativeSpelling(string $lexemeId, string $formId, string $neographyId, string $nativeSpellingId, ?string $domId = ''): void
+    {
+        //
     }
 }
