@@ -19,11 +19,12 @@ use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class EntryEditor extends Component
 {
-    // use HasModelCache;
-    // private $cacheRoot = 'wordClassGroups';
+    use HasModelCache;
+    private $cacheRoot = 'lexemes';
     // Models
     #[Locked] public Language $language;
     #[Locked] public Entry $entry;
+    #[Locked] public array $lexemes;
     // UI input layer
     public array $infoForm = [];
     // UI display properties
@@ -66,9 +67,10 @@ class EntryEditor extends Component
             'lexemes.forms.nativeSpellings',
             'lexemes.senses.subsenses',
         ]);
+        $this->lexemes = $this->entry->lexemes->sortBy('position')->all();
         $this->infoForm = [
             'etym' => $this->entry->etym,
-            'lexemes' => $this->entry->lexemes->mapWithKeys(function ($lexeme) {
+            'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) {
                 return [$lexeme->id => [
                     'wordClassId' => $lexeme->wordClass->id,
                     'wordClassName' => $lexeme->wordClass->name,
@@ -141,13 +143,13 @@ class EntryEditor extends Component
          * not completely implausible. This softer decision seems best
          * to enforce right here at the PHP level.
          */
-        if ($this->entry->lexemes->pluck('wordClass')->contains($wordClassModel)) {
+        if (collect($this->lexemes)->pluck('wordClass')->contains($wordClassModel)) {
             $this->dispatch('lexeme-add-failure');
             throw \Illuminate\Validation\ValidationException::withMessages(['wordClassId' => [__('tollerus::error.dupliacte_of_unique_per_entry')]]);
         }
 
         // Create lexeme
-        $nextPosition = $this->entry->lexemes->max('position') + 1;
+        $nextPosition = collect($this->lexemes)->max('position') + 1;
         $lexeme = $this->entry->lexemes()->create([
             'language_id' => $this->language->id,
             'word_class_id' => $wordClassModel->id,
@@ -163,6 +165,33 @@ class EntryEditor extends Component
     }
     public function swapLexemes(string $lexemeId, string $neighborId): void
     {
-        //
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($lexemeId, $neighborId) {
+                $lexemesCollection = collect($this->lexemes);
+                $lexemeModel   = $lexemesCollection->firstWhere('id', $lexemeId);
+                $neighborModel = $lexemesCollection->firstWhere('id', $neighborId);
+                $oldLexemePosition   = (int) $this->infoForm['lexemes'][$lexemeId]['position'];
+                $oldNeighborPosition = (int) $this->infoForm['lexemes'][$neighborId]['position'];
+                /**
+                 * Apparently the 'unique' constraint applies even within a transaction.
+                 * So we need to carefully move one of the models out of the way first.
+                 */
+                $minPosition = $lexemesCollection->min('position');
+                $neighborModel->position = $minPosition - 1;
+                $neighborModel->save();
+                /**
+                 * And finally we can just set and save both correct values.
+                 */
+                $lexemeModel->position = $oldNeighborPosition;
+                $lexemeModel->save();
+                $neighborModel->position = $oldLexemePosition;
+                $neighborModel->save();
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('lexeme-swap-failure');
+            throw $e;
+        }
+        $this->refreshForm();
     }
 }
