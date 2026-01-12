@@ -98,25 +98,14 @@ class EntryEditor extends Component
             ];
         })->toArray();
     }
-    public function infoSave(string $afterSuccess = '', array $payload = []): void
+    public function infoSave(): void
     {
         try {
-            // // Validate
-            // $this->validate([
-            //     'infoForm.name' => [
-            //         Rule::unique('PeterMarkley\Tollerus\Models\Language', 'name')->ignore($this->language->id),
-            //     ],
-            //     'infoForm.machine_name' => [
-            //         'alpha_dash:ascii',
-            //         Rule::unique('PeterMarkley\Tollerus\Models\Language', 'machine_name')->ignore($this->language->id),
-            //     ],
-            // ]);
-            // // Save to database
-            // $this->language->fill($this->infoForm);
-            // $this->language->save();
+            $this->entry->etym = $this->infoForm['etym'];
+            $this->entry->save();
             // Refresh front-end state
             $this->refreshForm();
-            $this->dispatch('save-info-success', ['afterSuccess'=>$afterSuccess, 'payload'=>$payload]);
+            $this->dispatch('save-info-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('save-info-failure');
             // Let error keep propagating
