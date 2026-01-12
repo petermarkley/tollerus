@@ -396,6 +396,18 @@ return [
   /**
    * TRANSLATOR NOTE:
    *
+   * "Form" i.e. a word form, or a distinct outcome of
+   * word inflection/morphology. For example "walk" vs.
+   * "walks" vs. "walked" vs. "walking", all different
+   * forms of the same word.
+   *
+   * These labels will appear when editing a word entry
+   * in the dictionary.
+   */
+  'primary_form' => 'Primary form',
+  /**
+   * TRANSLATOR NOTE:
+   *
    * These items will be used together in a popup dialogue,
    * along with "Save" above. "Cancel" means cancel the action
    * of leaving, so the user can continue making changes.

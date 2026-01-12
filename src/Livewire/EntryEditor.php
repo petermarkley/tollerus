@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Models\Entry;
+use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
 use PeterMarkley\Tollerus\Models\Neography;
@@ -35,9 +36,17 @@ class EntryEditor extends Component
      */
     public function render(): View
     {
+        if ($this->entry->primaryForm === null) {
+            $entryName = __('tollerus::ui.entry_nameless');
+        } else {
+            $entryName = $this->entry->primaryForm->transliterated;
+        }
+        $pageTitle = mb_ucfirst($entryName);
         $neographyId = $this->language->primaryNeography?->id;
-        return view('tollerus::livewire.entry-editor')
-            ->layout('tollerus::components.layout', [
+        return view('tollerus::livewire.entry-editor', [
+                'entryName' => $entryName,
+                'pageTitle' => $pageTitle,
+            ])->layout('tollerus::components.layout', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.languages.index'), 'text' => __('tollerus::ui.languages')],
@@ -46,7 +55,7 @@ class EntryEditor extends Component
                         'tab' => 'entries',
                     ]), 'text' => $this->language->name],
                 ],
-            ])->title(mb_ucfirst($this->entry->primaryForm->transliterated));
+            ])->title($pageTitle);
     }
     public function mount(Language $language, Entry $entry): void
     {
@@ -69,14 +78,24 @@ class EntryEditor extends Component
         ]);
         $this->lexemes = $this->entry->lexemes->sortBy('position')->all();
         $this->infoForm = [
+            'primaryForm' => $this->entry->primary_form,
             'etym' => $this->entry->etym,
             'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) {
                 return [$lexeme->id => [
                     'wordClassId' => $lexeme->wordClass->id,
                     'wordClassName' => $lexeme->wordClass->name,
                     'position' => $lexeme->position,
+                    'forms' => $lexeme->forms->mapWithKeys(function ($form) {
+                        return [$form->id => [
+                            'transliterated' => $form->transliterated,
+                            'phonemic' => $form->phonemic,
+                            'irregular' => (bool)($form->irregular),
+                            'nativeSpellings' => [], // FIXME
+                        ]];
+                    })->toArray(),
+                    'senses' => [], // FIXME
                 ]];
-            }),
+            })->toArray(),
         ];
         $this->language->loadMissing([
             'wordClassGroups.wordClasses',
@@ -116,6 +135,21 @@ class EntryEditor extends Component
     /**
      * Granular CRUD-type functions
      */
+    public function updatePrimaryForm(string $primaryFormId): void
+    {
+        if (!empty($primaryFormId)) {
+            // Find model
+            $formModel = collect($this->lexemes)->flatMap->forms->firstWhere('id', $primaryFormId);
+            if (!($formModel instanceof Form)) {
+                $this->dispatch('primaryform-update-failure');
+                throw \Illuminate\Validation\ValidationException::withMessages(['primaryFormId' => [__('tollerus::error.invalid_form')]]);
+            }
+        }
+        // Update entry
+        $this->entry->primary_form = (isset($formModel) ? $formModel->id : null);
+        $this->entry->save();
+        $this->refreshForm();
+    }
     public function createLexeme(string $wordClassId): void
     {
         // Make sure the word class exists on this language

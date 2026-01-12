@@ -36,7 +36,7 @@
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0 flex flex-row gap-4 justify-between items-center">
-            <span>{{ mb_ucfirst($entry->primaryForm->transliterated) }}</span>
+            <span>{{ $pageTitle }}</span>
             <x-tollerus::inputs.button
                 type="secondary"
                 size="small"
@@ -55,6 +55,32 @@
         </h1>
         <div class="flex flex-col gap-6">
             <x-tollerus::panel class="flex flex-col gap-4 items-start">
+                <div class="flex flex-col gap-2 items-start">
+                    <h3 class="font-bold text-lg">
+                        <label for="primary_form" class="flex flex-row gap-4 items-center">
+                            <x-tollerus::icons.word-class />
+                            <span>{{ __('tollerus::ui.primary_form') }}</span>
+                        </label>
+                    </h3>
+                    <div>
+                        <x-tollerus::inputs.select
+                            idExpression="'primary_form'"
+                            label="{{ __('tollerus::ui.primary_form') }}"
+                            showLabel="false"
+                            model="infoForm.primaryForm"
+                            @change="$wire.updatePrimaryForm($el.value);"
+                        >
+                            <option value="" class="cursor-pointer italic" x-bind:selected="infoForm.primaryForm===null || infoForm.primaryForm===''">{{ __('tollerus::ui.none') }}</option>
+                            <template x-for="([lexemeId, lexeme], i) in $store.reorderFunctions.sortItems(infoForm.lexemes)">
+                                <optgroup x-bind:label="lexeme.wordClassName">
+                                    <template x-for="(form, formId) in lexeme.forms">
+                                        <option x-bind:value="formId" class="cursor-pointer" x-text="form.transliterated" x-bind:selected="infoForm.primaryForm==formId"></option>
+                                    </template>
+                                </optgroup>
+                            </template>
+                        </x-tollerus::inputs.select>
+                    </div>
+                </div>
                 <div class="w-full flex flex-col gap-2">
                     <h3 class="font-bold text-lg">
                         <label for="etym" class="flex flex-row gap-4 items-center">
