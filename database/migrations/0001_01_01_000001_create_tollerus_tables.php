@@ -465,7 +465,7 @@ return new class extends Migration
                 ->collation('ascii_bin')
                 ->nullable();
             $table->index(['neography_id', 'sort_key'], 'native_spellings_neography_sort_key_idx');
-            // ensure only one of each native spelling per `form`
+            // ensure only one native spelling for each neography per `form`
             $table->unique(['form_id', 'neography_id'], 'form_neography_unique');
         });
 
