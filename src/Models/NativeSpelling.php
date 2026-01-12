@@ -15,6 +15,7 @@ class NativeSpelling extends Model
     use HasFactory;
     protected $table = 'native_spellings';
     public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * Model relations

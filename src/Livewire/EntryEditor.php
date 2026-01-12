@@ -16,6 +16,7 @@ use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
+use PeterMarkley\Tollerus\Models\NativeSpelling;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\WordClass;
 use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
@@ -426,8 +427,73 @@ class EntryEditor extends Component
             ->delete();
         $this->refreshForm();
     }
-    public function updateNativeSpelling(string $lexemeId, string $formId, string $neographyId, ?string $nativeSpellingId, ?string $domId = ''): void
+    public function updateNativeSpelling(string $lexemeId, string $formId, string $neographyId, string $spelling, ?string $domId = ''): void
     {
-        //
+        // Find models
+        $formModel = $this->findInCache('nativespelling-update-failure', [
+            [
+                'id' => $lexemeId,
+                'objectType' => Lexeme::class,
+                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
+                'relation' => 'forms',
+            ],
+            [
+                'id' => $formId,
+                'objectType' => Form::class,
+                'failMessage' => ['formId' => [__('tollerus::error.invalid_form')]],
+            ],
+        ]);
+        $neographyModel = $this->language->neographies->firstWhere('id', $neographyId);
+        if (!($neographyModel instanceof Neography)) {
+            $this->dispatch('nativespelling-update-failure');
+            return;
+        }
+        /**
+         * In this case, we're using a more implicit UI pattern for
+         * creating/deleting models.
+         *
+         * Basically, the user is given a text field and if it's
+         * empty that means no model. If it's filled, that means
+         * there's a model.
+         *
+         * So create/delete actions are triggered merely by state
+         * changes in the text field.
+         */
+        $nativeSpelling = $formModel->nativeSpellings->firstWhere('neography_id', $neographyId);
+        if (!($nativeSpelling instanceof NativeSpelling)) {
+            if (empty($spelling)) {
+                /**
+                 * No NativeSpelling model exists, and the user has set the
+                 * field to empty. That's already correct, so we do nothing.
+                 */
+                $this->refreshForm();
+                return;
+            } else {
+                /**
+                 * The user has typed a spelling, but no model exists. So
+                 * we create one.
+                 */
+                $nativeSpelling = $formModel->nativeSpellings()->create([
+                    'neography_id' => $neographyModel->id,
+                ]);
+            }
+        }
+        if (empty($spelling)) {
+            /**
+             * A model exists, but the user set the field to empty.
+             * So we delete it.
+             */
+            $nativeSpelling->delete();
+            $this->refreshForm();
+            return;
+        }
+        /**
+         * If we get this far, it means a model exists now (either
+         * it pre-existed, or we just created it) and we need to
+         * update it with what the user typed.
+         */
+        $nativeSpelling->spelling = $spelling;
+        $nativeSpelling->save();
+        $this->refreshForm();
     }
 }

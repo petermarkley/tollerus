@@ -236,7 +236,7 @@
                                                                 idExpression="'native_spelling_' + nativeSpelling.neographyId"
                                                                 model="nativeSpelling.spelling"
                                                                 fieldName="{{ __('tollerus::ui.native_spelling') }}"
-                                                                saveEvent="$wire.updateNativeSpelling(lexemeId, formId, nativeSpelling.neographyId, nativeSpelling.nativeSpellingId, document.getElementById(id).value, id);"
+                                                                saveEvent="$wire.updateNativeSpelling(lexemeId, formId, nativeSpelling.neographyId, document.getElementById(id).value, id);"
                                                                 x-bind:class="'tollerus_' + nativeSpelling.neographyMachineName" />
                                                         </td>
                                                     </tr>
