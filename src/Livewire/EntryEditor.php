@@ -11,11 +11,14 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Models\Entry;
+use PeterMarkley\Tollerus\Models\Feature;
+use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\WordClass;
+use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class EntryEditor extends Component
@@ -73,6 +76,7 @@ class EntryEditor extends Component
         $this->language->loadMissing(['wordClasses']);
         $this->entry->load([
             'lexemes.wordClass',
+            'lexemes.forms.inflectionValues.feature',
             'lexemes.forms.nativeSpellings',
             'lexemes.senses.subsenses',
         ]);
@@ -82,15 +86,26 @@ class EntryEditor extends Component
             'etym' => $this->entry->etym,
             'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) {
                 return [$lexeme->id => [
+                    'globalId' => $lexeme->global_id,
                     'wordClassId' => $lexeme->wordClass->id,
                     'wordClassName' => $lexeme->wordClass->name,
+                    'wordClassGroupId' => $lexeme->wordClass->group_id,
                     'position' => $lexeme->position,
                     'forms' => $lexeme->forms->mapWithKeys(function ($form) {
                         return [$form->id => [
+                            'globalId' => $form->global_id,
                             'transliterated' => $form->transliterated,
                             'phonemic' => $form->phonemic,
                             'irregular' => (bool)($form->irregular),
                             'nativeSpellings' => [], // FIXME
+                            'inflectionValues' => $form->inflectionValues->mapWithKeys(function ($value) {
+                                return [$value->id => [
+                                    'featureId'   => $value->feature->id,
+                                    'featureName' => $value->feature->name,
+                                    'valueId'     => $value->id,
+                                    'valueName'   => $value->name,
+                                ]];
+                            })->toArray(),
                         ]];
                     })->toArray(),
                     'senses' => [], // FIXME
@@ -100,6 +115,7 @@ class EntryEditor extends Component
         $this->language->loadMissing([
             'wordClassGroups.wordClasses',
             'wordClassGroups.primaryClass',
+            'wordClassGroups.features.featureValues'
         ]);
         $this->wordClassGroups = $this->language->wordClassGroups->sortBy('id')->map(function ($group) {
             if ($group->primaryClass === null) {
@@ -113,6 +129,14 @@ class EntryEditor extends Component
                 'classes' => $group->wordClasses->sortBy('id')->map(fn ($class) => [
                     'id' => $class->id,
                     'name' => $class->name,
+                ])->toArray(),
+                'features' => $group->features->sortBy('name')->map(fn ($feature) => [
+                    'id' => $feature->id,
+                    'name' => $feature->name,
+                    'values' => $feature->featureValues->sortBy('name')->map(fn ($value) => [
+                        'id' => $value->id,
+                        'name' => $value->name
+                    ])->toArray(),
                 ])->toArray(),
             ];
         })->toArray();
@@ -215,6 +239,60 @@ class EntryEditor extends Component
             $this->dispatch('lexeme-swap-failure');
             throw $e;
         }
+        $this->refreshForm();
+    }
+    public function createForm(string $lexemeId): void
+    {
+        //
+    }
+    public function updateForm(string $lexemeId, string $formId, string $propName, string $propVal, ?string $domId = ''): void
+    {
+        //
+    }
+    public function deleteForm(string $formId): void
+    {
+        //
+    }
+    public function addFormValue(string $lexemeId, string $formId, string $valueId): void
+    {
+        // Find models
+        $formModel = $this->findInCache('form-value-add-failure', [
+            [
+                'id' => $lexemeId,
+                'objectType' => Lexeme::class,
+                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
+                'relation' => 'forms',
+            ],
+            [
+                'id' => $formId,
+                'objectType' => Form::class,
+                'failMessage' => ['formId' => [__('tollerus::error.invalid_form')]],
+            ],
+        ]);
+        $valueModel = FeatureValue::find($valueId);
+        if (!($valueModel instanceof FeatureValue)) {
+            $this->dispatch('form-value-add-failure');
+            return;
+        }
+        // Create pivot row
+        try {
+            (new FormFeatureValue([
+                'form_id' => $formModel->id,
+                'feature_id' => $valueModel->feature_id,
+                'value_id' => $valueModel->id,
+            ]))->save();
+        } catch (\Throwable $e) {
+            $this->dispatch('form-value-add-failure');
+            throw $e;
+        }
+        $this->refreshForm();
+    }
+    public function removeFormValue(string $formId, string $valueId): void
+    {
+        FormFeatureValue::where('form_id', (int)$formId)
+            ->where('value_id', (int)$valueId)
+            ->firstOrFail()
+            ->delete();
         $this->refreshForm();
     }
 }

@@ -401,10 +401,22 @@ return [
    * "walks" vs. "walked" vs. "walking", all different
    * forms of the same word.
    *
+   * "Irregular" as in a word form that doesn't follow
+   * typical rules. (For example "gave" for past tense,
+   * instead of "gived" with the typical '-ed' suffix.)
+   *
    * These labels will appear when editing a word entry
    * in the dictionary.
    */
   'primary_form' => 'Primary form',
+  'word_form' => 'Word form',
+  'word_forms' => 'Word forms',
+  'add_word_form' => 'Add word form',
+  'delete_word_form' => 'Delete word form',
+  'irregular' => 'Irregular',
+  'inflection_values' => 'Inflection values',
+  'add_value' => 'Add value', // That is, a grammatical value
+  'remove_value' => 'Remove value',
   /**
    * TRANSLATOR NOTE:
    *
@@ -443,6 +455,7 @@ return [
   'delete_keyboard_confirmation' => 'About to delete keyboard. Are you sure?',
   'delete_key_confirmation' => 'About to delete key. Are you sure?',
   'delete_entry_confirmation' => 'About to delete entry. Are you sure?',
+  'delete_word_form_confirmation' => 'About to delete word form. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *
