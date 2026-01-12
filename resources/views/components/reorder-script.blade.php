@@ -4,36 +4,36 @@
 document.addEventListener('alpine:init', () => {
     Alpine.store('reorderFunctions', {
         positionProp: 'position',
-        sortItems(parentObj) {
+        sortItems(parentObj, positionProp = this.positionProp) {
             return Object.entries(parentObj).sort((a, b) => {
-                return a[1][this.positionProp] - b[1][this.positionProp];
+                return a[1][positionProp] - b[1][positionProp];
             });
         },
-        isFirstItem(parentObj, itemId) {
+        isFirstItem(parentObj, itemId, positionProp = this.positionProp) {
             if (typeof parentObj[itemId] === "undefined") {
                 return true;
             }
             let lowest = null;
             for (let id in parentObj) {
-                if (lowest === null || parentObj[id][this.positionProp] < lowest) {
-                    lowest = parentObj[id][this.positionProp];
+                if (lowest === null || parentObj[id][positionProp] < lowest) {
+                    lowest = parentObj[id][positionProp];
                 }
             }
-            return (parentObj[itemId][this.positionProp] == lowest);
+            return (parentObj[itemId][positionProp] == lowest);
         },
-        isLastItem(parentObj, itemId) {
+        isLastItem(parentObj, itemId, positionProp = this.positionProp) {
             if (typeof parentObj[itemId] === "undefined") {
                 return true;
             }
             let highest = null;
             for (let id in parentObj) {
-                if (highest === null || parentObj[id][this.positionProp] > highest) {
-                    highest = parentObj[id][this.positionProp];
+                if (highest === null || parentObj[id][positionProp] > highest) {
+                    highest = parentObj[id][positionProp];
                 }
             }
-            return (parentObj[itemId][this.positionProp] == highest);
+            return (parentObj[itemId][positionProp] == highest);
         },
-        getNeighborId(parentObj, itemId, dir) {
+        getNeighborId(parentObj, itemId, dir, positionProp = this.positionProp) {
             // Normalize input
             if (dir == 0) {
                 return null;
@@ -43,10 +43,10 @@ document.addEventListener('alpine:init', () => {
             let itemsNumeric = [];
             for (let id in parentObj) {
                 let newItem = {id: id};
-                newItem[this.positionProp] = parentObj[id][this.positionProp];
+                newItem[positionProp] = parentObj[id][positionProp];
                 itemsNumeric.push(newItem);
             }
-            itemsNumeric.sort((a, b) => a[this.positionProp] - b[this.positionProp]);
+            itemsNumeric.sort((a, b) => a[positionProp] - b[positionProp]);
             let idsNumeric = itemsNumeric.map(item => item.id);
             // Get numeric indices
             let itemIndex = idsNumeric.indexOf(itemId);
