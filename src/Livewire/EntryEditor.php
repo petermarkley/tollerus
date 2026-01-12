@@ -107,6 +107,7 @@ class EntryEditor extends Component
                                     'nativeSpellingId' => ($nativeSpelling===null? null : $nativeSpelling->id),
                                     'neographyId' => $n->id,
                                     'neographyName' => $n->name,
+                                    'neographyMachineName' => $n->machine_name,
                                     'spelling' => ($nativeSpelling===null? null : $nativeSpelling->spelling),
                                 ];
                             })->toArray(),
