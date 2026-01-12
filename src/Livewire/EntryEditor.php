@@ -426,7 +426,7 @@ class EntryEditor extends Component
             ->delete();
         $this->refreshForm();
     }
-    public function updateNativeSpelling(string $lexemeId, string $formId, string $neographyId, string $nativeSpellingId, ?string $domId = ''): void
+    public function updateNativeSpelling(string $lexemeId, string $formId, string $neographyId, ?string $nativeSpellingId, ?string $domId = ''): void
     {
         //
     }
