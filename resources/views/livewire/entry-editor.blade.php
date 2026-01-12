@@ -307,6 +307,12 @@
                                     <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_word_form') }}</span>
                                 </x-tollerus::inputs.missing-data>
                             </x-tollerus::pane>
+                            <x-tollerus::pane class="flex flex-col gap-4 items-start">
+                                <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
+                                    <x-tollerus::icons.scales />
+                                    <span>{{ __('tollerus::ui.definition') }}</span>
+                                </h3>
+                            </x-tollerus::pane>
                         </x-tollerus::panel>
                     </div>
                 </template>

@@ -122,7 +122,18 @@ class EntryEditor extends Component
                             })->toArray(),
                         ]];
                     })->toArray(),
-                    'senses' => [], // FIXME
+                    'senses' => $lexeme->senses->mapWithKeys(function ($sense) {
+                        return [$sense->id => [
+                            'num' => $sense->num,
+                            'body' => $sense->body,
+                            'subsenses' => $sense->subsenses->mapWithKeys(function ($subsense) {
+                                return [$subsense->id => [
+                                    'num' => $subsense->num,
+                                    'body' => $subsense->body,
+                                ]];
+                            })->toArray(),
+                        ]];
+                    })->toArray(),
                 ]];
             })->toArray(),
         ];
