@@ -243,15 +243,71 @@ class EntryEditor extends Component
     }
     public function createForm(string $lexemeId): void
     {
-        //
+        // Find model
+        $lexemeModel = $this->findInCache('form-add-failure', [
+            [
+                'id' => $lexemeId,
+                'objectType' => Lexeme::class,
+                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
+            ],
+        ]);
+        // Create row
+        $lexemeModel->forms()->create([
+            'language_id' => $this->language->id,
+        ]);
+        $this->refreshForm();
     }
     public function updateForm(string $lexemeId, string $formId, string $propName, string $propVal, ?string $domId = ''): void
     {
-        //
+        // Find model
+        $formModel = $this->findInCache('form-update-failure', [
+            [
+                'id' => $lexemeId,
+                'objectType' => Lexeme::class,
+                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
+                'relation' => 'forms',
+            ],
+            [
+                'id' => $formId,
+                'objectType' => Form::class,
+                'failMessage' => ['formId' => [__('tollerus::error.invalid_form')]],
+            ],
+        ]);
+        // $propName whitelist
+        $allowedPropData = [
+            'transliterated' => ['type' => 'string', 'column' => 'transliterated'],
+            'phonemic'       => ['type' => 'string', 'column' => 'phonemic'],
+            'irregular'      => ['type' => 'boolean', 'column' => 'irregular'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('form-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'boolean':
+                $formModel[$allowedPropData[$propName]['column']] = (bool) filter_var($propVal, FILTER_VALIDATE_BOOLEAN);
+            break;
+            case 'string':
+            default:
+                $formModel[$allowedPropData[$propName]['column']] = $propVal;
+            break;
+        }
+        // Save to database
+        try {
+            $formModel->save();
+            $this->dispatch('text-save-success', id: $domId);
+            $this->refreshForm();
+        } catch (\Throwable $e) {
+            $this->dispatch('form-update-failure');
+            throw $e;
+        }
     }
     public function deleteForm(string $formId): void
     {
-        //
+        Form::findOrFail((int)$formId)->delete();
+        $this->refreshForm();
     }
     public function addFormValue(string $lexemeId, string $formId, string $valueId): void
     {

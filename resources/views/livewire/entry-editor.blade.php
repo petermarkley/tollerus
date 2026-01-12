@@ -198,29 +198,33 @@
                                             </x-tollerus::inputs.button>
                                         </div>
                                         <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center flex-grow">
-                                            <x-tollerus::inputs.text-saveable
-                                                idExpression="'form_' + formId + '_transliterated'"
-                                                model="form.transliterated"
-                                                fieldName="{{ config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated')) }}"
-                                                showLabel="true"
-                                                saveEvent="$wire.updateForm(lexemeId, formId, 'transliterated', document.getElementById(id).value, id);"
-                                            />
-                                            <x-tollerus::inputs.text-saveable
-                                                idExpression="'form_' + formId + '_phonemic'"
-                                                model="form.phonemic"
-                                                fieldName="{{ __('tollerus::ui.phonemic') }}"
-                                                showLabel="true"
-                                                saveEvent="$wire.updateForm(lexemeId, formId, 'phonemic', document.getElementById(id).value, id);"
-                                            />
-                                        </div>
-                                        <div class="flex flex-col items-start">
-                                            <x-tollerus::inputs.checkbox
-                                                idExpression="'form_' + formId + '_irregular'"
-                                                model="form.irregular"
-                                                modelIsAlpine="true"
-                                                label="{{ __('tollerus::ui.irregular') }}"
-                                                @change="$wire.updateForm(lexemeId, formId, 'irregular', $el.checked, id);"
-                                            />
+                                            <div class="lg:w-80">
+                                                <x-tollerus::inputs.text-saveable
+                                                    idExpression="'form_' + formId + '_transliterated'"
+                                                    model="form.transliterated"
+                                                    fieldName="{{ config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated')) }}"
+                                                    showLabel="true"
+                                                    saveEvent="$wire.updateForm(lexemeId, formId, 'transliterated', document.getElementById(id).value, id);"
+                                                />
+                                            </div>
+                                            <div class="lg:w-80">
+                                                <x-tollerus::inputs.text-saveable
+                                                    idExpression="'form_' + formId + '_phonemic'"
+                                                    model="form.phonemic"
+                                                    fieldName="{{ __('tollerus::ui.phonemic') }}"
+                                                    showLabel="true"
+                                                    saveEvent="$wire.updateForm(lexemeId, formId, 'phonemic', document.getElementById(id).value, id);"
+                                                />
+                                            </div>
+                                            <div class="flex flex-col items-start">
+                                                <x-tollerus::inputs.checkbox
+                                                    idExpression="'form_' + formId + '_irregular'"
+                                                    model="form.irregular"
+                                                    modelIsAlpine="true"
+                                                    label="{{ __('tollerus::ui.irregular') }}"
+                                                    @change="$wire.updateForm(lexemeId, formId, 'irregular', $el.checked, id);"
+                                                />
+                                            </div>
                                         </div>
                                         <h4>{{ __('tollerus::ui.inflection_values') }}</h4>
                                         <div class="pl-12 flex flex-col gap-2 items-start w-full">

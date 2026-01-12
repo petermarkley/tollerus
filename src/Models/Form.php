@@ -19,6 +19,7 @@ class Form extends Model
     use HasFactory;
     protected $table = 'forms';
     public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * Model relations
