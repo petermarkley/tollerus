@@ -115,7 +115,7 @@ class EntryEditor extends Component
         $this->language->loadMissing([
             'wordClassGroups.wordClasses',
             'wordClassGroups.primaryClass',
-            'wordClassGroups.features.featureValues'
+            'wordClassGroups.features.featureValues',
         ]);
         $this->wordClassGroups = $this->language->wordClassGroups->sortBy('id')->map(function ($group) {
             if ($group->primaryClass === null) {
@@ -202,6 +202,65 @@ class EntryEditor extends Component
             'word_class_id' => $wordClassModel->id,
             'position' => $nextPosition,
         ]);
+
+        // Create forms if appropriate
+        $wordClassModel->loadMissing([
+            'group.inflectionTables.filterValues',
+            'group.inflectionTables.rows.filterValues',
+        ]);
+        $alreadyHadForm = collect($this->lexemes)->reduce(
+            fn ($c, $l) => $c || $l->forms()->exists(),
+            false
+        );
+        $addedForm = false;
+        /**
+         * For inflected word classes, we want to scaffold a set of word forms
+         * based on any inflection tables that are currently configured.
+         *
+         * One form for each inflection row, with all the relevant filters
+         * added as inflection values.
+         */
+        foreach ($wordClassModel->group->inflectionTables->sortBy('position') as $table) {
+            foreach ($table->rows->sortBy('position') as $row) {
+                // Create the form
+                $form = $lexeme->forms()->create([
+                    'language_id' => $this->language->id,
+                ]);
+                $addedForm = true;
+                // Maybe set as primary
+                if ($row->src_base === null && $this->entry->primary_form === null) {
+                    $this->entry->primary_form = $form->id;
+                    $this->entry->save();
+                }
+                // Add filters from the table
+                foreach ($table->filterValues as $value) {
+                    (new FormFeatureValue([
+                        'form_id' => $form->id,
+                        'feature_id' => $value->feature_id,
+                        'value_id' => $value->id,
+                    ]))->save();
+                }
+                // Add filters from the row
+                foreach ($row->filterValues as $value) {
+                    (new FormFeatureValue([
+                        'form_id' => $form->id,
+                        'feature_id' => $value->feature_id,
+                        'value_id' => $value->id,
+                    ]))->save();
+                }
+            }
+        }
+        /**
+         * Now, if it's not an inflected word class and no other forms exist,
+         * we want to add one and set it to primary.
+         */
+        if (!$alreadyHadForm && !$addedForm) {
+            $form = $lexeme->forms()->create([
+                'language_id' => $this->language->id,
+            ]);
+            $this->entry->primary_form = $form->id;
+            $this->entry->save();
+        }
 
         $this->refreshForm();
     }
