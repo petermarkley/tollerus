@@ -12,7 +12,9 @@ use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Language;
+use PeterMarkley\Tollerus\Models\Lexeme;
 use PeterMarkley\Tollerus\Models\Neography;
+use PeterMarkley\Tollerus\Models\WordClass;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class EntryEditor extends Component
@@ -58,7 +60,8 @@ class EntryEditor extends Component
      */
     public function refreshForm(): void
     {
-        $this->entry->loadMissing([
+        $this->language->loadMissing(['wordClasses']);
+        $this->entry->load([
             'lexemes.wordClass',
             'lexemes.forms.nativeSpellings',
             'lexemes.senses.subsenses',
@@ -124,11 +127,39 @@ class EntryEditor extends Component
      */
     public function createLexeme(string $wordClassId): void
     {
-        //
+        // Make sure the word class exists on this language
+        $wordClassModel = $this->language->wordClasses->firstWhere('id', $wordClassId);
+        if (!($wordClassModel instanceof WordClass)) {
+            $this->dispatch('lexeme-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['wordClassId' => [__('tollerus::error.invalid_word_class')]]);
+        }
+        // Make sure it doesn't already exist on this entry
+        /**
+         * This is not enforced at the database level, because what if
+         * at some future point we want to change the UI and allow
+         * multiple lexemes of the same word class on one entry? It's
+         * not completely implausible. This softer decision seems best
+         * to enforce right here at the PHP level.
+         */
+        if ($this->entry->lexemes->pluck('wordClass')->contains($wordClassModel)) {
+            $this->dispatch('lexeme-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['wordClassId' => [__('tollerus::error.dupliacte_of_unique_per_entry')]]);
+        }
+
+        // Create lexeme
+        $nextPosition = $this->entry->lexemes->max('position') + 1;
+        $lexeme = $this->entry->lexemes()->create([
+            'language_id' => $this->language->id,
+            'word_class_id' => $wordClassModel->id,
+            'position' => $nextPosition,
+        ]);
+
+        $this->refreshForm();
     }
     public function deleteLexeme(string $lexemeId): void
     {
-        //
+        Lexeme::findOrFail((int)$lexemeId)->delete();
+        $this->refreshForm();
     }
     public function swapLexemes(string $lexemeId, string $neighborId): void
     {

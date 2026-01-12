@@ -61,6 +61,7 @@ return [
     'invalid_key' => 'Invalid key ID', // "Key" as in a button on a computer keyboard
     'number_out_of_range' => 'Number is out of range.',
     'duplicate_of_key' => 'This must be unique per keyboard.',
+    'dupliacte_of_unique_per_entry' => 'This must be unique per entry.',
     'max_attempts_adding_unique_name' => 'Reached max attempts while trying to create unique object name.',
     /**
      * TRANSLATOR NOTE:
