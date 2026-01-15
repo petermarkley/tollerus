@@ -422,6 +422,7 @@ return [
   'delete_word_sense' => 'Delete word sense',
   'move_sense_up' => 'Move sense up',
   'move_sense_down' => 'Move sense down',
+  'subsenses' => 'Subsenses',
   'add_subsense' => 'Add subsense',
   'delete_subsense' => 'Delete subsense',
   'move_subsense_up' => 'Move subsense up',
