@@ -18,6 +18,8 @@ use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
 use PeterMarkley\Tollerus\Models\NativeSpelling;
 use PeterMarkley\Tollerus\Models\Neography;
+use PeterMarkley\Tollerus\Models\Sense;
+use PeterMarkley\Tollerus\Models\Subsense;
 use PeterMarkley\Tollerus\Models\WordClass;
 use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
@@ -338,7 +340,7 @@ class EntryEditor extends Component
                 'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
             ],
         ]);
-        // Create row
+        // Create form
         $lexemeModel->forms()->create([
             'language_id' => $this->language->id,
         ]);
@@ -505,6 +507,210 @@ class EntryEditor extends Component
          */
         $nativeSpelling->spelling = $spelling;
         $nativeSpelling->save();
+        $this->refreshForm();
+    }
+    public function createSense(string $lexemeId): void
+    {
+        // Find model
+        $lexemeModel = $this->findInCache('sense-add-failure', [
+            [
+                'id' => $lexemeId,
+                'objectType' => Lexeme::class,
+                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
+            ],
+        ]);
+        // Create sense
+        $nextNum = $lexemeModel->senses->max('num') + 1;
+        $lexemeModel->senses()->create([
+            'num' => $nextNum,
+        ]);
+        $this->refreshForm();
+    }
+    public function updateSense(string $lexemeId, string $senseId, string $propName, string $propVal, ?string $domId = ''): void
+    {
+        // Find models
+        $senseModel = $this->findInCache('sense-update-failure', [
+            [
+                'id' => $lexemeId,
+                'objectType' => Lexeme::class,
+                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
+                'relation' => 'senses',
+            ],
+            [
+                'id' => $senseId,
+                'objectType' => Sense::class,
+                'failMessage' => ['senseId' => [__('tollerus::error.invalid_sense')]],
+            ],
+        ]);
+        // $propName whitelist
+        $allowedPropData = [
+            'body' => ['type' => 'string', 'column' => 'body'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('sense-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'string':
+            default:
+                $senseModel[$allowedPropData[$propName]['column']] = $propVal;
+            break;
+        }
+        // Save to database
+        try {
+            $senseModel->save();
+            $this->dispatch('sense-update-success', id: $domId);
+            $this->refreshForm();
+        } catch (\Throwable $e) {
+            $this->dispatch('sense-update-failure');
+            throw $e;
+        }
+    }
+    public function deleteSense(string $senseId): void
+    {
+        Sense::findOrFail((int)$senseId)->delete();
+        $this->refreshForm();
+    }
+    public function swapSenses(string $lexemeId, string $senseId, string $neighborId): void
+    {
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($lexemeId, $senseId, $neighborId) {
+                $lexemeModel = collect($this->lexemes)->firstWhere('id', $lexemeId);
+                $senseModel    = $lexemeModel->senses->firstWhere('id', $senseId);
+                $neighborModel = $lexemeModel->senses->firstWhere('id', $neighborId);
+                $oldSenseNum    = (int) $this->infoForm['lexemes'][$lexemeId]['senses'][$senseId]['num'];
+                $oldNeighborNum = (int) $this->infoForm['lexemes'][$lexemeId]['senses'][$neighborId]['num'];
+                /**
+                 * Apparently the 'unique' constraint applies even within a transaction.
+                 * So we need to carefully move one of the models out of the way first.
+                 */
+                $minNum = $lexemeModel->senses->min('num');
+                $neighborModel->num = $minNum - 1;
+                $neighborModel->save();
+                /**
+                 * And finally we can just set and save both correct values.
+                 */
+                $senseModel->num = $oldNeighborNum;
+                $senseModel->save();
+                $neighborModel->num = $oldSenseNum;
+                $neighborModel->save();
+
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('sense-swap-failure');
+            throw $e;
+        }
+        $this->refreshForm();
+    }
+    public function createSubsense(string $lexemeId, string $senseId): void
+    {
+        // Find models
+        $senseModel = $this->findInCache('subsense-add-failure', [
+            [
+                'id' => $lexemeId,
+                'objectType' => Lexeme::class,
+                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
+                'relation' => 'senses',
+            ],
+            [
+                'id' => $senseId,
+                'objectType' => Sense::class,
+                'failMessage' => ['senseId' => [__('tollerus::error.invalid_sense')]],
+            ],
+        ]);
+        // Create subsense
+        $nextNum = $senseModel->subsenses->max('num') + 1;
+        $senseModel->subsenses()->create([
+            'num' => $nextNum,
+        ]);
+        $this->refreshForm();
+    }
+    public function updateSubsense(string $lexemeId, string $senseId, string $subsenseId, string $propName, string $propVal, ?string $domId = ''): void
+    {
+        // Find models
+        $subsenseModel = $this->findInCache('subsense-update-failure', [
+            [
+                'id' => $lexemeId,
+                'objectType' => Lexeme::class,
+                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
+                'relation' => 'senses',
+            ],
+            [
+                'id' => $senseId,
+                'objectType' => Sense::class,
+                'failMessage' => ['senseId' => [__('tollerus::error.invalid_sense')]],
+                'relation' => 'subsenses',
+            ],
+            [
+                'id' => $subsenseId,
+                'objectType' => Subsense::class,
+                'failMessage' => ['senseId' => [__('tollerus::error.invalid_subsense')]],
+            ],
+        ]);
+        // $propName whitelist
+        $allowedPropData = [
+            'body' => ['type' => 'string', 'column' => 'body'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('subsense-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'string':
+            default:
+                $senseModel[$allowedPropData[$propName]['column']] = $propVal;
+            break;
+        }
+        // Save to database
+        try {
+            $senseModel->save();
+            $this->dispatch('subsense-update-success', id: $domId);
+            $this->refreshForm();
+        } catch (\Throwable $e) {
+            $this->dispatch('subsense-update-failure');
+            throw $e;
+        }
+    }
+    public function removeSubsense(string $subsenseId): void
+    {
+        Subsense::findOrFail((int)$subsenseId)->delete();
+        $this->refreshForm();
+    }
+    public function swapSubsenses(string $lexemeId, string $senseId, string $subsenseId, string $neighborId): void
+    {
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($lexemeId, $senseId, $subsenseId, $neighborId) {
+                $senseModel = collect($this->lexemes)->firstWhere('id', $lexemeId)->senses->firstWhere('id', $senseId);
+                $subsenseModel = $senseModel->subsenses->firstWhere('id', $subsenseId);
+                $neighborModel = $senseModel->subsenses->firstWhere('id', $neighborId);
+                $oldSubsenseNum = (int) $this->infoForm['lexemes'][$lexemeId]['senses'][$senseId]['subsenses'][$subsenseId]['num'];
+                $oldNeighborNum = (int) $this->infoForm['lexemes'][$lexemeId]['senses'][$senseId]['subsenses'][$neighborId]['num'];
+                /**
+                 * Apparently the 'unique' constraint applies even within a transaction.
+                 * So we need to carefully move one of the models out of the way first.
+                 */
+                $minNum = $senseModel->subsenses->min('num');
+                $neighborModel->num = $minNum - 1;
+                $neighborModel->save();
+                /**
+                 * And finally we can just set and save both correct values.
+                 */
+                $subsenseModel->num = $oldNeighborNum;
+                $subsenseModel->save();
+                $neighborModel->num = $oldSubsenseNum;
+                $neighborModel->save();
+
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('sense-swap-failure');
+            throw $e;
+        }
         $this->refreshForm();
     }
 }

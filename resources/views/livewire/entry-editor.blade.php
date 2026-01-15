@@ -11,6 +11,8 @@
             delete_entry_confirmation: @js(__('tollerus::ui.delete_entry_confirmation')),
             delete_word_class_confirmation: @js(__('tollerus::ui.delete_word_class_confirmation')),
             delete_word_form_confirmation: @js(__('tollerus::ui.delete_word_form_confirmation')),
+            delete_sense_confirmation: @js(__('tollerus::ui.delete_sense_confirmation')),
+            delete_subsense_confirmation: @js(__('tollerus::ui.delete_subsense_confirmation')),
         },
         infoForm: $wire.entangle('infoForm'),
         wordClassGroups: $wire.entangle('wordClassGroups'),
@@ -29,12 +31,44 @@
             };
             lexemeElem.addEventListener('transitionend', onDone);
         },
+        moveSense(lexemeId, senseElem, senseId, dir) {
+            let neighborId = $store.reorderFunctions.getNeighborId(this.infoForm.lexemes[lexemeId].senses, senseId, dir, 'num');
+            if (neighborId === null) {
+                return;
+            }
+            let neighborElem = document.getElementById('sense_' + neighborId);
+            $store.reorderFunctions.swapItems(senseElem, neighborElem);
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Livewire request
+                $wire.swapSenses(lexemeId, senseId, neighborId);
+            };
+            senseElem.addEventListener('transitionend', onDone);
+        },
+        moveSense(lexemeId, senseId, subsenseElem, subsenseId, dir) {
+            let neighborId = $store.reorderFunctions.getNeighborId(this.infoForm.lexemes[lexemeId].senses[senseId].subsenses, subsenseId, dir, 'num');
+            if (neighborId === null) {
+                return;
+            }
+            let neighborElem = document.getElementById('subsense_' + neighborId);
+            $store.reorderFunctions.swapItems(subsenseElem, neighborElem);
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Livewire request
+                $wire.swapSubsenses(lexemeId, senseId, subsenseId, neighborId);
+            };
+            subsenseElem.addEventListener('transitionend', onDone);
+        },
     }"
     @modal-discard.window="$wire.refreshForm(); dirty=false;"
     @modal-save.window="$wire.save(tab, '', {});"
     @entry-delete.window="$store.entry.delete($event.detail.url);"
     @lexeme-delete.window="$wire.deleteLexeme($event.detail.lexemeId);"
     @form-delete.window="$wire.deleteForm($event.detail.formId);"
+    @sense-delete.window="$wire.deleteSense($event.detail.senseId);"
+    @subsense-delete.window="$wire.deleteSubsense($event.detail.subsenseId);"
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0 flex flex-row gap-4 justify-between items-center">
@@ -317,6 +351,150 @@
                                     <x-tollerus::icons.scales />
                                     <span>{{ __('tollerus::ui.definition') }}</span>
                                 </h3>
+                                <template x-if="Object.keys(lexeme.senses).length > 0">
+                                    <div class="flex flex-col gap-4 items-start w-full" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
+                                        <template x-for="([senseId, sense], i) in $store.reorderFunctions.sortItems(lexeme.senses, 'num')">
+                                            <div
+                                                x-bind:id="'sense_' + senseId"
+                                                data-obj="sense"
+                                                class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
+                                                x-bind:style="'order: '+i"
+                                                @transitionend="$nextTick(() => {animating=false});"
+                                            >
+                                                <x-tollerus::panel class="px-3 py-8 flex flex-col gap-6 justify-start shrink-0 rounded-l-xl rounded-r-none">
+                                                    <x-tollerus::inputs.button
+                                                        type="inverse"
+                                                        title="{{ __('tollerus::ui.move_sense_up') }}"
+                                                        x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(lexeme.senses, senseId, 'num')"
+                                                        @click="animating=true; moveSense(lexemeId, $el.closest('[data-obj=&quot;sense&quot;]'), senseId, -1);"
+                                                    >
+                                                        <x-tollerus::icons.chevron-up class="h-8 w-8" />
+                                                        <span class="sr-only">{{ __('tollerus::ui.move_sense_up') }}</span>
+                                                    </x-tollerus::inputs.button>
+                                                    <x-tollerus::inputs.button
+                                                        type="inverse"
+                                                        title="{{ __('tollerus::ui.move_sense_down') }}"
+                                                        x-bind:disabled="animating || $store.reorderFunctions.isLastItem(lexeme.senses, senseId, 'num')"
+                                                        @click="animating=true; moveSense(lexemeId, $el.closest('[data-obj=&quot;sense&quot;]'), senseId, +1);"
+                                                    >
+                                                        <x-tollerus::icons.chevron-down class="h-8 w-8" />
+                                                        <span class="sr-only">{{ __('tollerus::ui.move_sense_down') }}</span>
+                                                    </x-tollerus::inputs.button>
+                                                </x-tollerus::panel>
+                                                <x-tollerus::panel class="flex flex-col gap-4 items-start rounded-l-none flex-grow">
+                                                    <div class="flex flex-row gap-4 justify-between items-start w-full">
+                                                        <h4 class="font-bold text-lg">
+                                                            <span x-text="(parseInt(sense.num)+1).toString()+'.'"></span>
+                                                        </h4>
+                                                        <x-tollerus::inputs.button
+                                                            type="inverse"
+                                                            size="small"
+                                                            class="align-middle"
+                                                            title="{{ __('tollerus::ui.delete_word_sense') }}"
+                                                            @click="$dispatch('open-modal', {
+                                                                message: msgs['delete_inflection_sense_confirmation'],
+                                                                buttons: [
+                                                                    { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                                                    { text: msgs.yes_delete, type: 'primary', clickEvent: 'sense-delete', payload: {senseId: senseId} }
+                                                                ]
+                                                            });"
+                                                        >
+                                                            <x-tollerus::icons.delete/>
+                                                            <label class="sr-only">{{ __('tollerus::ui.delete_word_sense') }}</label>
+                                                        </x-tollerus::inputs.button>
+                                                    </div>
+                                                    <div data-obj="textarea-div" class="flex flex-col gap-2 items-start w-full" x-data="{ dirty: false, btn: 'saved', id: 'sense_'+senseId+'_body' }">
+                                                        <textarea
+                                                            x-bind:id="id"
+                                                            rows="2"
+                                                            x-model="sense.body"
+                                                            @input="btn = 'save'; dirty=true;"
+                                                            class="border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600" >
+                                                        </textarea>
+                                                        <x-tollerus::inputs.button
+                                                            @click="
+                                                                btn = 'saving';
+                                                                e = $el.closest('[data-obj=&quot;textarea-div&quot;]').querySelector('textarea');
+                                                                $wire.updateSense(lexemeId, senseId, 'body', e.value, id);
+                                                            "
+                                                            x-bind:disabled="!dirty"
+                                                            wire:loading.attr="disabled"
+                                                            wire:target="updateSense"
+                                                            @sense-update-success.window="btn = 'saved'; dirty=false;"
+                                                            @sense-update-failure.window="btn = 'save';"
+                                                            x-text="msgs[btn]" />
+                                                    </div>
+                                                    <template x-if="Object.keys(sense.subsenses).length > 0">
+                                                        <div class="flex flex-col gap-4 items-start pl-12 w-full" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
+                                                            <template x-for="([subsenseId, subsense], i) in $store.reorderFunctions.sortItems(sense.subsenses, 'num')">
+                                                                <div
+                                                                    x-bind:id="'subsense_' + subsenseId"
+                                                                    data-obj="subsense"
+                                                                    class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
+                                                                    x-bind:style="'order: '+i"
+                                                                    @transitionend="$nextTick(() => {animating=false});"
+                                                                >
+                                                                    <div class="flex flex-col gap-2 justify-start shrink-0">
+                                                                        <x-tollerus::inputs.button
+                                                                            type="inverse"
+                                                                            title="{{ __('tollerus::ui.move_subsense_up') }}"
+                                                                            x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(sense.subsenses, subsenseId, 'num')"
+                                                                            @click="animating=true; moveSubsense(lexemeId, senseId, $el.closest('[data-obj=&quot;subsense&quot;]'), subsenseId, -1);"
+                                                                        >
+                                                                            <x-tollerus::icons.chevron-up class="h-6 w-6" />
+                                                                            <span class="sr-only">{{ __('tollerus::ui.move_subsense_up') }}</span>
+                                                                        </x-tollerus::inputs.button>
+                                                                        <x-tollerus::inputs.button
+                                                                            type="inverse"
+                                                                            title="{{ __('tollerus::ui.move_subsense_down') }}"
+                                                                            x-bind:disabled="animating || $store.reorderFunctions.isLastItem(sense.subsenses, subsenseId, 'num')"
+                                                                            @click="animating=true; moveSubsense(lexemeId, senseId, $el.closest('[data-obj=&quot;ubssense&quot;]'), ubssenseId, +1);"
+                                                                        >
+                                                                            <x-tollerus::icons.chevron-down class="h-6 w-6" />
+                                                                            <span class="sr-only">{{ __('tollerus::ui.move_subsense_down') }}</span>
+                                                                        </x-tollerus::inputs.button>
+                                                                    </div>
+                                                                    <div data-obj="textarea-div" class="flex flex-col gap-2 items-start flex-grow" x-data="{ dirty: false, btn: 'saved', id: 'subsense_'+subsenseId+'_body' }">
+                                                                        <textarea
+                                                                            x-bind:id="id"
+                                                                            rows="2"
+                                                                            x-model="subsense.body"
+                                                                            @input="btn = 'save'; dirty=true;"
+                                                                            class="border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600" >
+                                                                        </textarea>
+                                                                        <x-tollerus::inputs.button
+                                                                            @click="
+                                                                                btn = 'saving';
+                                                                                e = $el.closest('[data-obj=&quot;textarea-div&quot;]').querySelector('textarea');
+                                                                                $wire.updateSubsense(lexemeId, senseId, subsenseId, 'body', e.value, id);
+                                                                            "
+                                                                            x-bind:disabled="!dirty"
+                                                                            wire:loading.attr="disabled"
+                                                                            wire:target="updateSubsense"
+                                                                            @sense-update-success.window="btn = 'saved'; dirty=false;"
+                                                                            @sense-update-failure.window="btn = 'save';"
+                                                                            x-text="msgs[btn]" />
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                </x-tollerus::panel>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <x-tollerus::inputs.missing-data
+                                    size="small"
+                                    title="{{ __('tollerus::ui.add_word_sense') }}"
+                                    class="relative flex flex-row gap-2 justify-center items-center w-full"
+                                    @click="$wire.createSense(lexemeId);"
+                                    wire:loading.attr="disabled"
+                                    wire:target="createSense"
+                                >
+                                    <x-tollerus::icons.plus/>
+                                    <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_word_sense') }}</span>
+                                </x-tollerus::inputs.missing-data>
                             </x-tollerus::pane>
                         </x-tollerus::panel>
                     </div>

@@ -61,6 +61,8 @@ return [
     'invalid_key' => 'Invalid key ID', // "Key" as in a button on a computer keyboard
     'invalid_lexeme' => 'Invalid lexeme ID',
     'invalid_form' => 'Invalid word form ID', // "Form" as in a word form like "walking" vs. "walked"
+    'invalid_sense' => 'Invalid word sense ID', // "Sense" as in a discrete meaning for a word in the dictionary
+    'invalid_subsense' => 'Invalid subsense ID',
     'number_out_of_range' => 'Number is out of range.',
     'duplicate_of_key' => 'This must be unique per keyboard.',
     'dupliacte_of_unique_per_entry' => 'This must be unique per entry.',

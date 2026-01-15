@@ -402,8 +402,9 @@ return [
    * forms of the same word.
    *
    * "Irregular" as in a word form that doesn't follow
-   * typical rules. (For example "gave" for past tense,
-   * instead of "gived" with the typical '-ed' suffix.)
+   * the typical rules within a language. (For example,
+   * "gave" for past tense instead of "gived" with the
+   * typical '-ed' suffix.)
    *
    * These labels will appear when editing a word entry
    * in the dictionary.
@@ -417,6 +418,14 @@ return [
   'inflection_values' => 'Inflection values',
   'add_value' => 'Add value', // That is, a grammatical value
   'remove_value' => 'Remove value',
+  'add_word_sense' => 'Add word sense', // That is, a sense of a word in the dictionary
+  'delete_word_sense' => 'Delete word sense',
+  'move_sense_up' => 'Move sense up',
+  'move_sense_down' => 'Move sense down',
+  'add_subsense' => 'Add subsense',
+  'delete_subsense' => 'Delete subsense',
+  'move_subsense_up' => 'Move subsense up',
+  'move_subsense_down' => 'Move subsense down',
   /**
    * TRANSLATOR NOTE:
    *
@@ -456,6 +465,8 @@ return [
   'delete_key_confirmation' => 'About to delete key. Are you sure?',
   'delete_entry_confirmation' => 'About to delete entry. Are you sure?',
   'delete_word_form_confirmation' => 'About to delete word form. Are you sure?',
+  'delete_sense_confirmation' => 'About to delete word sense. Are you sure?',
+  'delete_subsense_confirmation' => 'About to delete subsense. Are you sure?',
   /**
    * TRANSLATOR NOTE:
    *
