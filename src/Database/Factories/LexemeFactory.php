@@ -33,10 +33,10 @@ class LexemeFactory extends Factory
             Sense::factory()
                 ->for($lexeme)
                 ->count($senseNum)
-                ->state(new Sequence(fn($seq)=>['num'=>$seq->index]))
+                ->state(new Sequence(fn($seq)=>['num'=>$seq->index+1]))
                 ->has(Subsense::factory()
                     ->count(( ((bool)mt_rand(0,1)) ? mt_rand(1,4) : 0 ))
-                    ->state(new Sequence(fn($seq)=>['num'=>$seq->index]))
+                    ->state(new Sequence(fn($seq)=>['num'=>$seq->index+1]))
                 )->create();
         });
     }

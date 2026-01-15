@@ -524,6 +524,8 @@ class EntryEditor extends Component
         $lexemeModel->senses()->create([
             'num' => $nextNum,
         ]);
+        // Renumber starting from 1
+        $this->renumberSenses($lexemeId);
         $this->refreshForm();
     }
     public function updateSense(string $lexemeId, string $senseId, string $propName, string $propVal, ?string $domId = ''): void
@@ -570,7 +572,11 @@ class EntryEditor extends Component
     }
     public function deleteSense(string $senseId): void
     {
-        Sense::findOrFail((int)$senseId)->delete();
+        $sense = Sense::findOrFail((int)$senseId);
+        $lexeme = $sense->lexeme;
+        $sense->delete();
+        // Renumber starting from 1
+        $this->renumberSenses($lexeme->id);
         $this->refreshForm();
     }
     public function swapSenses(string $lexemeId, string $senseId, string $neighborId): void
@@ -597,7 +603,8 @@ class EntryEditor extends Component
                 $senseModel->save();
                 $neighborModel->num = $oldSenseNum;
                 $neighborModel->save();
-
+                // Renumber starting from 1
+                $this->renumberSenses($lexemeId);
             });
         } catch (\Throwable $e) {
             $this->dispatch('sense-swap-failure');
@@ -705,12 +712,38 @@ class EntryEditor extends Component
                 $subsenseModel->save();
                 $neighborModel->num = $oldSubsenseNum;
                 $neighborModel->save();
-
             });
         } catch (\Throwable $e) {
             $this->dispatch('sense-swap-failure');
             throw $e;
         }
         $this->refreshForm();
+    }
+
+    /**
+     * Public utility functions
+     */
+    public function renumberSenses(string $lexemeId): void
+    {
+        // Find model
+        $lexemeModel = collect($this->lexemes)->firstWhere('id', $lexemeId);
+        // Initialize important values
+        $senses = $lexemeModel->senses->sortBy('num');
+        $safeZero = min(0, $senses->min('num'));
+        $count = $senses->count();
+        // Renumber models
+        $connection = config('tollerus.connection', 'tollerus');
+        DB::connection($connection)->transaction(function () use ($senses, $safeZero, $count) {
+            // Move all models out of the way
+            foreach ($senses as $i => $sense) {
+                $sense->num = $safeZero - $count + $i;
+                $sense->save();
+            }
+            // Move them into the proper places
+            foreach ($senses->values() as $i => $sense) {
+                $sense->num = $i+1;
+                $sense->save();
+            }
+        });
     }
 }
