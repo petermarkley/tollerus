@@ -670,12 +670,12 @@ class EntryEditor extends Component
         switch ($allowedPropData[$propName]['type']) {
             case 'string':
             default:
-                $senseModel[$allowedPropData[$propName]['column']] = $propVal;
+                $subsenseModel[$allowedPropData[$propName]['column']] = $propVal;
             break;
         }
         // Save to database
         try {
-            $senseModel->save();
+            $subsenseModel->save();
             $this->dispatch('subsense-update-success', id: $domId);
             $this->refreshForm();
         } catch (\Throwable $e) {

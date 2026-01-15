@@ -490,8 +490,8 @@
                                                                             x-bind:disabled="!dirty"
                                                                             wire:loading.attr="disabled"
                                                                             wire:target="updateSubsense"
-                                                                            @sense-update-success.window="btn = 'saved'; dirty=false;"
-                                                                            @sense-update-failure.window="btn = 'save';"
+                                                                            @subsense-update-success.window="btn = 'saved'; dirty=false;"
+                                                                            @subsense-update-failure.window="btn = 'save';"
                                                                             x-text="msgs[btn]" />
                                                                     </div>
                                                                 </div>
