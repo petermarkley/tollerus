@@ -683,7 +683,7 @@ class EntryEditor extends Component
             throw $e;
         }
     }
-    public function removeSubsense(string $subsenseId): void
+    public function deleteSubsense(string $subsenseId): void
     {
         Subsense::findOrFail((int)$subsenseId)->delete();
         $this->refreshForm();

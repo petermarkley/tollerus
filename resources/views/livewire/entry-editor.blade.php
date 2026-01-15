@@ -465,7 +465,7 @@
                                                                                     message: msgs['delete_subsense_confirmation'],
                                                                                     buttons: [
                                                                                         { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
-                                                                                        { text: msgs.yes_delete, type: 'primary', clickEvent: 'sense-delete', payload: {subsenseId: subsenseId} }
+                                                                                        { text: msgs.yes_delete, type: 'primary', clickEvent: 'subsense-delete', payload: {subsenseId: subsenseId} }
                                                                                     ]
                                                                                 });"
                                                                             >
@@ -498,6 +498,19 @@
                                                             </template>
                                                         </div>
                                                     </template>
+                                                    <div class="pl-12">
+                                                        <x-tollerus::inputs.missing-data
+                                                            size="small"
+                                                            title="{{ __('tollerus::ui.add_subsense') }}"
+                                                            class="relative flex flex-row gap-2 justify-center items-center w-full"
+                                                            @click="$wire.createSubsense(lexemeId, senseId);"
+                                                            wire:loading.attr="disabled"
+                                                            wire:target="createSubsense"
+                                                        >
+                                                            <x-tollerus::icons.plus/>
+                                                            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_subsense') }}</span>
+                                                        </x-tollerus::inputs.missing-data>
+                                                    </div>
                                                 </x-tollerus::panel>
                                             </div>
                                         </template>

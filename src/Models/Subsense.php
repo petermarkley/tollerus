@@ -15,6 +15,7 @@ class Subsense extends Model
     use HasFactory;
     protected $table = 'subsenses';
     public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * Model relations
