@@ -430,6 +430,7 @@ return [
   'no_row_matches_alert' => 'This word form has no matching inflection row, and will not be shown.',
   'multiple_row_matches_alert' => 'This word form may show in multiple inflection rows.',
   'multiple_form_matches_alert' => 'This word form\'s inflection values are redundant with another word form.',
+  'missing_forms_alert' => 'This word class is missing one or more expected word forms.',
   /**
    * TRANSLATOR NOTE:
    *

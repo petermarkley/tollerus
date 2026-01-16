@@ -119,75 +119,87 @@ class EntryEditor extends Component
          *    - Wherever it IS one-to-one, offer auto-inflection.
          */
         $lexemes = collect($this->lexemes);
-        $rowFiltersPerGroup = $this->language->wordClassGroups->mapWithKeys(function ($group) use ($lexemes) {
+        $inflectionMatchesPerGroup = $this->language->wordClassGroups->mapWithKeys(function ($group) use ($lexemes) {
             /**
-             * We could use `flatMap->rows`, except that we need to know the
-             * table filters when working on each row.
+             * Find which best lexeme belongs to this group
              */
-            return [$group->id => $group->inflectionTables->map(function ($table) use ($group, $lexemes) {
-                return $table->rows->map(function ($row) use ($group, $table, $lexemes) {
-                    /**
-                     * We are now inside an inflection row. We now need to
-                     * apply the table and row filters to all the forms on
-                     * the relevant lexeme (if present).
-                     */
-                    // Table vs. row filters are treated the same
-                    $filters = $table->filterValues->concat($row->filterValues);
-                    // Find which best lexeme belongs to this group
-                    $lexeme = $lexemes->sortBy('position')
-                        ->filter(fn ($l) => $l->wordClass->group_id == $group->id)
-                        // If multiple exist with forms attached, we ignore them
-                        ->firstWhere(fn ($l) => $l->forms->count() > 0);
-                    // Missing lexeme is 100% valid state
-                    if ($lexeme) {
+            // First, exclude any lexemes for a different group
+            $matchedLexemes = $lexemes->sortBy('position')
+                ->filter(fn ($l) => $l->wordClass->group_id == $group->id);
+            // Next, segment by whether a lexeme contains any forms
+            $lexemesWithForms = $matchedLexemes
+                ->filter(fn ($l) => $l->forms->isNotEmpty());
+            $lexemesWithNoForms = $matchedLexemes
+                ->filter(fn ($l) => $l->forms->isEmpty());
+            // Prefer one with forms if available
+            if ($lexemesWithForms->isNotEmpty()) {
+                $lexeme = $lexemesWithForms->first();
+            } else {
+                $lexeme = $lexemesWithNoForms->first();
+            }
+            // Don't assume that we found any lexemes at all
+            if ($lexeme) {
+                /**
+                 * We could use `flatMap->rows`, except that we need to know the
+                 * table filters when working on each row.
+                 */
+                $rows = $group->inflectionTables->map(function ($table) use ($group, $lexeme) {
+                    return $table->rows->map(function ($row) use ($group, $table, $lexeme) {
                         /**
-                         * Apply inflection filters ... Ideally this
-                         * results in a list of exactly 1 word form.
-                         * If not, we inform the user.
+                         * We are now inside an inflection row. We now need to
+                         * apply the table and row filters to all the forms on
+                         * the relevant lexeme (if present).
                          */
-                        $matchingForms = $lexeme->forms->filter(
-                            fn ($form) => $filters->reduce(
-                                fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
-                                true
-                            )
-                        )->values();
-                    } else {
-                        $matchingForms = null;
-                    }
-                    // Package up the per-row data object
-                    return [
-                        'rowId' => $row->id,
-                        'srcBase' => $row->src_base,
-                        'matchingForms' => $matchingForms, // Collection of forms
-                    ];
-                });
-            })->flatten(1)->keyBy('rowId')]; // Collection of rows
+                        // Table vs. row filters are treated the same
+                        $filters = $table->filterValues->concat($row->filterValues);
+                        // Package up the per-row data object
+                        return [
+                            'rowId' => $row->id,
+                            'srcBase' => $row->src_base,
+                            'matchingForms' => $lexeme?->forms->filter(
+                                fn ($form) => $filters->reduce(
+                                    fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
+                                    true
+                                )
+                            )->values(), // Collection of forms
+                        ];
+                    });
+                })->flatten(1)->keyBy('rowId'); // Collection of rows
+            } else {
+                $rows = null;
+            }
+            return [$group->id => [
+                'lexemeId' => $lexeme?->id,
+                'rows' => $rows,
+            ]];
         }); // Collection of groups
         /**
-         * $rowFiltersPerGroup should now look something like:
+         * $inflectionMatchesPerGroup should now look something like:
          *
          *   [
          *     (WordClassGroup->id) => [
-         *       (InflectionTableRow->id) => [
-         *         'rowId' => <int>,
-         *         'srcBase' => <int>,
-         *         'matchingForms' => [
-         *           0 => <Form::class>,
-         *           . . .
+         *       'lexemeId' => <int>,
+         *       'rows' => [
+         *         (InflectionTableRow->id) => [
+         *           'rowId' => <int>,
+         *           'srcBase' => <int>,
+         *           'matchingForms' => [
+         *             0 => <Form::class>,
+         *             . . .
+         *           ],
          *         ],
+         *         . . .
          *       ],
-         *       . . .
          *     ],
          *     . . .
          *   ]
          *
-         * For non-inflected word class groups, the collection at that key will
-         * be empty (`$rowFiltersPerGroup->get($groupId)->count() == 0`).
+         * For non-inflected word class groups, the 'rows' key will be an
+         * empty collection. For inflected groups with no lexeme, both it and
+         * 'lexemeId' will be null. In either of these cases, do not warn the
+         * user because nothing is amiss.
          *
-         * For inflected groups with no lexeme, matchingForms will be `null`.
-         * In this case, do not warn the user because nothing is amiss.
-         *
-         * For inflected groups with a lexeme, matchingForms may still be an
+         * For inflected groups with a lexeme, 'matchingForms' may still be an
          * empty collection or greater than 1:
          *
          *    $row['matchingForms']->count() != 1
@@ -202,23 +214,53 @@ class EntryEditor extends Component
         $this->infoForm = [
             'primaryForm' => $this->entry->primary_form,
             'etym' => $this->entry->etym,
-            'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) use ($neographies, $rowFiltersPerGroup) {
-                $rowFilters = $rowFiltersPerGroup->get($lexeme->wordClass->group_id);
+            'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) use ($neographies, $inflectionMatchesPerGroup) {
+                $inflectionMatches = $inflectionMatchesPerGroup->get($lexeme->wordClass->group_id);
+                if ($inflectionMatches['lexemeId'] == $lexeme->id && $inflectionMatches['rows']->count() > 0) {
+                    $hasMissingForms = $inflectionMatches['rows']->reduce(
+                        fn ($carry, $row) => ($carry || $row['matchingForms']->isEmpty()),
+                        false
+                    );
+                    $canAutoInflect = (
+                        // No missing or competing forms
+                        $inflectionMatches['rows']->reduce(
+                            fn ($carry, $row) => ($carry && $row['matchingForms']->count()==1),
+                            true
+                        )
+                        &&
+                        // ... and no forms matching multiple rows
+                        $lexeme->forms->reduce(
+                            fn ($carry, $form) => (
+                                $carry
+                                &&
+                                $inflectionMatches['rows']
+                                    ->filter(fn ($r) => $r['matchingForms']->contains($form))
+                                    ->count() == 1
+                            ),
+                            true
+                        )
+                    );
+                } else {
+                    $hasMissingForms = false;
+                    $canAutoInflect = false;
+                }
                 return [$lexeme->id => [
                     'globalId' => $lexeme->global_id,
                     'wordClassId' => $lexeme->wordClass->id,
                     'wordClassName' => $lexeme->wordClass->name,
                     'wordClassGroupId' => $lexeme->wordClass->group_id,
                     'position' => $lexeme->position,
-                    'forms' => $lexeme->forms->mapWithKeys(function ($form) use ($neographies, $rowFilters) {
-                        $matchingRows = $rowFilters->filter(fn ($row) => $row['matchingForms']->contains($form));
+                    'hasMissingForms' => $hasMissingForms,
+                    'canAutoInflect' => $canAutoInflect,
+                    'forms' => $lexeme->forms->mapWithKeys(function ($form) use ($neographies, $inflectionMatches, $lexeme) {
+                        $matchingRows = $inflectionMatches['rows']->filter(fn ($row) => $row['matchingForms']->contains($form));
                         // Collate some info about inflection matching
-                        if ($matchingRows->count() > 0) {
+                        if ($inflectionMatches['lexemeId'] == $lexeme->id && $matchingRows->count() > 0) {
                             // There is a matching row ...
                             $rowId              = $matchingRows->first()['rowId'];
                             $srcBase            = $matchingRows->first()['srcBase'];
                             $thisRowMatchedWith = $matchingRows->first()['matchingForms']->count();
-                            $srcForms = ($srcBase ? $rowFilters->get($srcBase)['matchingForms'] : null);
+                            $srcForms = ($srcBase ? $inflectionMatches['rows']->get($srcBase)['matchingForms'] : null);
                             $srcForm  = ($srcForms!==null && $srcForms->count()>0 ? $srcForms->first()->id : null);
                             $canAutoInflect = ( // We can auto-inflect if ...
                                 $matchingRows->count() == 1 && // This form exists in only one row's match results, AND

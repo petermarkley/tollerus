@@ -203,6 +203,11 @@
                                     <span class="sr-only">{{ __('tollerus::ui.delete_thing', ['thing' => __('tollerus::ui.word_class')]) }}</span>
                                 </x-tollerus::inputs.button>
                             </div>
+                            <template x-if="lexeme.hasMissingForms">
+                                <x-tollerus::alert type="warning">
+                                    <p>{{ __('tollerus::ui.missing_forms_alert') }}</p>
+                                </x-tollerus::alert>
+                            </template>
                             <x-tollerus::pane class="flex flex-col gap-4 items-start">
                                 <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
                                     <x-tollerus::icons.fingerprint />
