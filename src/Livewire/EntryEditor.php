@@ -87,18 +87,149 @@ class EntryEditor extends Component
             'lexemes.forms.nativeSpellings',
             'lexemes.senses.subsenses',
         ]);
+        $this->language->loadMissing([
+            'wordClassGroups.wordClasses',
+            'wordClassGroups.primaryClass',
+            'wordClassGroups.features.featureValues',
+            'wordClassGroups.inflectionTables.filterValues',
+            'wordClassGroups.inflectionTables.rows.filterValues',
+        ]);
         $this->lexemes = $this->entry->lexemes->sortBy('position')->all();
+
+        /**
+         * Prepare context for auto-inflection
+         * ===================================
+         *
+         * In some ways the Tollerus data schema is designed to be very loose
+         * and flexible. A WordClassGroup can have any number of tables, with
+         * any number of rows, each having any number of filters that might
+         * overlap or leave gaps. Conversely a lexeme can have any number of
+         * word forms with any number of grammar features assigned. The
+         * correspondence between these two structures is completely implicit.
+         *
+         * This avoids enforcing too much about how a conlanger wants to use
+         * the system. But the downside is that we have to do extra work right
+         * here to define that data correspondence and surface it to the user.
+         *
+         * For each inflection row, we need a list of all the word forms it
+         * will match when the filters are applied.
+         *
+         *    - Wherever it's NOT one-to-one, inform the user.
+         *
+         *    - Wherever it IS one-to-one, offer auto-inflection.
+         */
+        $lexemes = collect($this->lexemes);
+        $rowFiltersPerGroup = $this->language->wordClassGroups->mapWithKeys(function ($group) use ($lexemes) {
+            /**
+             * We could use `flatMap->rows`, except that we need to know the
+             * table filters when working on each row.
+             */
+            return [$group->id => $group->inflectionTables->map(function ($table) use ($group, $lexemes) {
+                return $table->rows->map(function ($row) use ($group, $table, $lexemes) {
+                    /**
+                     * We are now inside an inflection row. We now need to
+                     * apply the table and row filters to all the forms on
+                     * the relevant lexeme (if present).
+                     */
+                    // Table vs. row filters are treated the same
+                    $filters = $table->filterValues->concat($row->filterValues);
+                    // Find which lexeme belongs to this group
+                    $lexeme = $lexemes->firstWhere(fn ($l) => $l->wordClass->group_id == $group->id);
+                    // Missing lexeme is 100% valid state
+                    if ($lexeme) {
+                        /**
+                         * Apply inflection filters ... Ideally this
+                         * results in a list of exactly 1 word form.
+                         * If not, we inform the user.
+                         */
+                        $matchingForms = $lexeme->forms->filter(
+                            fn ($form) => $filters->reduce(
+                                fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
+                                true
+                            )
+                        )->values();
+                    } else {
+                        $matchingForms = null;
+                    }
+                    // Package up the per-row data object
+                    return [
+                        'rowId' => $row->id,
+                        'srcBase' => $row->src_base,
+                        'matchingForms' => $matchingForms, // Collection of forms
+                    ];
+                });
+            })->flatten(1)->keyBy('rowId')]; // Collection of rows
+        }); // Collection of groups
+        /**
+         * $rowFiltersPerGroup should now look something like:
+         *
+         *   [
+         *     (WordClassGroup->id) => [
+         *       (InflectionTableRow->id) => [
+         *         'rowId' => <int>,
+         *         'srcBase' => <int>,
+         *         'matchingForms' => [
+         *           0 => <Form::class>,
+         *           . . .
+         *         ],
+         *       ],
+         *       . . .
+         *     ],
+         *     . . .
+         *   ]
+         *
+         * For non-inflected word class groups, the collection at that key will
+         * be empty (`$rowFiltersPerGroup->get($groupId)->count() == 0`).
+         *
+         * For inflected groups with no lexeme, matchingForms will be `null`.
+         * In this case, do not warn the user because nothing is amiss.
+         *
+         * For inflected groups with a lexeme, matchingForms may still be an
+         * empty collection or greater than 1:
+         *
+         *    $row['matchingForms']->count() != 1
+         *
+         * This is when we warn the user.
+         *
+         * However, even if count(matchingForms) is always 1, we still want to
+         * check for a word form matching to multiple inflection rows. It must
+         * be 1-to-1 in both directions.
+         */
+
         $this->infoForm = [
             'primaryForm' => $this->entry->primary_form,
             'etym' => $this->entry->etym,
-            'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) use ($neographies) {
+            'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) use ($neographies, $rowFiltersPerGroup) {
+                $rowFilters = $rowFiltersPerGroup->get($lexeme->wordClass->group_id);
                 return [$lexeme->id => [
                     'globalId' => $lexeme->global_id,
                     'wordClassId' => $lexeme->wordClass->id,
                     'wordClassName' => $lexeme->wordClass->name,
                     'wordClassGroupId' => $lexeme->wordClass->group_id,
                     'position' => $lexeme->position,
-                    'forms' => $lexeme->forms->mapWithKeys(function ($form) use ($neographies) {
+                    'forms' => $lexeme->forms->mapWithKeys(function ($form) use ($neographies, $rowFilters) {
+                        $matchingRows = $rowFilters->filter(fn ($row) => $row['matchingForms']->contains($form));
+                        // Collate some info about inflection matching
+                        if ($matchingRows->count() > 0) {
+                            // There is a matching row ...
+                            $rowId              = $matchingRows->first()['rowId'];
+                            $srcBase            = $matchingRows->first()['srcBase'];
+                            $thisRowMatchedWith = $matchingRows->first()['matchingForms']->count();
+                            $srcForms = ($srcBase ? $rowFilters->get($srcBase)['matchingForms'] : null);
+                            $srcForm  = ($srcForms!==null && $srcForms->count()>0 ? $srcForms->first()->id : null);
+                            $canAutoInflect = ( // We can auto-inflect if ...
+                                $matchingRows->count() == 1 && // This form exists in only one row's match results, AND
+                                $thisRowMatchedWith == 1 && // It's the only one in that row's match results, AND
+                                $srcForm !== null // We have a valid base form to inflect from
+                            );
+                        } else {
+                            // There is NOT a matching row ...
+                            $rowId = null;
+                            $srcBase = null;
+                            $srcForm = null;
+                            $thisRowMatchedWith = null;
+                            $canAutoInflect = false;
+                        }
                         return [$form->id => [
                             'globalId' => $form->global_id,
                             'transliterated' => $form->transliterated,
@@ -122,6 +253,12 @@ class EntryEditor extends Component
                                     'valueName'   => $value->name,
                                 ]];
                             })->toArray(),
+                            'inflectionRow' => $rowId,
+                            'srcRow' => $srcBase,
+                            'srcForm' => $srcForm,
+                            'matchedWithRows' => $matchingRows->count(),
+                            'thisRowMatchedWith' => $thisRowMatchedWith,
+                            'canAutoInflect' => $canAutoInflect,
                         ]];
                     })->toArray(),
                     'senses' => $lexeme->senses->mapWithKeys(function ($sense) {
@@ -139,11 +276,6 @@ class EntryEditor extends Component
                 ]];
             })->toArray(),
         ];
-        $this->language->loadMissing([
-            'wordClassGroups.wordClasses',
-            'wordClassGroups.primaryClass',
-            'wordClassGroups.features.featureValues',
-        ]);
         $this->wordClassGroups = $this->language->wordClassGroups->sortBy('id')->map(function ($group) {
             if ($group->primaryClass === null) {
                 $groupName = __('tollerus::ui.group_nameless');
