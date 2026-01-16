@@ -133,8 +133,11 @@ class EntryEditor extends Component
                      */
                     // Table vs. row filters are treated the same
                     $filters = $table->filterValues->concat($row->filterValues);
-                    // Find which lexeme belongs to this group
-                    $lexeme = $lexemes->firstWhere(fn ($l) => $l->wordClass->group_id == $group->id);
+                    // Find which best lexeme belongs to this group
+                    $lexeme = $lexemes->sortBy('position')
+                        ->filter(fn ($l) => $l->wordClass->group_id == $group->id)
+                        // If multiple exist with forms attached, we ignore them
+                        ->firstWhere(fn ($l) => $l->forms->count() > 0);
                     // Missing lexeme is 100% valid state
                     if ($lexeme) {
                         /**
@@ -253,7 +256,7 @@ class EntryEditor extends Component
                                     'valueName'   => $value->name,
                                 ]];
                             })->toArray(),
-                            'inflectionRow' => $rowId,
+                            'thisRow' => $rowId,
                             'srcRow' => $srcBase,
                             'srcForm' => $srcForm,
                             'matchedWithRows' => $matchingRows->count(),

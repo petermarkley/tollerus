@@ -427,6 +427,9 @@ return [
   'delete_subsense' => 'Delete subsense',
   'move_subsense_up' => 'Move subsense up',
   'move_subsense_down' => 'Move subsense down',
+  'no_row_matches_alert' => 'This word form has no matching inflection row, and will not be shown.',
+  'multiple_row_matches_alert' => 'This word form may show in multiple inflection rows.',
+  'multiple_form_matches_alert' => 'This word form\'s inflection values are redundant with another word form.',
   /**
    * TRANSLATOR NOTE:
    *

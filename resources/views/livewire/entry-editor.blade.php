@@ -330,6 +330,21 @@
                                                         </template>
                                                     </x-tollerus::inputs.dropdown>
                                                 </div>
+                                                <template x-if="form.matchedWithRows < 1">
+                                                    <x-tollerus::alert type="warning">
+                                                        <p>{{ __('tollerus::ui.no_row_matches_alert') }}</p>
+                                                    </x-tollerus::alert>
+                                                </template>
+                                                <template x-if="form.matchedWithRows > 1">
+                                                    <x-tollerus::alert type="warning">
+                                                        <p>{{ __('tollerus::ui.multiple_row_matches_alert') }}</p>
+                                                    </x-tollerus::alert>
+                                                </template>
+                                                <template x-if="form.thisRowMatchedWith > 1">
+                                                    <x-tollerus::alert type="warning">
+                                                        <p>{{ __('tollerus::ui.multiple_form_matches_alert') }}</p>
+                                                    </x-tollerus::alert>
+                                                </template>
                                             </div>
                                         </template>
                                     </x-tollerus::panel>
