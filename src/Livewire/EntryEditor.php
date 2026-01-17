@@ -216,10 +216,11 @@ class EntryEditor extends Component
          * be 1-to-1 in both directions.
          */
 
+        $language = $this->language;
         $this->infoForm = [
             'primaryForm' => $this->entry->primary_form,
             'etym' => $this->entry->etym,
-            'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) use ($neographies, $inflectionMatchesPerGroup) {
+            'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) use ($language, $neographies, $inflectionMatchesPerGroup) {
                 // Collate some info about inflection matching at the lexeme level
                 $inflectionMatches = $inflectionMatchesPerGroup->get($lexeme->wordClass->group_id);
                 $wasMatched = $inflectionMatches['lexemeId'] == $lexeme->id;
@@ -249,9 +250,14 @@ class EntryEditor extends Component
                             true
                         )
                     );
+                    $inflectionEditUrl = route('tollerus.admin.languages.inflection-tables', [
+                        'language' => $language,
+                        'wordClassGroup' => $lexeme->wordClass->group_id,
+                    ]);
                 } else {
                     $hasMissingForms = false;
                     $canAutoInflect = false;
+                    $inflectionEditUrl = null;
                 }
                 return [$lexeme->id => [
                     'globalId' => $lexeme->global_id,
@@ -262,6 +268,7 @@ class EntryEditor extends Component
                     'wasMatched' => $wasMatched,
                     'hasMissingForms' => $hasMissingForms,
                     'canAutoInflect' => $canAutoInflect,
+                    'inflectionEditUrl' => $inflectionEditUrl,
                     'forms' => $lexeme->forms->mapWithKeys(function ($form) use ($neographies, $inflectionMatches, $wasMatched, $lexeme) {
                         // Collate some info about inflection matching at the form level
                         $matchingRows     = $inflectionMatches['rows']->filter(fn ($row) => $row['matchingForms']->contains($form));

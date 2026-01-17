@@ -213,16 +213,31 @@
                                         @click="$wire.createMissingForms(lexemeId);"
                                         wire:loading.attr="disabled"
                                         wire:target="createMissingForms"
+                                        class="px-2"
                                     >
                                         <span>{{ __('tollerus::ui.add_missing_word_forms') }}</span>
                                     </x-tollerus::inputs.button>
                                 </x-tollerus::alert>
                             </template>
                             <x-tollerus::pane class="flex flex-col gap-4 items-start">
-                                <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
-                                    <x-tollerus::icons.fingerprint />
-                                    <span>{{ __('tollerus::ui.word_forms') }}</span>
-                                </h3>
+                                <div class="flex flex-col md:flex-row gap-y-4 gap-x-8 items-start md:items-center">
+                                    <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
+                                        <x-tollerus::icons.fingerprint />
+                                        <span>{{ __('tollerus::ui.word_forms') }}</span>
+                                    </h3>
+                                    <template x-if="lexeme.wasMatched && Object.values(wordClassGroup.features).length > 0">
+                                        <x-tollerus::button
+                                            type="secondary"
+                                            size="small"
+                                            title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.inflection_tables')]) }}"
+                                            x-bind:href="lexeme.inflectionEditUrl"
+                                            class="flex flex-row gap-2 items-center px-2"
+                                        >
+                                            <x-tollerus::icons.edit />
+                                            <span>{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.inflection_tables')]) }}</span>
+                                        </x-tollerus::button>
+                                    </template>
+                                </div>
                                 <template x-for="([formId, form], i) in Object.entries(lexeme.forms)">
                                     <x-tollerus::panel class="flex flex-col gap-4 items-start w-full">
                                         <div class="flex flex-row gap-4 justify-between items-center w-full">
