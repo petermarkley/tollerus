@@ -649,26 +649,34 @@ class EntryEditor extends Component
         $formModel->loadMissing([
             'inflectionValues',
         ]);
-        // Remove any existing inflection values
-        foreach ($formModel->inflectionValues as $value) {
-            FormFeatureValue::where('form_id', (int)$formModel->id)
-                ->where('value_id', (int)$value->id)
-                ->firstOrFail()
-                ->delete();
-        }
-        // Add values from table and row filters
-        $filters = $table->filterValues->concat($row->filterValues);
-        foreach ($filters as $value) {
-            try {
-                (new FormFeatureValue([
-                    'form_id' => $formModel->id,
-                    'feature_id' => $value->feature_id,
-                    'value_id' => $value->id,
-                ]))->save();
-            } catch (\Throwable $e) {
-                $this->dispatch('form-matchtorow-failure');
-                throw $e;
-            }
+        try {
+            $connection = config('tollerus.connection', 'tollerus');
+            DB::connection($connection)->transaction(function () use ($formModel, $table, $row) {
+                // Remove any existing inflection values
+                foreach ($formModel->inflectionValues as $value) {
+                    FormFeatureValue::where('form_id', (int)$formModel->id)
+                        ->where('value_id', (int)$value->id)
+                        ->firstOrFail()
+                        ->delete();
+                }
+                // Add values from table and row filters
+                $filters = $table->filterValues->concat($row->filterValues);
+                foreach ($filters as $value) {
+                    try {
+                        (new FormFeatureValue([
+                            'form_id' => $formModel->id,
+                            'feature_id' => $value->feature_id,
+                            'value_id' => $value->id,
+                        ]))->save();
+                    } catch (\Throwable $e) {
+                        $this->dispatch('form-matchtorow-failure');
+                        throw $e;
+                    }
+                }
+            });
+        } catch (\Throwable $e) {
+            $this->dispatch('form-matchtorow-failure');
+            throw $e;
         }
         $this->refreshForm();
     }
