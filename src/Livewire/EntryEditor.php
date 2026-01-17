@@ -662,16 +662,11 @@ class EntryEditor extends Component
                 // Add values from table and row filters
                 $filters = $table->filterValues->concat($row->filterValues);
                 foreach ($filters as $value) {
-                    try {
-                        (new FormFeatureValue([
-                            'form_id' => $formModel->id,
-                            'feature_id' => $value->feature_id,
-                            'value_id' => $value->id,
-                        ]))->save();
-                    } catch (\Throwable $e) {
-                        $this->dispatch('form-matchtorow-failure');
-                        throw $e;
-                    }
+                    (new FormFeatureValue([
+                        'form_id' => $formModel->id,
+                        'feature_id' => $value->feature_id,
+                        'value_id' => $value->id,
+                    ]))->save();
                 }
             });
         } catch (\Throwable $e) {
