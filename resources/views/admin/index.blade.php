@@ -23,6 +23,9 @@
                     <x-tollerus::panel class="flex flex-row gap-4 justify-center items-center group-has-hover:bg-zinc-100 group-has-hover:dark:bg-zinc-700">
                         <x-tollerus::icons.neography class="w-12 h-12"/>
                         <span class="text-3xl sr-only sm:not-sr-only">{{ __('tollerus::ui.neographies') }}</span>
+                        @if ($neographyCount > 0)
+                            <span class="block text-2xl font-bold text-white dark:text-zinc-900 bg-zinc-600 dark:bg-zinc-300 rounded-full w-8 h-8 flex justify-center items-center text-center">{{ $neographyCount }}</span>
+                        @endif
                     </x-tollerus::panel>
                 </a>
                 @if (!$hasData)
@@ -43,6 +46,9 @@
                     <x-tollerus::panel class="flex flex-row gap-4 justify-center items-center group-has-hover:bg-zinc-100 group-has-hover:dark:bg-zinc-700">
                         <x-tollerus::icons.language class="w-12 h-12"/>
                         <span class="text-3xl sr-only sm:not-sr-only">{{ __('tollerus::ui.languages') }}</span>
+                        @if ($languageCount > 0)
+                            <span class="block text-2xl font-bold text-white dark:text-zinc-900 bg-zinc-600 dark:bg-zinc-300 rounded-full w-8 h-8 flex justify-center items-center text-center">{{ $languageCount }}</span>
+                        @endif
                     </x-tollerus::panel>
                 </a>
             </div>

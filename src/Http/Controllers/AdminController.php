@@ -13,7 +13,13 @@ class AdminController extends Controller
 {
     public function index(): View
     {
-        $hasData = (bool)((Language::count() + Neography::count()) > 0);
-        return view('tollerus::admin.index', ['hasData' => $hasData]);
+        $languageCount = Language::count();
+        $neographyCount = Neography::count();
+        $hasData = (bool)(($languageCount + $neographyCount) > 0);
+        return view('tollerus::admin.index', [
+            'languageCount' => $languageCount,
+            'neographyCount' => $neographyCount,
+            'hasData' => $hasData,
+        ]);
     }
 }
