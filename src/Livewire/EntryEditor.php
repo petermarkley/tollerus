@@ -21,6 +21,7 @@ use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\Sense;
 use PeterMarkley\Tollerus\Models\Subsense;
 use PeterMarkley\Tollerus\Models\WordClass;
+use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
@@ -422,39 +423,10 @@ class EntryEditor extends Component
             /**
              * For inflected word classes, we want to scaffold a set of word forms
              * based on any inflection tables that are currently configured.
-             *
-             * One form for each inflection row, with all the relevant filters
-             * added as inflection values.
              */
-            foreach ($wordClassModel->group->inflectionTables->sortBy('position') as $table) {
-                foreach ($table->rows->sortBy('position') as $row) {
-                    // Create the form
-                    $form = $lexeme->forms()->create([
-                        'language_id' => $this->language->id,
-                    ]);
-                    $addedForm = true;
-                    // Maybe set as primary
-                    if ($row->src_base === null && $this->entry->primary_form === null) {
-                        $this->entry->primary_form = $form->id;
-                        $this->entry->save();
-                    }
-                    // Add filters from the table
-                    foreach ($table->filterValues as $value) {
-                        (new FormFeatureValue([
-                            'form_id' => $form->id,
-                            'feature_id' => $value->feature_id,
-                            'value_id' => $value->id,
-                        ]))->save();
-                    }
-                    // Add filters from the row
-                    foreach ($row->filterValues as $value) {
-                        (new FormFeatureValue([
-                            'form_id' => $form->id,
-                            'feature_id' => $value->feature_id,
-                            'value_id' => $value->id,
-                        ]))->save();
-                    }
-                }
+            if ($wordClassModel->group->inflectionTables->isNotEmpty()) {
+                $this->createMissingFormsWorker($lexeme, $wordClassModel->group);
+                $addedForm = true;
             }
         }
         /**
@@ -922,5 +894,90 @@ class EntryEditor extends Component
                 $sense->save();
             }
         });
+    }
+    public function createMissingForms(string $lexemeId): void
+    {
+        // Find model
+        $lexemeModel = $this->findInCache('form-addmissing-failure', [
+            [
+                'id' => $lexemeId,
+                'objectType' => Lexeme::class,
+                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
+            ],
+        ]);
+        $this->createMissingFormsWorker($lexemeModel, $lexemeModel->wordClass->group);
+        $this->refreshForm();
+    }
+
+    /**
+     * Internal utility functions
+     */
+    private function createMissingFormsWorker(Lexeme $lexeme, WordClassGroup $group): void
+    {
+        /**
+         * For lexemes in inflected word class groups, the system expects
+         * exactly one word form to exist for each inflection row, with
+         * grammar features that match it one-to-one.
+         *
+         * To help the user achieve this state, we're going to add any word
+         * forms that are missing.
+         */
+        // Check for bad input
+        if ($lexeme->wordClass->group_id != $group->id) {
+            return;
+        }
+        // Eager-load relations
+        $lexeme->loadMissing([
+            'forms.inflectionValues'
+        ]);
+        $group->loadMissing([
+            'inflectionTables.filterValues',
+            'inflectionTables.rows.filterValues',
+        ]);
+        // Check for non-inflected word class group
+        if (!$group->features()->exists() || $group->inflectionTables->isEmpty()) {
+            return;
+        }
+        // Okay, let's do it
+        foreach ($group->inflectionTables->sortBy('position') as $table) {
+            foreach ($table->rows->sortBy('position') as $row) {
+
+                // Establish filter list
+                $filters = $table->filterValues->concat($row->filterValues);
+
+                // Check if any forms already match
+                $matchingForms = $lexeme->forms->filter(
+                    fn ($form) => $filters->reduce(
+                        fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
+                        true
+                    )
+                );
+                if ($matchingForms->isNotEmpty()) {
+                    // If one or more matching form exists, then skip this row
+                    continue;
+                }
+
+                // Create the form
+                $form = $lexeme->forms()->create([
+                    'language_id' => $this->language->id,
+                ]);
+
+                // Maybe set as primary
+                if ($row->src_base === null && $this->entry->primary_form === null) {
+                    $this->entry->primary_form = $form->id;
+                    $this->entry->save();
+                }
+
+                // Add filter values
+                foreach ($filters as $value) {
+                    (new FormFeatureValue([
+                        'form_id' => $form->id,
+                        'feature_id' => $value->feature_id,
+                        'value_id' => $value->id,
+                    ]))->save();
+                }
+
+            }
+        }
     }
 }

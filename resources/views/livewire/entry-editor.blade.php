@@ -206,6 +206,16 @@
                             <template x-if="lexeme.hasMissingForms">
                                 <x-tollerus::alert type="warning">
                                     <p>{{ __('tollerus::ui.missing_forms_alert') }}</p>
+                                    <x-tollerus::inputs.button
+                                        type="primary"
+                                        size="small"
+                                        title="{{ __('tollerus::ui.add_missing_word_forms') }}"
+                                        @click="$wire.createMissingForms(lexemeId);"
+                                        wire:loading.attr="disabled"
+                                        wire:target="createMissingForms"
+                                    >
+                                        <span>{{ __('tollerus::ui.add_missing_word_forms') }}</span>
+                                    </x-tollerus::inputs.button>
                                 </x-tollerus::alert>
                             </template>
                             <x-tollerus::pane class="flex flex-col gap-4 items-start">

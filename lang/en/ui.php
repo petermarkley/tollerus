@@ -413,6 +413,7 @@ return [
   'word_form' => 'Word form',
   'word_forms' => 'Word forms',
   'add_word_form' => 'Add word form',
+  'add_missing_word_forms' => 'Add missing word forms',
   'delete_word_form' => 'Delete word form',
   'irregular' => 'Irregular',
   'inflection_values' => 'Inflection values',
