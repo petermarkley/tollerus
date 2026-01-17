@@ -316,34 +316,63 @@
                                                             </li>
                                                         </template>
                                                     </ul>
-                                                    <x-tollerus::inputs.dropdown class="relative w-full">
-                                                        <x-slot:button>
-                                                            <x-tollerus::inputs.missing-data
-                                                                size="small"
-                                                                title="{{ __('tollerus::ui.add_value') }}"
-                                                                class="relative flex flex-row gap-2 justify-center items-center"
-                                                                @click="open=true"
-                                                            >
-                                                                <x-tollerus::icons.plus/>
-                                                                <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_value') }}</span>
-                                                            </x-tollerus::inputs.missing-data>
-                                                        </x-slot:button>
-                                                        <template x-for="feature in wordClassGroup.features">
-                                                            <div class="flex flex-col items-start">
-                                                                <span x-text="feature.name" class="italic opacity-50"></span>
-                                                                <template x-for="value in feature.values">
-                                                                    <x-tollerus::inputs.button
-                                                                        type="inverse"
-                                                                        size="small"
-                                                                        x-bind:class="{'ml-4': true, 'line-through': Object.values(form.inflectionValues).map((v)=>v.featureId).includes(feature.id)}"
-                                                                        x-bind:disabled="Object.values(form.inflectionValues).map((v)=>v.featureId).includes(feature.id);"
-                                                                        x-text="value.name"
-                                                                        @click="open=false; $wire.addFormValue(lexemeId, formId, value.id);"
-                                                                    />
-                                                                </template>
-                                                            </div>
-                                                        </template>
-                                                    </x-tollerus::inputs.dropdown>
+                                                    <div class="flex flex-col md:flex-row gap-4 justify-start items-start md:items-center">
+                                                        <x-tollerus::inputs.dropdown class="relative w-full">
+                                                            <x-slot:button>
+                                                                <x-tollerus::inputs.missing-data
+                                                                    size="small"
+                                                                    title="{{ __('tollerus::ui.match_to_inflection_row') }}"
+                                                                    class="relative flex flex-row gap-2 justify-center items-center"
+                                                                    @click="open=true"
+                                                                >
+                                                                    <x-tollerus::icons.link/>
+                                                                    <span class="sr-only lg:not-sr-only !whitespace-nowrap">{{ __('tollerus::ui.match_to_inflection_row') }}</span>
+                                                                </x-tollerus::inputs.missing-data>
+                                                            </x-slot:button>
+                                                            <template x-for="table in wordClassGroup.tables">
+                                                                <div class="flex flex-col items-start">
+                                                                    <span x-text="table.label" class="italic opacity-50"></span>
+                                                                    <template x-for="row in table.rows">
+                                                                        <x-tollerus::inputs.button
+                                                                            type="inverse"
+                                                                            size="small"
+                                                                            x-text="row.label"
+                                                                            @click="open=false; $wire.matchFormToRow(lexemeId, formId, table.id, row.id);"
+                                                                            class="ml-4"
+                                                                        />
+                                                                    </template>
+                                                                </div>
+                                                            </template>
+                                                        </x-tollerus::inputs.dropdown>
+                                                        <x-tollerus::inputs.dropdown class="relative w-full">
+                                                            <x-slot:button>
+                                                                <x-tollerus::inputs.missing-data
+                                                                    size="small"
+                                                                    title="{{ __('tollerus::ui.add_value') }}"
+                                                                    class="relative flex flex-row gap-2 justify-center items-center"
+                                                                    @click="open=true"
+                                                                >
+                                                                    <x-tollerus::icons.plus/>
+                                                                    <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_value') }}</span>
+                                                                </x-tollerus::inputs.missing-data>
+                                                            </x-slot:button>
+                                                            <template x-for="feature in wordClassGroup.features">
+                                                                <div class="flex flex-col items-start">
+                                                                    <span x-text="feature.name" class="italic opacity-50"></span>
+                                                                    <template x-for="value in feature.values">
+                                                                        <x-tollerus::inputs.button
+                                                                            type="inverse"
+                                                                            size="small"
+                                                                            x-bind:class="{'ml-4': true, 'line-through': Object.values(form.inflectionValues).map((v)=>v.featureId).includes(feature.id)}"
+                                                                            x-bind:disabled="Object.values(form.inflectionValues).map((v)=>v.featureId).includes(feature.id);"
+                                                                            x-text="value.name"
+                                                                            @click="open=false; $wire.addFormValue(lexemeId, formId, value.id);"
+                                                                        />
+                                                                    </template>
+                                                                </div>
+                                                            </template>
+                                                        </x-tollerus::inputs.dropdown>
+                                                    </div>
                                                 </div>
                                                 <template x-if="form.matchedWithRows < 1">
                                                     <x-tollerus::alert type="warning">

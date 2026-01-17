@@ -419,6 +419,7 @@ return [
   'inflection_values' => 'Inflection values',
   'add_value' => 'Add value', // That is, a grammatical value
   'remove_value' => 'Remove value',
+  'match_to_inflection_row' => 'Match to inflection row',
   'add_word_sense' => 'Add word sense', // That is, a sense of a word in the dictionary
   'delete_word_sense' => 'Delete word sense',
   'move_sense_up' => 'Move sense up',

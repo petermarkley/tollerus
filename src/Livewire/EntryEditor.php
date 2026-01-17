@@ -14,6 +14,8 @@ use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Form;
+use PeterMarkley\Tollerus\Models\InflectionTable;
+use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
 use PeterMarkley\Tollerus\Models\NativeSpelling;
@@ -343,6 +345,14 @@ class EntryEditor extends Component
                         'name' => $value->name
                     ])->toArray(),
                 ])->toArray(),
+                'tables' => $group->inflectionTables->sortBy('position')->map(fn ($table) => [
+                    'id' => $table->id,
+                    'label' => $table->label,
+                    'rows' => $table->rows->sortBy('position')->map(fn ($row) => [
+                        'id' => $row->id,
+                        'label' => $row->label,
+                    ])->toArray(),
+                ])->toArray(),
             ];
         })->toArray();
     }
@@ -587,6 +597,66 @@ class EntryEditor extends Component
             ->where('value_id', (int)$valueId)
             ->firstOrFail()
             ->delete();
+        $this->refreshForm();
+    }
+    public function matchFormToRow(string $lexemeId, string $formId, string $tableId, string $rowId): void
+    {
+        // Find models
+        $lexemeModel = collect($this->lexemes)->firstWhere('id', $lexemeId);
+        if (!($lexemeModel instanceof Lexeme)) {
+            $this->dispatch('form-matchtorow-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['lexemeId' => [__('tollerus::error.invalid_lexeme')]]);
+            return;
+        }
+        $formModel = $lexemeModel->forms->firstWhere('id', $formId);
+        if (!($formModel instanceof Form)) {
+            $this->dispatch('form-matchtorow-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['formId' => [__('tollerus::error.invalid_form')]]);
+            return;
+        }
+        $wordClassGroup = $this->language->wordClassGroups->firstWhere('id', $lexemeModel->wordClass->group_id);
+        $table = $wordClassGroup->inflectionTables->firstWhere('id', $tableId);
+        if (!($table instanceof InflectionTable)) {
+            $this->dispatch('form-matchtorow-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['tableId' => [__('tollerus::error.invalid_inflection_table')]]);
+            return;
+        }
+        $row = $table->rows->firstWhere('id', $rowId);
+        if (!($row instanceof InflectionTableRow)) {
+            $this->dispatch('form-matchtorow-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_table_row')]]);
+            return;
+        }
+        $table->loadMissing([
+            'filterValues',
+        ]);
+        $row->loadMissing([
+            'filterValues',
+        ]);
+        $formModel->loadMissing([
+            'inflectionValues',
+        ]);
+        // Remove any existing inflection values
+        foreach ($formModel->inflectionValues as $value) {
+            FormFeatureValue::where('form_id', (int)$formModel->id)
+                ->where('value_id', (int)$value->id)
+                ->firstOrFail()
+                ->delete();
+        }
+        // Add values from table and row filters
+        $filters = $table->filterValues->concat($row->filterValues);
+        foreach ($filters as $value) {
+            try {
+                (new FormFeatureValue([
+                    'form_id' => $formModel->id,
+                    'feature_id' => $value->feature_id,
+                    'value_id' => $value->id,
+                ]))->save();
+            } catch (\Throwable $e) {
+                $this->dispatch('form-matchtorow-failure');
+                throw $e;
+            }
+        }
         $this->refreshForm();
     }
     public function updateNativeSpelling(string $lexemeId, string $formId, string $neographyId, string $spelling, ?string $domId = ''): void
