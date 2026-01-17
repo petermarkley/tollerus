@@ -317,33 +317,35 @@
                                                         </template>
                                                     </ul>
                                                     <div class="flex flex-col md:flex-row gap-4 justify-start items-start md:items-center">
-                                                        <x-tollerus::inputs.dropdown class="relative w-full">
-                                                            <x-slot:button>
-                                                                <x-tollerus::inputs.missing-data
-                                                                    size="small"
-                                                                    title="{{ __('tollerus::ui.match_to_inflection_row') }}"
-                                                                    class="relative flex flex-row gap-2 justify-center items-center"
-                                                                    @click="open=true"
-                                                                >
-                                                                    <x-tollerus::icons.link/>
-                                                                    <span class="sr-only lg:not-sr-only !whitespace-nowrap">{{ __('tollerus::ui.match_to_inflection_row') }}</span>
-                                                                </x-tollerus::inputs.missing-data>
-                                                            </x-slot:button>
-                                                            <template x-for="table in wordClassGroup.tables">
-                                                                <div class="flex flex-col items-start">
-                                                                    <span x-text="table.label" class="italic opacity-50"></span>
-                                                                    <template x-for="row in table.rows">
-                                                                        <x-tollerus::inputs.button
-                                                                            type="inverse"
-                                                                            size="small"
-                                                                            x-text="row.label"
-                                                                            @click="open=false; $wire.matchFormToRow(lexemeId, formId, table.id, row.id);"
-                                                                            class="ml-4"
-                                                                        />
-                                                                    </template>
-                                                                </div>
-                                                            </template>
-                                                        </x-tollerus::inputs.dropdown>
+                                                        <template x-if="form.matchingRowId===null">
+                                                            <x-tollerus::inputs.dropdown class="relative w-full">
+                                                                <x-slot:button>
+                                                                    <x-tollerus::inputs.missing-data
+                                                                        size="small"
+                                                                        title="{{ __('tollerus::ui.match_to_inflection_row') }}"
+                                                                        class="relative flex flex-row gap-2 justify-center items-center"
+                                                                        @click="open=true"
+                                                                    >
+                                                                        <x-tollerus::icons.link/>
+                                                                        <span class="sr-only lg:not-sr-only !whitespace-nowrap">{{ __('tollerus::ui.match_to_inflection_row') }}</span>
+                                                                    </x-tollerus::inputs.missing-data>
+                                                                </x-slot:button>
+                                                                <template x-for="table in wordClassGroup.tables">
+                                                                    <div class="flex flex-col items-start">
+                                                                        <span x-text="table.label" class="italic opacity-50"></span>
+                                                                        <template x-for="row in table.rows">
+                                                                            <x-tollerus::inputs.button
+                                                                                type="inverse"
+                                                                                size="small"
+                                                                                x-text="row.label"
+                                                                                @click="open=false; $wire.matchFormToRow(lexemeId, formId, table.id, row.id);"
+                                                                                class="ml-4"
+                                                                            />
+                                                                        </template>
+                                                                    </div>
+                                                                </template>
+                                                            </x-tollerus::inputs.dropdown>
+                                                        </template>
                                                         <x-tollerus::inputs.dropdown class="relative w-full">
                                                             <x-slot:button>
                                                                 <x-tollerus::inputs.missing-data
@@ -374,17 +376,24 @@
                                                         </x-tollerus::inputs.dropdown>
                                                     </div>
                                                 </div>
-                                                <template x-if="form.matchedWithRows < 1">
+                                                <template x-if="form.matchingRowId!==null">
+                                                    <p class="flex flex-row gap-3 justify-start items-center text-zinc-500 dark:text-zinc-500">
+                                                        <x-tollerus::icons.check class="border-2 border-zinc-500 rounded-full"/>
+                                                        <span class="italic">{{ __('tollerus::ui.matched_inflection_row') }}:</span>
+                                                        <span class="font-bold" x-text="form.matchingRowLabel"></span>
+                                                    </p>
+                                                </template>
+                                                <template x-if="lexeme.wasMatched && form.matchingRowCount < 1">
                                                     <x-tollerus::alert type="warning">
                                                         <p>{{ __('tollerus::ui.no_row_matches_alert') }}</p>
                                                     </x-tollerus::alert>
                                                 </template>
-                                                <template x-if="form.matchedWithRows > 1">
+                                                <template x-if="lexeme.wasMatched && form.matchingRowCount > 1">
                                                     <x-tollerus::alert type="warning">
                                                         <p>{{ __('tollerus::ui.multiple_row_matches_alert') }}</p>
                                                     </x-tollerus::alert>
                                                 </template>
-                                                <template x-if="form.thisRowMatchedWith > 1">
+                                                <template x-if="lexeme.wasMatched && form.matchingRowHasOthers">
                                                     <x-tollerus::alert type="warning">
                                                         <p>{{ __('tollerus::ui.multiple_form_matches_alert') }}</p>
                                                     </x-tollerus::alert>

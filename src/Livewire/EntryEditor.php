@@ -158,6 +158,7 @@ class EntryEditor extends Component
                         // Package up the per-row data object
                         return [
                             'rowId' => $row->id,
+                            'rowLabel' => $table->label." \u{2192} ".$row->label,
                             'srcBase' => $row->src_base,
                             'matchingForms' => $lexeme?->forms->filter(
                                 fn ($form) => $filters->reduce(
@@ -185,6 +186,7 @@ class EntryEditor extends Component
          *       'rows' => [
          *         (InflectionTableRow->id) => [
          *           'rowId' => <int>,
+         *           'rowLabel' => <string>,
          *           'srcBase' => <int>,
          *           'matchingForms' => [
          *             0 => <Form::class>,
@@ -218,12 +220,16 @@ class EntryEditor extends Component
             'primaryForm' => $this->entry->primary_form,
             'etym' => $this->entry->etym,
             'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) use ($neographies, $inflectionMatchesPerGroup) {
+                // Collate some info about inflection matching at the lexeme level
                 $inflectionMatches = $inflectionMatchesPerGroup->get($lexeme->wordClass->group_id);
-                if ($inflectionMatches['lexemeId'] == $lexeme->id && $inflectionMatches['rows']->count() > 0) {
+                $wasMatched = $inflectionMatches['lexemeId'] == $lexeme->id;
+                if ($wasMatched && $inflectionMatches['rows']->isNotEmpty()) {
+                    // This decides whether we warn the user
                     $hasMissingForms = $inflectionMatches['rows']->reduce(
                         fn ($carry, $row) => ($carry || $row['matchingForms']->isEmpty()),
                         false
                     );
+                    // This decides whether we offer auto-inflection here
                     $canAutoInflect = (
                         // No missing or competing forms
                         $inflectionMatches['rows']->reduce(
@@ -253,31 +259,30 @@ class EntryEditor extends Component
                     'wordClassName' => $lexeme->wordClass->name,
                     'wordClassGroupId' => $lexeme->wordClass->group_id,
                     'position' => $lexeme->position,
+                    'wasMatched' => $wasMatched,
                     'hasMissingForms' => $hasMissingForms,
                     'canAutoInflect' => $canAutoInflect,
-                    'forms' => $lexeme->forms->mapWithKeys(function ($form) use ($neographies, $inflectionMatches, $lexeme) {
-                        $matchingRows = $inflectionMatches['rows']->filter(fn ($row) => $row['matchingForms']->contains($form));
-                        // Collate some info about inflection matching
-                        if ($inflectionMatches['lexemeId'] == $lexeme->id && $matchingRows->count() > 0) {
-                            // There is a matching row ...
-                            $rowId              = $matchingRows->first()['rowId'];
-                            $srcBase            = $matchingRows->first()['srcBase'];
-                            $thisRowMatchedWith = $matchingRows->first()['matchingForms']->count();
-                            $srcForms = ($srcBase ? $inflectionMatches['rows']->get($srcBase)['matchingForms'] : null);
-                            $srcForm  = ($srcForms!==null && $srcForms->count()>0 ? $srcForms->first()->id : null);
-                            $canAutoInflect = ( // We can auto-inflect if ...
-                                $matchingRows->count() == 1 && // This form exists in only one row's match results, AND
-                                $thisRowMatchedWith == 1 && // It's the only one in that row's match results, AND
-                                $srcForm !== null // We have a valid base form to inflect from
-                            );
-                        } else {
-                            // There is NOT a matching row ...
-                            $rowId = null;
-                            $srcBase = null;
-                            $srcForm = null;
-                            $thisRowMatchedWith = null;
-                            $canAutoInflect = false;
-                        }
+                    'forms' => $lexeme->forms->mapWithKeys(function ($form) use ($neographies, $inflectionMatches, $wasMatched, $lexeme) {
+                        // Collate some info about inflection matching at the form level
+                        $matchingRows     = $inflectionMatches['rows']->filter(fn ($row) => $row['matchingForms']->contains($form));
+                        $matchingRow      = $matchingRows->first();
+                        $matchingRowId    = $matchingRow['rowId'] ?? null;
+                        $matchingRowLabel = $matchingRow['rowLabel'] ?? null;
+                        $matchingRowCount = $matchingRows->count();
+                        $srcRow           = $matchingRow['srcBase'] ?? null;
+                        $srcRowForms = $inflectionMatches['rows']->get($srcRow)['matchingForms'] ?? null;
+                        $srcForm     = $srcRowForms?->first()?->id;
+                        $matchingRowHasOthers = ($matchingRow ? ($matchingRow['matchingForms']->count() > 1) : false);
+                        $canAutoInflect = (
+                            // We can auto-inflect if ...
+                            $wasMatched // The lexeme has any matching status to begin with, AND
+                            &&
+                            $matchingRowCount == 1 // This form exists in only one row's match results, AND
+                            &&
+                            $matchingRow['matchingForms']->count() == 1 // It's the only one in that row's match results, AND
+                            &&
+                            $srcForm !== null // We have a valid base form to inflect from
+                        );
                         return [$form->id => [
                             'globalId' => $form->global_id,
                             'transliterated' => $form->transliterated,
@@ -301,11 +306,12 @@ class EntryEditor extends Component
                                     'valueName'   => $value->name,
                                 ]];
                             })->toArray(),
-                            'thisRow' => $rowId,
-                            'srcRow' => $srcBase,
+                            'matchingRowId'    => $matchingRowId,
+                            'matchingRowLabel' => $matchingRowLabel,
+                            'matchingRowCount' => $matchingRowCount,
+                            'matchingRowHasOthers' => $matchingRowHasOthers,
+                            'srcRow' => $srcRow,
                             'srcForm' => $srcForm,
-                            'matchedWithRows' => $matchingRows->count(),
-                            'thisRowMatchedWith' => $thisRowMatchedWith,
                             'canAutoInflect' => $canAutoInflect,
                         ]];
                     })->toArray(),
