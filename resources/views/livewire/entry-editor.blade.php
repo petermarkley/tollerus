@@ -400,6 +400,11 @@
                                                 </template>
                                             </div>
                                         </template>
+                                        <template x-if="Object.values(wordClassGroup.features).length == 0 && infoForm.primaryForm !== null && infoForm.primaryForm != formId">
+                                            <x-tollerus::alert type="warning">
+                                                <p>{{ __('tollerus::ui.non_primary_form_alert') }}</p>
+                                            </x-tollerus::alert>
+                                        </template>
                                     </x-tollerus::panel>
                                 </template>
                                 <x-tollerus::inputs.missing-data

@@ -434,6 +434,7 @@ return [
   'multiple_row_matches_alert' => 'This word form may show in multiple inflection rows.',
   'multiple_form_matches_alert' => 'This word form\'s inflection values are redundant with another word form.',
   'missing_forms_alert' => 'This word class is missing one or more expected word forms.',
+  'non_primary_form_alert' => 'This word class does not need a word form, unless it\'s the primary form for the entry. This form will not be shown.',
   /**
    * TRANSLATOR NOTE:
    *
