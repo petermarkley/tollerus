@@ -20,7 +20,7 @@ final class LoadGrammarPreset
         $connection = config('tollerus.connection', 'tollerus');
         return DB::connection($connection)->transaction(function () use ($language, $preset) {
             // Read the file
-            $fileName = __DIR__.'/../../../../resources/grammar_presets/'.$preset.'.json';
+            $fileName = __DIR__.'/../../../../resources/data/grammar_presets/'.$preset.'.json';
             if (!file_exists($fileName)) {
                 throw new \InvalidArgumentException("File '{$fileName}' doesn't exist.");
             }

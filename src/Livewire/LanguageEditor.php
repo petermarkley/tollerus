@@ -122,7 +122,7 @@ class LanguageEditor extends Component
 
         // Grammar tab
         $this->refreshGrammarForm();
-        $folder = __DIR__ . '/../../resources/grammar_presets/';
+        $folder = __DIR__ . '/../../resources/data/grammar_presets/';
         $presetFiles = collect(scandir($folder))
             ->map(fn ($f) => $folder . $f)
             ->filter(fn ($path) => (
