@@ -1279,5 +1279,704 @@
         "type": "vowel",
         "row": 7,
         "col": 10
+    },
+
+    {
+        "glyph": "ʼ",
+        "label": "Ejective diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 2
+    },
+    {
+        "glyph": "̩",
+        "label": "Syllabic lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 3
+    },
+    {
+        "glyph": "̍",
+        "label": "Syllabic upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 4
+    },
+    {
+        "glyph": "̯",
+        "label": "Non-syllabic lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 5
+    },
+    {
+        "glyph": "̑",
+        "label": "Non-syllabic upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 6
+    },
+    {
+        "glyph": "ʰ",
+        "label": "Aspirated diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 8
+    },
+    {
+        "glyph": "̚",
+        "label": "No audible release diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 10
+    },
+    {
+        "glyph": "ⁿ",
+        "label": "Nasal release diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 12
+    },
+    {
+        "glyph": "ˡ",
+        "label": "Lateral release diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 14
+    },
+    {
+        "glyph": "ᶿ",
+        "label": "Voiceless dental fricative release diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 16
+    },
+    {
+        "glyph": "ˣ",
+        "label": "Voiceless velar fricative release diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 18
+    },
+    {
+        "glyph": "ᵊ",
+        "label": "Mid central vowel release diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 20
+    },
+    {
+        "glyph": "̥",
+        "label": "Voiceless lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 21
+    },
+    {
+        "glyph": "̊",
+        "label": "Voiceless upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 22
+    },
+    {
+        "glyph": "̬",
+        "label": "Voiced diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 23
+    },
+    {
+        "glyph": "̤",
+        "label": "Breathy voiced diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 25
+    },
+    {
+        "glyph": "̰",
+        "label": "Creaky voiced diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 1,
+        "col": 27
+    },
+    {
+        "glyph": "̪",
+        "label": "Dental lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 1
+    },
+    {
+        "glyph": "͆",
+        "label": "Dental upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 2
+    },
+    {
+        "glyph": "̼",
+        "label": "Linguolabial lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 3
+    },
+    {
+        "glyph": "᫥",
+        "label": "Linguolabial upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 4
+    },
+    {
+        "glyph": "̺",
+        "label": "Apical lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 5
+    },
+    {
+        "glyph": "᫣",
+        "label": "Apical upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 6
+    },
+    {
+        "glyph": "̻",
+        "label": "Laminal lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 7
+    },
+    {
+        "glyph": "᫤",
+        "label": "Laminal upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 8
+    },
+    {
+        "glyph": "̟",
+        "label": "Advanced lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 9
+    },
+    {
+        "glyph": "᫈",
+        "label": "Advanced upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 10
+    },
+    {
+        "glyph": "̠",
+        "label": "Retracted lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 11
+    },
+    {
+        "glyph": "᫢",
+        "label": "Retracted upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 12
+    },
+    {
+        "glyph": "̈",
+        "label": "Centralized diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 14
+    },
+    {
+        "glyph": "̽",
+        "label": "Mid-centralized diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 16
+    },
+    {
+        "glyph": "̝",
+        "label": "Raised lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 17
+    },
+    {
+        "glyph": "᷵",
+        "label": "Raised upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 18
+    },
+    {
+        "glyph": "̞",
+        "label": "Lowered lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 19
+    },
+    {
+        "glyph": "᫛",
+        "label": "Lowered upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 2,
+        "col": 20
+    },
+    {
+        "glyph": "̹",
+        "label": "More rounded lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 1
+    },
+    {
+        "glyph": "͗",
+        "label": "More rounded upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 2
+    },
+    {
+        "glyph": "̜",
+        "label": "Less rounded lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 3
+    },
+    {
+        "glyph": "͑",
+        "label": "Less rounded upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 4
+    },
+    {
+        "glyph": "ʷ",
+        "label": "Labialized diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 6
+    },
+    {
+        "glyph": "ʲ",
+        "label": "Palatalized diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 8
+    },
+    {
+        "glyph": "ˠ",
+        "label": "Velarized diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 10
+    },
+    {
+        "glyph": "̴",
+        "label": "Velarized or pharyngealized diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 12
+    },
+    {
+        "glyph": "ˤ",
+        "label": "Pharyngealized diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 14
+    },
+    {
+        "glyph": "̘",
+        "label": "Advanced tongue root lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 15
+    },
+    {
+        "glyph": "᫠",
+        "label": "Advanced tongue root upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 16
+    },
+    {
+        "glyph": "̙",
+        "label": "Retracted tongue root lower diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 17
+    },
+    {
+        "glyph": "᫡",
+        "label": "Retracted tongue root upper diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 18
+    },
+    {
+        "glyph": "̃",
+        "label": "Nasalized diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 20
+    },
+    {
+        "glyph": "˞",
+        "label": "Rhoticity diacritic",
+        "render_on_base": true,
+        "type": "diacritic",
+        "row": 3,
+        "col": 22
+    },
+
+    {
+        "glyph": "˥",
+        "label": "High tone bar",
+        "render_on_base": false,
+        "type": "tone",
+        "row": 1,
+        "col": 1
+    },
+    {
+        "glyph": "꜒",
+        "label": "High Chao tone letter",
+        "render_on_base": false,
+        "type": "tone",
+        "row": 1,
+        "col": 2
+    },
+    {
+        "glyph": "˦",
+        "label": "Half-high tone bar",
+        "render_on_base": false,
+        "type": "tone",
+        "row": 2,
+        "col": 1
+    },
+    {
+        "glyph": "꜓",
+        "label": "Half-high Chao tone letter",
+        "render_on_base": false,
+        "type": "tone",
+        "row": 2,
+        "col": 2
+    },
+    {
+        "glyph": "˧",
+        "label": "Mid tone bar",
+        "render_on_base": false,
+        "type": "tone",
+        "row": 3,
+        "col": 1
+    },
+    {
+        "glyph": "꜔",
+        "label": "Mid Chao tone letter",
+        "render_on_base": false,
+        "type": "tone",
+        "row": 3,
+        "col": 2
+    },
+    {
+        "glyph": "˨",
+        "label": "Half-low tone bar",
+        "render_on_base": false,
+        "type": "tone",
+        "row": 4,
+        "col": 1
+    },
+    {
+        "glyph": "꜕",
+        "label": "Half-low Chao tone letter",
+        "render_on_base": false,
+        "type": "tone",
+        "row": 4,
+        "col": 2
+    },
+    {
+        "glyph": "˩",
+        "label": "Low tone bar",
+        "render_on_base": false,
+        "type": "tone",
+        "row": 5,
+        "col": 1
+    },
+    {
+        "glyph": "꜖",
+        "label": "Low Chao tone letter",
+        "render_on_base": false,
+        "type": "tone",
+        "row": 5,
+        "col": 2
+    },
+
+    {
+        "glyph": "̋",
+        "label": "Extra high pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 1
+    },
+    {
+        "glyph": "́",
+        "label": "High pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 2
+    },
+    {
+        "glyph": "̄",
+        "label": "Mid pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 3
+    },
+    {
+        "glyph": "̀",
+        "label": "Low pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 4
+    },
+    {
+        "glyph": "̏",
+        "label": "Extra low pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 5
+    },
+    {
+        "glyph": "̌",
+        "label": "Rising pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 6
+    },
+    {
+        "glyph": "̂",
+        "label": "Falling pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 7
+    },
+    {
+        "glyph": "᷈",
+        "label": "Peaking pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 8
+    },
+    {
+        "glyph": "᷉",
+        "label": "Dipping pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 9
+    },
+    {
+        "glyph": "᷄",
+        "label": "Mid-rising pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 10
+    },
+    {
+        "glyph": "᷅",
+        "label": "Low-rising pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 11
+    },
+    {
+        "glyph": "᷇",
+        "label": "High-falling pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 12
+    },
+    {
+        "glyph": "᷆",
+        "label": "Mid-falling pitch diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 1,
+        "col": 13
+    },
+    {
+        "glyph": "ˈ",
+        "label": "Primary stress mark",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 1
+    },
+    {
+        "glyph": "ˌ",
+        "label": "Secondary stress mark",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 2
+    },
+    {
+        "glyph": "ː",
+        "label": "Long mark",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 3
+    },
+    {
+        "glyph": "ˑ",
+        "label": "Half-long mark",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 4
+    },
+    {
+        "glyph": "̆",
+        "label": "Extra-short upper diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 2,
+        "col": 5
+    },
+    {
+        "glyph": "̮",
+        "label": "Extra-short lower diacritic",
+        "render_on_base": true,
+        "type": "prosody",
+        "row": 2,
+        "col": 6
+    },
+    {
+        "glyph": ".",
+        "label": "Syllable break",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 7
+    },
+    {
+        "glyph": "‿",
+        "label": "Linking mark",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 8
+    },
+    {
+        "glyph": "|",
+        "label": "Minor break",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 9
+    },
+    {
+        "glyph": "‖",
+        "label": "Major break",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 10
+    },
+    {
+        "glyph": "↗︎",
+        "label": "Global rise mark",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 11
+    },
+    {
+        "glyph": "↘︎",
+        "label": "Global fall mark",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 12
+    },
+    {
+        "glyph": "ꜛ",
+        "label": "Up-step mark",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 13
+    },
+    {
+        "glyph": "ꜜ",
+        "label": "Down-step mark",
+        "render_on_base": false,
+        "type": "prosody",
+        "row": 2,
+        "col": 14
     }
 ]
