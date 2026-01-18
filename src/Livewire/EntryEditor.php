@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
+use PeterMarkley\Tollerus\Domain\Morphology\Services\AutoInflector;
+use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
@@ -992,6 +994,72 @@ class EntryEditor extends Component
             ],
         ]);
         $this->createMissingFormsWorker($lexemeModel, $lexemeModel->wordClass->group);
+        $this->refreshForm();
+    }
+    public function autoInflect(string $lexemeId, string $formId, string $rowId, string $baseStr, string $type, ?string $neographyId = null, ?string $domId = ''): void
+    {
+        if (mb_strlen($baseStr) == 0) {
+            return;
+        }
+        /**
+         * Find models
+         */
+        // Form (via lexeme)
+        $formModel = $this->findInCache('form-autoinflect-failure', [
+            [
+                'id' => $lexemeId,
+                'objectType' => Lexeme::class,
+                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
+                'relation' => 'forms',
+            ],
+            [
+                'id' => $formId,
+                'objectType' => Form::class,
+                'failMessage' => ['formId' => [__('tollerus::error.invalid_form')]],
+            ],
+        ]);
+        // Inflection row (directly)
+        $row = InflectionTableRow::find($rowId);
+        if (!($row instanceof InflectionTableRow)) {
+            $this->dispatch('form-autoinflect-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_table_row')]]);
+            return;
+        }
+        // Backed enum instance
+        try {
+            $patternType = MorphRulePatternType::from($type);
+        } catch (Throwable $e) {
+            $this->dispatch('form-autoinflect-failure');
+            return;
+        }
+        /**
+         * Perform auto-inflection
+         */
+        $result = new AutoInflector(
+            row: $row,
+            base: $baseStr,
+            type: $patternType,
+            neographyId: $neographyId,
+        )->inflect();
+        switch ($patternType) {
+            case MorphRulePatternType::Transliterated:
+                $formModel->transliterated = $result;
+            break;
+            case MorphRulePatternType::Phonemic:
+                $formModel->phonemic = $result;
+            break;
+            case MorphRulePatternType::Native:
+                $this->updateNativeSpelling($lexemeId, $formId, $neographyId, $result, $domId);
+            break;
+        }
+        // Save to database
+        try {
+            $formModel->save();
+            $this->dispatch('form-autoinflect-success', id: $domId);
+        } catch (\Throwable $e) {
+            $this->dispatch('form-autoinflect-failure');
+            throw $e;
+        }
         $this->refreshForm();
     }
 

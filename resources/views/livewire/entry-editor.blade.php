@@ -270,7 +270,25 @@
                                                     fieldName="{{ config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated')) }}"
                                                     showLabel="true"
                                                     saveEvent="$wire.updateForm(lexemeId, formId, 'transliterated', document.getElementById(id).value, id);"
-                                                />
+                                                >
+                                                    <x-slot:before>
+                                                        <template x-if="form.canAutoInflect">
+                                                            <x-tollerus::inputs.button
+                                                                type="secondary"
+                                                                size="small"
+                                                                class="align-middle"
+                                                                title="{{ __('tollerus::ui.auto_inflect') }}"
+                                                                x-bind:disabled="lexeme.forms[form.srcForm].transliterated.length == 0"
+                                                                @click="$wire.autoInflect(lexemeId, formId, form.matchingRowId, lexeme.forms[form.srcForm].transliterated, 'transliterated', null, id);"
+                                                                wire:loading.attr="disabled"
+                                                                wire:target="autoInflect"
+                                                            >
+                                                                <x-tollerus::icons.bolt fill="currentColor" />
+                                                                <label class="sr-only">{{ __('tollerus::ui.auto_inflect') }}</label>
+                                                            </x-tollerus::inputs.button>
+                                                        </template>
+                                                    </x-slot:before>
+                                                </x-tollerus::inputs.text-saveable>
                                             </div>
                                             <div class="lg:w-80">
                                                 <x-tollerus::inputs.text-saveable

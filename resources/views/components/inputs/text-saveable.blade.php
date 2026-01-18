@@ -17,6 +17,9 @@
     @if (filter_var($showLabel, FILTER_VALIDATE_BOOLEAN))
         <label x-bind:for="id">{{ $fieldName }}:</label>
     @endif
+    @isset($before)
+        {{ $before }}
+    @endisset
     <template x-if="editing">
         <div class="flex flex-row gap-2 justify-start items-center flex-grow">
             @if (empty($height))

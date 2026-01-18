@@ -392,6 +392,7 @@ return [
   'show_label' => 'Show label',
   'auto_inflection' => 'Auto-inflection',
   'configure_auto_inflection' => 'Configure auto-inflection',
+  'auto_inflect' => 'Auto-inflect', // i.e. perform the action of auto-inflection, used on a button label
   'no_base_row_notice' => 'This inflection row has no input base row. These settings will have no effect.',
   /**
    * TRANSLATOR NOTE:
