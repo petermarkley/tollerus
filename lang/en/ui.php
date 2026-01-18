@@ -141,6 +141,9 @@ return [
    */
   'type' => 'Type',
   'alphabet' => 'Alphabet',
+  'abugida' => 'Abugida',
+  'syllabary' => 'Syllabary',
+  'logography' => 'Logography',
   'numerals' => 'Numerals',
   'symbol' => 'Symbol', // e.g. a letter or character
   'mark' => 'Mark', // e.g. an apostrophe or accent mark
