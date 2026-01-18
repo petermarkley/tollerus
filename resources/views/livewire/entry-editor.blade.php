@@ -297,7 +297,25 @@
                                                     fieldName="{{ __('tollerus::ui.phonemic') }}"
                                                     showLabel="true"
                                                     saveEvent="$wire.updateForm(lexemeId, formId, 'phonemic', document.getElementById(id).value, id);"
-                                                />
+                                                >
+                                                    <x-slot:before>
+                                                        <template x-if="form.canAutoInflect">
+                                                            <x-tollerus::inputs.button
+                                                                type="secondary"
+                                                                size="small"
+                                                                class="align-middle"
+                                                                title="{{ __('tollerus::ui.auto_inflect') }}"
+                                                                x-bind:disabled="lexeme.forms[form.srcForm].phonemic.length == 0"
+                                                                @click="$wire.autoInflect(lexemeId, formId, form.matchingRowId, lexeme.forms[form.srcForm].phonemic, 'phonemic', null, id);"
+                                                                wire:loading.attr="disabled"
+                                                                wire:target="autoInflect"
+                                                            >
+                                                                <x-tollerus::icons.bolt fill="currentColor" />
+                                                                <label class="sr-only">{{ __('tollerus::ui.auto_inflect') }}</label>
+                                                            </x-tollerus::inputs.button>
+                                                        </template>
+                                                    </x-slot:before>
+                                                </x-tollerus::inputs.text-saveable>
                                             </div>
                                             <div class="flex flex-col items-start">
                                                 <x-tollerus::inputs.checkbox
@@ -320,7 +338,28 @@
                                                                 model="nativeSpelling.spelling"
                                                                 fieldName="{{ __('tollerus::ui.native_spelling') }}"
                                                                 saveEvent="$wire.updateNativeSpelling(lexemeId, formId, nativeSpelling.neographyId, document.getElementById(id).value, id);"
-                                                                x-bind:class="'tollerus_' + nativeSpelling.neographyMachineName" />
+                                                                x-bind:class="'tollerus_' + nativeSpelling.neographyMachineName"
+                                                            >
+                                                                <x-slot:before>
+                                                                    <template x-if="form.canAutoInflect">
+                                                                        <div x-data="{ srcSpelling: lexeme.forms[form.srcForm].nativeSpellings.find(sp => sp.neographyId==nativeSpelling.neographyId) }">
+                                                                            <x-tollerus::inputs.button
+                                                                                type="secondary"
+                                                                                size="small"
+                                                                                class="align-middle"
+                                                                                title="{{ __('tollerus::ui.auto_inflect') }}"
+                                                                                x-bind:disabled="typeof srcSpelling.spelling !== 'string' || srcSpelling.spelling.length == 0"
+                                                                                @click="$wire.autoInflect(lexemeId, formId, form.matchingRowId, srcSpelling.spelling, 'native', nativeSpelling.neographyId, id);"
+                                                                                wire:loading.attr="disabled"
+                                                                                wire:target="autoInflect"
+                                                                            >
+                                                                                <x-tollerus::icons.bolt fill="currentColor" />
+                                                                                <label class="sr-only">{{ __('tollerus::ui.auto_inflect') }}</label>
+                                                                            </x-tollerus::inputs.button>
+                                                                        </div>
+                                                                    </template>
+                                                                </x-slot:before>
+                                                            </x-tollerus::inputs.text-saveable>
                                                         </td>
                                                     </tr>
                                                 </template>
