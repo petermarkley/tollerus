@@ -1681,6 +1681,20 @@
         "row": 3,
         "col": 22
     },
+    {
+        "glyph": "͜",
+        "label": "Combining double lower breve",
+        "type": "diacritic",
+        "row": 4,
+        "col": 1
+    },
+    {
+        "glyph": "͡",
+        "label": "Combining double upper breve",
+        "type": "diacritic",
+        "row": 4,
+        "col": 2
+    },
 
     {
         "glyph": "˥",
