@@ -1,7 +1,7 @@
 [
     {
         "glyph": "m̥",
-        "label": "Voiceless bilabial nasal",
+        "label": "voiceless_bilabial_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -9,7 +9,7 @@
     },
     {
         "glyph": "m",
-        "label": "Voiced bilabial nasal",
+        "label": "voiced_bilabial_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -17,7 +17,7 @@
     },
     {
         "glyph": "ɱ̊",
-        "label": "Voiceless labiodental nasal",
+        "label": "voiceless_labiodental_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -25,7 +25,7 @@
     },
     {
         "glyph": "ɱ",
-        "label": "Voiced labiodental nasal",
+        "label": "voiced_labiodental_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -33,7 +33,7 @@
     },
     {
         "glyph": "n̼",
-        "label": "Voiced linguolabial nasal",
+        "label": "voiced_linguolabial_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -41,7 +41,7 @@
     },
     {
         "glyph": "n̪̊",
-        "label": "Voiceless dental nasal",
+        "label": "voiceless_dental_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -49,7 +49,7 @@
     },
     {
         "glyph": "n̪",
-        "label": "Voiced dental nasal",
+        "label": "voiced_dental_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -57,7 +57,7 @@
     },
     {
         "glyph": "n̥",
-        "label": "Voiceless alveolar nasal",
+        "label": "voiceless_alveolar_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -65,7 +65,7 @@
     },
     {
         "glyph": "n",
-        "label": "Voiced alveolar nasal",
+        "label": "voiced_alveolar_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -73,7 +73,7 @@
     },
     {
         "glyph": "n̠̊",
-        "label": "Voiceless postalveolar nasal",
+        "label": "voiceless_postalveolar_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -81,7 +81,7 @@
     },
     {
         "glyph": "n̠",
-        "label": "Voiced postalveolar nasal",
+        "label": "voiced_postalveolar_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -89,7 +89,7 @@
     },
     {
         "glyph": "ɳ̊",
-        "label": "Voiceless retroflex nasal",
+        "label": "voiceless_retroflex_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -97,7 +97,7 @@
     },
     {
         "glyph": "ɳ",
-        "label": "Voiced retroflex nasal",
+        "label": "voiced_retroflex_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -105,7 +105,7 @@
     },
     {
         "glyph": "ɲ̊",
-        "label": "Voiceless palatal nasal",
+        "label": "voiceless_palatal_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -113,7 +113,7 @@
     },
     {
         "glyph": "ɲ",
-        "label": "Voiced palatal nasal",
+        "label": "voiced_palatal_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -121,7 +121,7 @@
     },
     {
         "glyph": "ŋ̊",
-        "label": "Voiceless velar nasal",
+        "label": "voiceless_velar_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -129,7 +129,7 @@
     },
     {
         "glyph": "ŋ",
-        "label": "Voiced velar nasal",
+        "label": "voiced_velar_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -137,7 +137,7 @@
     },
     {
         "glyph": "ɴ̥",
-        "label": "Voiceless uvular nasal",
+        "label": "voiceless_uvular_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -145,7 +145,7 @@
     },
     {
         "glyph": "ɴ",
-        "label": "Voiced uvular nasal",
+        "label": "voiced_uvular_nasal",
         "render_on_base": false,
         "type": "consonant",
         "row": 1,
@@ -153,7 +153,7 @@
     },
     {
         "glyph": "p",
-        "label": "Voiceless bilabial plosive",
+        "label": "voiceless_bilabial_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -161,7 +161,7 @@
     },
     {
         "glyph": "b",
-        "label": "Voiced bilabial plosive",
+        "label": "voiced_bilabial_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -169,7 +169,7 @@
     },
     {
         "glyph": "p̪",
-        "label": "Voiceless labiodental plosive",
+        "label": "voiceless_labiodental_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -177,7 +177,7 @@
     },
     {
         "glyph": "b̪",
-        "label": "Voiced labiodental plosive",
+        "label": "voiced_labiodental_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -185,7 +185,7 @@
     },
     {
         "glyph": "t̼",
-        "label": "Voiceless linguolabial plosive",
+        "label": "voiceless_linguolabial_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -193,7 +193,7 @@
     },
     {
         "glyph": "d̼",
-        "label": "Voiced linguolabial plosive",
+        "label": "voiced_linguolabial_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -201,7 +201,7 @@
     },
     {
         "glyph": "t̪",
-        "label": "Voiceless dental plosive",
+        "label": "voiceless_dental_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -209,7 +209,7 @@
     },
     {
         "glyph": "d̪",
-        "label": "Voiced dental plosive",
+        "label": "voiced_dental_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -217,7 +217,7 @@
     },
     {
         "glyph": "t",
-        "label": "Voiceless alveolar plosive",
+        "label": "voiceless_alveolar_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -225,7 +225,7 @@
     },
     {
         "glyph": "d",
-        "label": "Voiced alveolar plosive",
+        "label": "voiced_alveolar_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -233,7 +233,7 @@
     },
     {
         "glyph": "ʈ",
-        "label": "Voiceless retroflex plosive",
+        "label": "voiceless_retroflex_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -241,7 +241,7 @@
     },
     {
         "glyph": "ɖ",
-        "label": "Voiced retroflex plosive",
+        "label": "voiced_retroflex_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -249,7 +249,7 @@
     },
     {
         "glyph": "c",
-        "label": "Voiceless palatal plosive",
+        "label": "voiceless_palatal_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -257,7 +257,7 @@
     },
     {
         "glyph": "ɟ",
-        "label": "Voiced palatal plosive",
+        "label": "voiced_palatal_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -265,7 +265,7 @@
     },
     {
         "glyph": "k",
-        "label": "Voiceless velar plosive",
+        "label": "voiceless_velar_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -273,7 +273,7 @@
     },
     {
         "glyph": "ɡ",
-        "label": "Voiced velar plosive",
+        "label": "voiced_velar_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -281,7 +281,7 @@
     },
     {
         "glyph": "q",
-        "label": "Voiceless uvular plosive",
+        "label": "voiceless_uvular_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -289,7 +289,7 @@
     },
     {
         "glyph": "ɢ",
-        "label": "Voiced uvular plosive",
+        "label": "voiced_uvular_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -297,7 +297,7 @@
     },
     {
         "glyph": "ʡ",
-        "label": "Epiglottal plosive",
+        "label": "epiglottal_plosive",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -305,7 +305,7 @@
     },
     {
         "glyph": "ʔ",
-        "label": "Glottal stop",
+        "label": "glottal_stop",
         "render_on_base": false,
         "type": "consonant",
         "row": 2,
@@ -313,7 +313,7 @@
     },
     {
         "glyph": "s̪",
-        "label": "Voiceless dental sibilant fricative",
+        "label": "voiceless_dental_sibilant_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 3,
@@ -321,7 +321,7 @@
     },
     {
         "glyph": "z̪",
-        "label": "Voiced dental sibilant fricative",
+        "label": "voiced_dental_sibilant_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 3,
@@ -329,7 +329,7 @@
     },
     {
         "glyph": "s",
-        "label": "Voiceless alveolar fricative",
+        "label": "voiceless_alveolar_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 3,
@@ -337,7 +337,7 @@
     },
     {
         "glyph": "z",
-        "label": "Voiced alveolar fricative",
+        "label": "voiced_alveolar_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 3,
@@ -345,7 +345,7 @@
     },
     {
         "glyph": "ʃ",
-        "label": "Voiceless postalveolar fricative",
+        "label": "voiceless_postalveolar_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 3,
@@ -353,7 +353,7 @@
     },
     {
         "glyph": "ʒ",
-        "label": "Voiced postalveolar fricative",
+        "label": "voiced_postalveolar_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 3,
@@ -361,7 +361,7 @@
     },
     {
         "glyph": "ʂ",
-        "label": "Voiceless retroflex fricative",
+        "label": "voiceless_retroflex_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 3,
@@ -369,7 +369,7 @@
     },
     {
         "glyph": "ʐ",
-        "label": "Voiced retroflex fricative",
+        "label": "voiced_retroflex_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 3,
@@ -377,7 +377,7 @@
     },
     {
         "glyph": "ɕ",
-        "label": "Voiceless alveolo-palatal fricative",
+        "label": "voiceless_alveolo_palatal_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 3,
@@ -385,7 +385,7 @@
     },
     {
         "glyph": "ʑ",
-        "label": "Voiced alveolo-palatal fricative",
+        "label": "voiced_alveolo_palatal_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 3,
@@ -393,7 +393,7 @@
     },
     {
         "glyph": "ɸ",
-        "label": "Voiceless bilabial fricative",
+        "label": "voiceless_bilabial_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -401,7 +401,7 @@
     },
     {
         "glyph": "β",
-        "label": "Voiced bilabial fricative",
+        "label": "voiced_bilabial_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -409,7 +409,7 @@
     },
     {
         "glyph": "f",
-        "label": "Voiceless labiodental fricative",
+        "label": "voiceless_labiodental_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -417,7 +417,7 @@
     },
     {
         "glyph": "v",
-        "label": "Voiced labiodental fricative",
+        "label": "voiced_labiodental_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -425,7 +425,7 @@
     },
     {
         "glyph": "θ̼",
-        "label": "Voiceless linguolabial fricative",
+        "label": "voiceless_linguolabial_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -433,7 +433,7 @@
     },
     {
         "glyph": "ð̼",
-        "label": "Voiced linguolabial fricative",
+        "label": "voiced_linguolabial_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -441,7 +441,7 @@
     },
     {
         "glyph": "θ",
-        "label": "Voiceless dental fricative",
+        "label": "voiceless_dental_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -449,7 +449,7 @@
     },
     {
         "glyph": "ð",
-        "label": "Voiced dental fricative",
+        "label": "voiced_dental_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -457,7 +457,7 @@
     },
     {
         "glyph": "θ̠",
-        "label": "Voiceless alveolar non-sibilant fricative",
+        "label": "voiceless_alveolar_non_sibilant_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -465,7 +465,7 @@
     },
     {
         "glyph": "ð̠",
-        "label": "Voiced alveolar non-sibilant fricative",
+        "label": "voiced_alveolar_non_sibilant_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -473,7 +473,7 @@
     },
     {
         "glyph": "ɹ̠̊˔",
-        "label": "Voiceless postalveolar non-sibilant fricative",
+        "label": "voiceless_postalveolar_non_sibilant_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -481,7 +481,7 @@
     },
     {
         "glyph": "ɹ̠˔",
-        "label": "Voiced postalveolar non-sibilant fricative",
+        "label": "voiced_postalveolar_non_sibilant_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -489,7 +489,7 @@
     },
     {
         "glyph": "ɻ̊˔",
-        "label": "Voiceless retroflex non-sibilant fricative",
+        "label": "voiceless_retroflex_non_sibilant_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -497,7 +497,7 @@
     },
     {
         "glyph": "ɻ˔",
-        "label": "Voiced retroflex non-sibilant fricative",
+        "label": "voiced_retroflex_non_sibilant_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -505,7 +505,7 @@
     },
     {
         "glyph": "ç",
-        "label": "Voiceless palatal fricative",
+        "label": "voiceless_palatal_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -513,7 +513,7 @@
     },
     {
         "glyph": "ʝ",
-        "label": "Voiced palatal fricative",
+        "label": "voiced_palatal_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -521,7 +521,7 @@
     },
     {
         "glyph": "x",
-        "label": "Voiceless velar fricative",
+        "label": "voiceless_velar_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -529,7 +529,7 @@
     },
     {
         "glyph": "ɣ",
-        "label": "Voiced velar fricative",
+        "label": "voiced_velar_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -537,7 +537,7 @@
     },
     {
         "glyph": "χ",
-        "label": "Voiceless uvular fricative",
+        "label": "voiceless_uvular_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -545,7 +545,7 @@
     },
     {
         "glyph": "ʁ",
-        "label": "Voiced uvular fricative",
+        "label": "voiced_uvular_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -553,7 +553,7 @@
     },
     {
         "glyph": "ħ",
-        "label": "Voiceless pharyngeal fricative",
+        "label": "voiceless_pharyngeal_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -561,7 +561,7 @@
     },
     {
         "glyph": "ʕ",
-        "label": "Voiced pharyngeal fricative",
+        "label": "voiced_pharyngeal_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -569,7 +569,7 @@
     },
     {
         "glyph": "h",
-        "label": "Voiceless glottal fricative",
+        "label": "voiceless_glottal_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -577,7 +577,7 @@
     },
     {
         "glyph": "ɦ",
-        "label": "Voiced glottal fricative",
+        "label": "voiced_glottal_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 4,
@@ -585,7 +585,7 @@
     },
     {
         "glyph": "β̞",
-        "label": "Voiced bilabial approximant",
+        "label": "voiced_bilabial_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 5,
@@ -593,7 +593,7 @@
     },
     {
         "glyph": "ʋ",
-        "label": "Voiced labiodental approximant",
+        "label": "voiced_labiodental_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 5,
@@ -601,7 +601,7 @@
     },
     {
         "glyph": "ð̞",
-        "label": "Voiced dental approximant",
+        "label": "voiced_dental_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 5,
@@ -609,7 +609,7 @@
     },
     {
         "glyph": "ɹ",
-        "label": "Voiced alveolar approximant",
+        "label": "voiced_alveolar_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 5,
@@ -617,7 +617,7 @@
     },
     {
         "glyph": "ɹ̠",
-        "label": "Voiced postalveolar approximant",
+        "label": "voiced_postalveolar_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 5,
@@ -625,7 +625,7 @@
     },
     {
         "glyph": "ɻ",
-        "label": "Voiced retroflex approximant",
+        "label": "voiced_retroflex_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 5,
@@ -633,7 +633,7 @@
     },
     {
         "glyph": "j",
-        "label": "Voiced palatal approximant",
+        "label": "voiced_palatal_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 5,
@@ -641,7 +641,7 @@
     },
     {
         "glyph": "ɰ",
-        "label": "Voiced velar approximant",
+        "label": "voiced_velar_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 5,
@@ -649,7 +649,7 @@
     },
     {
         "glyph": "˷",
-        "label": "Creaky-voiced glottal approximant",
+        "label": "creaky_voiced_glottal_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 5,
@@ -657,7 +657,7 @@
     },
     {
         "glyph": "ⱱ̟",
-        "label": "Voiced bilabial flap",
+        "label": "voiced_bilabial_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 6,
@@ -665,7 +665,7 @@
     },
     {
         "glyph": "ⱱ",
-        "label": "Voiced labiodental flap",
+        "label": "voiced_labiodental_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 6,
@@ -673,7 +673,7 @@
     },
     {
         "glyph": "ɾ̥",
-        "label": "Voiceless alveolar tap",
+        "label": "voiceless_alveolar_tap",
         "render_on_base": false,
         "type": "consonant",
         "row": 6,
@@ -681,7 +681,7 @@
     },
     {
         "glyph": "ɾ",
-        "label": "Voiced alveolar tap or flap",
+        "label": "voiced_alveolar_tap_or_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 6,
@@ -689,7 +689,7 @@
     },
     {
         "glyph": "ɽ̊",
-        "label": "Voiceless retroflex flap",
+        "label": "voiceless_retroflex_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 6,
@@ -697,7 +697,7 @@
     },
     {
         "glyph": "ɽ",
-        "label": "Voiced retroflex flap",
+        "label": "voiced_retroflex_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 6,
@@ -705,7 +705,7 @@
     },
     {
         "glyph": "ɢ̆",
-        "label": "Voiced uvular tap and flap",
+        "label": "voiced_uvular_tap_and_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 6,
@@ -713,7 +713,7 @@
     },
     {
         "glyph": "ʡ̮",
-        "label": "Voiced epiglottal tap",
+        "label": "voiced_epiglottal_tap",
         "render_on_base": false,
         "type": "consonant",
         "row": 6,
@@ -721,7 +721,7 @@
     },
     {
         "glyph": "ʙ̥",
-        "label": "Voiceless bilabial trill",
+        "label": "voiceless_bilabial_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -729,7 +729,7 @@
     },
     {
         "glyph": "ʙ",
-        "label": "Voiced bilabial trill",
+        "label": "voiced_bilabial_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -737,7 +737,7 @@
     },
     {
         "glyph": "r̥",
-        "label": "Voiceless alveolar trill",
+        "label": "voiceless_alveolar_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -745,7 +745,7 @@
     },
     {
         "glyph": "r",
-        "label": "Voiced alveolar trill",
+        "label": "voiced_alveolar_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -753,7 +753,7 @@
     },
     {
         "glyph": "r̠",
-        "label": "Voiced postalveolar trill",
+        "label": "voiced_postalveolar_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -761,7 +761,7 @@
     },
     {
         "glyph": "ɽ̊r̥",
-        "label": "Voiceless retroflex trill",
+        "label": "voiceless_retroflex_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -769,7 +769,7 @@
     },
     {
         "glyph": "ɽr",
-        "label": "Voiced retroflex trill",
+        "label": "voiced_retroflex_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -777,7 +777,7 @@
     },
     {
         "glyph": "ʀ̥",
-        "label": "Voiceless uvular trill",
+        "label": "voiceless_uvular_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -785,7 +785,7 @@
     },
     {
         "glyph": "ʀ",
-        "label": "Voiced uvular trill",
+        "label": "voiced_uvular_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -793,7 +793,7 @@
     },
     {
         "glyph": "ʜ",
-        "label": "Voiceless epiglottal trill",
+        "label": "voiceless_epiglottal_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -801,7 +801,7 @@
     },
     {
         "glyph": "ʢ",
-        "label": "Voiced epiglottal trill",
+        "label": "voiced_epiglottal_trill",
         "render_on_base": false,
         "type": "consonant",
         "row": 7,
@@ -809,7 +809,7 @@
     },
     {
         "glyph": "ɬ̪",
-        "label": "Voiceless dental lateral fricative",
+        "label": "voiceless_dental_lateral_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 8,
@@ -817,7 +817,7 @@
     },
     {
         "glyph": "ɬ",
-        "label": "Voiceless alveolar lateral fricative",
+        "label": "voiceless_alveolar_lateral_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 8,
@@ -825,7 +825,7 @@
     },
     {
         "glyph": "ɮ",
-        "label": "Voiced alveolar lateral fricative",
+        "label": "voiced_alveolar_lateral_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 8,
@@ -833,7 +833,7 @@
     },
     {
         "glyph": "ꞎ",
-        "label": "Voiceless retroflex lateral fricative",
+        "label": "voiceless_retroflex_lateral_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 8,
@@ -841,7 +841,7 @@
     },
     {
         "glyph": "𝼅",
-        "label": "Voiced retroflex lateral fricative",
+        "label": "voiced_retroflex_lateral_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 8,
@@ -849,7 +849,7 @@
     },
     {
         "glyph": "𝼆",
-        "label": "Voiceless palatal lateral fricative",
+        "label": "voiceless_palatal_lateral_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 8,
@@ -857,7 +857,7 @@
     },
     {
         "glyph": "ʎ̝",
-        "label": "Voiced palatal lateral fricative",
+        "label": "voiced_palatal_lateral_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 8,
@@ -865,7 +865,7 @@
     },
     {
         "glyph": "𝼄",
-        "label": "Voiceless velar lateral fricative",
+        "label": "voiceless_velar_lateral_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 8,
@@ -873,7 +873,7 @@
     },
     {
         "glyph": "ʟ̝",
-        "label": "Voiced velar lateral fricative",
+        "label": "voiced_velar_lateral_fricative",
         "render_on_base": false,
         "type": "consonant",
         "row": 8,
@@ -881,7 +881,7 @@
     },
     {
         "glyph": "l̪",
-        "label": "Voiced dental lateral approximant",
+        "label": "voiced_dental_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -889,7 +889,7 @@
     },
     {
         "glyph": "l̥",
-        "label": "Voiceless alveolar lateral approximant",
+        "label": "voiceless_alveolar_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -897,7 +897,7 @@
     },
     {
         "glyph": "l",
-        "label": "Voiced alveolar lateral approximant",
+        "label": "voiced_alveolar_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -905,7 +905,7 @@
     },
     {
         "glyph": "l̠",
-        "label": "Voiced postalveolar lateral approximant",
+        "label": "voiced_postalveolar_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -913,7 +913,7 @@
     },
     {
         "glyph": "ɭ̊",
-        "label": "Voiceless retroflex lateral approximant",
+        "label": "voiceless_retroflex_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -921,7 +921,7 @@
     },
     {
         "glyph": "ɭ",
-        "label": "Voiced retroflex lateral approximant",
+        "label": "voiced_retroflex_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -929,7 +929,7 @@
     },
     {
         "glyph": "ʎ̥",
-        "label": "Voiceless palatal lateral approximant",
+        "label": "voiceless_palatal_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -937,7 +937,7 @@
     },
     {
         "glyph": "ʎ",
-        "label": "Voiced palatal lateral approximant",
+        "label": "voiced_palatal_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -945,7 +945,7 @@
     },
     {
         "glyph": "ʟ̥",
-        "label": "Voiceless velar lateral approximant",
+        "label": "voiceless_velar_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -953,7 +953,7 @@
     },
     {
         "glyph": "ʟ",
-        "label": "Voiced velar lateral approximant",
+        "label": "voiced_velar_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -961,7 +961,7 @@
     },
     {
         "glyph": "ʟ̠",
-        "label": "Voiced uvular lateral approximant",
+        "label": "voiced_uvular_lateral_approximant",
         "render_on_base": false,
         "type": "consonant",
         "row": 9,
@@ -969,7 +969,7 @@
     },
     {
         "glyph": "ɺ̥",
-        "label": "Voiceless alveolar lateral flap",
+        "label": "voiceless_alveolar_lateral_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 10,
@@ -977,7 +977,7 @@
     },
     {
         "glyph": "ɺ",
-        "label": "Voiced alveolar lateral flap",
+        "label": "voiced_alveolar_lateral_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 10,
@@ -985,7 +985,7 @@
     },
     {
         "glyph": "𝼈̊",
-        "label": "Voiceless retroflex lateral flap",
+        "label": "voiceless_retroflex_lateral_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 10,
@@ -993,7 +993,7 @@
     },
     {
         "glyph": "𝼈",
-        "label": "Voiced retroflex lateral flap",
+        "label": "voiced_retroflex_lateral_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 10,
@@ -1001,7 +1001,7 @@
     },
     {
         "glyph": "ʎ̮",
-        "label": "Voiced palatal lateral flap",
+        "label": "voiced_palatal_lateral_flap",
         "render_on_base": false,
         "type": "consonant",
         "row": 10,
@@ -1009,7 +1009,7 @@
     },
     {
         "glyph": "ʟ̆",
-        "label": "Voiced velar lateral tap",
+        "label": "voiced_velar_lateral_tap",
         "render_on_base": false,
         "type": "consonant",
         "row": 10,
@@ -1018,7 +1018,7 @@
 
     {
         "glyph": "i",
-        "label": "Close front unrounded vowel",
+        "label": "close_front_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 1,
@@ -1026,7 +1026,7 @@
     },
     {
         "glyph": "y",
-        "label": "Close front rounded vowel",
+        "label": "close_front_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 1,
@@ -1034,7 +1034,7 @@
     },
     {
         "glyph": "ɨ",
-        "label": "Close central unrounded vowel",
+        "label": "close_central_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 1,
@@ -1042,7 +1042,7 @@
     },
     {
         "glyph": "ʉ",
-        "label": "Close central rounded vowel",
+        "label": "close_central_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 1,
@@ -1050,7 +1050,7 @@
     },
     {
         "glyph": "ɯ",
-        "label": "Close back unrounded vowel",
+        "label": "close_back_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 1,
@@ -1058,7 +1058,7 @@
     },
     {
         "glyph": "u",
-        "label": "Close back rounded vowel",
+        "label": "close_back_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 1,
@@ -1066,7 +1066,7 @@
     },
     {
         "glyph": "ɪ",
-        "label": "Near-close near-front unrounded vowel",
+        "label": "near_close_near_front_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 2,
@@ -1074,7 +1074,7 @@
     },
     {
         "glyph": "ʏ",
-        "label": "Near-close near-front rounded vowel",
+        "label": "near_close_near_front_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 2,
@@ -1082,7 +1082,7 @@
     },
     {
         "glyph": "ʊ",
-        "label": "Near-close near-back rounded vowel",
+        "label": "near_close_near_back_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 2,
@@ -1090,7 +1090,7 @@
     },
     {
         "glyph": "e",
-        "label": "Close-mid front unrounded vowel",
+        "label": "close_mid_front_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 3,
@@ -1098,7 +1098,7 @@
     },
     {
         "glyph": "ø",
-        "label": "Close-mid front rounded vowel",
+        "label": "close_mid_front_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 3,
@@ -1106,7 +1106,7 @@
     },
     {
         "glyph": "ɘ",
-        "label": "Close-mid central unrounded vowel",
+        "label": "close_mid_central_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 3,
@@ -1114,7 +1114,7 @@
     },
     {
         "glyph": "ɵ",
-        "label": "Close-mid central rounded vowel",
+        "label": "close_mid_central_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 3,
@@ -1122,7 +1122,7 @@
     },
     {
         "glyph": "ɤ",
-        "label": "Close-mid back unrounded vowel",
+        "label": "close_mid_back_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 3,
@@ -1130,7 +1130,7 @@
     },
     {
         "glyph": "o",
-        "label": "Close-mid back rounded vowel",
+        "label": "close_mid_back_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 3,
@@ -1138,7 +1138,7 @@
     },
     {
         "glyph": "e̞",
-        "label": "Mid front unrounded vowel",
+        "label": "mid_front_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 4,
@@ -1146,7 +1146,7 @@
     },
     {
         "glyph": "ø̞",
-        "label": "Mid front rounded vowel",
+        "label": "mid_front_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 4,
@@ -1154,7 +1154,7 @@
     },
     {
         "glyph": "ə",
-        "label": "Mid central vowel",
+        "label": "mid_central_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 4,
@@ -1162,7 +1162,7 @@
     },
     {
         "glyph": "ɤ̞",
-        "label": "Mid back unrounded vowel",
+        "label": "mid_back_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 4,
@@ -1170,7 +1170,7 @@
     },
     {
         "glyph": "o̞",
-        "label": "Mid back rounded vowel",
+        "label": "mid_back_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 4,
@@ -1178,7 +1178,7 @@
     },
     {
         "glyph": "ɛ",
-        "label": "Open-mid front unrounded vowel",
+        "label": "open_mid_front_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 5,
@@ -1186,7 +1186,7 @@
     },
     {
         "glyph": "œ",
-        "label": "Open-mid front rounded vowel",
+        "label": "open_mid_front_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 5,
@@ -1194,7 +1194,7 @@
     },
     {
         "glyph": "ɜ",
-        "label": "Open-mid central unrounded vowel",
+        "label": "open_mid_central_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 5,
@@ -1202,7 +1202,7 @@
     },
     {
         "glyph": "ɞ",
-        "label": "Open-mid central rounded vowel",
+        "label": "open_mid_central_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 5,
@@ -1210,7 +1210,7 @@
     },
     {
         "glyph": "ʌ",
-        "label": "Open-mid back unrounded vowel",
+        "label": "open_mid_back_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 5,
@@ -1218,7 +1218,7 @@
     },
     {
         "glyph": "ɔ",
-        "label": "Open-mid back rounded vowel",
+        "label": "open_mid_back_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 5,
@@ -1226,7 +1226,7 @@
     },
     {
         "glyph": "æ",
-        "label": "Near-open front unrounded vowel",
+        "label": "near_open_front_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 6,
@@ -1234,7 +1234,7 @@
     },
     {
         "glyph": "ɐ",
-        "label": "Near-open central vowel",
+        "label": "near_open_central_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 6,
@@ -1242,7 +1242,7 @@
     },
     {
         "glyph": "a",
-        "label": "Open front unrounded vowel",
+        "label": "open_front_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 7,
@@ -1250,7 +1250,7 @@
     },
     {
         "glyph": "ɶ",
-        "label": "Open front rounded vowel",
+        "label": "open_front_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 7,
@@ -1258,7 +1258,7 @@
     },
     {
         "glyph": "ä",
-        "label": "Open central unrounded vowel",
+        "label": "open_central_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 7,
@@ -1266,7 +1266,7 @@
     },
     {
         "glyph": "ɑ",
-        "label": "Open back unrounded vowel",
+        "label": "open_back_unrounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 7,
@@ -1274,7 +1274,7 @@
     },
     {
         "glyph": "ɒ",
-        "label": "Open back rounded vowel",
+        "label": "open_back_rounded_vowel",
         "render_on_base": false,
         "type": "vowel",
         "row": 7,
@@ -1283,7 +1283,7 @@
 
     {
         "glyph": "ʼ",
-        "label": "Ejective diacritic",
+        "label": "ejective_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1291,7 +1291,7 @@
     },
     {
         "glyph": "̩",
-        "label": "Syllabic lower diacritic",
+        "label": "syllabic_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1299,7 +1299,7 @@
     },
     {
         "glyph": "̍",
-        "label": "Syllabic upper diacritic",
+        "label": "syllabic_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1307,7 +1307,7 @@
     },
     {
         "glyph": "̯",
-        "label": "Non-syllabic lower diacritic",
+        "label": "non_syllabic_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1315,7 +1315,7 @@
     },
     {
         "glyph": "̑",
-        "label": "Non-syllabic upper diacritic",
+        "label": "non_syllabic_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1323,7 +1323,7 @@
     },
     {
         "glyph": "ʰ",
-        "label": "Aspirated diacritic",
+        "label": "aspirated_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1331,7 +1331,7 @@
     },
     {
         "glyph": "̚",
-        "label": "No audible release diacritic",
+        "label": "no_audible_release_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1339,7 +1339,7 @@
     },
     {
         "glyph": "ⁿ",
-        "label": "Nasal release diacritic",
+        "label": "nasal_release_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1347,7 +1347,7 @@
     },
     {
         "glyph": "ˡ",
-        "label": "Lateral release diacritic",
+        "label": "lateral_release_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1355,7 +1355,7 @@
     },
     {
         "glyph": "ᶿ",
-        "label": "Voiceless dental fricative release diacritic",
+        "label": "voiceless_dental_fricative_release_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1363,7 +1363,7 @@
     },
     {
         "glyph": "ˣ",
-        "label": "Voiceless velar fricative release diacritic",
+        "label": "voiceless_velar_fricative_release_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1371,7 +1371,7 @@
     },
     {
         "glyph": "ᵊ",
-        "label": "Mid central vowel release diacritic",
+        "label": "mid_central_vowel_release_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1379,7 +1379,7 @@
     },
     {
         "glyph": "̥",
-        "label": "Voiceless lower diacritic",
+        "label": "voiceless_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1387,7 +1387,7 @@
     },
     {
         "glyph": "̊",
-        "label": "Voiceless upper diacritic",
+        "label": "voiceless_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1395,7 +1395,7 @@
     },
     {
         "glyph": "̬",
-        "label": "Voiced diacritic",
+        "label": "voiced_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1403,7 +1403,7 @@
     },
     {
         "glyph": "̤",
-        "label": "Breathy voiced diacritic",
+        "label": "breathy_voiced_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1411,7 +1411,7 @@
     },
     {
         "glyph": "̰",
-        "label": "Creaky voiced diacritic",
+        "label": "creaky_voiced_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 1,
@@ -1419,7 +1419,7 @@
     },
     {
         "glyph": "̪",
-        "label": "Dental lower diacritic",
+        "label": "dental_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1427,7 +1427,7 @@
     },
     {
         "glyph": "͆",
-        "label": "Dental upper diacritic",
+        "label": "dental_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1435,7 +1435,7 @@
     },
     {
         "glyph": "̼",
-        "label": "Linguolabial lower diacritic",
+        "label": "linguolabial_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1443,7 +1443,7 @@
     },
     {
         "glyph": "᫥",
-        "label": "Linguolabial upper diacritic",
+        "label": "linguolabial_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1451,7 +1451,7 @@
     },
     {
         "glyph": "̺",
-        "label": "Apical lower diacritic",
+        "label": "apical_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1459,7 +1459,7 @@
     },
     {
         "glyph": "᫣",
-        "label": "Apical upper diacritic",
+        "label": "apical_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1467,7 +1467,7 @@
     },
     {
         "glyph": "̻",
-        "label": "Laminal lower diacritic",
+        "label": "laminal_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1475,7 +1475,7 @@
     },
     {
         "glyph": "᫤",
-        "label": "Laminal upper diacritic",
+        "label": "laminal_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1483,7 +1483,7 @@
     },
     {
         "glyph": "̟",
-        "label": "Advanced lower diacritic",
+        "label": "advanced_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1491,7 +1491,7 @@
     },
     {
         "glyph": "᫈",
-        "label": "Advanced upper diacritic",
+        "label": "advanced_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1499,7 +1499,7 @@
     },
     {
         "glyph": "̠",
-        "label": "Retracted lower diacritic",
+        "label": "retracted_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1507,7 +1507,7 @@
     },
     {
         "glyph": "᫢",
-        "label": "Retracted upper diacritic",
+        "label": "retracted_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1515,7 +1515,7 @@
     },
     {
         "glyph": "̈",
-        "label": "Centralized diacritic",
+        "label": "centralized_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1523,7 +1523,7 @@
     },
     {
         "glyph": "̽",
-        "label": "Mid-centralized diacritic",
+        "label": "mid_centralized_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1531,7 +1531,7 @@
     },
     {
         "glyph": "̝",
-        "label": "Raised lower diacritic",
+        "label": "raised_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1539,7 +1539,7 @@
     },
     {
         "glyph": "᷵",
-        "label": "Raised upper diacritic",
+        "label": "raised_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1547,7 +1547,7 @@
     },
     {
         "glyph": "̞",
-        "label": "Lowered lower diacritic",
+        "label": "lowered_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1555,7 +1555,7 @@
     },
     {
         "glyph": "᫛",
-        "label": "Lowered upper diacritic",
+        "label": "lowered_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 2,
@@ -1563,7 +1563,7 @@
     },
     {
         "glyph": "̹",
-        "label": "More rounded lower diacritic",
+        "label": "more_rounded_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1571,7 +1571,7 @@
     },
     {
         "glyph": "͗",
-        "label": "More rounded upper diacritic",
+        "label": "more_rounded_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1579,7 +1579,7 @@
     },
     {
         "glyph": "̜",
-        "label": "Less rounded lower diacritic",
+        "label": "less_rounded_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1587,7 +1587,7 @@
     },
     {
         "glyph": "͑",
-        "label": "Less rounded upper diacritic",
+        "label": "less_rounded_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1595,7 +1595,7 @@
     },
     {
         "glyph": "ʷ",
-        "label": "Labialized diacritic",
+        "label": "labialized_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1603,7 +1603,7 @@
     },
     {
         "glyph": "ʲ",
-        "label": "Palatalized diacritic",
+        "label": "palatalized_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1611,7 +1611,7 @@
     },
     {
         "glyph": "ˠ",
-        "label": "Velarized diacritic",
+        "label": "velarized_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1619,7 +1619,7 @@
     },
     {
         "glyph": "̴",
-        "label": "Velarized or pharyngealized diacritic",
+        "label": "velarized_or_pharyngealized_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1627,7 +1627,7 @@
     },
     {
         "glyph": "ˤ",
-        "label": "Pharyngealized diacritic",
+        "label": "pharyngealized_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1635,7 +1635,7 @@
     },
     {
         "glyph": "̘",
-        "label": "Advanced tongue root lower diacritic",
+        "label": "advanced_tongue_root_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1643,7 +1643,7 @@
     },
     {
         "glyph": "᫠",
-        "label": "Advanced tongue root upper diacritic",
+        "label": "advanced_tongue_root_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1651,7 +1651,7 @@
     },
     {
         "glyph": "̙",
-        "label": "Retracted tongue root lower diacritic",
+        "label": "retracted_tongue_root_lower_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1659,7 +1659,7 @@
     },
     {
         "glyph": "᫡",
-        "label": "Retracted tongue root upper diacritic",
+        "label": "retracted_tongue_root_upper_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1667,7 +1667,7 @@
     },
     {
         "glyph": "̃",
-        "label": "Nasalized diacritic",
+        "label": "nasalized_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1675,7 +1675,7 @@
     },
     {
         "glyph": "˞",
-        "label": "Rhoticity diacritic",
+        "label": "rhoticity_diacritic",
         "render_on_base": true,
         "type": "diacritic",
         "row": 3,
@@ -1683,14 +1683,14 @@
     },
     {
         "glyph": "͜",
-        "label": "Combining double lower breve",
+        "label": "combining_double_lower_breve",
         "type": "diacritic",
         "row": 4,
         "col": 1
     },
     {
         "glyph": "͡",
-        "label": "Combining double upper breve",
+        "label": "combining_double_upper_breve",
         "type": "diacritic",
         "row": 4,
         "col": 2
@@ -1698,7 +1698,7 @@
 
     {
         "glyph": "˥",
-        "label": "High tone bar",
+        "label": "high_tone_bar",
         "render_on_base": false,
         "type": "tone",
         "row": 1,
@@ -1706,7 +1706,7 @@
     },
     {
         "glyph": "꜒",
-        "label": "High Chao tone letter",
+        "label": "high_chao_tone_letter",
         "render_on_base": false,
         "type": "tone",
         "row": 1,
@@ -1714,7 +1714,7 @@
     },
     {
         "glyph": "˦",
-        "label": "Half-high tone bar",
+        "label": "half_high_tone_bar",
         "render_on_base": false,
         "type": "tone",
         "row": 2,
@@ -1722,7 +1722,7 @@
     },
     {
         "glyph": "꜓",
-        "label": "Half-high Chao tone letter",
+        "label": "half_high_chao_tone_letter",
         "render_on_base": false,
         "type": "tone",
         "row": 2,
@@ -1730,7 +1730,7 @@
     },
     {
         "glyph": "˧",
-        "label": "Mid tone bar",
+        "label": "mid_tone_bar",
         "render_on_base": false,
         "type": "tone",
         "row": 3,
@@ -1738,7 +1738,7 @@
     },
     {
         "glyph": "꜔",
-        "label": "Mid Chao tone letter",
+        "label": "mid_chao_tone_letter",
         "render_on_base": false,
         "type": "tone",
         "row": 3,
@@ -1746,7 +1746,7 @@
     },
     {
         "glyph": "˨",
-        "label": "Half-low tone bar",
+        "label": "half_low_tone_bar",
         "render_on_base": false,
         "type": "tone",
         "row": 4,
@@ -1754,7 +1754,7 @@
     },
     {
         "glyph": "꜕",
-        "label": "Half-low Chao tone letter",
+        "label": "half_low_chao_tone_letter",
         "render_on_base": false,
         "type": "tone",
         "row": 4,
@@ -1762,7 +1762,7 @@
     },
     {
         "glyph": "˩",
-        "label": "Low tone bar",
+        "label": "low_tone_bar",
         "render_on_base": false,
         "type": "tone",
         "row": 5,
@@ -1770,7 +1770,7 @@
     },
     {
         "glyph": "꜖",
-        "label": "Low Chao tone letter",
+        "label": "low_chao_tone_letter",
         "render_on_base": false,
         "type": "tone",
         "row": 5,
@@ -1779,7 +1779,7 @@
 
     {
         "glyph": "̋",
-        "label": "Extra high pitch diacritic",
+        "label": "extra_high_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1787,7 +1787,7 @@
     },
     {
         "glyph": "́",
-        "label": "High pitch diacritic",
+        "label": "high_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1795,7 +1795,7 @@
     },
     {
         "glyph": "̄",
-        "label": "Mid pitch diacritic",
+        "label": "mid_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1803,7 +1803,7 @@
     },
     {
         "glyph": "̀",
-        "label": "Low pitch diacritic",
+        "label": "low_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1811,7 +1811,7 @@
     },
     {
         "glyph": "̏",
-        "label": "Extra low pitch diacritic",
+        "label": "extra_low_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1819,7 +1819,7 @@
     },
     {
         "glyph": "̌",
-        "label": "Rising pitch diacritic",
+        "label": "rising_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1827,7 +1827,7 @@
     },
     {
         "glyph": "̂",
-        "label": "Falling pitch diacritic",
+        "label": "falling_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1835,7 +1835,7 @@
     },
     {
         "glyph": "᷈",
-        "label": "Peaking pitch diacritic",
+        "label": "peaking_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1843,7 +1843,7 @@
     },
     {
         "glyph": "᷉",
-        "label": "Dipping pitch diacritic",
+        "label": "dipping_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1851,7 +1851,7 @@
     },
     {
         "glyph": "᷄",
-        "label": "Mid-rising pitch diacritic",
+        "label": "mid_rising_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1859,7 +1859,7 @@
     },
     {
         "glyph": "᷅",
-        "label": "Low-rising pitch diacritic",
+        "label": "low_rising_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1867,7 +1867,7 @@
     },
     {
         "glyph": "᷇",
-        "label": "High-falling pitch diacritic",
+        "label": "high_falling_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1875,7 +1875,7 @@
     },
     {
         "glyph": "᷆",
-        "label": "Mid-falling pitch diacritic",
+        "label": "mid_falling_pitch_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 1,
@@ -1883,7 +1883,7 @@
     },
     {
         "glyph": "ˈ",
-        "label": "Primary stress mark",
+        "label": "primary_stress_mark",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1891,7 +1891,7 @@
     },
     {
         "glyph": "ˌ",
-        "label": "Secondary stress mark",
+        "label": "secondary_stress_mark",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1899,7 +1899,7 @@
     },
     {
         "glyph": "ː",
-        "label": "Long mark",
+        "label": "long_mark",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1907,7 +1907,7 @@
     },
     {
         "glyph": "ˑ",
-        "label": "Half-long mark",
+        "label": "half_long_mark",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1915,7 +1915,7 @@
     },
     {
         "glyph": "̆",
-        "label": "Extra-short upper diacritic",
+        "label": "extra_short_upper_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 2,
@@ -1923,7 +1923,7 @@
     },
     {
         "glyph": "̮",
-        "label": "Extra-short lower diacritic",
+        "label": "extra_short_lower_diacritic",
         "render_on_base": true,
         "type": "prosody",
         "row": 2,
@@ -1931,7 +1931,7 @@
     },
     {
         "glyph": ".",
-        "label": "Syllable break",
+        "label": "syllable_break",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1939,7 +1939,7 @@
     },
     {
         "glyph": "‿",
-        "label": "Linking mark",
+        "label": "linking_mark",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1947,7 +1947,7 @@
     },
     {
         "glyph": "|",
-        "label": "Minor break",
+        "label": "minor_break",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1955,7 +1955,7 @@
     },
     {
         "glyph": "‖",
-        "label": "Major break",
+        "label": "major_break",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1963,7 +1963,7 @@
     },
     {
         "glyph": "↗︎",
-        "label": "Global rise mark",
+        "label": "global_rise_mark",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1971,7 +1971,7 @@
     },
     {
         "glyph": "↘︎",
-        "label": "Global fall mark",
+        "label": "global_fall_mark",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1979,7 +1979,7 @@
     },
     {
         "glyph": "ꜛ",
-        "label": "Up-step mark",
+        "label": "up_step_mark",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
@@ -1987,7 +1987,7 @@
     },
     {
         "glyph": "ꜜ",
-        "label": "Down-step mark",
+        "label": "down_step_mark",
         "render_on_base": false,
         "type": "prosody",
         "row": 2,
