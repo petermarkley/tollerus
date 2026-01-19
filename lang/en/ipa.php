@@ -1,6 +1,17 @@
 <?php
 
 return [
+	/**
+	 * Category names
+	 */
+	'consonants' => 'Consonants',
+	'vowels'     => 'Vowels',
+	'diacritics' => 'Diacritics',
+	'tones'      => 'Tones',
+	'prosody'    => 'Prosody',
+	/**
+	 * Glyph labels
+	 */
 	'voiceless_bilabial_nasal' => 'Voiceless bilabial nasal',
 	'voiced_bilabial_nasal' => 'Voiced bilabial nasal',
 	'voiceless_labiodental_nasal' => 'Voiceless labiodental nasal',
