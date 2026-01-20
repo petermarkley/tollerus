@@ -378,6 +378,7 @@ return [
     'base' => 'Base',
     'particle' => 'Particle',
     'transliterated' => 'Transliterated',
+    'transliteration' => 'Transliteration',
     'phonemic' => 'Phonemic',
     'native' => 'Native',
     'add_rule' => 'Add rule',
@@ -439,7 +440,8 @@ return [
     'multiple_row_matches_alert' => 'This word form may show in multiple inflection rows.',
     'multiple_form_matches_alert' => 'This word form\'s inflection values are redundant with another word form.',
     'missing_forms_alert' => 'This word class is missing one or more expected word forms.',
-    'non_primary_form_alert' => 'This word class does not need a word form, unless it\'s the primary form for the entry. This form will not be shown.',
+    'non_primary_form_alert' => 'This word class does not need any non-primary word forms. This form will not be shown.',
+    'missing_primary_form_alert' => 'This entry needs a primary word form, or it will not be shown.',
     /**
      * TRANSLATOR NOTE:
      *
@@ -506,12 +508,21 @@ return [
      * The word 'transliterated' in this phrase is configurable
      * by the user, so that e.g. in English it can say "Roman."
      *
-     * See `Config::get('local_transliteration_target')`. This
-     * config value will be given as the substitution token, or
-     * if missing then the value of localization key
+     * See `Config::get('tollerus.local_transliteration_target')`.
+     * This config value will be given as the substitution token,
+     * or if missing then the value of localization key
      * `transliterated` (here in this file, above).
      */
     'sort_by_transliterated' => 'Sort by :transliterated',
+    /**
+     * TRANSLATOR NOTE:
+     *
+     * Similar to the above, this phrase uses
+     * `Config::get('tollerus.local_transliteration_word')` which
+     * in English defaults to "romanization". If missing, it will
+     * use the localization key `transliteration`.
+     */
+    'word_form_not_transliterated_alert' => 'This word form needs a :transliteration, or it will not be shown.',
     'sort_by_native' => 'Sort by native',
     'native_spelling' => 'Native spelling',
 

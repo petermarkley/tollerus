@@ -124,6 +124,11 @@
                             </template>
                         </x-tollerus::inputs.select>
                     </div>
+                    <template x-if="infoForm.primaryForm===null || infoForm.primaryForm.length==0">
+                        <x-tollerus::alert type="warning">
+                            <p>{{ __('tollerus::ui.missing_primary_form_alert') }}</p>
+                        </x-tollerus::alert>
+                    </template>
                 </div>
                 <div class="w-full flex flex-col gap-2">
                     <h3 class="font-bold text-lg">
@@ -471,6 +476,11 @@
                                                     </x-tollerus::alert>
                                                 </template>
                                             </div>
+                                        </template>
+                                        <template x-if="form.transliterated.length==0">
+                                            <x-tollerus::alert type="warning">
+                                                <p>{{ __('tollerus::ui.word_form_not_transliterated_alert', ['transliteration' => Config::get('tollerus.local_transliteration_word', __('tollerus::ui.transliteration'))]) }}</p>
+                                            </x-tollerus::alert>
                                         </template>
                                         <template x-if="Object.values(wordClassGroup.features).length == 0 && infoForm.primaryForm !== null && infoForm.primaryForm != formId">
                                             <x-tollerus::alert type="warning">
