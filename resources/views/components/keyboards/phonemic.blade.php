@@ -80,8 +80,10 @@
                         @endphp
                         <div
                             @class([
-                                'w-full @container',
-                                'bg-zinc-50/20 dark:bg-zinc-900/20 rounded-[10%] m-[1px]' => $glyph === null,
+                                '@container',
+                                'w-full' => !$glyphsArePaired,
+                                'w-[90%]' => $glyphsArePaired,
+                                'bg-zinc-50/70 dark:bg-zinc-900/20 rounded-[10%] m-[1px]' => $glyph === null,
                                 'rounded-l-[30%] ml-1' => $glyphsArePaired && ($x%2 == 1),
                                 'rounded-r-[30%] mr-1' => $glyphsArePaired && ($x%2 == 0),
                             ])
