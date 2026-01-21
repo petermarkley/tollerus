@@ -207,11 +207,16 @@ final class PhonemicKeyboard
         $categories = $jsonTranslated->pluck('category')->unique()->values();
         return [
             'canonical' => $canonical,
-            'tabs' => $categories->map(function ($category) use ($jsonTranslated) {
+            'tabs' => $categories->map(function ($category) use ($jsonTranslated, $jsonFiltered) {
                 return [
                     'key' => $category,
                     'label' => __('tollerus::ipa.' . $category),
-                    'glyphs' => $jsonTranslated->filter(fn ($g) => $g->category == $category)->values()->toArray(),
+                    'glyphs' => $jsonTranslated
+                        ->filter(fn ($g) => $g->category == $category)
+                        ->map(function ($glyph) use ($jsonFiltered) {
+                            $glyph->isCanonical = $jsonFiltered->pluck('index')->contains($glyph->index);
+                            return $glyph;
+                        })->values()->toArray(),
                 ];
             })->toArray(),
         ];

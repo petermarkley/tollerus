@@ -93,7 +93,7 @@
                 @for ($y=1; $y <= $height; $y++)
                     @for ($x=1; $x <= $width; $x++)
                         @php
-                            $glyph = collect($tab['glyphs'])->firstWhere(fn ($g) => ($g->col==$x && $g->row==$y));
+                            $glyph = collect($tab['glyphs'])->first(fn ($g) => ($g->col==$x && $g->row==$y));
                         @endphp
                         <div
                             @class([
@@ -108,7 +108,9 @@
                             @if ($glyph !== null)
                                 <button
                                     @class([
-                                        'w-full flex flex-col justify-between items-center bg-white dark:bg-zinc-800 rounded-[20cqw] shadow/40 hover:shadow-lg/20 focus:shadow-lg/20 active:shadow-sm/80 p-1 border border-b-[10cqw] border-zinc-400 dark:border-zinc-600 hover:bg-zinc-100 cursor-pointer hover:dark:bg-zinc-700',
+                                        'w-full flex flex-col justify-between items-center rounded-[20cqw] shadow/40 hover:shadow-lg/20 focus:shadow-lg/20 active:shadow-sm/80 p-1 border border-b-[10cqw] cursor-pointer',
+                                        'text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-800 border-zinc-400 dark:border-zinc-600 hover:bg-zinc-100 hover:dark:bg-zinc-700' => !$glyph->isCanonical,
+                                        'text-cyan-900 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-950 saturate-50 dark:saturate-30 border-cyan-400 dark:border-cyan-600 hover:bg-cyan-100 hover:dark:bg-cyan-700' => $glyph->isCanonical,
                                         'hover:transform-[translateY(-6cqw)] focus:transform-[translateY(-6cqw)] active:transform-[translateY(6cqw)]',
                                         'rounded-l-[30cqw] rounded-r-[10cqw] ml-1' => $glyphsArePaired && ($x%2 == 1),
                                         'rounded-l-[10cqw] rounded-r-[30cqw] mr-1' => $glyphsArePaired && ($x%2 == 0),
@@ -123,7 +125,11 @@
                                     @else
                                         <span class="text-[60cqw]">{{ ($glyph->glyph==' '? '&nbsp;' : $glyph->glyph) }}</span>
                                     @endif
-                                    <span class="text-[15cqw] font-mono text-zinc-500 dark:text-zinc-500 line-clamp-1">{{ $glyph->hex }}</span>
+                                    <span @class([
+                                        'text-[15cqw] font-mono line-clamp-1',
+                                        'text-zinc-500 dark:text-zinc-500' => !$glyph->isCanonical,
+                                        'text-cyan-500 dark:text-cyan-500' => $glyph->isCanonical,
+                                    ])>{{ $glyph->hex }}</span>
                                 </button>
                             @endif
                         </div>
