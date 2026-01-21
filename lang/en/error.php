@@ -22,6 +22,8 @@ return [
     'file_path_missing' => 'No public file path found.',
     'svg_parse_error' => 'Error while parsing SVG font file.',
     'keyboards_already_exists' => 'Keyboards already exist.',
+    'ipa_json_missing' => 'IPA keyboard resource not found.',
+    'ipa_json_read_error' => 'Error while reading IPA keyboard resource.',
     /**
      * TRANSLATOR NOTE:
      *

@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Domain\Morphology\Services\AutoInflector;
+use PeterMarkley\Tollerus\Domain\Neography\Services\PhonemicKeyboard;
 use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Feature;
@@ -41,6 +42,7 @@ class EntryEditor extends Component
     public array $infoForm = [];
     // UI display properties
     #[Locked] public array $wordClassGroups = [];
+    #[Locked] public array $ipaKeyboard = [];
 
     /**
      * Livewire hooks
@@ -72,6 +74,7 @@ class EntryEditor extends Component
     {
         $this->entry = $entry;
         $this->language = $language;
+        $this->ipaKeyboard = app(PhonemicKeyboard::class)->load();
 
         $this->refreshForm();
     }

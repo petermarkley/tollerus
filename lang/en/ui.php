@@ -330,6 +330,15 @@ return [
     /**
      * TRANSLATOR NOTE:
      *
+     * This is used as a tab label on a phonemic keyboard.
+     * It refers to sounds/phonemes that are automatically
+     * detected by their use in phonemic values in the list
+     * of neography glyphs.
+     */
+    'canonical' => 'Canonical',
+    /**
+     * TRANSLATOR NOTE:
+     *
      * "Width" here refers to the number of buttons/keys in
      * each row of a keybaord.
      */

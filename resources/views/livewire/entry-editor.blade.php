@@ -149,6 +149,9 @@
                         @save-info-failure.window="btn = 'save';"
                         x-text="msgs[btn]" />
                 </div>
+                <div>
+                    <pre>{!! json_encode($ipaKeyboard, JSON_PRETTY_PRINT) !!}</pre>
+                </div>
             </x-tollerus::panel>
             <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
                 <template x-for="([lexemeId, lexeme], i) in $store.reorderFunctions.sortItems(infoForm.lexemes)">
