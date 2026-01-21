@@ -34,43 +34,82 @@
             role="tabpanel"
             x-cloak x-show="phonemicTab=='canonical'"
             class="w-full grid grid-cols-20 gap-1"
-        ></div>
+        >
+            @foreach ($phonemicKeyboard['canonical'] as $glyph)
+                <div class="w-full @container">
+                    <button
+                        @class([
+                            'w-full flex flex-col justify-between items-center bg-white dark:bg-zinc-800 rounded-[20cqw] shadow/40 hover:shadow-lg/20 focus:shadow-lg/20 active:shadow-sm/80 p-1 border border-b-[10cqw] border-zinc-400 dark:border-zinc-600 hover:bg-zinc-100 cursor-pointer hover:dark:bg-zinc-700',
+                            'hover:transform-[translateY(-6cqw)] focus:transform-[translateY(-6cqw)] active:transform-[translateY(6cqw)]',
+                        ])
+                        data-glyph="{{ $glyph->glyph }}"
+                        title="{{ $glyph->labelTranslated }}"
+                        @click="$store.phonemicKeyboard.click"
+                    >
+                        <span class="sr-only">{{ $glyph->labelTranslated }}</span>
+                        @if ($glyph->render_on_base)
+                            <span class="text-[60cqw]">&#x25CC;{{ $glyph->glyph }}</span>
+                        @else
+                            <span class="text-[60cqw]">{{ ($glyph->glyph==' '? '&nbsp;' : $glyph->glyph) }}</span>
+                        @endif
+                        <span class="text-[15cqw] font-mono text-zinc-500 dark:text-zinc-500 line-clamp-1">{{ $glyph->hex }}</span>
+                    </button>
+                </div>
+            @endforeach
+        </div>
         @foreach ($phonemicKeyboard['tabs'] as $tab)
             @php
-                $width = 20;
+                $height = collect($tab['glyphs'])->max('row');
+                $width = collect($tab['glyphs'])->max('col');
+                $glyphsArePaired = in_array($tab['key'], ['consonants', 'vowels', 'diacritics', 'tones']);
             @endphp
             <div
                 id="tabpanel-{{ $tab['key'] }}"
                 role="tabpanel"
                 x-cloak x-show="phonemicTab=='{{ $tab['key'] }}'"
                 class="w-full grid gap-1"
-                style="grid-template-columns: repeat({{ $width }}, minmax(0, 1fr));"
+                style="
+                    grid-template-columns: repeat({{ $width }}, minmax(0, 1fr));
+                    max-width: min(1200px, {{ (80*$width) }}px);
+                "
             >
-                @foreach ($tab['glyphs'] as $i => $glyph)
-                    @php
-                        $rowCycle = floor($i / $width) % 3;
-                    @endphp
-                    <div class="w-full @container">
-                        <button
+                @for ($y=1; $y <= $height; $y++)
+                    @for ($x=1; $x <= $width; $x++)
+                        @php
+                            $glyph = collect($tab['glyphs'])->firstWhere(fn ($g) => ($g->col==$x && $g->row==$y));
+                        @endphp
+                        <div
                             @class([
-                                'w-full flex flex-col justify-between items-center bg-white dark:bg-zinc-800 rounded-[20cqw] shadow/40 hover:shadow-lg/20 focus:shadow-lg/20 active:shadow-sm/80 p-1 border border-b-[10cqw] border-zinc-400 dark:border-zinc-600 hover:bg-zinc-100 cursor-pointer hover:dark:bg-zinc-700',
-                                'hover:transform-[translateY(-6cqw)] focus:transform-[translateY(-6cqw)] active:transform-[translateY(6cqw)]' => $rowCycle==0,
-                                'transform-[translateX(16%)] hover:transform-[translate(16%,-6cqw)] focus:transform-[translate(16%,-6cqw)] active:transform-[translate(16%,6cqw)]' => $rowCycle==1,
-                                'transform-[translateX(-16%)] hover:transform-[translate(-16%,-6cqw)] focus:transform-[translate(-16%,-6cqw)] active:transform-[translate(-16%,6cqw)]' => $rowCycle==2,
+                                'w-full @container',
+                                'bg-zinc-50/20 dark:bg-zinc-900/20 rounded-[10%] m-[1px]' => $glyph === null,
+                                'rounded-l-[30%] ml-1' => $glyphsArePaired && ($x%2 == 1),
+                                'rounded-r-[30%] mr-1' => $glyphsArePaired && ($x%2 == 0),
                             ])
-                            data-glyph="{{ $glyph->glyph }}"
-                            @click="$store.phonemicKeyboard.click"
                         >
-                            <span class="text-[20cqw]">{{ $glyph->label }}</span>
-                            @if ($glyph->render_on_base)
-                                <span class="text-[60cqw]">&#x25CC;{{ $glyph->glyph }}</span>
-                            @else
-                                <span class="text-[60cqw]">{{ ($glyph->glyph==' '? '&nbsp;' : $glyph->glyph) }}</span>
+                            @if ($glyph !== null)
+                                <button
+                                    @class([
+                                        'w-full flex flex-col justify-between items-center bg-white dark:bg-zinc-800 rounded-[20cqw] shadow/40 hover:shadow-lg/20 focus:shadow-lg/20 active:shadow-sm/80 p-1 border border-b-[10cqw] border-zinc-400 dark:border-zinc-600 hover:bg-zinc-100 cursor-pointer hover:dark:bg-zinc-700',
+                                        'hover:transform-[translateY(-6cqw)] focus:transform-[translateY(-6cqw)] active:transform-[translateY(6cqw)]',
+                                        'rounded-l-[30cqw] rounded-r-[10cqw] ml-1' => $glyphsArePaired && ($x%2 == 1),
+                                        'rounded-l-[10cqw] rounded-r-[30cqw] mr-1' => $glyphsArePaired && ($x%2 == 0),
+                                    ])
+                                    data-glyph="{{ $glyph->glyph }}"
+                                    title="{{ $glyph->labelTranslated }}"
+                                    @click="$store.phonemicKeyboard.click"
+                                >
+                                    <span class="sr-only">{{ $glyph->labelTranslated }}</span>
+                                    @if ($glyph->render_on_base)
+                                        <span class="text-[60cqw]">&#x25CC;{{ $glyph->glyph }}</span>
+                                    @else
+                                        <span class="text-[60cqw]">{{ ($glyph->glyph==' '? '&nbsp;' : $glyph->glyph) }}</span>
+                                    @endif
+                                    <span class="text-[15cqw] font-mono text-zinc-500 dark:text-zinc-500 line-clamp-1">{{ $glyph->hex }}</span>
+                                </button>
                             @endif
-                            <span class="text-[15cqw] font-mono text-zinc-500 dark:text-zinc-500">{{ $glyph->hex }}</span>
-                        </button>
-                    </div>
-                @endforeach
+                        </div>
+                    @endfor
+                @endfor
             </div>
         @endforeach
     </div>
