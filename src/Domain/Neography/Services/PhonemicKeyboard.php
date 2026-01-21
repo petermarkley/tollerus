@@ -62,7 +62,7 @@ final class PhonemicKeyboard
             ['index', 'asc'],
         ])->values();
         // Fetch user-inputted chars
-        $userInput = NeographyGlyph::all()->pluck('phonemic');
+        $userInput = NeographyGlyph::query()->whereNotNull('phonemic')->pluck('phonemic');
         /**
          * This is where we match the IPA glyphs against user input, and
          * only keep those IPA glyphs that have one or more occurrences.
