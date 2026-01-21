@@ -46,7 +46,7 @@
                         title="{{ $glyph->labelTranslated }}"
                         @click="$store.phonemicKeyboard.click"
                     >
-                        <span class="sr-only">{{ $glyph->labelTranslated }}</span>
+                        <span class="sr-only" @if(!$glyph->recognized) lang="en" @endif>{{ $glyph->labelTranslated }}</span>
                         @if ($glyph->render_on_base)
                             <span class="text-[60cqw]">&#x25CC;{{ $glyph->glyph }}</span>
                         @else
