@@ -26,8 +26,11 @@ final class NativeKeyboard
     {
         $language->loadMissing(['neographies.keyboards.inputKeys']);
         return $language->neographies
-            ->mapWithKeys(fn ($n) => [$n->id => $this->loadSingleNeography($n)])
-            ->toArray();
+            ->mapWithKeys(fn ($n) => [$n->id => [
+                'name' => $n->name,
+                'machineName' => $n->machine_name,
+                'keyboards' => $this->loadSingleNeography($n),
+            ]])->toArray();
     }
 }
 
