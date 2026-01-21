@@ -8,6 +8,12 @@ use PeterMarkley\Tollerus\Models\Neography;
 final class SvgToKeyboard
 {
     /**
+     * These words, as well as the neography's name, will be ignored when assigning
+     * key labels from the font glyph names.
+     */
+    const IGNORE = ['letter', 'symbol', 'mark', 'character'];
+
+    /**
      * This will import glyphs from the stored SVG font into NeographyInputKey objects.
      *
      * Note: The SVG parsing/chunking code here is repeated once in SvgToGlyphs. If
@@ -65,8 +71,13 @@ final class SvgToKeyboard
                     'width' => 10,
                 ]);
                 foreach ($chunk as $j => $glyph) {
+                    $label = collect(explode(' ', $glyph['glyph-name'])) // Break into words
+                        ->filter(fn ($str) => strlen($str)>0) // Remove empty word strings (resulting from extra spaces)
+                        ->filter(fn ($str) => !in_array(strtolower($str), self::IGNORE)) // Remove words in IGNORE list
+                        ->filter(fn ($str) => strtolower($str) != strtolower($neography->machine_name)) // Remove cases of the neography name
+                        ->implode(' ');
                     $keyboard->inputKeys()->create([
-                        'label' => $glyph['glyph-name'],
+                        'label' => $label,
                         'glyph' => $glyph['unicode'],
                         'position' => $j,
                         'render_base' => false,
