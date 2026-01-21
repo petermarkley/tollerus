@@ -149,7 +149,7 @@
                         @save-info-failure.window="btn = 'save';"
                         x-text="msgs[btn]" />
                 </div>
-                <div class="w-full" x-data="{}" x-init="$store.nativeKeyboard.mount(1, $el)"></div>
+                <div class="w-full" x-data="{}" x-init="$store.phonemicKeyboard.mount($el)"></div>
             </x-tollerus::panel>
             <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
                 <template x-for="([lexemeId, lexeme], i) in $store.reorderFunctions.sortItems(infoForm.lexemes)">
@@ -735,6 +735,7 @@
     </div>
     <x-tollerus::modal/>
     <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
+    <x-tollerus::keyboards.phonemic :phonemicKeyboard="$ipaKeyboard"/>
 </div>
 <x-tollerus::reorder-script/>
 @once

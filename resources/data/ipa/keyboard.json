@@ -1684,6 +1684,7 @@
     {
         "glyph": "͜",
         "label": "combining_double_lower_breve",
+        "render_on_base": true,
         "category": "diacritics",
         "row": 4,
         "col": 1
@@ -1691,6 +1692,7 @@
     {
         "glyph": "͡",
         "label": "combining_double_upper_breve",
+        "render_on_base": true,
         "category": "diacritics",
         "row": 4,
         "col": 2
