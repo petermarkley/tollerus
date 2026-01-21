@@ -6,6 +6,48 @@ use IntlChar; // This can be installed as `ext-intl`
 // use Illuminate\Support\Facades\Cache;
 use PeterMarkley\Tollerus\Models\NeographyGlyph;
 
+/**
+ * This service class compiles a display-ready dataset for a phonemic
+ * keyboard. It takes the form:
+ *
+ *   {
+ *     'canonical' => [
+ *       (list of glyphs...)
+ *     ],
+ *     'tabs' => [
+ *       {
+ *         'key' => 'consonants',
+ *         'label' => (localized string),
+ *         'glyphs' => [
+ *           (list of glyphs...)
+ *         ]
+ *       },
+ *       {
+ *         'key' => 'vowels',
+ *         'label' => (localized string),
+ *         'glyphs' => [
+ *           (list of glyphs...)
+ *         ]
+ *       },
+ *
+ *       (other tabs...)
+ *
+ *     ]
+ *   }
+ *
+ * Everything in the 'tabs' part comes from the IPA keyboard JSON file.
+ * The 'canonical' part is a list of phonemic characters the user has
+ * entered in all of their neography alphabets.
+ *
+ * When processing the canonical glyphs, the service class first eager-
+ * matches any occurrences in the user input with recognized IPA
+ * characters from the JSON file, then parses any remaining unrecognized
+ * characters in a fallback mode. This is to maximize the rich IPA-centric
+ * metadata (key labels, combining marks, sort order, etc).
+ *
+ * The fallback mode uses the PHP `IntlChar` class, and itself has a
+ * graceful fallback if this class isn't installed.
+ */
 final class PhonemicKeyboard
 {
     // public const string CACHE_KEY  = 'tollerus:ipa-keyboard';
@@ -37,6 +79,7 @@ final class PhonemicKeyboard
         $jsonTranslated = collect($json)->map(function ($glyph, $index) {
             $glyph->labelTranslated = __('tollerus::ipa.' . $glyph->label);
             $glyph->index = $index;
+            $glyph->recognized = true;
             return $glyph;
         });
 
@@ -146,6 +189,7 @@ final class PhonemicKeyboard
                 'render_on_base' => $renderOnBase,
                 'codepoint' => $codepoint,
                 'hex' => dechex($codepoint),
+                'recognized' => false,
             ]));
         })->sortBy('codepoint')->values();
         /**
