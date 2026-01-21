@@ -4,7 +4,7 @@
 ])
 <template id="phonemic_keyboard">
     <div class="flex flex-col gap-4 px-6" x-data="{ phonemicTab: '{{ (filter_var($showCanonical, FILTER_VALIDATE_BOOLEAN) ? 'canonical' : 'consonants') }}' }">
-        <ul class="px-4 flex flex-row flex-wrap md:flex-nowrap gap-4 justify-start items-end" role="tablist">
+        <ul class="px-4 flex flex-row flex-wrap md:flex-nowrap gap-2 md:gap-4 justify-start items-end border-b-2 border-zinc-500 dark:border-zinc-400 pb-2 md:pb-0" role="tablist">
             @if (filter_var($showCanonical, FILTER_VALIDATE_BOOLEAN))
                 <li
                     role="tab"
@@ -16,9 +16,9 @@
                     @keydown.enter.prevent="phonemicTab = 'canonical';"
                     @keydown.space.prevent="phonemicTab = 'canonical';"
                     x-bind:class="{
-                        'rounded-t-lg flex flex-row justify-start items-center gap-2 cursor-pointer py-2 px-4 flex focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white': true,
-                        'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': phonemicTab!='canonical',
-                        'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': phonemicTab=='canonical'
+                        'rounded-t-lg rounded-b-lg md:rounded-b-none flex flex-row justify-start items-center gap-2 cursor-pointer py-1 px-2 flex focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white': true,
+                        'text-white dark:text-zinc-900 font-bold border-2 mb-[-2px] border-zinc-500 dark:border-zinc-400 hover:border-zinc-600 hover:dark:border-white bg-zinc-500 dark:bg-zinc-400 hover:bg-zinc-600 hover:dark:bg-white': phonemicTab!='canonical',
+                        'text-zinc-900 dark:text-zinc-300 border-2 mb-[-2px] border-t-zinc-500 dark:border-t-zinc-400 border-x-zinc-500 dark:border-x-zinc-400 border-b-zinc-500 dark:border-b-zinc-400 md:border-b-white md:dark:border-b-zinc-800 bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': phonemicTab=='canonical'
                     }"
                 >
                     <span>{{ __('tollerus::ui.canonical') }}</span>
@@ -35,9 +35,9 @@
                     @keydown.enter.prevent="phonemicTab = '{{ $tab['key'] }}';"
                     @keydown.space.prevent="phonemicTab = '{{ $tab['key'] }}';"
                     x-bind:class="{
-                        'rounded-t-lg flex flex-row justify-start items-center gap-2 cursor-pointer py-2 px-4 flex focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white': true,
-                        'bg-zinc-50 dark:bg-zinc-900 hover:bg-white hover:dark:bg-zinc-800': phonemicTab!='{{ $tab['key'] }}',
-                        'bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': phonemicTab=='{{ $tab['key'] }}'
+                        'rounded-t-lg rounded-b-lg md:rounded-b-none flex flex-row justify-start items-center gap-2 cursor-pointer py-1 px-2 flex focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white': true,
+                        'text-white dark:text-zinc-900 font-bold border-2 mb-[-2px] border-zinc-500 dark:border-zinc-400 hover:border-zinc-600 hover:dark:border-white bg-zinc-500 dark:bg-zinc-400 hover:bg-zinc-600 hover:dark:bg-white': phonemicTab!='{{ $tab['key'] }}',
+                        'text-zinc-900 dark:text-zinc-300 border-2 mb-[-2px] border-t-zinc-500 dark:border-t-zinc-400 border-x-zinc-500 dark:border-x-zinc-400 border-b-zinc-500 dark:border-b-zinc-400 md:border-b-white md:dark:border-b-zinc-800 bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700': phonemicTab=='{{ $tab['key'] }}'
                     }"
                 >
                     <span>{{ $tab['label'] }}</span>
