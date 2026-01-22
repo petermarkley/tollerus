@@ -9,6 +9,7 @@
         tabPattern: $wire.entangle('tabPattern'),
         tabNeography: $wire.entangle('tabNeography'),
         ruleForm: $wire.entangle('ruleForm'),
+        nativeKeyboards: $wire.entangle('nativeKeyboards'),
         moveRule(ruleList, ruleElem, tabTarget, tabPattern, tabNeography, ruleId, dir) {
             let neighborId = $store.reorderFunctions.getNeighborId(ruleList, ruleId, dir);
             if (neighborId === null) {
@@ -209,5 +210,7 @@
         </div>
     </div>
     <x-tollerus::modal/>
+    <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
+    <x-tollerus::keyboards.phonemic :phonemicKeyboard="$ipaKeyboard"/>
 </div>
 <x-tollerus::reorder-script/>
