@@ -319,7 +319,11 @@
                                                                 <label class="sr-only">{{ __('tollerus::ui.auto_inflect') }}</label>
                                                             </x-tollerus::inputs.button>
                                                         </template>
-                                                        <div class="relative" x-data="{ showKeyboard: false }">
+                                                        <div
+                                                            x-data="{ showKeyboard: false }"
+                                                            class="relative"
+                                                            @close-phonemic-keyboard.window="showKeyboard=false;"
+                                                        >
                                                             <x-tollerus::inputs.button
                                                                 x-cloak x-show="!showKeyboard"
                                                                 type="secondary"

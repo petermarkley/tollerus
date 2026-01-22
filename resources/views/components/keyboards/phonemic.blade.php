@@ -185,15 +185,60 @@ document.addEventListener('alpine:init', () => {
             // Mount keyboard
             this.mountPoint.appendChild(clone);
             this.calculatePosition();
+
+            /**
+             * Set event listeners
+             * ===================
+             */
+
+            // If the user tabs out of the relevant area, close the keyboard
+            const onFocusout = (event) => {
+                if (this.mountElem === null) {
+                    return;
+                }
+                if (event.relatedTarget !== null && !(this.mountTerritory.contains(event.relatedTarget) || event.relatedTarget.contains(this.mountTerritory))) {
+                    event.target.removeEventListener('focusout', onFocusout);
+                    window.dispatchEvent(new CustomEvent('close-phonemic-keyboard'));
+                    this.unmount();
+                }
+            };
+            this.mountTerritory.addEventListener('focusout', onFocusout);
+
+            // If the user clicks outside the relevant area, close the keyboard
+            const onClick = (event) => {
+                if (this.mountElem === null) {
+                    return;
+                }
+                if (!this.mountTerritory.contains(event.target)) {
+                    event.target.removeEventListener('click', onClick);
+                    window.dispatchEvent(new CustomEvent('close-phonemic-keyboard'));
+                    this.unmount();
+                }
+            };
+            window.addEventListener('click', onClick, {capture: true}); // If we let this bubble, we get redundant events due to Alpine DOM updates
+
+            // If the user presses escape, close the keyboard
+            const onKeydown = (event) => {
+                if (this.mountElem === null) {
+                    return;
+                }
+                if (event.key === 'Escape' || event.key === 'Esc') {
+                    event.target.removeEventListener('keydown', onKeydown);
+                    window.dispatchEvent(new CustomEvent('close-phonemic-keyboard'));
+                    this.unmount();
+                }
+            };
+            window.addEventListener('keydown', onKeydown);
         },
         unmount() {
-            if (this.mountElem !== null) {
-                this.mountElem.remove();
-                this.mountElem = null;
-                this.mountPoint = null;
-                this.mountTerritory = null;
-                this.inputField = null;
+            if (this.mountElem === null) {
+                return;
             }
+            this.mountElem.remove();
+            this.mountElem = null;
+            this.mountPoint = null;
+            this.mountTerritory = null;
+            this.inputField = null;
         },
         calculatePosition() {
             const targetRect = this.mountPoint.getBoundingClientRect();
