@@ -7,6 +7,14 @@
             tabindex="-1"
             class="w-[100vw] mt-4 absolute flex flex-col gap-4 items-center p-6 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-xl shadow"
         >
+            <div data-keyboard-elem="paneltail" class="absolute -top-4 left-[50%] transform-[translateX(-50%)]">
+                <svg viewBox="0 0 24 12" class="block dark:hidden w-8 h-4 text-white">
+                    <path d="M 2,12 L 12,2 L 22,12" fill="currentColor" stroke-width="1.5" stroke-linejoin="miter" stroke-miterlimit="8" stroke="var(--color-zinc-400)" />
+                </svg>
+                <svg viewBox="0 0 24 12" class="hidden dark:block w-8 h-4 text-zinc-800">
+                    <path d="M 2,12 L 12,2 L 22,12" fill="currentColor" stroke-width="1.5" stroke-linejoin="miter" stroke-miterlimit="8" stroke="var(--color-zinc-500)" />
+                </svg>
+            </div>
             @foreach ($keyboardNeography['keyboards'] as $keyboard)
                 <div class="w-full grid gap-1" style="
                     grid-template-columns: repeat({{ $keyboard['width'] }}, minmax(0, 1fr));
@@ -25,7 +33,7 @@
                                     'transform-[translateX(-16%)] hover:transform-[translate(-16%,-6cqw)] focus:transform-[translate(-16%,-6cqw)] active:transform-[translate(-16%,6cqw)]' => $rowCycle==2,
                                 ])
                                 data-glyph="{{ $key['glyph'] }}"
-                                @click="$store.nativeKeyboard.click($event);"
+                                @click="$store.virtualKeyboard.click($event);"
                             >
                                 <span class="text-[20cqw]">{{ $key['label'] }}</span>
                                 @if ($key['render_on_base'])
@@ -42,33 +50,4 @@
         </div>
     </template>
 @endforeach
-
-@once
-@push('tollerus-scripts')
-<script>
-document.addEventListener('alpine:init', () => {
-    Alpine.store('nativeKeyboard', {
-        mount(neographyId, target) {
-            const template = document.getElementById('keyboard_for_'+neographyId);
-            if (template === null || target === null) {
-                return;
-            }
-            const clone = template.content.cloneNode(true);
-            target.appendChild(clone);
-        },
-        click(e) {
-            if (typeof e.target.dataset.glyph === "undefined") {
-                var key = e.target.closest('[data-glyph]');
-            } else {
-                var key = e.target;
-            }
-            if (key === null) {
-                return;
-            }
-            console.log(key.dataset.glyph);
-        },
-    });
-});
-</script>
-@endpush
-@endonce
+<x-tollerus::keyboards.script/>
