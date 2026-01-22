@@ -16,6 +16,7 @@
         },
         infoForm: $wire.entangle('infoForm'),
         wordClassGroups: $wire.entangle('wordClassGroups'),
+        nativeKeyboards: $wire.entangle('nativeKeyboards'),
         moveLexeme(lexemeElem, lexemeId, dir) {
             let neighborId = $store.reorderFunctions.getNeighborId(this.infoForm.lexemes, lexemeId, dir);
             if (neighborId === null) {
@@ -402,45 +403,47 @@
                                                                             </x-tollerus::inputs.button>
                                                                         </div>
                                                                     </template>
-                                                                    <div
-                                                                        x-data="{ showKeyboard: false }"
-                                                                        class="relative"
-                                                                        @close-virtual-keyboard.window="showKeyboard=false;"
-                                                                    >
-                                                                        <x-tollerus::inputs.button
-                                                                            x-cloak x-show="!showKeyboard"
-                                                                            type="secondary"
-                                                                            size="small"
-                                                                            class="align-middle"
-                                                                            title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
-                                                                            @click="
-                                                                                editing=true;
-                                                                                $nextTick(()=>{
-                                                                                    showKeyboard=true;
-                                                                                    $store.virtualKeyboard.mount({
-                                                                                        virtualKeyboardType: 'native',
-                                                                                        neographyId: nativeSpelling.neographyId,
-                                                                                        mountPoint: $el.parentNode,
-                                                                                        inputFieldId: id
+                                                                    <template x-if="nativeKeyboards[nativeSpelling.neographyId].keyboards.length > 0">
+                                                                        <div
+                                                                            x-data="{ showKeyboard: false }"
+                                                                            class="relative"
+                                                                            @close-virtual-keyboard.window="showKeyboard=false;"
+                                                                        >
+                                                                            <x-tollerus::inputs.button
+                                                                                x-cloak x-show="!showKeyboard"
+                                                                                type="secondary"
+                                                                                size="small"
+                                                                                class="align-middle"
+                                                                                title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
+                                                                                @click="
+                                                                                    editing=true;
+                                                                                    $nextTick(()=>{
+                                                                                        showKeyboard=true;
+                                                                                        $store.virtualKeyboard.mount({
+                                                                                            virtualKeyboardType: 'native',
+                                                                                            neographyId: nativeSpelling.neographyId,
+                                                                                            mountPoint: $el.parentNode,
+                                                                                            inputFieldId: id
+                                                                                        });
                                                                                     });
-                                                                                });
-                                                                            "
-                                                                        >
-                                                                            <x-tollerus::icons.keyboard/>
-                                                                            <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
-                                                                        </x-tollerus::inputs.button>
-                                                                        <x-tollerus::inputs.button
-                                                                            x-cloak x-show="showKeyboard"
-                                                                            type="primary"
-                                                                            size="small"
-                                                                            class="align-middle"
-                                                                            title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
-                                                                            @click="showKeyboard=false; $store.virtualKeyboard.unmount();"
-                                                                        >
-                                                                            <x-tollerus::icons.keyboard/>
-                                                                            <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
-                                                                        </x-tollerus::inputs.button>
-                                                                    </div>
+                                                                                "
+                                                                            >
+                                                                                <x-tollerus::icons.keyboard/>
+                                                                                <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
+                                                                            </x-tollerus::inputs.button>
+                                                                            <x-tollerus::inputs.button
+                                                                                x-cloak x-show="showKeyboard"
+                                                                                type="primary"
+                                                                                size="small"
+                                                                                class="align-middle"
+                                                                                title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
+                                                                                @click="showKeyboard=false; $store.virtualKeyboard.unmount();"
+                                                                            >
+                                                                                <x-tollerus::icons.keyboard/>
+                                                                                <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
+                                                                            </x-tollerus::inputs.button>
+                                                                        </div>
+                                                                    </template>
                                                                 </x-slot:before>
                                                             </x-tollerus::inputs.text-saveable>
                                                         </td>
