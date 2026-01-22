@@ -149,7 +149,6 @@
                         @save-info-failure.window="btn = 'save';"
                         x-text="msgs[btn]" />
                 </div>
-                <div class="w-full" x-data="{}" x-init="$store.phonemicKeyboard.mount($el)"></div>
             </x-tollerus::panel>
             <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
                 <template x-for="([lexemeId, lexeme], i) in $store.reorderFunctions.sortItems(infoForm.lexemes)">
@@ -296,7 +295,7 @@
                                                     </x-slot:before>
                                                 </x-tollerus::inputs.text-saveable>
                                             </div>
-                                            <div class="lg:w-80">
+                                            <div class="lg:w-80" data-keyboard-elem="territory">
                                                 <x-tollerus::inputs.text-saveable
                                                     idExpression="'form_' + formId + '_phonemic'"
                                                     model="form.phonemic"
@@ -320,6 +319,30 @@
                                                                 <label class="sr-only">{{ __('tollerus::ui.auto_inflect') }}</label>
                                                             </x-tollerus::inputs.button>
                                                         </template>
+                                                        <div class="relative" x-data="{ showKeyboard: false }">
+                                                            <x-tollerus::inputs.button
+                                                                x-cloak x-show="!showKeyboard"
+                                                                type="secondary"
+                                                                size="small"
+                                                                class="align-middle"
+                                                                title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
+                                                                @click="editing=true; $nextTick(()=>{showKeyboard=true; $store.phonemicKeyboard.mount($el.parentNode, id);});"
+                                                            >
+                                                                <x-tollerus::icons.keyboard/>
+                                                                <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
+                                                            </x-tollerus::inputs.button>
+                                                            <x-tollerus::inputs.button
+                                                                x-cloak x-show="showKeyboard"
+                                                                type="primary"
+                                                                size="small"
+                                                                class="align-middle"
+                                                                title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
+                                                                @click="showKeyboard=false; $store.phonemicKeyboard.unmount();"
+                                                            >
+                                                                <x-tollerus::icons.keyboard/>
+                                                                <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
+                                                            </x-tollerus::inputs.button>
+                                                        </div>
                                                     </x-slot:before>
                                                 </x-tollerus::inputs.text-saveable>
                                             </div>

@@ -310,6 +310,8 @@ return [
     'delete_keyboard' => 'Delete keyboard',
     'move_keyboard_up' => 'Move keyboard up',
     'move_keyboard_down' => 'Move keyboard down',
+    'show_virtual_keyboard' => 'Show virtual keyboard',
+    'hide_virtual_keyboard' => 'Hide virtual keyboard',
     /**
      * TRANSLATOR NOTE:
      *

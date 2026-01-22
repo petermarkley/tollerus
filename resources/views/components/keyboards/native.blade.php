@@ -3,7 +3,7 @@
 ])
 @foreach ($nativeKeyboards as $keyboardNeographyId => $keyboardNeography)
     <template id="{{ 'keyboard_for_'.$keyboardNeographyId }}">
-        <div class="flex flex-col gap-4 px-6">
+        <div class="w-[100vw] mt-4 absolute flex flex-col gap-4 items-center p-6 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-xl shadow">
             @foreach ($keyboardNeography['keyboards'] as $keyboard)
                 <div class="w-full grid gap-1" style="
                     grid-template-columns: repeat({{ $keyboard['width'] }}, minmax(0, 1fr));
@@ -22,7 +22,7 @@
                                     'transform-[translateX(-16%)] hover:transform-[translate(-16%,-6cqw)] focus:transform-[translate(-16%,-6cqw)] active:transform-[translate(-16%,6cqw)]' => $rowCycle==2,
                                 ])
                                 data-glyph="{{ $key['glyph'] }}"
-                                @click="$store.nativeKeyboard.click"
+                                @click="$store.nativeKeyboard.click($event);"
                             >
                                 <span class="text-[20cqw]">{{ $key['label'] }}</span>
                                 @if ($key['render_on_base'])

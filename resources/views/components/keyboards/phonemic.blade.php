@@ -3,7 +3,18 @@
     'showCanonical' => true,
 ])
 <template id="phonemic_keyboard">
-    <div class="flex flex-col gap-4 px-6" x-data="{ phonemicTab: '{{ (filter_var($showCanonical, FILTER_VALIDATE_BOOLEAN) ? 'canonical' : 'consonants') }}' }">
+    <div
+        x-data="{ phonemicTab: '{{ (filter_var($showCanonical, FILTER_VALIDATE_BOOLEAN) ? 'canonical' : 'consonants') }}' }"
+        class="w-[100vw] mt-4 absolute flex flex-col gap-4 items-center p-6 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-xl shadow"
+    >
+        <div data-keyboard-elem="paneltail" class="absolute -top-4 left-[50%] transform-[translateX(-50%)]">
+            <svg viewBox="0 0 20 10" class="block dark:hidden w-8 h-4 text-white">
+                <path d="M 0,10 L 10,0 L 20,10" fill="currentColor" stroke-width="1.25" stroke-linejoin="round" stroke="var(--color-zinc-400)" />
+            </svg>
+            <svg viewBox="0 0 20 10" class="hidden dark:block w-8 h-4 text-zinc-800">
+                <path d="M 0,10 L 10,0 L 20,10" fill="currentColor" stroke-width="1.25" stroke-linejoin="round" stroke="var(--color-zinc-500)" />
+            </svg>
+        </div>
         <ul class="px-4 flex flex-row flex-wrap md:flex-nowrap gap-2 md:gap-4 justify-start items-end border-b-2 border-zinc-500 dark:border-zinc-400 pb-2 md:pb-0" role="tablist">
             @if (filter_var($showCanonical, FILTER_VALIDATE_BOOLEAN))
                 <li
@@ -67,7 +78,7 @@
                             ])
                             data-glyph="{{ $glyph->glyph }}"
                             title="{{ $glyph->labelTranslated }}"
-                            @click="$store.phonemicKeyboard.click"
+                            @click="$store.phonemicKeyboard.click($event);"
                         >
                             <span class="sr-only" @if(!$glyph->recognized) lang="en" @endif>{{ $glyph->labelTranslated }}</span>
                             @if ($glyph->render_on_base)
@@ -124,7 +135,7 @@
                                     ])
                                     data-glyph="{{ $glyph->glyph }}"
                                     title="{{ $glyph->labelTranslated }}"
-                                    @click="$store.phonemicKeyboard.click"
+                                    @click="$store.phonemicKeyboard.click($event);"
                                 >
                                     <span class="sr-only">{{ $glyph->labelTranslated }}</span>
                                     @if ($glyph->render_on_base)
@@ -152,13 +163,46 @@
 <script>
 document.addEventListener('alpine:init', () => {
     Alpine.store('phonemicKeyboard', {
-        mount(target) {
+        mountPoint: null,
+        mountTerritory: null,
+        mountElem: null,
+        inputField: null,
+        mount(mountPoint, inputFieldId) {
             const template = document.getElementById('phonemic_keyboard');
-            if (template === null || target === null) {
+            if (template === null || mountPoint === null) {
                 return;
             }
+            // Store values
+            this.mountPoint = mountPoint;
+            this.mountTerritory = mountPoint.closest('[data-keyboard-elem="territory"]');
+            this.inputField = document.getElementById(inputFieldId);
+            if (this.mountTerritory === null || this.inputField === null) {
+                return;
+            }
+            // Retrieve info
             const clone = template.content.cloneNode(true);
-            target.appendChild(clone);
+            this.mountElem = clone.querySelector('*');
+            // Mount keyboard
+            this.mountPoint.appendChild(clone);
+            this.calculatePosition();
+        },
+        unmount() {
+            if (this.mountElem !== null) {
+                this.mountElem.remove();
+                this.mountElem = null;
+                this.mountPoint = null;
+                this.mountTerritory = null;
+                this.inputField = null;
+            }
+        },
+        calculatePosition() {
+            const targetRect = this.mountPoint.getBoundingClientRect();
+            this.mountElem.style.left = "-"+targetRect.x+"px";
+            const tail = this.mountElem.querySelector('[data-keyboard-elem="paneltail"]');
+            if (tail !== null) {
+                const offset = targetRect.x + (targetRect.width/2.0);
+                tail.style.left = offset.toString() + "px";
+            }
         },
         click(e) {
             if (typeof e.target.dataset.glyph === "undefined") {
@@ -169,7 +213,9 @@ document.addEventListener('alpine:init', () => {
             if (key === null) {
                 return;
             }
-            console.log(key.dataset.glyph);
+            if (this.inputField !== null) {
+                this.inputField.value = this.inputField.value + key.dataset.glyph;
+            }
         },
     });
 });
