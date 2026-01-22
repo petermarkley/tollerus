@@ -168,6 +168,7 @@ document.addEventListener('alpine:init', () => {
         mountTerritory: null,
         mountElem: null,
         inputField: null,
+        onResize: null,
         mount(mountPoint, inputFieldId) {
             if (this.mountElem !== null) {
                 this.unmount();
@@ -250,6 +251,13 @@ document.addEventListener('alpine:init', () => {
                 }
             };
             window.addEventListener('keydown', onKeydown);
+
+            /**
+             * Handle window resize events
+             */
+            const onResize = (event) => {this.calculatePosition();}
+            this.onResize = onResize;
+            window.addEventListener('resize', this.onResize);
         },
         unmount() {
             if (this.mountElem === null) {
@@ -261,8 +269,13 @@ document.addEventListener('alpine:init', () => {
             this.mountPoint = null;
             this.mountTerritory = null;
             this.inputField = null;
+            window.removeEventListener('resize', this.onResize);
+            this.onResize = null;
         },
         calculatePosition() {
+            if (this.mountPoint === null || this.mountElem === null) {
+                return;
+            }
             const targetRect = this.mountPoint.getBoundingClientRect();
             this.mountElem.style.left = "-"+targetRect.x+"px";
             const tail = this.mountElem.querySelector('[data-keyboard-elem="paneltail"]');
