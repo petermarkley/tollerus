@@ -169,6 +169,9 @@ document.addEventListener('alpine:init', () => {
         mountElem: null,
         inputField: null,
         mount(mountPoint, inputFieldId) {
+            if (this.mountElem !== null) {
+                this.unmount();
+            }
             const template = document.getElementById('phonemic_keyboard');
             if (template === null || mountPoint === null) {
                 return;
@@ -202,7 +205,6 @@ document.addEventListener('alpine:init', () => {
                 }
                 if (event.target !== null && !(this.mountTerritory.contains(event.target) || event.target.contains(this.mountTerritory))) {
                     window.removeEventListener('focusin', onFocusin);
-                    window.dispatchEvent(new CustomEvent('close-phonemic-keyboard'));
                     this.unmount();
                 }
             };
@@ -230,7 +232,6 @@ document.addEventListener('alpine:init', () => {
                 }
                 if (clickedNonKeyboardButton || !this.mountTerritory.contains(event.target)) {
                     window.removeEventListener('click', onClick);
-                    window.dispatchEvent(new CustomEvent('close-phonemic-keyboard'));
                     this.unmount();
                 }
             };
@@ -245,7 +246,6 @@ document.addEventListener('alpine:init', () => {
                 }
                 if (event.key === 'Escape' || event.key === 'Esc') {
                     window.removeEventListener('keydown', onKeydown);
-                    window.dispatchEvent(new CustomEvent('close-phonemic-keyboard'));
                     this.unmount();
                 }
             };
@@ -255,6 +255,7 @@ document.addEventListener('alpine:init', () => {
             if (this.mountElem === null) {
                 return;
             }
+            window.dispatchEvent(new CustomEvent('close-phonemic-keyboard'));
             this.mountElem.remove();
             this.mountElem = null;
             this.mountPoint = null;
