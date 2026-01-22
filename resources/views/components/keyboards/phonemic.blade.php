@@ -45,11 +45,18 @@
             @endforeach
         </ul>
         @if (filter_var($showCanonical, FILTER_VALIDATE_BOOLEAN))
+            @php
+                $width = max(10, ceil(sqrt(count($phonemicKeyboard['canonical']))));
+            @endphp
             <div
                 id="tabpanel-canonical"
                 role="tabpanel"
                 x-cloak x-show="phonemicTab=='canonical'"
-                class="w-full grid grid-cols-20 gap-1"
+                class="w-full grid gap-1"
+                style="
+                    grid-template-columns: repeat({{ $width }}, minmax(0, 1fr));
+                    max-width: min(1200px, {{ (80*$width) }}px);
+                "
             >
                 @foreach ($phonemicKeyboard['canonical'] as $glyph)
                     <div class="w-full @container">
