@@ -112,7 +112,13 @@ class AutoInflectionEditor extends Component
         ]);
         $this->group = $wordClassGroup;
         $this->row = $row;
-        $this->tabNeography = (string)$this->language->primary_neography;
+        if ($this->language->neographies->isNotEmpty()) {
+            if ($this->language->primary_neography !== null) {
+                $this->tabNeography = (string)$this->language->primary_neography;
+            } else {
+                $this->tabNeography = (string)$this->language->neographies->first()->id;
+            }
+        }
         $this->refreshRuleForm();
     }
 
