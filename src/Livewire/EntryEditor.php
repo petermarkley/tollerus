@@ -51,7 +51,7 @@ class EntryEditor extends Component
      */
     public function render(): View
     {
-        if ($this->entry->primaryForm === null) {
+        if ($this->entry->primaryForm === null || empty($this->entry->primaryForm->transliterated)) {
             $entryName = __('tollerus::ui.entry_nameless');
         } else {
             $entryName = $this->entry->primaryForm->transliterated;
