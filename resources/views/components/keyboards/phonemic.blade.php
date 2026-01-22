@@ -5,14 +5,15 @@
 <template id="phonemic_keyboard">
     <div
         x-data="{ phonemicTab: '{{ (filter_var($showCanonical, FILTER_VALIDATE_BOOLEAN) ? 'canonical' : 'consonants') }}' }"
+        tabindex="-1"
         class="w-[100vw] mt-4 absolute flex flex-col gap-4 items-center p-6 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-xl shadow"
     >
         <div data-keyboard-elem="paneltail" class="absolute -top-4 left-[50%] transform-[translateX(-50%)]">
-            <svg viewBox="0 0 20 10" class="block dark:hidden w-8 h-4 text-white">
-                <path d="M 0,10 L 10,0 L 20,10" fill="currentColor" stroke-width="1.25" stroke-linejoin="round" stroke="var(--color-zinc-400)" />
+            <svg viewBox="0 0 24 12" class="block dark:hidden w-8 h-4 text-white">
+                <path d="M 2,12 L 12,2 L 22,12" fill="currentColor" stroke-width="1.5" stroke-linejoin="miter" stroke-miterlimit="8" stroke="var(--color-zinc-400)" />
             </svg>
-            <svg viewBox="0 0 20 10" class="hidden dark:block w-8 h-4 text-zinc-800">
-                <path d="M 0,10 L 10,0 L 20,10" fill="currentColor" stroke-width="1.25" stroke-linejoin="round" stroke="var(--color-zinc-500)" />
+            <svg viewBox="0 0 24 12" class="hidden dark:block w-8 h-4 text-zinc-800">
+                <path d="M 2,12 L 12,2 L 22,12" fill="currentColor" stroke-width="1.5" stroke-linejoin="miter" stroke-miterlimit="8" stroke="var(--color-zinc-500)" />
             </svg>
         </div>
         <ul class="px-4 flex flex-row flex-wrap md:flex-nowrap gap-2 md:gap-4 justify-start items-end border-b-2 border-zinc-500 dark:border-zinc-400 pb-2 md:pb-0" role="tablist">
@@ -185,45 +186,65 @@ document.addEventListener('alpine:init', () => {
             // Mount keyboard
             this.mountPoint.appendChild(clone);
             this.calculatePosition();
+            this.mountElem.focus();
 
             /**
              * Set event listeners
              * ===================
              */
 
-            // If the user tabs out of the relevant area, close the keyboard
-            const onFocusout = (event) => {
+            /**
+             * If the user tabs out of the relevant area, close the keyboard.
+             */
+            const onFocusin = (event) => {
                 if (this.mountElem === null) {
                     return;
                 }
-                if (event.relatedTarget !== null && !(this.mountTerritory.contains(event.relatedTarget) || event.relatedTarget.contains(this.mountTerritory))) {
-                    event.target.removeEventListener('focusout', onFocusout);
+                if (event.target !== null && !(this.mountTerritory.contains(event.target) || event.target.contains(this.mountTerritory))) {
+                    window.removeEventListener('focusin', onFocusin);
                     window.dispatchEvent(new CustomEvent('close-phonemic-keyboard'));
                     this.unmount();
                 }
             };
-            this.mountTerritory.addEventListener('focusout', onFocusout);
+            window.addEventListener('focusin', onFocusin);
 
-            // If the user clicks outside the relevant area, close the keyboard
+            /**
+             * If the user clicks a non-keyboard button, or clicks outside the
+             * relevant area, then close the keyboard.
+             */
             const onClick = (event) => {
                 if (this.mountElem === null) {
                     return;
                 }
-                if (!this.mountTerritory.contains(event.target)) {
-                    event.target.removeEventListener('click', onClick);
+                // We need to check all the buttons inside the mount territory
+                let clickedNonKeyboardButton = false;
+                const buttonList = this.mountTerritory.querySelectorAll('button');
+                for (let i=0; buttonList!==null && i < buttonList.length; i++) {
+                    if (this.mountElem.contains(buttonList[i])) {
+                        // Skip actual keyboard buttons
+                        continue;
+                    }
+                    if (event.target === buttonList[i] || buttonList[i].contains(event.target)) {
+                        clickedNonKeyboardButton = true;
+                    }
+                }
+                if (clickedNonKeyboardButton || !this.mountTerritory.contains(event.target)) {
+                    window.removeEventListener('click', onClick);
                     window.dispatchEvent(new CustomEvent('close-phonemic-keyboard'));
                     this.unmount();
                 }
             };
             window.addEventListener('click', onClick, {capture: true}); // If we let this bubble, we get redundant events due to Alpine DOM updates
 
-            // If the user presses escape, close the keyboard
+            /**
+             * If the user presses escape, close the keyboard.
+             */
             const onKeydown = (event) => {
                 if (this.mountElem === null) {
                     return;
                 }
                 if (event.key === 'Escape' || event.key === 'Esc') {
-                    event.target.removeEventListener('keydown', onKeydown);
+                    window.removeEventListener('keydown', onKeydown);
                     window.dispatchEvent(new CustomEvent('close-phonemic-keyboard'));
                     this.unmount();
                 }

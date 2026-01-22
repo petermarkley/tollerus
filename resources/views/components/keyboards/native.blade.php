@@ -3,7 +3,10 @@
 ])
 @foreach ($nativeKeyboards as $keyboardNeographyId => $keyboardNeography)
     <template id="{{ 'keyboard_for_'.$keyboardNeographyId }}">
-        <div class="w-[100vw] mt-4 absolute flex flex-col gap-4 items-center p-6 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-xl shadow">
+        <div
+            tabindex="-1"
+            class="w-[100vw] mt-4 absolute flex flex-col gap-4 items-center p-6 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-xl shadow"
+        >
             @foreach ($keyboardNeography['keyboards'] as $keyboard)
                 <div class="w-full grid gap-1" style="
                     grid-template-columns: repeat({{ $keyboard['width'] }}, minmax(0, 1fr));
