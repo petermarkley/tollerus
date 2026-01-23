@@ -279,20 +279,66 @@
                                                                             @change="$wire.updateGlyph(groupId, glyphId, 'renderBase', $el.checked, id);"
                                                                         />
                                                                     </div>
-                                                                    <x-tollerus::inputs.text-saveable
-                                                                        showLabel="true"
-                                                                        idExpression="'glyph_' + glyphId + '_transliterated'"
-                                                                        model="glyph.transliterated"
-                                                                        fieldName="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
-                                                                        saveEvent="$wire.updateGlyph(groupId, glyphId, 'transliterated', document.getElementById(id).value, id);"
-                                                                    />
-                                                                    <x-tollerus::inputs.text-saveable
-                                                                        showLabel="true"
-                                                                        idExpression="'glyph_' + glyphId + '_phonemic'"
-                                                                        model="glyph.phonemic"
-                                                                        fieldName="{{ __('tollerus::ui.phonemic') }}"
-                                                                        saveEvent="$wire.updateGlyph(groupId, glyphId, 'phonemic', document.getElementById(id).value, id);"
-                                                                    />
+                                                                    <div>
+                                                                        <x-tollerus::inputs.text-saveable
+                                                                            showLabel="true"
+                                                                            idExpression="'glyph_' + glyphId + '_transliterated'"
+                                                                            model="glyph.transliterated"
+                                                                            fieldName="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
+                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'transliterated', document.getElementById(id).value, id);"
+                                                                        />
+                                                                    </div>
+                                                                    <div data-keyboard-elem="territory">
+                                                                        <x-tollerus::inputs.text-saveable
+                                                                            showLabel="true"
+                                                                            idExpression="'glyph_' + glyphId + '_phonemic'"
+                                                                            model="glyph.phonemic"
+                                                                            fieldName="{{ __('tollerus::ui.phonemic') }}"
+                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'phonemic', document.getElementById(id).value, id);"
+                                                                        >
+                                                                            <x-slot:before>
+                                                                                <div
+                                                                                    x-data="{ showKeyboard: false }"
+                                                                                    class="relative"
+                                                                                    @close-virtual-keyboard.window="showKeyboard=false;"
+                                                                                >
+                                                                                    <x-tollerus::inputs.button
+                                                                                        x-cloak x-show="!showKeyboard"
+                                                                                        type="secondary"
+                                                                                        size="small"
+                                                                                        class="align-middle"
+                                                                                        title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
+                                                                                        @click="
+                                                                                            editing=true;
+                                                                                            $nextTick(()=>{
+                                                                                                showKeyboard=true;
+                                                                                                $store.virtualKeyboard.mount({
+                                                                                                    virtualKeyboardType: 'phonemic',
+                                                                                                    neographyId: null,
+                                                                                                    mountPoint: $el.parentNode,
+                                                                                                    inputFieldId: id
+                                                                                                });
+                                                                                            });
+                                                                                        "
+                                                                                    >
+                                                                                        <x-tollerus::icons.keyboard/>
+                                                                                        <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
+                                                                                    </x-tollerus::inputs.button>
+                                                                                    <x-tollerus::inputs.button
+                                                                                        x-cloak x-show="showKeyboard"
+                                                                                        type="primary"
+                                                                                        size="small"
+                                                                                        class="align-middle"
+                                                                                        title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
+                                                                                        @click="showKeyboard=false; $store.virtualKeyboard.unmount();"
+                                                                                    >
+                                                                                        <x-tollerus::icons.keyboard/>
+                                                                                        <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
+                                                                                    </x-tollerus::inputs.button>
+                                                                                </div>
+                                                                            </x-slot:before>
+                                                                        </x-tollerus::inputs.text-saveable>
+                                                                    </div>
                                                                     <div class="col-span-1 lg:col-span-3">
                                                                         <x-tollerus::inputs.text-saveable
                                                                             showLabel="true"
@@ -307,27 +353,120 @@
                                                             <div class="flex flex-col gap-2 items-start w-full">
                                                                 <h3 class="font-bold text-lg">{{ __('tollerus::ui.spoken_form') }}</h3>
                                                                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 w-full">
-                                                                    <x-tollerus::inputs.text-saveable
-                                                                        showLabel="true"
-                                                                        idExpression="'glyph_' + glyphId + '_pronunciation_transliterated'"
-                                                                        model="glyph.pronunciationTransliterated"
-                                                                        fieldName="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
-                                                                        saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationTransliterated', document.getElementById(id).value, id);"
-                                                                    />
-                                                                    <x-tollerus::inputs.text-saveable
-                                                                        showLabel="true"
-                                                                        idExpression="'glyph_' + glyphId + '_pronunciation_phonemic'"
-                                                                        model="glyph.pronunciationPhonemic"
-                                                                        fieldName="{{ __('tollerus::ui.phonemic') }}"
-                                                                        saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationPhonemic', document.getElementById(id).value, id);"
-                                                                    />
-                                                                    <x-tollerus::inputs.text-saveable
-                                                                        showLabel="true"
-                                                                        idExpression="'glyph_' + glyphId + '_pronunciation_native'"
-                                                                        model="glyph.pronunciationNative"
-                                                                        fieldName="{{ __('tollerus::ui.native') }}"
-                                                                        saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationNative', document.getElementById(id).value, id);"
-                                                                    />
+                                                                    <div>
+                                                                        <x-tollerus::inputs.text-saveable
+                                                                            showLabel="true"
+                                                                            idExpression="'glyph_' + glyphId + '_pronunciation_transliterated'"
+                                                                            model="glyph.pronunciationTransliterated"
+                                                                            fieldName="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
+                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationTransliterated', document.getElementById(id).value, id);"
+                                                                        />
+                                                                    </div>
+                                                                    <div data-keyboard-elem="territory">
+                                                                        <x-tollerus::inputs.text-saveable
+                                                                            showLabel="true"
+                                                                            idExpression="'glyph_' + glyphId + '_pronunciation_phonemic'"
+                                                                            model="glyph.pronunciationPhonemic"
+                                                                            fieldName="{{ __('tollerus::ui.phonemic') }}"
+                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationPhonemic', document.getElementById(id).value, id);"
+                                                                        >
+                                                                            <x-slot:before>
+                                                                                <div
+                                                                                    x-data="{ showKeyboard: false }"
+                                                                                    class="relative"
+                                                                                    @close-virtual-keyboard.window="showKeyboard=false;"
+                                                                                >
+                                                                                    <x-tollerus::inputs.button
+                                                                                        x-cloak x-show="!showKeyboard"
+                                                                                        type="secondary"
+                                                                                        size="small"
+                                                                                        class="align-middle"
+                                                                                        title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
+                                                                                        @click="
+                                                                                            editing=true;
+                                                                                            $nextTick(()=>{
+                                                                                                showKeyboard=true;
+                                                                                                $store.virtualKeyboard.mount({
+                                                                                                    virtualKeyboardType: 'phonemic',
+                                                                                                    neographyId: null,
+                                                                                                    mountPoint: $el.parentNode,
+                                                                                                    inputFieldId: id
+                                                                                                });
+                                                                                            });
+                                                                                        "
+                                                                                    >
+                                                                                        <x-tollerus::icons.keyboard/>
+                                                                                        <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
+                                                                                    </x-tollerus::inputs.button>
+                                                                                    <x-tollerus::inputs.button
+                                                                                        x-cloak x-show="showKeyboard"
+                                                                                        type="primary"
+                                                                                        size="small"
+                                                                                        class="align-middle"
+                                                                                        title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
+                                                                                        @click="showKeyboard=false; $store.virtualKeyboard.unmount();"
+                                                                                    >
+                                                                                        <x-tollerus::icons.keyboard/>
+                                                                                        <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
+                                                                                    </x-tollerus::inputs.button>
+                                                                                </div>
+                                                                            </x-slot:before>
+                                                                        </x-tollerus::inputs.text-saveable>
+                                                                    </div>
+                                                                    <div data-keyboard-elem="territory">
+                                                                        <x-tollerus::inputs.text-saveable
+                                                                            showLabel="true"
+                                                                            idExpression="'glyph_' + glyphId + '_pronunciation_native'"
+                                                                            model="glyph.pronunciationNative"
+                                                                            fieldName="{{ __('tollerus::ui.native') }}"
+                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationNative', document.getElementById(id).value, id);"
+                                                                            class="tollerus_{{ $neography->machine_name }}"
+                                                                        >
+                                                                            <x-slot:before>
+                                                                                @if ($neography->keyboards()->exists())
+                                                                                    <div
+                                                                                        x-data="{ showKeyboard: false }"
+                                                                                        class="relative"
+                                                                                        @close-virtual-keyboard.window="showKeyboard=false;"
+                                                                                    >
+                                                                                        <x-tollerus::inputs.button
+                                                                                            x-cloak x-show="!showKeyboard"
+                                                                                            type="secondary"
+                                                                                            size="small"
+                                                                                            class="align-middle"
+                                                                                            title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
+                                                                                            @click="
+                                                                                                editing=true;
+                                                                                                $nextTick(()=>{
+                                                                                                    showKeyboard=true;
+                                                                                                    $store.virtualKeyboard.mount({
+                                                                                                        virtualKeyboardType: 'native',
+                                                                                                        neographyId: {{ $neography->id }},
+                                                                                                        mountPoint: $el.parentNode,
+                                                                                                        inputFieldId: id
+                                                                                                    });
+                                                                                                });
+                                                                                            "
+                                                                                        >
+                                                                                            <x-tollerus::icons.keyboard/>
+                                                                                            <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
+                                                                                        </x-tollerus::inputs.button>
+                                                                                        <x-tollerus::inputs.button
+                                                                                            x-cloak x-show="showKeyboard"
+                                                                                            type="primary"
+                                                                                            size="small"
+                                                                                            class="align-middle"
+                                                                                            title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
+                                                                                            @click="showKeyboard=false; $store.virtualKeyboard.unmount();"
+                                                                                        >
+                                                                                            <x-tollerus::icons.keyboard/>
+                                                                                            <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
+                                                                                        </x-tollerus::inputs.button>
+                                                                                    </div>
+                                                                                @endif
+                                                                            </x-slot:before>
+                                                                        </x-tollerus::inputs.text-saveable>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -395,5 +534,7 @@
         </div>
     </div>
     <x-tollerus::modal/>
+    <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
+    <x-tollerus::keyboards.phonemic :phonemicKeyboard="$ipaKeyboard" showCanonical="false"/>
 </div>
 <x-tollerus::reorder-script/>

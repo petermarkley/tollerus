@@ -11,6 +11,8 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Domain\Neography\Services\NativeKeyboard;
+use PeterMarkley\Tollerus\Domain\Neography\Services\PhonemicKeyboard;
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
 use PeterMarkley\Tollerus\Enums\NeographySectionType;
 use PeterMarkley\Tollerus\Models\Neography;
@@ -34,6 +36,8 @@ class NeographySectionEditor extends Component
     #[Locked] public array $glyphTypes = [];
     #[Locked] public array $sectTypes = [];
     #[Locked] public array $allSects = [];
+    #[Locked] public array $nativeKeyboards = [];
+    #[Locked] public array $ipaKeyboard = [];
 
     /**
      * Livewire hooks
@@ -72,6 +76,9 @@ class NeographySectionEditor extends Component
                     'local' => $type->localize(),
                 ]];
             })->toArray();
+
+        $this->nativeKeyboards = app(NativeKeyboard::class)->loadForNeography($neography);
+        $this->ipaKeyboard = app(PhonemicKeyboard::class)->load();
 
         $this->refreshForm();
     }

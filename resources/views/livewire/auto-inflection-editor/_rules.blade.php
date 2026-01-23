@@ -246,7 +246,7 @@
                                         class="{{ $inputStyle }}"
                                     >
                                         <x-slot:before>
-                                            @if ($neography->keyboards()->exists() > 0)
+                                            @if ($neography->keyboards()->exists())
                                                 <div
                                                     x-data="{ showKeyboard: false }"
                                                     class="relative"
