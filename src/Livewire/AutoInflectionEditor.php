@@ -333,6 +333,7 @@ class AutoInflectionEditor extends Component
         try {
             $ruleModel->save();
             $this->dispatch('text-save-success', id: $domId);
+            $this->refreshRuleForm();
         } catch (\Throwable $e) {
             $this->dispatch('rule-update-failure');
             throw $e;
