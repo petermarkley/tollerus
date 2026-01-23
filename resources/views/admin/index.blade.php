@@ -13,7 +13,10 @@
                 <li><a href="https://petermarkley.com/">{{ __('tollerus::ui.peter_markleys_portfolio') }}</a></li>
             </ul>
         </div>
-        <div class="px-6 xl:px-0 grid grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+        <div class="px-6 xl:px-0 text-xl flex flex-col gap-4 items-center">
+            {!! Str::markdown(__('tollerus::ui.donate_request', ['donate_url' => 'https://paypal.me/petermarkley'])) !!}
+        </div>
+        <div class="px-6 xl:px-0 grid grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div class="relative">
                 <a
                     href="{{ route('tollerus.admin.neographies.index') }}"
