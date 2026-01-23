@@ -190,7 +190,51 @@
                                         showLabel="true"
                                         saveEvent="$wire.updateRule(ruleId, 'pattern', document.getElementById(id).value, id);"
                                         class="{{ $inputStyle }}"
-                                    ></x-tollerus::inputs.text-saveable>
+                                    >
+                                        <x-slot:before>
+                                            @if ($neography->keyboards()->exists() > 0)
+                                                <div
+                                                    x-data="{ showKeyboard: false }"
+                                                    class="relative"
+                                                    @close-virtual-keyboard.window="showKeyboard=false;"
+                                                >
+                                                    <x-tollerus::inputs.button
+                                                        x-cloak x-show="!showKeyboard"
+                                                        type="secondary"
+                                                        size="small"
+                                                        class="align-middle"
+                                                        title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
+                                                        @click="
+                                                            editing=true;
+                                                            $nextTick(()=>{
+                                                                showKeyboard=true;
+                                                                $store.virtualKeyboard.mount({
+                                                                    virtualKeyboardType: 'native',
+                                                                    neographyId: {{ (string)$neography->id }},
+                                                                    mountPoint: $el.parentNode,
+                                                                    inputFieldId: id
+                                                                });
+                                                            });
+                                                        "
+                                                    >
+                                                        <x-tollerus::icons.keyboard/>
+                                                        <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
+                                                    </x-tollerus::inputs.button>
+                                                    <x-tollerus::inputs.button
+                                                        x-cloak x-show="showKeyboard"
+                                                        type="primary"
+                                                        size="small"
+                                                        class="align-middle"
+                                                        title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
+                                                        @click="showKeyboard=false; $store.virtualKeyboard.unmount();"
+                                                    >
+                                                        <x-tollerus::icons.keyboard/>
+                                                        <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
+                                                    </x-tollerus::inputs.button>
+                                                </div>
+                                            @endif
+                                        </x-slot:before>
+                                    </x-tollerus::inputs.text-saveable>
                                 </div>
                                 <div class="col-span-2 lg:col-span-1 flex flex-col justify-center" data-keyboard-elem="territory">
                                     <x-tollerus::inputs.text-saveable
@@ -200,7 +244,51 @@
                                         showLabel="true"
                                         saveEvent="$wire.updateRule(ruleId, 'replacement', document.getElementById(id).value, id);"
                                         class="{{ $inputStyle }}"
-                                    ></x-tollerus::inputs.text-saveable>
+                                    >
+                                        <x-slot:before>
+                                            @if ($neography->keyboards()->exists() > 0)
+                                                <div
+                                                    x-data="{ showKeyboard: false }"
+                                                    class="relative"
+                                                    @close-virtual-keyboard.window="showKeyboard=false;"
+                                                >
+                                                    <x-tollerus::inputs.button
+                                                        x-cloak x-show="!showKeyboard"
+                                                        type="secondary"
+                                                        size="small"
+                                                        class="align-middle"
+                                                        title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
+                                                        @click="
+                                                            editing=true;
+                                                            $nextTick(()=>{
+                                                                showKeyboard=true;
+                                                                $store.virtualKeyboard.mount({
+                                                                    virtualKeyboardType: 'native',
+                                                                    neographyId: {{ (string)$neography->id }},
+                                                                    mountPoint: $el.parentNode,
+                                                                    inputFieldId: id
+                                                                });
+                                                            });
+                                                        "
+                                                    >
+                                                        <x-tollerus::icons.keyboard/>
+                                                        <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
+                                                    </x-tollerus::inputs.button>
+                                                    <x-tollerus::inputs.button
+                                                        x-cloak x-show="showKeyboard"
+                                                        type="primary"
+                                                        size="small"
+                                                        class="align-middle"
+                                                        title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
+                                                        @click="showKeyboard=false; $store.virtualKeyboard.unmount();"
+                                                    >
+                                                        <x-tollerus::icons.keyboard/>
+                                                        <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
+                                                    </x-tollerus::inputs.button>
+                                                </div>
+                                            @endif
+                                        </x-slot:before>
+                                    </x-tollerus::inputs.text-saveable>
                                 </div>
                             @break
                             @default
