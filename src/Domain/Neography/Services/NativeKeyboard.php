@@ -11,7 +11,7 @@ use PeterMarkley\Tollerus\Models\Neography;
  */
 final class NativeKeyboard
 {
-    public function loadSingleNeography(Neography $neography): array
+    private function loadSingleNeography(Neography $neography): array
     {
         $neography->loadMissing(['keyboards.inputKeys']);
         return $neography->keyboards
@@ -20,6 +20,15 @@ final class NativeKeyboard
                 'width' => $k->width,
                 'keys' => $k->inputKeys->sortBy('position'),
             ])->toArray();
+    }
+
+    public function loadForNeography(Neography $neography): array
+    {
+        return [$neography->id => [
+            'name' => $neography->name,
+            'machineName' => $neography->machine_name,
+            'keyboards' => $this->loadSingleNeography($neography),
+        ]];
     }
 
     public function loadForLanguage(Language $language): array
