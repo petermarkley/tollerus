@@ -99,7 +99,7 @@ Here **the neuter gender does produce a new form.**
 |--|--|--|--|--|--|--|--|--|
 | hablar | infinitive | | | | | | | |
 | hablo | finite | singular | first-person | present | simple | indicative | | |
-| hablas / hablás ([dialectal](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | finite | singular | second-person | present | simple | indicative | | |
+| hablas / hablás ([*voseo* form](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | finite | singular | second-person | present | simple | indicative | | |
 | habla | finite | singular | third-person | present | simple | indicative | | |
 | hablamos | finite | plural | first-person | present | simple | indicative | | |
 | habláis | finite | plural | second-person | present | simple | indicative | | |
@@ -129,7 +129,7 @@ Here **the neuter gender does produce a new form.**
 | hablaríais | finite | plural | second-person | conditional | simple | indicative | | |
 | hablarían | finite | plural | third-person | conditional | simple | indicative | | |
 | hable | finite | singular | first-person | present | simple | subjunctive | | |
-| hables / hablés ([dialectal](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | finite | singular | second-person | present | simple | subjunctive | | |
+| hables / hablés ([*voseo* form](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | finite | singular | second-person | present | simple | subjunctive | | |
 | hable | finite | singular | third-person | present | simple | subjunctive | | |
 | hablemos | finite | plural | first-person | present | simple | subjunctive | | |
 | habléis | finite | plural | second-person | present | simple | subjunctive | | |
@@ -146,7 +146,7 @@ Here **the neuter gender does produce a new form.**
 | ~~habláremos~~ *(obsolete)* | finite | plural | first-person | future | simple | subjunctive | | |
 | ~~hablareis~~ *(obsolete)* | finite | plural | second-person | future | simple | subjunctive | | |
 | ~~hablaren~~ *(obsolete)* | finite | plural | third-person | future | simple | subjunctive | | |
-| habla / hablá ([dialectal](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | finite | singular | second-person | | | imperative | | familiar |
+| habla / hablá ([*voseo* form](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | finite | singular | second-person | | | imperative | | familiar |
 | hable | finite | singular | second-person | | | imperative | | formal |
 | hablad | finite | plural | second-person | | | imperative | | familiar |
 | hablen | finite | plural | second-person | | | imperative | | formal |
