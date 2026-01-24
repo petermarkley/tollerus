@@ -118,6 +118,11 @@
         },
         {
             "classes": [
+                {"i18n_key": "conjunction", "primary": true}
+            ]
+        },
+        {
+            "classes": [
                 {"i18n_key": "contraction", "primary": true}
             ]
         },
