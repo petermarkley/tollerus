@@ -24,7 +24,7 @@ Word class structure:
 * (group) - **inflected** by number, case
   * `pronoun`
 
-# English Verb Conjugations
+# English Verb Inflections
 
 We need a way to represent the conjugations of just the non-auxiliary verbs by themselves.
 
@@ -59,9 +59,11 @@ This is how the actual morphologies will look in the `forms` table.
 * giving [participle, progressive]
 * given [participle, perfect]
 
-# English Pronoun Conjugations
+# English Pronoun Inflections
 
-In English, personal pronouns are inflected by not just number, but also case: subjective vs. objective. (They also inflect by person and gender, but those inflections don't affect syntax.)
+In English, personal pronouns are inflected by not just number, but also case: subjective vs. objective.
+
+Some pronouns also encode person and gender ("he"/"she", "I"/"you"), but for many pronouns these features would be inapplicable ("it"/"this"/"that"). Therefore we'll consider person and gender, when present, to be **lexical instead of morphological,** with "he" vs. "she" being two different words.
 
 |  | subjective | objective |
 |--|--|--|
