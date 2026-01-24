@@ -173,11 +173,31 @@ Here **the neuter gender does produce a new form.**
 
 ## Inflection Tables
 
-|  | infinitive |
+|  | non-finite |
 |--|--|
 | infinitive | hablar |
+| gerund | hablando |
 
-FIXME!
+| | s. 1st-pers. | s. 2nd-pers. | s. 3rd-pers. | pl. 1st-pers. | pl. 2nd-pers. | pl. 3rd-pers. |
+|--|--|--|--|--|--|--|
+| present indicative | hablo | hablas / hablás | habla | hablamos | habláis | hablan |
+| preterite indicative | hablé | hablaste | habló | hablamos | hablasteis | hablaron |
+| imperfect indicative | hablaba | hablabas | hablaba | hablábamos | hablabais | hablaban |
+| future indicative | hablaré | hablarás | hablará | hablaremos | hablaréis | hablarán |
+
+| | s. 1st-pers. | s. 2nd-pers. | s. 3rd-pers. | pl. 1st-pers. | pl. 2nd-pers. | pl. 3rd-pers. |
+|--|--|--|--|--|--|--|
+| conditional | hablaría | hablarías | hablaría | hablaríamos | hablaríais | hablarían |
+| present subjunctive | hable | hables / hablés | hable | hablemos | habléis | hablen |
+| imperfect subjunctive | hablara / hablase | hablaras / hablases | hablara / hablase | habláramos / hablásemos | hablarais / hablaseis | hablaran / hablasen |
+| ~~future subjunctive~~ *(obsolete)* | ~~hablare~~ | ~~hablares~~ | ~~hablare~~ | ~~habláremos~~ | ~~hablareis~~ | ~~hablaren~~ |
+
+| | singular | plural |
+|--|--|--|
+| familiar imperative | habla / hablá | hablad |
+| formal imperative | hable | hablen |
+| masc. participle (adjectival) | hablado | hablados |
+| fem. participle (adjectival) | hablada | habladas |
 
 # Spanish Noun Inflections
 
