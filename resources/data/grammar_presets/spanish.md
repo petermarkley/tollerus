@@ -95,66 +95,66 @@ Here **the neuter gender does produce a new form.**
 # Spanish Verb Inflections
 
 ## Listed forms
-|  | role | [number](https://en.wikipedia.org/wiki/Grammatical_number) | [person](https://en.wikipedia.org/wiki/Grammatical_person) | [tense](https://en.wikipedia.org/wiki/Grammatical_tense) | [aspect](https://en.wikipedia.org/wiki/Grammatical_aspect) | [mood](https://en.wikipedia.org/wiki/Grammatical_mood) | [gender](https://en.wikipedia.org/wiki/Grammatical_gender) | formality |
+|  | role ([finite](https://en.wikipedia.org/wiki/Finite_verb) / [non-finite](https://en.wikipedia.org/wiki/Nonfinite_verb)) | [number](https://en.wikipedia.org/wiki/Grammatical_number) | [person](https://en.wikipedia.org/wiki/Grammatical_person) | [tense](https://en.wikipedia.org/wiki/Grammatical_tense) | [aspect](https://en.wikipedia.org/wiki/Grammatical_aspect) | [mood](https://en.wikipedia.org/wiki/Grammatical_mood) | [gender](https://en.wikipedia.org/wiki/Grammatical_gender) | formality |
 |--|--|--|--|--|--|--|--|--|
-| hablar | [infinitive](https://en.wikipedia.org/wiki/Infinitive) | | | | | | | |
-| hablo | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablas / hablás ([dialectal](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| habla | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablamos | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| habláis | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablan | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablé | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [past](https://en.wikipedia.org/wiki/Past_tense) | [perfective](https://en.wikipedia.org/wiki/Perfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaste | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [perfective](https://en.wikipedia.org/wiki/Perfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| habló | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [perfective](https://en.wikipedia.org/wiki/Perfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablamos | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [past](https://en.wikipedia.org/wiki/Past_tense) | [perfective](https://en.wikipedia.org/wiki/Perfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablasteis | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [perfective](https://en.wikipedia.org/wiki/Perfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaron | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [perfective](https://en.wikipedia.org/wiki/Perfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaba | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablabas | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaba | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablábamos | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablabais | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaban | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaré | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablarás | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablará | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaremos | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaréis | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablarán | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaría | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [conditional](https://en.wikipedia.org/wiki/Conditional_mood) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablarías | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [conditional](https://en.wikipedia.org/wiki/Conditional_mood) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaría | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [conditional](https://en.wikipedia.org/wiki/Conditional_mood) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaríamos | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [conditional](https://en.wikipedia.org/wiki/Conditional_mood) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablaríais | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [conditional](https://en.wikipedia.org/wiki/Conditional_mood) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hablarían | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [conditional](https://en.wikipedia.org/wiki/Conditional_mood) | simple | [indicative](https://en.wikipedia.org/wiki/Realis_mood) | | |
-| hable | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| hables / hablés ([dialectal](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| hable | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| hablemos | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| habléis | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| hablen | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [present](https://en.wikipedia.org/wiki/Present_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| hablara / hablase | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| hablaras / hablases | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| hablara / hablase | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| habláramos / hablásemos | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| hablarais / hablaseis | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| hablaran / hablasen | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [past](https://en.wikipedia.org/wiki/Past_tense) | [imperfective](https://en.wikipedia.org/wiki/Imperfective_aspect) | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| ~~hablare~~ *(obsolete)* | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| ~~hablares~~ *(obsolete)* | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| ~~hablare~~ *(obsolete)* | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| ~~habláremos~~ *(obsolete)* | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [first-person](https://en.wikipedia.org/wiki/First-person_narrative) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| ~~hablareis~~ *(obsolete)* | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| ~~hablaren~~ *(obsolete)* | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [third-person](https://en.wikipedia.org/wiki/Narration#Third-person) | [future](https://en.wikipedia.org/wiki/Future_tense) | simple | [subjunctive](https://en.wikipedia.org/wiki/Subjunctive_mood) | | |
-| habla / hablá ([dialectal](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | | | [imperative](https://en.wikipedia.org/wiki/Imperative_mood) | | familiar |
-| hable | [finite](https://en.wikipedia.org/wiki/Finite_verb) | singular | [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | | | [imperative](https://en.wikipedia.org/wiki/Imperative_mood) | | formal |
-| hablad | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | | | [imperative](https://en.wikipedia.org/wiki/Imperative_mood) | | familiar |
-| hablen | [finite](https://en.wikipedia.org/wiki/Finite_verb) | [plural](https://en.wikipedia.org/wiki/Plural)| [second-person](https://en.wikipedia.org/wiki/Narration#Second-person) | | | [imperative](https://en.wikipedia.org/wiki/Imperative_mood) | | formal |
-| hablado | [participle](https://en.wikipedia.org/wiki/Participle) | singular | | | | | masculine | |
-| hablada | [participle](https://en.wikipedia.org/wiki/Participle) | singular | | | | | feminine | |
-| hablados | [participle](https://en.wikipedia.org/wiki/Participle) | [plural](https://en.wikipedia.org/wiki/Plural)| | | | | masculine | |
-| habladas | [participle](https://en.wikipedia.org/wiki/Participle) | [plural](https://en.wikipedia.org/wiki/Plural)| | | | | feminine | |
-| hablando | [gerund](https://en.wikipedia.org/wiki/Gerund) | | | | | | | |
+| hablar | infinitive | | | | | | | |
+| hablo | finite | singular | first-person | present | simple | indicative | | |
+| hablas / hablás ([dialectal](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | finite | singular | second-person | present | simple | indicative | | |
+| habla | finite | singular | third-person | present | simple | indicative | | |
+| hablamos | finite | plural | first-person | present | simple | indicative | | |
+| habláis | finite | plural | second-person | present | simple | indicative | | |
+| hablan | finite | plural | third-person | present | simple | indicative | | |
+| hablé | finite | singular | first-person | past | perfective | indicative | | |
+| hablaste | finite | singular | second-person | past | perfective | indicative | | |
+| habló | finite | singular | third-person | past | perfective | indicative | | |
+| hablamos | finite | plural | first-person | past | perfective | indicative | | |
+| hablasteis | finite | plural | second-person | past | perfective | indicative | | |
+| hablaron | finite | plural | third-person | past | perfective | indicative | | |
+| hablaba | finite | singular | first-person | past | imperfective | indicative | | |
+| hablabas | finite | singular | second-person | past | imperfective | indicative | | |
+| hablaba | finite | singular | third-person | past | imperfective | indicative | | |
+| hablábamos | finite | plural | first-person | past | imperfective | indicative | | |
+| hablabais | finite | plural | second-person | past | imperfective | indicative | | |
+| hablaban | finite | plural | third-person | past | imperfective | indicative | | |
+| hablaré | finite | singular | first-person | future | simple | indicative | | |
+| hablarás | finite | singular | second-person | future | simple | indicative | | |
+| hablará | finite | singular | third-person | future | simple | indicative | | |
+| hablaremos | finite | plural | first-person | future | simple | indicative | | |
+| hablaréis | finite | plural | second-person | future | simple | indicative | | |
+| hablarán | finite | plural | third-person | future | simple | indicative | | |
+| hablaría | finite | singular | first-person | conditional | simple | indicative | | |
+| hablarías | finite | singular | second-person | conditional | simple | indicative | | |
+| hablaría | finite | singular | third-person | conditional | simple | indicative | | |
+| hablaríamos | finite | plural | first-person | conditional | simple | indicative | | |
+| hablaríais | finite | plural | second-person | conditional | simple | indicative | | |
+| hablarían | finite | plural | third-person | conditional | simple | indicative | | |
+| hable | finite | singular | first-person | present | simple | subjunctive | | |
+| hables / hablés ([dialectal](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | finite | singular | second-person | present | simple | subjunctive | | |
+| hable | finite | singular | third-person | present | simple | subjunctive | | |
+| hablemos | finite | plural | first-person | present | simple | subjunctive | | |
+| habléis | finite | plural | second-person | present | simple | subjunctive | | |
+| hablen | finite | plural | third-person | present | simple | subjunctive | | |
+| hablara / hablase | finite | singular | first-person | past | imperfective | subjunctive | | |
+| hablaras / hablases | finite | singular | second-person | past | imperfective | subjunctive | | |
+| hablara / hablase | finite | singular | third-person | past | imperfective | subjunctive | | |
+| habláramos / hablásemos | finite | plural | first-person | past | imperfective | subjunctive | | |
+| hablarais / hablaseis | finite | plural | second-person | past | imperfective | subjunctive | | |
+| hablaran / hablasen | finite | plural | third-person | past | imperfective | subjunctive | | |
+| ~~hablare~~ *(obsolete)* | finite | singular | first-person | future | simple | subjunctive | | |
+| ~~hablares~~ *(obsolete)* | finite | singular | second-person | future | simple | subjunctive | | |
+| ~~hablare~~ *(obsolete)* | finite | singular | third-person | future | simple | subjunctive | | |
+| ~~habláremos~~ *(obsolete)* | finite | plural | first-person | future | simple | subjunctive | | |
+| ~~hablareis~~ *(obsolete)* | finite | plural | second-person | future | simple | subjunctive | | |
+| ~~hablaren~~ *(obsolete)* | finite | plural | third-person | future | simple | subjunctive | | |
+| habla / hablá ([dialectal](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction)) | finite | singular | second-person | | | imperative | | familiar |
+| hable | finite | singular | second-person | | | imperative | | formal |
+| hablad | finite | plural | second-person | | | imperative | | familiar |
+| hablen | finite | plural | second-person | | | imperative | | formal |
+| hablado | participle | singular | | | | | masculine | |
+| hablada | participle | singular | | | | | feminine | |
+| hablados | participle | plural | | | | | masculine | |
+| habladas | participle | plural | | | | | feminine | |
+| hablando | gerund | | | | | | | |
 
 > [!Note]
 > 
