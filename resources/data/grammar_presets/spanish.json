@@ -190,7 +190,7 @@
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
                         {"feature": "verb_role", "value": "finite"},
                         {"feature": "number", "value": "singular"},
@@ -236,7 +236,7 @@
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
                         {"feature": "verb_role", "value": "finite"},
                         {"feature": "number", "value": "singular"},
@@ -282,7 +282,7 @@
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
                         {"feature": "verb_role", "value": "finite"},
                         {"feature": "number", "value": "plural"},
@@ -328,7 +328,7 @@
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
                         {"feature": "verb_role", "value": "finite"},
                         {"feature": "number", "value": "plural"},
@@ -374,7 +374,7 @@
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
                         {"feature": "verb_role", "value": "finite"},
                         {"feature": "number", "value": "plural"},
@@ -466,7 +466,7 @@
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
                         {"feature": "verb_role", "value": "finite"},
                         {"feature": "number", "value": "singular"},
@@ -512,7 +512,7 @@
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
                         {"feature": "verb_role", "value": "finite"},
                         {"feature": "number", "value": "singular"},
@@ -558,7 +558,7 @@
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
                         {"feature": "verb_role", "value": "finite"},
                         {"feature": "number", "value": "plural"},
@@ -604,7 +604,7 @@
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
                         {"feature": "verb_role", "value": "finite"},
                         {"feature": "number", "value": "plural"},
@@ -650,7 +650,7 @@
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
                         {"feature": "verb_role", "value": "finite"},
                         {"feature": "number", "value": "plural"},
@@ -736,13 +736,13 @@
                     ]
                 },
                 {
-                    "i18n_key": "number.singular",
+                    "i18n_key": "number.plural",
                     "stack": true,
                     "align_on_stack": false,
                     "table_fold": false,
-                    "rows_fold": false,
+                    "rows_fold": true,
                     "filters": [
-                        {"feature": "number", "value": "singular"}
+                        {"feature": "number", "value": "plural"}
                     ],
                     "rows": [
                         {
@@ -1083,13 +1083,13 @@
                     ]
                 },
                 {
-                    "i18n_key": "pronouns.second_person_masc",
+                    "i18n_key": "pronouns.third_person_masc",
                     "stack": true,
                     "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
-                        {"feature": "person", "value": "second"},
+                        {"feature": "person", "value": "third"},
                         {"feature": "gender", "value": "masculine"}
                     ],
                     "rows": [
@@ -1131,13 +1131,13 @@
                     ]
                 },
                 {
-                    "i18n_key": "pronouns.second_person_fem",
+                    "i18n_key": "pronouns.third_person_fem",
                     "stack": true,
                     "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
-                        {"feature": "person", "value": "second"},
+                        {"feature": "person", "value": "third"},
                         {"feature": "gender", "value": "feminine"}
                     ],
                     "rows": [
@@ -1183,7 +1183,7 @@
                     "stack": true,
                     "align_on_stack": true,
                     "table_fold": false,
-                    "rows_fold": true,
+                    "rows_fold": false,
                     "filters": [
                         {"feature": "person", "value": "first"},
                         {"feature": "gender", "value": "masculine"}

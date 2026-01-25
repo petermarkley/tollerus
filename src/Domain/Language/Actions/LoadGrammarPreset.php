@@ -206,7 +206,7 @@ final class LoadGrammarPreset
                  */
                 foreach ($tables as $table) {
                     foreach ($table['rows'] as $row) {
-                        if ($baseRow !== $row) {
+                        if ($baseRow !== $row && $baseRow !== null) {
                             $row->src_base = $baseRow->id;
                             $row->save();
                         }

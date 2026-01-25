@@ -242,7 +242,7 @@ return [
             'name' => 'reflexive',
             'name_brief' => 'refl.',
         ],
-        'prespositional' => [
+        'prepositional' => [
             'name' => 'prepositional',
             'name_brief' => 'prep.',
         ],
