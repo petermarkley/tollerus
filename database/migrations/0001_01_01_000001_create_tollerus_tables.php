@@ -532,8 +532,6 @@ return new class extends Migration
              * from it).
              */
             $table->boolean('rows_fold');
-            // ensure only one of each label per word class group
-            $table->unique(['word_class_group_id', 'label'], 'group_label_unique');
             // ensure only one of each position per word class group
             $table->unique(['word_class_group_id', 'position'], 'group_position_unique');
         });
