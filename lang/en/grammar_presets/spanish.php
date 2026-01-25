@@ -269,6 +269,43 @@ return [
      * purposeful and signifies that no value is needed.
      */
     'inflection_tables' => [
+        /**
+         * These are labels that are used in more than one table...
+         */
+        'gender' => [
+            /**
+             * These are only used as row labels.
+             */
+            'masculine' => [
+                'label' => 'masculine',
+                'label_brief' => 'masc.',
+                'label_long' => '', // none needed because the default is fully clear
+            ],
+            'feminine' => [
+                'label' => 'feminine',
+                'label_brief' => 'fem.',
+                'label_long' => '', // none needed because the default is fully clear
+            ],
+            'neuter' => [
+                'label' => 'neuter',
+                'label_brief' => 'neu.',
+                'label_long' => '', // none needed because the default is fully clear
+            ],
+        ],
+        'number' => [
+            /**
+             * These are only used as table/column labels.
+             */
+            'singular' => [
+                '_label' => 'singular',
+            ],
+            'plural' => [
+                '_label' => 'plural',
+            ],
+        ],
+        /**
+         * Tables with special labels...
+         */
         'verbs' => [
             /**
              * Column labels
@@ -366,37 +403,6 @@ return [
                 'label' => 'fem. participle',
                 'label_brief' => 'fem. partic.',
                 'label_long' => 'feminine participle (adjectival)',
-            ],
-        ],
-        'gender' => [
-            /**
-             * These are only used as row labels.
-             */
-            'masculine' => [
-                'label' => 'masculine',
-                'label_brief' => 'masc.',
-                'label_long' => '', // none needed because the default is fully clear
-            ],
-            'feminine' => [
-                'label' => 'feminine',
-                'label_brief' => 'fem.',
-                'label_long' => '', // none needed because the default is fully clear
-            ],
-            'neuter' => [
-                'label' => 'neuter',
-                'label_brief' => 'neu.',
-                'label_long' => '', // none needed because the default is fully clear
-            ],
-        ],
-        'number' => [
-            /**
-             * These are only used as table/column labels.
-             */
-            'singular' => [
-                '_label' => 'singular',
-            ],
-            'plural' => [
-                '_label' => 'plural',
             ],
         ],
         'pronouns' => [

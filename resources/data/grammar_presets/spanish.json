@@ -115,6 +115,670 @@
                 }
             ],
             "inflection_tables": [
+                {
+                    "i18n_key": "verbs.non_finite",
+                    "visible": true,
+                    "stack": false,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.infinitive",
+                            "filters": [
+                                {"feature": "verb_role", "value": "infinitive"}
+                            ],
+                            "base": true
+                        },
+                        {
+                            "i18n_key": "verbs.gerund",
+                            "filters": [
+                                {"feature": "verb_role", "value": "gerund"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.singular_first_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "singular"},
+                        {"feature": "person", "value": "first"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.present_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.preterite_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "perfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.singular_second_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "singular"},
+                        {"feature": "person", "value": "second"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.present_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.preterite_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "perfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.singular_third_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "singular"},
+                        {"feature": "person", "value": "third"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.present_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.preterite_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "perfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.plural_first_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "plural"},
+                        {"feature": "person", "value": "first"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.present_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.preterite_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "perfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.plural_second_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "plural"},
+                        {"feature": "person", "value": "second"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.present_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.preterite_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "perfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.plural_third_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "plural"},
+                        {"feature": "person", "value": "third"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.present_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.preterite_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "perfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_indicative",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.singular_first_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "singular"},
+                        {"feature": "person", "value": "first"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.conditional",
+                            "filters": [
+                                {"feature": "tense", "value": "conditional"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.present_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.singular_second_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "singular"},
+                        {"feature": "person", "value": "second"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.conditional",
+                            "filters": [
+                                {"feature": "tense", "value": "conditional"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.present_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.singular_third_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "singular"},
+                        {"feature": "person", "value": "third"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.conditional",
+                            "filters": [
+                                {"feature": "tense", "value": "conditional"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.present_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.plural_first_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "plural"},
+                        {"feature": "person", "value": "first"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.conditional",
+                            "filters": [
+                                {"feature": "tense", "value": "conditional"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.present_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.plural_second_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "plural"},
+                        {"feature": "person", "value": "second"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.conditional",
+                            "filters": [
+                                {"feature": "tense", "value": "conditional"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.present_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "verbs.plural_third_person",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "verb_role", "value": "finite"},
+                        {"feature": "number", "value": "plural"},
+                        {"feature": "person", "value": "third"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.conditional",
+                            "filters": [
+                                {"feature": "tense", "value": "conditional"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "indicative"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.present_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "present"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.imperfect_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "past"},
+                                {"feature": "aspect", "value": "imperfective"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.future_subjunctive",
+                            "filters": [
+                                {"feature": "tense", "value": "future"},
+                                {"feature": "aspect", "value": "simple"},
+                                {"feature": "mood", "value": "subjunctive"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "number.singular",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "number", "value": "singular"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.familiar_imperative",
+                            "filters": [
+                                {"feature": "verb_role", "value": "finite"},
+                                {"feature": "person", "value": "second"},
+                                {"feature": "mood", "value": "imperative"},
+                                {"feature": "formality", "value": "familiar"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.formal_imperative",
+                            "filters": [
+                                {"feature": "verb_role", "value": "finite"},
+                                {"feature": "person", "value": "second"},
+                                {"feature": "mood", "value": "imperative"},
+                                {"feature": "formality", "value": "formal"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.masculine_participle",
+                            "filters": [
+                                {"feature": "verb_role", "value": "participle"},
+                                {"feature": "gender", "value": "masculine"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.feminine_participle",
+                            "filters": [
+                                {"feature": "verb_role", "value": "participle"},
+                                {"feature": "gender", "value": "feminine"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "i18n_key": "number.singular",
+                    "stack": true,
+                    "align_on_stack": false,
+                    "table_fold": false,
+                    "rows_fold": false,
+                    "filters": [
+                        {"feature": "number", "value": "singular"}
+                    ],
+                    "rows": [
+                        {
+                            "i18n_key": "verbs.familiar_imperative",
+                            "filters": [
+                                {"feature": "verb_role", "value": "finite"},
+                                {"feature": "person", "value": "second"},
+                                {"feature": "mood", "value": "imperative"},
+                                {"feature": "formality", "value": "familiar"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.formal_imperative",
+                            "filters": [
+                                {"feature": "verb_role", "value": "finite"},
+                                {"feature": "person", "value": "second"},
+                                {"feature": "mood", "value": "imperative"},
+                                {"feature": "formality", "value": "formal"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.masculine_participle",
+                            "filters": [
+                                {"feature": "verb_role", "value": "participle"},
+                                {"feature": "gender", "value": "masculine"}
+                            ]
+                        },
+                        {
+                            "i18n_key": "verbs.feminine_participle",
+                            "filters": [
+                                {"feature": "verb_role", "value": "participle"},
+                                {"feature": "gender", "value": "feminine"}
+                            ]
+                        }
+                    ]
+                }
             ]
         },
         {
