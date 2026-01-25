@@ -27,6 +27,8 @@ class TollerusPopulate extends Command
      */
     public function handle()
     {
-        (new DemoConlangSeeder)->run();
+        $this->call('db:seed', [
+            '--class' => DemoConlangSeeder::class,
+        ]);
     }
 }

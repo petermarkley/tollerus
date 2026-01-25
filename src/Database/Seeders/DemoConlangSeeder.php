@@ -39,7 +39,21 @@ class DemoConlangSeeder extends Seeder
          * Step 1: Generate language, neography, and grammar
          */
         $language = Language::factory()->withNeography(pauseQueue: true)->create();
-        $loadGrammarPreset($language, 'english');
+        $folder = __DIR__ . '/../../../resources/data/grammar_presets/';
+        $presetFiles = collect(scandir($folder))
+            ->filter(function ($f) use ($folder) {
+                $path = $folder . $f;
+                return (
+                    is_file($path) &&
+                    str_contains($path, '.json') &&
+                    mime_content_type($path) == 'application/json'
+                );
+            })->map(fn ($f) => substr($f, 0, strpos($f, '.json')))
+            ->values()
+            ->toArray();
+        $presetChoice = $presetFiles[array_rand($presetFiles)];
+        $this->command->info("Using '{$presetChoice}' grammar preset for language '{$language->name}'");
+        $loadGrammarPreset($language, $presetChoice);
         // Build canonical glyph order for neographies
         foreach (Neography::all() as $neography) {
             app(BuildGlyphCanonicalRanks::class)($neography);
