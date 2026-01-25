@@ -9,7 +9,7 @@
  * past tense verbs.
  */
 return [
-    'preset_name' => 'English Grammar',
+    'preset_name' => 'Spanish Grammar',
 
     /**
      * ===========================================================
