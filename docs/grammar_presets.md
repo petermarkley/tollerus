@@ -1,20 +1,23 @@
+# Tollerus Grammar Presets
+
 Tollerus is a Laravel package that lets a user build, track, and browse a dictionary for their own conlang, or fictional language. As part of the Tollerus software, we offer grammar presets based on a selection of real-life languages.
 
 The existing grammar presets can be found in `resources/data/grammar_presets/`, and their localization files in `lang/[lang_code]/grammar_presets/`. These serve as examples to imitate when creating new presets.
 
-The grammar presets are to demonstrate for Tollerus users different ways that it's possible for a language's grammar to be represented in the software, and maybe if one happens to be similar to the user's intended conlang then it can even be a starting point that they load and modify, to save work. (It's doubtful that many users will want to use a grammar preset unmodified, but they certainly could if for some reason it perfectly matched their conlang.) So although the preset files discuss the grammar of real languages, these grammar concepts/rules are co-opted and transplanted into a conlang context for illustrative and scaffolding purposes. We try to keep them faithful to the grammar they represent, but they are not meant to support any teaching or translating of a real-life language.
+The grammar presets are to demonstrate for Tollerus users different ways that it's possible for a language's grammar to be represented in the software, and maybe if one happens to be similar to the user's intended conlang then it can even be a starting point that they load and modify, to save work. (It's doubtful that many users will want to use a grammar preset unmodified, but they certainly could if for some reason it perfectly matched their conlang.) So although the preset files discuss the grammar of real languages, these grammar concepts/rules are co-opted and transplanted into a conlang context for illustrative and scaffolding purposes. We try to keep them faithful to the grammar they represent, but they are not meant to support any teaching or translating of a real-life language, and nowhere does Tollerus use them to make semantic claims.
 
-Furthermore, the Tollerus system is concerned strictly with lexical and morphological data; inter-word syntax rules (like subject-verb agreement, or Spanish "usted" encoding a different person value lexically vs. grammatically) are far outside that scope. If appropriate, lexical info that doesn't belong in the Tollerus grammar config can still be written in a word entry's definition. For example, in the English grammar preset the "pronoun" word class does not have "gender" configured as an official inflection feature, but a user would be free to write "feminine personal pronoun" in an entry corresponding to "she." Tollerus has no need to understand or constrain the text in a definition--only to provide a means of recording, organizing, and comprehensibly displaying the word's morphology.
+Tollerus is concerned purely with lexicography, and the grammar is incidental through morphology. Inter-word syntax rules (like subject-verb agreement, or Spanish "usted" encoding a different person value lexically vs. grammatically) are far outside that scope. If appropriate, lexical info that doesn't belong in the Tollerus grammar config can still be written in a word entry's definition. For example, in the English grammar preset the "pronoun" word class does not have "gender" configured as an official inflection feature, but a user would be free to write "feminine personal pronoun" in an entry corresponding to "she." Tollerus has no need to understand or constrain the text in a definition--only to provide a means of recording, organizing, and comprehensibly displaying the word's morphology.
 
 Grammar presets are built in two stages:
 1. The Markdown file
 2. The JSON file + its localization file
 
-The JSON file (with localization) is what's actually used by Tollerus. The Markdown file is basically an intermediate draft to help create and document it.
+The JSON file (with localization) is what's actually used by Tollerus, and offered to the user through a GUI. The Markdown file is basically an intermediate draft to help developers create and document the JSON data.
 
 Some brief, key details about the Tollerus data schema:
 - Inflection tables can have row and column labels, but no label at a "table level" that's higher than a column. More on this in the section about the JSON.
 - Word classes are treated as mere labels underneath word class groups, or grammar groups. This is because some word classes share identical grammatical behavior but deserve different part-of-speech headings in a dictionary, like "noun" vs. "proper noun".
+- A word entry can have any number of lexemes or word classes. (However each inflected lexeme will display the inflection tables configured on its word class group. There is one such configuration per group that applies uniformly to all the lexemes in that group, with no option to treat some assigned lexemes differently.)
 - Inflection features are attached to word class groups, not to word classes.
 - There is no need for every word form to have a value assigned in every inflection axis on its grammar group, nor for any value to be identifying. For example in the English grammar preset, verbs officially inflect on number and person, but only third-person singular is used and only for the present simple form. This means:
   * Past simple, infinitive, and participles all leave the "number" and "person" axes empty.
@@ -22,7 +25,7 @@ Some brief, key details about the Tollerus data schema:
 
   Both of these facts, while sometimes reflecting author preference for how to interpret or represent the grammar, are nonetheless completely fine and normal for Tollerus. Sometimes they are desirable or even required, if they are faithfully representing a real asymmetry in the language.
 
-# The Markdown
+## The Markdown
 
 The Markdown file should follow this format:
 
@@ -44,9 +47,17 @@ The Markdown file should follow this format:
 
 - Most explanatory content should focus on rationales for why inflection features are defined as they are, why certain permutations of them are or are not included in the list of synthetic forms or the inflection tables, why certain terminology and labels are used, etc. Think of this document as a drafting process that moves in roughly a straight line, from nothing, to something just shy of a final product, with the final product being the inflection tables. Nothing out of proximity to that line should be included or discussed much (if at all).
 
-Some of these decisions require careful consideration: to balance simplification against accuracy, or to find the most efficient and expressive analysis of the grammar, or to optimize dictionary ergonomics, or all of these at once.
+### Guidance on structural choices
 
-# The JSON + localization
+A dictionary author can make certain choices how they use the Tollerus system as a "language" (so to speak) to communicate/present their lexical data to readers.
+
+Here are some things to keep in mind:
+- The ability to assign multiple lexemes to a single word entry can be advantageous and allows some less-than-obvious classifications. For example in English, the word *his* is a pronoun, and due to its modifier usage one might be tempted to place it in a sub-class like "possessive pronoun." However the modifier vs. noun usages are grammatically different and justify separate lexemes: one under "pronoun," and one under "determiner." (This principle becomes more important for word classes that are inflected.)
+- To an extent, the word classes underneath a grammar group can be thought of as nothing but labels. There is no obligation that classes under the same group superficially resemble one another, or that similar-sounding classes appear together; only that classes in the same group receive the same inflection configuration. For example in Russian, the group containing the "adjective" word class can be shared with "demonstrative pronoun" since these two word classes have nearly identical inflection profiles. Other pronoun-related word classes can go elsewhere, and there is no issue with that whatsoever as long as it serves the overall goal of simple, expressive dictionary ergonomics that faithfully represent the language.
+- In the English and Spanish presets, the participle forms of a verb (*spoken*, *hablado*) are included as inflections in the verb word class structure even though syntactically they behave like adjectives. These are produced predictably for nearly all verbs in the language and would be much more cumbersome to both author and reader if they were given in a separate "adjective" or "verbal adjective" word class. The difference between a periphrastic tense like preterite (*have spoken*) vs. a pure verbal (*the spoken word*) is out of scope for the lexical data that Tollerus tries to capture. Knowing this a dictionary author can choose to present them strictly as verb inflections--labelled appropriately as "participle"--and allow the reader to infer their grammatical usage based on a wider knowledge of the language, thereby achieving a more efficient and expressive lexical representation.
+- In Spanish, for correctness we keep tense and aspect as separate features in the grammar configuration and to *hablé* we assign both `tense=past` and `aspect=perfective`. However, in the inflection table this row is labelled with simply "preterite," which follows traditional grammar literature by using a convenient composite term for both features (tense and aspect). The grammar configuration is internal to the dictionary author and can afford a bit more academic rigor, whereas the labels on the inflection tables are reader-facing with strong pressure to simplify and abbreviate. Tollerus embraces this separation.
+
+## The JSON + localization
 
 Things to be aware of:
 
