@@ -298,7 +298,11 @@ Regardless, we enumerate them here in keeping with the Tollerus principle of _"s
 
 ## Inflection Tables
 
-We have to run through this twice, once for each aspect, to show all the table behaviors.
+The participle forms are heavily compacted, with certain rows sharing several inflection values. This helps to serve the Tollerus focus on *morphology over grammar*. Reused synthetic forms should not be avoidably repeated.
+
+When configuring the tables for filter matching, if the table cell cannot be uniquely identified by any single inflection value that applies to all grammatical uses of the form, then internally one value can be used which does **not** match all uses of the form. This will not affect what is shown to a reader, because the row can still be labelled with multiple inflection values. Even the labels may omit uses pragmatically; we do this with e.g. the plural dative use of *пишущим* which has the row label "s. masc./neu. instr."
+
+We have to run through all the inflection tables twice, once for each aspect, to show all the table behaviors.
 
 ### Example verb: *писать* “to write” (imperfective)
 
@@ -332,11 +336,20 @@ We have to run through this twice, once for each aspect, to show all the table b
 | present | пиша            |
 | past    | писав / писавши |
 
-|            | participle |
-|------------|------------|
-| pres. act. | пишущий    |
-| past act.  | писавший   |
-| past pass. | писанный   |
+|                                | pres. active participle | past active participle | past passive participle |
+|--------------------------------|-------------------------|------------------------|-------------------------|
+| s. masc. nom.                  | пишущий                 | писавший               | писанный                |
+| s. masc./neu. gen.             | пишущего                | писавшего              | писанного               |
+| s. masc./neu. dat.             | пишущему                | писавшему              | писанному               |
+| s. masc./neu. instr.           | пишущим                 | писавшим               | писанным                |
+| s. masc./neu. prep.            | пишущем                 | писавшем               | писанном                |
+| s. fem. nom.                   | пишущая                 | писавшая               | писанная                |
+| s. fem. gen./dat./instr./prep. | пишущей                 | писавшей               | писанной                |
+| s. fem. accus.                 | пишущую                 | писавшую               | писанную                |
+| s. neu. nom./accus.            | пишущее                 | писавшее               | писанное                |
+| pl. nom.                       | пишущие                 | писавшие               | писанные                |
+| pl. gen./prep.                 | пишущих                 | писавших               | писанных                |
+| pl. instr.                     | пишущими                | писавшими              | писанными               |
 
 ### Example verb: *написать* “to write” (perfective)
 
@@ -370,11 +383,20 @@ We have to run through this twice, once for each aspect, to show all the table b
 | present | --                  |
 | past    | написав / написавши |
 
-|            | participle |
-|------------|------------|
-| pres. act. | --         |
-| past act.  | написавший |
-| past pass. | написанный |
+|                                | pres. active participle | past active participle | past passive participle |
+|--------------------------------|-------------------------|------------------------|-------------------------|
+| s. masc. nom.                  | --                      | написавший             | написанный              |
+| s. masc./neu. gen.             | --                      | написавшего            | написанного             |
+| s. masc./neu. dat.             | --                      | написавшему            | написанному             |
+| s. masc./neu. instr.           | --                      | написавшим             | написанным              |
+| s. masc./neu. prep.            | --                      | написавшем             | написанном              |
+| s. fem. nom.                   | --                      | написавшая             | написанная              |
+| s. fem. gen./dat./instr./prep. | --                      | написавшей             | написанной              |
+| s. fem. accus.                 | --                      | написавшую             | написанную              |
+| s. neu. nom./accus.            | --                      | написавшее             | написанное              |
+| pl. nom.                       | --                      | написавшие             | написанные              |
+| pl. gen./prep.                 | --                      | написавших             | написанных              |
+| pl. instr.                     | --                      | написавшими            | написанными             |
 
 # Russian Personal Pronoun Inflections
 
