@@ -2,95 +2,59 @@
 > 
 > **This file was created with help from ChatGPT. It has not yet been checked by a person with real knowledge of Russian grammar.**
 
-# Russian grammar preset
-
 ## Word class structure
 
-* **noun (group)**
-
-  * **inflected** by number, case, gender
-
-* **pronoun (group)**
-
-  * **inflected** by person, number, case, gender (select forms)
-
-* **adjective (group)**
-
-  * **inflected** by number, case, gender, degree
-
-* **verb (group)**
-
-  * **inflected** by person, number, tense, mood, aspect, gender (select forms)
-
-* **adverb (group)**
-
-  * not inflected
-
-* **preposition (group)**
-
-  * not inflected
-
-* **conjunction (group)**
-
-  * not inflected
-
-* **particle (group)**
-
-  * not inflected
-
----
+* (group) - **inflected** by number, case, gender, degree
+  * `adjective`
+* (group)
+  * `adverb`
+* (group)
+  * `conjunction`
+* (group) - **inflected** by number, case
+  * `noun`
+* (group)
+  * `particle`
+* (group)
+  * `preposition`
+* (group) - **inflected** by person, number, case, gender
+  * `pronoun`
+* (group) - **inflected** by person, number, tense, mood, aspect, gender
+  * `verb`
 
 ## Inflection features (collected list)
 
-* **number**
-
+* number
   * singular
   * plural
-
-* **case**
-
+* case
   * nominative
+  * accusative
   * genitive
   * dative
-  * accusative
   * instrumental
   * prepositional
-
-* **gender**
-
+* gender
   * masculine
   * feminine
   * neuter
-
-* **person**
-
+* person
   * first
   * second
   * third
-
-* **tense**
-
+* tense
   * past
   * present
   * future
-
-* **aspect**
-
+* aspect
   * imperfective
   * perfective
-
-* **mood**
-
+* mood
   * indicative
   * imperative
-
-* **degree**
-
+* degree
   * positive
   * comparative
   * superlative
-
----
 
 # Nouns
 
