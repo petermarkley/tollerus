@@ -271,7 +271,7 @@ Example verb: *написать* “to write” (perfective)
 
 The singular masculine accusatives and plural accusatives reuse either the nominative or genitive form, and switch between these based on *animacy*. This is not modeled as an inflection axis because the inflection is so minimal and does not produce any unique synthetic forms.
 
-These inflections are usually not enumerated in dictionaries or other literature, because it's basically an adjective inflection *within* a verb inflection. Perhaps this *recursive multiplication* is considered simultaneously too heavy and too trivial/pedantic for most readers.
+The participle inflections are usually not enumerated in dictionaries or other literature, because it's basically an adjective inflection *within* a verb inflection. Perhaps this *recursive multiplication* is considered simultaneously too heavy and too trivial/pedantic for most readers.
 
 Regardless, we enumerate them here in keeping with the Tollerus principle of _"store everything, show what you need."_
 
@@ -298,9 +298,7 @@ Regardless, we enumerate them here in keeping with the Tollerus principle of _"s
 
 ## Inflection Tables
 
-The participle forms are heavily compacted, with certain rows sharing several inflection values. This helps to serve the Tollerus focus on *morphology over grammar*. Reused synthetic forms should not be avoidably repeated.
-
-When configuring the tables for filter matching, if the table cell cannot be uniquely identified by any single inflection value that applies to all grammatical uses of the form, then internally one value can be used which does **not** match all uses of the form. This will not affect what is shown to a reader, because the row can still be labelled with multiple inflection values. Even the labels may omit uses pragmatically; we do this with e.g. the plural dative use of *пишущим* which has the row label "s. masc./neu. instr."
+The participle forms are heavily compacted in keeping with the Tollerus principle of *condense homography wherever possible.* From the `grammar_presets.md` guidelines: "In extreme cases, even the labels may omit uses pragmatically." We do this here with the plural dative use of *пишущим* which has the row label "s. masc./neu. instr."
 
 We have to run through all the inflection tables twice, once for each aspect, to show all the table behaviors.
 
