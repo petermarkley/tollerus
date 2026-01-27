@@ -153,6 +153,7 @@ Example verb: *писать* “to write” (imperfective)
 | пишущее | participle | present | | neuter | singular | | active | nominative
 | пишущего | participle | present | | neuter | singular | | active | genitive
 | пишущему | participle | present | | neuter | singular | | active | dative
+| пишущее | participle | present | | neuter | singular | | active | accusative
 | пишущим | participle | present | | neuter | singular | | active | instrumental
 | пишущем | participle | present | | neuter | singular | | active | prepositional
 | пишущие | participle | present | | | plural | | active | nominative
@@ -174,6 +175,7 @@ Example verb: *писать* “to write” (imperfective)
 | писавшее | participle | past | | neuter | singular | | active | nominative
 | писавшего | participle | past | | neuter | singular | | active | genitive
 | писавшему | participle | past | | neuter | singular | | active | dative
+| писавшее | participle | past | | neuter | singular | | active | accusative
 | писавшим | participle | past | | neuter | singular | | active | instrumental
 | писавшем | participle | past | | neuter | singular | | active | prepositional
 | писавшие | participle | past | | | plural | | active | nominative
@@ -195,6 +197,7 @@ Example verb: *писать* “to write” (imperfective)
 | писанное | participle | past | | neuter | singular | | passive | nominative
 | писанного | participle | past | | neuter | singular | | passive | genitive
 | писанному | participle | past | | neuter | singular | | passive | dative
+| писанное | participle | past | | neuter | singular | | passive | accusative
 | писанным | participle | past | | neuter | singular | | passive | instrumental
 | писанном | participle | past | | neuter | singular | | passive | prepositional
 | писанные | participle | past | | | plural | | passive | nominative
@@ -264,6 +267,35 @@ Example verb: *написать* “to write” (perfective)
 | написанными | participle | past | | | plural | | passive | instrumental
 | написанных | participle | past | | | plural | | passive | prepositional
 
+## Preliminary draft of a participle inflection table
+
+The singular masculine accusatives and plural accusatives reuse either the nominative or genitive form, and switch between these based on *animacy*. This is not modeled as an inflection axis because the inflection is so minimal and does not produce any unique synthetic forms.
+
+These inflections are usually not enumerated in dictionaries or other literature, because it's basically an adjective inflection *within* a verb inflection. Perhaps this *recursive multiplication* is considered simultaneously too heavy and too trivial/pedantic for most readers.
+
+Regardless, we enumerate them here in keeping with the Tollerus principle of _"store everything, show what you need."_
+
+|                         | sing. masc. participle | sing. fem. participle | sing. neu. participle | pl. participle        |
+|-------------------------|------------------------|-----------------------|-----------------------|-----------------------|
+| pres. act. nominative   | пишущий                | пишущая               | пишущее               | пишущие               |
+| pres. act. genitive     | пишущего               | пишущей               | пишущего              | пишущих               |
+| pres. act. dative       | пишущему               | пишущей               | пишущему              | пишущим               |
+| pres. act. accusative   | пишущий / пишущего †   | пишущую               | пишущее               | пишущие / пишущих †   |
+| pres. act. instrumental | пишущим                | пишущей               | пишущим               | пишущими              |
+| pres. act. prepositional| пишущем                | пишущей               | пишущем               | пишущих               |
+|  past act. nominative   | писавший               | писавшая              | писавшее              | писавшие              |
+|  past act. genitive     | писавшего              | писавшей              | писавшего             | писавших              |
+|  past act. dative       | писавшему              | писавшей              | писавшему             | писавшим              |
+|  past act. accusative   | писавший / писавшего † | писавшую              | писавшее              | писавшие / писавших † |
+|  past act. instrumental | писавшим               | писавшей              | писавшим              | писавшими             |
+|  past act. prepositional| писавшем               | писавшей              | писавшем              | писавших              |
+| past pass. nominative   | писанный               | писанная              | писанное              | писанные              |
+| past pass. genitive     | писанного              | писанной              | писанного             | писанных              |
+| past pass. dative       | писанному              | писанной              | писанному             | писанным              |
+| past pass. accusative   | писанный / писанного † | писанную              | писанное              | писанные / писанных † |
+| past pass. instrumental | писанным               | писанной              | писанным              | писанными             |
+| past pass. prepositional| писанном               | писанной              | писанном              | писанных              |
+
 ## Inflection Tables
 
 We have to run through this twice, once for each aspect, to show all the table behaviors.
@@ -295,16 +327,16 @@ We have to run through this twice, once for each aspect, to show all the table b
 | sing. imper.  | пиши       |
 |   pl. imper.  | пишите     |
 
+|         | gerund          |
+|---------|-----------------|
+| present | пиша            |
+| past    | писав / писавши |
+
 |            | participle |
 |------------|------------|
 | pres. act. | пишущий    |
 | past act.  | писавший   |
 | past pass. | писанный   |
-
-|         | gerund          |
-|---------|-----------------|
-| present | пиша            |
-| past    | писав / писавши |
 
 ### Example verb: *написать* “to write” (perfective)
 
@@ -333,16 +365,16 @@ We have to run through this twice, once for each aspect, to show all the table b
 | singular | напиши     |
 | plural   | напишите   |
 
+|         | gerund              |
+|---------|---------------------|
+| present | --                  |
+| past    | написав / написавши |
+
 |            | participle |
 |------------|------------|
 | pres. act. | --         |
 | past act.  | написавший |
 | past pass. | написанный |
-
-|         | gerund              |
-|---------|---------------------|
-| present | --                  |
-| past    | написав / написавши |
 
 # Russian Personal Pronoun Inflections
 
