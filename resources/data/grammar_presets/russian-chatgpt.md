@@ -1,3 +1,7 @@
+> [!Warning]
+>
+> **This file was created with help from ChatGPT. It has not yet been checked by a person with real knowledge of Russian grammar.**
+
 # Russian Grammar Preset
 
 ## Word class structure
