@@ -11,7 +11,7 @@
   * `possessive pronoun`
 * (group)
   * `adverb`
-* (group) - **inflected** by role, tense, mood, gender, number, person, voice
+* (group) - **inflected** by role, tense, mood, gender, number, person, voice, case
   * `auxiliary verb`
   * `verb`
 * (group)
@@ -131,11 +131,71 @@ Example verb: *писать* “to write” (imperfective)
 * писали — finite, past, indicative, plural
 * пиши — imperative, singular
 * пишите — imperative, plural
-* пишущий — participle, active, present
-* писавший — participle, active, past
-* писанный — participle, passive, past
-* пиша — adverbial participle (gerund), present
-* писав / писавши — adverbial participle (gerund), past
+* пиша — gerund, present
+* писав / писавши — gerund, past
+* пишущий — participle, active, present, masculine, singular, nominative
+* пишущего — participle, active, present, masculine, singular, genitive
+* пишущему — participle, active, present, masculine, singular, dative
+* пишущим — participle, active, present, masculine, singular, instrumental
+* пишущем — participle, active, present, masculine, singular, prepositional
+* пишущая — participle, active, present, feminine, singular, nominative
+* пишущей — participle, active, present, feminine, singular, genitive
+* пишущей — participle, active, present, feminine, singular, dative
+* пишущую — participle, active, present, feminine, singular, accusative
+* пишущей — participle, active, present, feminine, singular, instrumental
+* пишущей — participle, active, present, feminine, singular, prepositional
+* пишущее — participle, active, present, neuter, singular, nominative
+* пишущего — participle, active, present, neuter, singular, genitive
+* пишущему — participle, active, present, neuter, singular, dative
+* пишущим — participle, active, present, neuter, singular, instrumental
+* пишущем — participle, active, present, neuter, singular, prepositional
+* пишущие — participle, active, present, plural, nominative
+* пишущих — participle, active, present, plural, genitive
+* пишущим — participle, active, present, plural, dative
+* пишущими — participle, active, present, plural, instrumental
+* пишущих — participle, active, present, plural, prepositional
+* писавший — participle, active, past, masculine, singular, nominative
+* писавшего — participle, active, past, masculine, singular, genitive
+* писавшему — participle, active, past, masculine, singular, dative
+* писавшим — participle, active, past, masculine, singular, instrumental
+* писавшем — participle, active, past, masculine, singular, prepositional
+* писавшая — participle, active, past, feminine, singular, nominative
+* писавшей — participle, active, past, feminine, singular, genitive
+* писавшей — participle, active, past, feminine, singular, dative
+* писавшую — participle, active, past, feminine, singular, accusative
+* писавшей — participle, active, past, feminine, singular, instrumental
+* писавшей — participle, active, past, feminine, singular, prepositional
+* писавшее — participle, active, past, neuter, singular, nominative
+* писавшего — participle, active, past, neuter, singular, genitive
+* писавшему — participle, active, past, neuter, singular, dative
+* писавшим — participle, active, past, neuter, singular, instrumental
+* писавшем — participle, active, past, neuter, singular, prepositional
+* писавшие — participle, active, past, plural, nominative
+* писавших — participle, active, past, plural, genitive
+* писавшим — participle, active, past, plural, dative
+* писавшими — participle, active, past, plural, instrumental
+* писавших — participle, active, past, plural, prepositional
+* писанный — participle, passive, past, masculine, singular, nominative
+* писанного — participle, passive, past, masculine, singular, genitive
+* писанному — participle, passive, past, masculine, singular, dative
+* писанным — participle, passive, past, masculine, singular, instrumental
+* писанном — participle, passive, past, masculine, singular, prepositional
+* писанная — participle, passive, past, feminine, singular, nominative
+* писанной — participle, passive, past, feminine, singular, genitive
+* писанной — participle, passive, past, feminine, singular, dative
+* писанную — participle, passive, past, feminine, singular, accusative
+* писанной — participle, passive, past, feminine, singular, instrumental
+* писанной — participle, passive, past, feminine, singular, prepositional
+* писанное — participle, passive, past, neuter, singular, nominative
+* писанного — participle, passive, past, neuter, singular, genitive
+* писанному — participle, passive, past, neuter, singular, dative
+* писанным — participle, passive, past, neuter, singular, instrumental
+* писанном — participle, passive, past, neuter, singular, prepositional
+* писанные — participle, passive, past, plural, nominative
+* писанных — participle, passive, past, plural, genitive
+* писанным — participle, passive, past, plural, dative
+* писанными — participle, passive, past, plural, instrumental
+* писанных — participle, passive, past, plural, prepositional
 
 Example verb: *написать* “to write” (perfective)
 
@@ -152,9 +212,49 @@ Example verb: *написать* “to write” (perfective)
 * написали — finite, past, indicative, plural
 * напиши — imperative, singular
 * напишите — imperative, plural
-* написавший — participle, active, past
-* написанный — participle, passive, past
-* написав / написавши — adverbial participle (gerund), past
+* написав / написавши — gerund, past
+* написавший — participle, active, past, masculine, singular, nominative
+* написавшего — participle, active, past, masculine, singular, genitive
+* написавшему — participle, active, past, masculine, singular, dative
+* написавшим — participle, active, past, masculine, singular, instrumental
+* написавшем — participle, active, past, masculine, singular, prepositional
+* написавшая — participle, active, past, feminine, singular, nominative
+* написавшей — participle, active, past, feminine, singular, genitive
+* написавшей — participle, active, past, feminine, singular, dative
+* написавшую — participle, active, past, feminine, singular, accusative
+* написавшей — participle, active, past, feminine, singular, instrumental
+* написавшей — participle, active, past, feminine, singular, prepositional
+* написавшее — participle, active, past, neuter, singular, nominative
+* написавшего — participle, active, past, neuter, singular, genitive
+* написавшему — participle, active, past, neuter, singular, dative
+* написавшим — participle, active, past, neuter, singular, instrumental
+* написавшем — participle, active, past, neuter, singular, prepositional
+* написавшие — participle, active, past, plural, nominative
+* написавших — participle, active, past, plural, genitive
+* написавшим — participle, active, past, plural, dative
+* написавшими — participle, active, past, plural, instrumental
+* написавших — participle, active, past, plural, prepositional
+* написанный — participle, passive, past, masculine, singular, nominative
+* написанного — participle, passive, past, masculine, singular, genitive
+* написанному — participle, passive, past, masculine, singular, dative
+* написанным — participle, passive, past, masculine, singular, instrumental
+* написанном — participle, passive, past, masculine, singular, prepositional
+* написанная — participle, passive, past, feminine, singular, nominative
+* написанной — participle, passive, past, feminine, singular, genitive
+* написанной — participle, passive, past, feminine, singular, dative
+* написанную — participle, passive, past, feminine, singular, accusative
+* написанной — participle, passive, past, feminine, singular, instrumental
+* написанной — participle, passive, past, feminine, singular, prepositional
+* написанное — participle, passive, past, neuter, singular, nominative
+* написанного — participle, passive, past, neuter, singular, genitive
+* написанному — participle, passive, past, neuter, singular, dative
+* написанным — participle, passive, past, neuter, singular, instrumental
+* написанном — participle, passive, past, neuter, singular, prepositional
+* написанные — participle, passive, past, plural, nominative
+* написанных — participle, passive, past, plural, genitive
+* написанным — participle, passive, past, plural, dative
+* написанными — participle, passive, past, plural, instrumental
+* написанных — participle, passive, past, plural, prepositional
 
 ## Inflection Tables
 
