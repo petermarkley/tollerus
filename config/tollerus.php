@@ -11,7 +11,8 @@ return [
      * URLs will start with this, e.g.:
      * https://example.com/tollerus/?&id=AAA4
      */
-    'route_prefix' => 'tollerus',
+    'admin_route_prefix' => 'tollerus/admin',
+    'public_route_prefix' => 'tollerus',
 
     /**
      * Locale-specific words for transliteration (the process,

@@ -18,15 +18,19 @@ $baseMiddleware = Config::get('tollerus.middleware', ['web']);
 $adminMiddleware = collect(Config::get('tollerus.admin_middleware', []))
     ->diff($baseMiddleware)->unique()->values()->all();;
 
-Route::prefix(Config::get('tollerus.route_prefix', 'tollerus'))
-    ->as('tollerus.')
+Route::as('tollerus.')
     ->middleware($baseMiddleware)
     ->group(function () use ($adminMiddleware) {
 
-        Route::get('/', fn () => redirect(route('tollerus.admin.index')));
+        // Routes for the public area of the app
+        Route::prefix(Config::get('tollerus.public_route_prefix', 'tollerus'))
+            ->as('public.')
+            ->group(function () {
+                Route::get('/', fn () => 'hello world, this is a public Tollerus page'/*redirect(route('tollerus.admin.index'))*/);
+            });
 
         // Routes for the admin area of the app
-        Route::prefix('admin')
+        Route::prefix(Config::get('tollerus.admin_route_prefix', 'tollerus/admin'))
             ->as('admin.')
             ->middleware($adminMiddleware)
             ->group(function () {
