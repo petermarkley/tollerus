@@ -8,6 +8,6 @@
 @push('scripts')
     <script src="{{ asset('vendor/tollerus/tollerus.js') }}" defer></script>
 @endpush
-@section($section)
+@php($__env->startSection($section))
     {{ $slot }}
-@endsection
+@php($__env->stopSection())
