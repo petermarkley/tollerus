@@ -61,7 +61,7 @@ class EntryEditor extends Component
         return view('tollerus::livewire.entry-editor', [
                 'entryName' => $entryName,
                 'pageTitle' => $pageTitle,
-            ])->layout('tollerus::components.layout', [
+            ])->layout('tollerus::components.layouts.admin', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.languages.index'), 'text' => __('tollerus::ui.languages')],

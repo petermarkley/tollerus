@@ -99,7 +99,7 @@ class LanguageEditor extends Component
         return view('tollerus::livewire.language-editor', [
                 'paginator' => $paginator,
                 'hasEntries' => $hasEntries,
-            ])->layout('tollerus::components.layout', [
+            ])->layout('tollerus::components.layouts.admin', [
                 'breadcrumbs' => [
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.languages.index'), 'text' => __('tollerus::ui.languages')],

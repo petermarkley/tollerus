@@ -58,7 +58,7 @@ class TollerusServiceProvider extends ServiceProvider
 		$this->loadViewsFrom(__DIR__.'/../../resources/views', 'tollerus');
 		Blade::anonymousComponentNamespace('tollerus::components', 'tollerus');
 		// This computed style needs to be injected into all Tollerus layouts
-		View::composer('tollerus::components.layout', function ($view) {
+		View::composer('tollerus::components.layouts.admin', function ($view) {
 			$view->with('tollerusNeographyFontCss', app(\PeterMarkley\Tollerus\Domain\Neography\Services\FontCssService::class)->getAllAdminFontFaceStyles());
 		});
 		// Expose Livewire component classes

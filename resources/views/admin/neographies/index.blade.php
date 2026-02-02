@@ -1,5 +1,5 @@
 @use('PeterMarkley\Tollerus\Enums\WritingDirection')
-<x-tollerus::layout :breadcrumbs="$breadcrumbs">
+<x-tollerus::layouts.admin :breadcrumbs="$breadcrumbs">
     <div
         id="non-modal-content"
         x-data="{
@@ -153,4 +153,4 @@
     </script>
     @endpush
     @endonce
-</x-tollerus::layout>
+</x-tollerus::layouts.admin>

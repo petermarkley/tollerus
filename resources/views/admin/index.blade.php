@@ -1,4 +1,4 @@
-<x-tollerus::layout>
+<x-tollerus::layouts.admin>
     <x-slot name="title">{{ __('tollerus::ui.tollerus_admin_area') }}</x-slot>
     <div class="flex flex-col gap-8">
         <div class="px-6 xl:px-0 flex flex-row justify-center items-center">
@@ -57,4 +57,4 @@
             </div>
         </div>
     </div>
-</x-tollerus::layout>
+</x-tollerus::layouts.admin>
