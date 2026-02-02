@@ -15,6 +15,15 @@ return [
     'public_route_prefix' => 'tollerus',
 
     /**
+     * If your app is white-labeling the public area of
+     * Tollerus, then enter a custom Blade layout name here,
+     * e.g. 'layouts.app'. (Otherwise the public pages will use
+     * the same Tollerus-branded layout as the admin pages.)
+     */
+    'public_layout' => null,
+    'public_layout_section' => 'content', // Your custom layout's main section name
+
+    /**
      * Locale-specific words for transliteration (the process,
      * and the target writing system). Used in some UI elements.
      */

@@ -26,7 +26,7 @@ Route::as('tollerus.')
         Route::prefix(Config::get('tollerus.public_route_prefix', 'tollerus'))
             ->as('public.')
             ->group(function () {
-                Route::get('/', fn () => 'hello world, this is a public Tollerus page'/*redirect(route('tollerus.admin.index'))*/);
+                Route::get('/', fn () => view('tollerus::public.index', ['title' => 'My test page']));
             });
 
         // Routes for the admin area of the app

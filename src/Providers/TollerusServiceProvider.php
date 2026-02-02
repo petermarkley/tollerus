@@ -61,6 +61,9 @@ class TollerusServiceProvider extends ServiceProvider
 		View::composer('tollerus::components.layouts.admin', function ($view) {
 			$view->with('tollerusNeographyFontCss', app(\PeterMarkley\Tollerus\Domain\Neography\Services\FontCssService::class)->getAllAdminFontFaceStyles());
 		});
+		View::composer('tollerus::components.layouts.public', function ($view) {
+			$view->with('tollerusNeographyFontCss', app(\PeterMarkley\Tollerus\Domain\Neography\Services\FontCssService::class)->getAllPublicFontFaceStyles());
+		});
 		// Expose Livewire component classes
 		Livewire::component('tollerus.language-editor', \PeterMarkley\Tollerus\Livewire\LanguageEditor::class);
 		Livewire::component('tollerus.neography-editor', \PeterMarkley\Tollerus\Livewire\NeographyEditor::class);
