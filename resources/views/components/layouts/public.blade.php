@@ -4,7 +4,10 @@
 @endphp
 
 @if ($hostLayout)
-    @include('tollerus::components.layouts.public-host', ['hostLayout' => $hostLayout])
+    @include('tollerus::components.layouts.public-host', [
+        'hostLayout' => $hostLayout,
+        'section' => $section
+    ])
 @else
     <x-tollerus::layouts.admin :title="$title">
         {{ $slot }}
