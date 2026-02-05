@@ -24,4 +24,39 @@
         max-height: 0in;
         transition: margin-top 0.5s ease-out 0s, opacity 0.5s ease-out 0s, max-height 0s linear 0.5s;
     }
+
+    /* Default values for CSS variables on public pages, customizable by host app */
+    :root {
+        --tollerus-bg: 212, 212, 216;               /* zinc-300 */
+        --tollerus-surface: 255, 255, 255;
+        --tollerus-surface-inactive: 250, 250, 250; /* zinc-50  */
+        --tollerus-surface-hover: 250, 250, 250;    /* zinc-50  */
+        --tollerus-text: 24, 24, 27;                /* zinc-900 */
+        --tollerus-text-inverse: 255, 255, 255;
+        --tollerus-muted: 250, 250, 250;            /* zinc-50  */
+        --tollerus-border: 159, 159, 169;           /* zinc-400 */
+        --tollerus-primary: 0, 117, 149;            /* cyan-700 */
+        --tollerus-primary-hover: 0, 146, 184;      /* cyan-600 */
+        --tollerus-secondary: 82, 82, 92;           /* zinc-600 */
+        --tollerus-secondary-hover: 113, 113, 123;  /* zinc-500 */
+        --tollerus-ring: 20, 71, 230;               /* blue-700 */
+        --tollerus-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --tollerus-bg: 24, 24, 27;                 /* zinc-900 */
+            --tollerus-surface: 39, 39, 42;            /* zinc-800 */
+            --tollerus-surface-inactive: 24, 24, 27;   /* zinc-900 */
+            --tollerus-surface-hover: 63, 63, 70;      /* zinc-700  */
+            --tollerus-text: 212, 212, 216;            /* zinc-300 */
+            --tollerus-text-inverse: 9, 9, 11;         /* zinc-950 */
+            --tollerus-muted: 34, 34, 37;              /* zinc-900, 30% opaque over zinc-800 */
+            --tollerus-border: 113, 113, 123;          /* zinc-500 */
+            --tollerus-primary: 75, 167, 184;          /* cyan-500, saturate-50 */
+            --tollerus-primary-hover: 85, 191, 206;    /* cyan-400, saturate-50 */
+            --tollerus-secondary: 159, 159, 169;       /* zinc-400 */
+            --tollerus-secondary-hover: 212, 212, 216; /* zinc-300 */
+            --tollerus-ring: 255, 255, 255;
+        }
+    }
 }
