@@ -4,10 +4,10 @@
 [x-cloak] { display: none !important; }
 
 @layer base {
-    a {
+    #tollerus_body a {
         @apply text-cyan-700 hover:text-cyan-600 dark:text-cyan-500 hover:dark:text-cyan-400 dark:saturate-50
     }
-    footer a {
+    #tollerus_body footer a {
         @apply text-cyan-800 hover:text-cyan-800 dark:text-cyan-500 hover:dark:text-cyan-500 saturate-80 dark:saturate-20
     }
     [data-component="alert"] a {
@@ -41,7 +41,7 @@
         --tollerus-secondary: 82 82 92;           /* zinc-600 */
         --tollerus-secondary-hover: 113 113 123;  /* zinc-500 */
         --tollerus-ring: 20 71 230;               /* blue-700 */
-        --tollerus-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        --tollerus-font-main: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     }
     @media (prefers-color-scheme: dark) {
         :root {

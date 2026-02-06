@@ -14,6 +14,7 @@ module.exports = {
           'surface-inactive': 'rgb(var(--tollerus-surface-inactive) / <alpha-value>)',
           'surface-hover': 'rgb(var(--tollerus-surface-hover) / <alpha-value>)',
           text: 'rgb(var(--tollerus-text) / <alpha-value>)',
+          'text-inverse': 'rgb(var(--tollerus-text-inverse) / <alpha-value>)',
           muted: 'rgb(var(--tollerus-muted) / <alpha-value>)',
           border: 'rgb(var(--tollerus-border) / <alpha-value>)',
           primary: 'rgb(var(--tollerus-primary) / <alpha-value>)',
