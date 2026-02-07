@@ -13,6 +13,7 @@ use PeterMarkley\Tollerus\Livewire\InflectionTableEditor;
 use PeterMarkley\Tollerus\Livewire\LanguageEditor;
 use PeterMarkley\Tollerus\Livewire\NeographyEditor;
 use PeterMarkley\Tollerus\Livewire\NeographySectionEditor;
+use PeterMarkley\Tollerus\Livewire\PublicDictionary;
 
 $baseMiddleware = Config::get('tollerus.middleware', ['web']);
 $adminMiddleware = collect(Config::get('tollerus.admin_middleware', []))
@@ -26,7 +27,7 @@ Route::as('tollerus.')
         Route::prefix(Config::get('tollerus.public_route_prefix', 'tollerus'))
             ->as('public.')
             ->group(function () {
-                Route::get('/', fn () => view('tollerus::public.index', ['title' => 'My test page']));
+                Route::get('/', PublicDictionary::class);
             });
 
         // Routes for the admin area of the app
