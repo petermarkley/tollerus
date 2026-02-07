@@ -24,6 +24,9 @@ Route::as('tollerus.')
     ->middleware($baseMiddleware)
     ->group(function () use ($adminMiddleware) {
 
+        // Redirect in case of custom value for Config::get('tollerus.public_route_prefix')
+        Route::get('tollerus', fn () => redirect()->route('tollerus.public.index'));
+
         // Routes for the public area of the app
         Route::prefix(Config::get('tollerus.public_route_prefix', 'tollerus'))
             ->as('public.')
