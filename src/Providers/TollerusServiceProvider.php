@@ -71,7 +71,7 @@ class TollerusServiceProvider extends ServiceProvider
 		Livewire::component('tollerus.inflection-table-editor', \PeterMarkley\Tollerus\Livewire\InflectionTableEditor::class);
 		Livewire::component('tollerus.auto-inflection-editor', \PeterMarkley\Tollerus\Livewire\AutoInflectionEditor::class);
 		Livewire::component('tollerus.entry-editor', \PeterMarkley\Tollerus\Livewire\EntryEditor::class);
-		Livewire::component('tollerus.public-dictionary', \PeterMarkley\Tollerus\Livewire\PublicDictionary::class);
+		Livewire::component('tollerus.public-word-lookup', \PeterMarkley\Tollerus\Livewire\PublicWordLookup::class);
 		// Model observers
 		\PeterMarkley\Tollerus\Models\Neography::observe(\PeterMarkley\Tollerus\Observers\NeographyObserver::class);
 		\PeterMarkley\Tollerus\Models\NeographySection::observe(\PeterMarkley\Tollerus\Observers\NeographySectionObserver::class);

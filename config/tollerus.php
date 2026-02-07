@@ -22,6 +22,18 @@ return [
      */
     'public_layout' => null,
     'public_layout_section' => 'content', // Your custom layout's main section name
+    /**
+     * These control the page titles of Tollerus-owned public
+     * pages. Change `public_page_title_base` to your website's
+     * name if desired. Then `*_title_append` is a boolean
+     * for whether to append specific page titles onto that.
+     *
+     * For example, if your title base is "MySite" and the user
+     * visits "Language info" with `*_title_append` enabled,
+     * the page title will be "MySite Language info".
+     */
+    'public_page_title_base' => 'Tollerus',
+    'public_page_title_append' => true,
 
     /**
      * Locale-specific words for transliteration (the process,

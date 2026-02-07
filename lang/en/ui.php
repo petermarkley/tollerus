@@ -537,6 +537,34 @@ return [
     'word_form_not_transliterated_alert' => 'This word form needs a :transliteration, or it will not be shown.',
     'sort_by_native' => 'Sort by native',
     'native_spelling' => 'Native spelling',
+    /**
+     * TRANSLATOR NOTE:
+     *
+     * These messages are for the public-facing UI which is more
+     * layman-oriented than the admin UI. Technical terms from
+     * linguistics and grammar are avoided a little more strongly.
+     */
+    'word_lookup' => 'Word lookup',
+    /**
+     * TRANSLATOR NOTE:
+     *
+     * In English, this UI message "Language info" is a noun
+     * adjunct that doesn't distinguish between singular vs.
+     * plural. Other languages may need to re-phrase this with a
+     * preposition, where grammatical number is needed. For
+     * example in Spanish, two possible translations are:
+     *
+     *     - "Información sobre el idioma" (singular)
+     *     - "Información sobre los idiomas" (plural)
+     *
+     * To accommodate that, this translation key uses the Laravel
+     * pluralization syntax and will be retrieved via
+     * `trans_choice()`, even though it's not needed in English.
+     *
+     * For more info, see the Laravel documentation:
+     * https://laravel.com/docs/12.x/localization#pluralization
+     */
+    'language_info' => '{1} Language info|[2,*] Language info',
 
     /**
      * TRANSLATOR NOTE:

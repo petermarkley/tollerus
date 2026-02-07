@@ -7,13 +7,14 @@ use PeterMarkley\Tollerus\Http\Controllers\AdminController;
 use PeterMarkley\Tollerus\Http\Controllers\EntryController;
 use PeterMarkley\Tollerus\Http\Controllers\LanguageController;
 use PeterMarkley\Tollerus\Http\Controllers\NeographyController;
+use PeterMarkley\Tollerus\Http\Controllers\PublicLanguageController;
 use PeterMarkley\Tollerus\Livewire\AutoInflectionEditor;
 use PeterMarkley\Tollerus\Livewire\EntryEditor;
 use PeterMarkley\Tollerus\Livewire\InflectionTableEditor;
 use PeterMarkley\Tollerus\Livewire\LanguageEditor;
 use PeterMarkley\Tollerus\Livewire\NeographyEditor;
 use PeterMarkley\Tollerus\Livewire\NeographySectionEditor;
-use PeterMarkley\Tollerus\Livewire\PublicDictionary;
+use PeterMarkley\Tollerus\Livewire\PublicWordLookup;
 
 $baseMiddleware = Config::get('tollerus.middleware', ['web']);
 $adminMiddleware = collect(Config::get('tollerus.admin_middleware', []))
@@ -27,7 +28,12 @@ Route::as('tollerus.')
         Route::prefix(Config::get('tollerus.public_route_prefix', 'tollerus'))
             ->as('public.')
             ->group(function () {
-                Route::get('/', PublicDictionary::class);
+                Route::get('/', PublicWordLookup::class)->name('index');
+                Route::prefix('languages')
+                    ->as('languages.')
+                    ->group(function () {
+                        Route::get('/', [PublicLanguageController::class, 'index'])->name('index');
+                    });
             });
 
         // Routes for the admin area of the app

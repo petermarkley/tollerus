@@ -15,7 +15,7 @@ use Illuminate\Validation\Rule;
 use PeterMarkley\Tollerus\Enums\SearchType;
 use PeterMarkley\Tollerus\Models\Language;
 
-class PublicDictionary extends Component
+class PublicWordLookup extends Component
 {
     // use WithPagination, WithoutUrlPagination;
     // Models
@@ -30,11 +30,16 @@ class PublicDictionary extends Component
      */
     public function render(): View
     {
-        return view('tollerus::livewire.public-dictionary', [
+        $pageTitle = config('tollerus.public_page_title_base', 'Tollerus');
+        if (config('tollerus.public_page_title_append', true)) {
+            $pageTitle .= ' My test page';
+        }
+
+        return view('tollerus::livewire.public-word-lookup', [
                 // 'paginator' => $paginator,
                 // 'hasEntries' => $hasEntries,
             ])->layout('tollerus::components.layouts.public')
-            ->title('My test page');
+            ->title($pageTitle);
     }
     public function mount(): void
     {
