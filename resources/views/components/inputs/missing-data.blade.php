@@ -3,7 +3,7 @@
     'floating' => false,
 ])
 @php
-    $style = 'rounded-lg inset-shadow-sm border-dashed border-2 text-sm italic text-center max-w-40 lg:max-w-80 cursor-pointer ';
+    $style = 'relative rounded-lg inset-shadow-sm border-dashed border-2 text-sm italic text-center max-w-40 lg:max-w-80 cursor-pointer ';
     if (filter_var($floating, FILTER_VALIDATE_BOOLEAN)) {
         $style .= 'border-zinc-500 dark:border-zinc-500 text-zinc-700 dark:text-zinc-400 hover:bg-zinc-300 hover:dark:bg-zinc-700 hover:text-zinc-900 hover:dark:text-zinc-400';
     } else {

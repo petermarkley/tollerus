@@ -15,7 +15,7 @@
     @endif
     class="flex flex-col gap-1 items-center"
 >
-    <div class="flex flex-row gap-4 justify-start items-center">
+    <div class="relative flex flex-row gap-4 justify-start items-center">
         <label
             @if (!empty($id) && empty($idExpression))
                 for="{{ $id }}"

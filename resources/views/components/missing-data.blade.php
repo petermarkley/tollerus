@@ -2,7 +2,7 @@
     'floating' => false,
 ])
 @php
-    $style = 'flex justify-center items-center p-4 rounded-lg inset-shadow-sm border-dashed border-2 cursor-pointer ';
+    $style = 'relative flex justify-center items-center p-4 rounded-lg inset-shadow-sm border-dashed border-2 cursor-pointer ';
     $textStyle = 'text-sm italic text-center max-w-40 ';
     if (filter_var($floating, FILTER_VALIDATE_BOOLEAN)) {
         $style .= 'border-zinc-500 dark:border-zinc-500 hover:bg-zinc-300 hover:dark:bg-zinc-700';

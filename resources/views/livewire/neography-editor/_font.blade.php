@@ -56,7 +56,7 @@
                                     x-data="{ id: $id('font_url') }"
                                     class="flex flex-row gap-2 border border-zinc-50 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-lg shadow p-2"
                                 >
-                                    <div class="max-w-80 whitespace-nowrap overflow-hidden p-2 rounded inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 flex flex-col items-end">
+                                    <div class="relative max-w-80 whitespace-nowrap overflow-hidden p-2 rounded inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 flex flex-col items-end">
                                         <label x-bind:for="id" class="sr-only">{{ __('tollerus::ui.asset_url') }}</label>
                                         <input
                                             x-bind:id="id"
@@ -74,13 +74,13 @@
                                         x-bind:disabled="copied"
                                     >
                                         <template x-if="!copied">
-                                            <div>
+                                            <div class="relative">
                                                 <x-tollerus::icons.document-duplicate class="w-6 h-6"/>
                                                 <span class="sr-only">{{ __('tollerus::ui.copy_to_clipboard') }}</span>
                                             </div>
                                         </template>
                                         <template x-if="copied">
-                                            <div>
+                                            <div class="relative">
                                                 <x-tollerus::icons.check class="w-6 h-6"/>
                                                 <span class="sr-only">{{ __('tollerus::ui.copied_to_clipboard') }}</span>
                                             </div>

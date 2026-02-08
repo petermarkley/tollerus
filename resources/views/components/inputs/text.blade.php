@@ -5,7 +5,7 @@
     'modelIsAlpine' => false,
     'type' => 'text',
 ])
-<div class="flex flex-col gap-1 items-start flex-grow">
+<div class="relative flex flex-col gap-1 items-start flex-grow">
     @if (empty($label))
         {{ $slot }}
     @else
