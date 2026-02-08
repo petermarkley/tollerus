@@ -197,7 +197,7 @@
                                             showLabel="true"
                                             saveEvent="$wire.updateFeature(groupId, featureId, 'name_brief', document.getElementById(id).value, id);" />
                                     </div>
-                                    <div class="min-w-24">
+                                    <div class="min-w-24 text-right">
                                         <x-tollerus::inputs.button
                                             type="inverse"
                                             size="small"
