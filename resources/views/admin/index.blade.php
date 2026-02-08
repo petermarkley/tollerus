@@ -16,7 +16,7 @@
         <div class="px-6 xl:px-0 text-xl flex flex-col gap-4 items-center">
             {!! Str::markdown(__('tollerus::ui.donate_request', ['donate_url' => 'https://paypal.me/petermarkley'])) !!}
         </div>
-        <div class="px-6 xl:px-0 grid grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div class="px-6 xl:px-0 flex flex-row flex-wrap gap-4 justify-center items-center mt-4">
             <div class="relative">
                 <a
                     href="{{ route('tollerus.admin.neographies.index') }}"
@@ -52,6 +52,18 @@
                         @if ($languageCount > 0)
                             <span class="block text-2xl font-bold text-white dark:text-zinc-900 bg-zinc-600 dark:bg-zinc-300 rounded-full w-8 h-8 flex justify-center items-center text-center">{{ $languageCount }}</span>
                         @endif
+                    </x-tollerus::panel>
+                </a>
+            </div>
+            <div>
+                <a
+                    href="{{ route('tollerus.public.index') }}"
+                    title="{{ __('tollerus::ui.browse_dictionary') }}"
+                    class="group text-zinc-900 dark:text-zinc-300 hover:text-zinc-900 hover:dark:text-zinc-300"
+                >
+                    <x-tollerus::panel class="relative flex flex-row gap-4 justify-center items-center group-has-hover:bg-zinc-100 group-has-hover:dark:bg-zinc-700">
+                        <x-tollerus::icons.eye class="w-12 h-12"/>
+                        <span class="text-3xl sr-only sm:not-sr-only">{{ __('tollerus::ui.browse_dictionary') }}</span>
                     </x-tollerus::panel>
                 </a>
             </div>

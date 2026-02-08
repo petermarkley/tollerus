@@ -27,6 +27,7 @@ return [
     'language' => 'Language',
     'languages' => 'Languages',
     'add_language' => 'Add language',
+    'browse_dictionary' => 'Browse Dictionary',
     /**
      * TRANSLATOR NOTE:
      *
