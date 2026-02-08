@@ -24,9 +24,9 @@ class PublicLanguageController extends Controller
         }
 
         return view('tollerus::public.languages.index', [
-            'breadcrumbs' => [
-                ['href' => route('tollerus.public.index'), 'text' => __('tollerus::ui.word_lookup')],
-            ],
+            // 'breadcrumbs' => [
+            //     ['href' => route('tollerus.public.index'), 'text' => __('tollerus::ui.word_lookup')],
+            // ],
             'languages' => $languages,
             'title' => $pageTitle,
         ]);

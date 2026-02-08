@@ -19,7 +19,7 @@ class PublicWordLookup extends Component
 {
     // use WithPagination, WithoutUrlPagination;
     // Models
-    // #[Locked] public array $languages = [];
+    #[Locked] public Collection $languages;
     // UI input layer
     // public string $sortBy = 'transliterated';
     // public string $searchStr = '';
@@ -43,7 +43,7 @@ class PublicWordLookup extends Component
     }
     public function mount(): void
     {
-        //
+        $this->languages = Language::where('visible', true)->get();
     }
 
     public function search()

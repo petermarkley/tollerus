@@ -11,6 +11,7 @@ return [
     'tollerus_welcome' => 'Welcome to Tollerus, the Laravel system for conlang dictionaries!',
     'tollerus_description' => 'The luxurious way to build, track, and browse your conlang\'s lexical data.',
     'tollerus_admin_area' => 'Tollerus Admin Area',
+    'admin_area' => 'Admin Area',
     'how_to_use' => 'How to use',
     'coming_soon' => '(This is coming soon!)',
     'tollerus_on_github' => 'Tollerus on GitHub',
@@ -544,6 +545,7 @@ return [
      * layman-oriented than the admin UI. Technical terms from
      * linguistics and grammar are avoided a little more strongly.
      */
+    'no_data_notice' => 'You don\'t have any language data! Use the Admin Area to get started.',
     'word_lookup' => 'Word lookup',
     /**
      * TRANSLATOR NOTE:
