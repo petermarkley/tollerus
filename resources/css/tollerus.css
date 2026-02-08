@@ -31,7 +31,7 @@
         max-height: 0in;
         transition: margin-top 0.5s ease-out 0s, opacity 0.5s ease-out 0s, max-height 0s linear 0.5s;
     }
-    #tollerus_root[data-layout="admin"] .sr-only {
+    #tollerus_root .sr-only {
         display: block;
         position: static !important;
     }
