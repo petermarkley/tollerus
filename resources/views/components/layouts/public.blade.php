@@ -12,6 +12,8 @@
     ])
 @else
     <x-tollerus::layouts.admin :title="$title">
-        {{ $slot }}
+        <div data-route="public">
+            {{ $slot }}
+        </div>
     </x-tollerus::layouts.admin>
 @endif
