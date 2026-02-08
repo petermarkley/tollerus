@@ -25,7 +25,32 @@ module.exports = {
           ring: 'rgb(var(--tollerus-ring) / <alpha-value>)',
         },
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: '100ch',
+            color: 'rgb(var(--tollerus-text))',
+            a: {
+              color: 'rgb(var(--tollerus-primary))',
+              '&:hover': {
+                color: 'rgb(var(--tollerus-primary-hover))',
+              },
+            },
+            p: {
+              'text-indent': '1rem',
+              'margin-top': '0.25em',
+              'margin-bottom': '0.25em',
+            },
+            div: {
+              'margin-top': '1em',
+              'margin-bottom': '1em',
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }
