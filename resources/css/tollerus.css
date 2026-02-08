@@ -4,22 +4,25 @@
 [x-cloak] { display: none !important; }
 
 @layer base {
-    #tollerus_body a {
+    #tollerus_root[data-layout="admin"] {
+        @apply w-full h-full min-h-screen bg-zinc-300 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-300
+    }
+    #tollerus_root[data-layout="admin"] body a {
         @apply text-cyan-700 hover:text-cyan-600 dark:text-cyan-500 hover:dark:text-cyan-400 dark:saturate-50
     }
-    #tollerus_body footer a {
+    #tollerus_root[data-layout="admin"] body footer a {
         @apply text-cyan-800 hover:text-cyan-800 dark:text-cyan-500 hover:dark:text-cyan-500 saturate-80 dark:saturate-20
     }
-    [data-component="alert"] a {
+    #tollerus_root [data-component="alert"] a {
         @apply saturate-100 underline font-bold
     }
-    div.drawer-content {
+    #tollerus_root div.drawer-content {
         margin-top: 0%;
         opacity: 1;
         max-height: 10000in;
         transition: margin-top 0.5s ease-out 0s, opacity 0.5s ease-out 0s, max-height 0s linear 0s;
     }
-    div.drawer-content-closed {
+    #tollerus_root div.drawer-content-closed {
         margin-top: -100%;
         opacity: 0;
         max-height: 0in;

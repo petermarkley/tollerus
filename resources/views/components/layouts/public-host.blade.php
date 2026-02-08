@@ -9,5 +9,7 @@
     <script src="{{ asset('vendor/tollerus/tollerus.js') }}" defer></script>
 @endpush
 @php($__env->startSection($section))
-    {{ $slot }}
+    <div id="tollerus_root">
+        {{ $slot }}
+    </div>
 @php($__env->stopSection())

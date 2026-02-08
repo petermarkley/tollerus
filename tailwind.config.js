@@ -2,6 +2,7 @@ module.exports = {
   content: [
     './resources/views/**/*.blade.php',
   ],
+  important: '#tollerus_root',
   theme: {
     extend: {
       fontFamily: {

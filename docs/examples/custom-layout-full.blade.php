@@ -21,8 +21,8 @@
     <head>
         <title>{{ $title }}</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        @stack('styles')
         @vite('resources/css/app.css')
+        @stack('styles')
         <style>
             :root {
                 --tollerus-bg: 233 242 237;               /* emerald-100, saturate-20 */

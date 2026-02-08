@@ -1,4 +1,7 @@
 <x-tollerus::layouts.public :title="$title">
+    @if (isset($breadcrumbs))
+        <x-tollerus::breadcrumbs :breadcrumbs="$breadcrumbs" isPublic="true"/>
+    @endif
     <div class="mx-auto mt-4 w-full max-w-[1200px] flex flex-col gap-4 items-start">
         <div class="inline-block bg-tollerus-surface hover:bg-tollerus-surface-hover cursor-pointer rounded-lg shadow-lg p-4 text-tollerus-text font-bold">Big Button</div>
         <div class="w-full flex flex-col gap-4 bg-tollerus-surface rounded-lg shadow-lg p-6 text-tollerus-text">
