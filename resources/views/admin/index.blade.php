@@ -16,56 +16,60 @@
         <div class="px-6 xl:px-0 text-xl flex flex-col gap-4 items-center">
             {!! Str::markdown(__('tollerus::ui.donate_request', ['donate_url' => 'https://paypal.me/petermarkley'])) !!}
         </div>
-        <div class="px-6 xl:px-0 flex flex-row flex-wrap gap-4 justify-center items-center mt-4">
-            <div class="relative">
-                <a
-                    href="{{ route('tollerus.admin.neographies.index') }}"
-                    title="{{ __('tollerus::ui.neographies') }}"
-                    class="group text-zinc-900 dark:text-zinc-300 hover:text-zinc-900 hover:dark:text-zinc-300"
-                >
-                    <x-tollerus::panel class="relative flex flex-row gap-4 justify-center items-center group-has-hover:bg-zinc-100 group-has-hover:dark:bg-zinc-700">
-                        <x-tollerus::icons.neography class="w-12 h-12"/>
-                        <span class="text-3xl sr-only sm:not-sr-only">{{ __('tollerus::ui.neographies') }}</span>
-                        @if ($neographyCount > 0)
-                            <span class="block text-2xl font-bold text-white dark:text-zinc-900 bg-zinc-600 dark:bg-zinc-300 rounded-full w-8 h-8 flex justify-center items-center text-center">{{ $neographyCount }}</span>
-                        @endif
-                    </x-tollerus::panel>
-                </a>
-                @if (!$hasData)
-                    <div class="absolute left-[50%] transform-[translateX(-50%)] h-10 -top-12 z-10 pointer-events-none flex justify-center items-center text-center bg-zinc-800 dark:bg-white text-zinc-300 dark:text-zinc-900 rounded-lg shadow py-2 px-4">
-                        <svg viewBox="0 0 20 10" class="absolute w-8 h-4 -bottom-4 left-[50%] transform-[translateX(-50%)] text-zinc-800 dark:text-white">
-                            <path d="M 20,0 L 10,10 L 0,0 z" fill="currentColor" />
-                        </svg>
-                        <span class="font-bold whitespace-nowrap">{{ __('tollerus::ui.start_here') }}</span>
-                    </div>
-                @endif
+        <div class="px-6 xl:px-0 flex flex-col gap-4 items-center mt-4">
+            <div class="flex flex-row gap-4 justify-center items-center">
+                <div class="relative">
+                    <a
+                        href="{{ route('tollerus.admin.neographies.index') }}"
+                        title="{{ __('tollerus::ui.neographies') }}"
+                        class="group text-zinc-900 dark:text-zinc-300 hover:text-zinc-900 hover:dark:text-zinc-300"
+                    >
+                        <x-tollerus::panel class="relative flex flex-row gap-4 justify-center items-center group-has-hover:bg-zinc-100 group-has-hover:dark:bg-zinc-700">
+                            <x-tollerus::icons.neography class="w-12 h-12"/>
+                            <span class="text-3xl sr-only sm:not-sr-only">{{ __('tollerus::ui.neographies') }}</span>
+                            @if ($neographyCount > 0)
+                                <span class="block text-2xl font-bold text-white dark:text-zinc-900 bg-zinc-600 dark:bg-zinc-300 rounded-full w-8 h-8 flex justify-center items-center text-center">{{ $neographyCount }}</span>
+                            @endif
+                        </x-tollerus::panel>
+                    </a>
+                    @if (!$hasData)
+                        <div class="absolute left-[50%] transform-[translateX(-50%)] h-10 -top-12 z-10 pointer-events-none flex justify-center items-center text-center bg-zinc-800 dark:bg-white text-zinc-300 dark:text-zinc-900 rounded-lg shadow py-2 px-4">
+                            <svg viewBox="0 0 20 10" class="absolute w-8 h-4 -bottom-4 left-[50%] transform-[translateX(-50%)] text-zinc-800 dark:text-white">
+                                <path d="M 20,0 L 10,10 L 0,0 z" fill="currentColor" />
+                            </svg>
+                            <span class="font-bold whitespace-nowrap">{{ __('tollerus::ui.start_here') }}</span>
+                        </div>
+                    @endif
+                </div>
+                <div>
+                    <a
+                        href="{{ route('tollerus.admin.languages.index') }}"
+                        title="{{ __('tollerus::ui.languages') }}"
+                        class="group text-zinc-900 dark:text-zinc-300 hover:text-zinc-900 hover:dark:text-zinc-300"
+                    >
+                        <x-tollerus::panel class="relative flex flex-row gap-4 justify-center items-center group-has-hover:bg-zinc-100 group-has-hover:dark:bg-zinc-700">
+                            <x-tollerus::icons.language class="w-12 h-12"/>
+                            <span class="text-3xl sr-only sm:not-sr-only">{{ __('tollerus::ui.languages') }}</span>
+                            @if ($languageCount > 0)
+                                <span class="block text-2xl font-bold text-white dark:text-zinc-900 bg-zinc-600 dark:bg-zinc-300 rounded-full w-8 h-8 flex justify-center items-center text-center">{{ $languageCount }}</span>
+                            @endif
+                        </x-tollerus::panel>
+                    </a>
+                </div>
             </div>
-            <div>
-                <a
-                    href="{{ route('tollerus.admin.languages.index') }}"
-                    title="{{ __('tollerus::ui.languages') }}"
-                    class="group text-zinc-900 dark:text-zinc-300 hover:text-zinc-900 hover:dark:text-zinc-300"
-                >
-                    <x-tollerus::panel class="relative flex flex-row gap-4 justify-center items-center group-has-hover:bg-zinc-100 group-has-hover:dark:bg-zinc-700">
-                        <x-tollerus::icons.language class="w-12 h-12"/>
-                        <span class="text-3xl sr-only sm:not-sr-only">{{ __('tollerus::ui.languages') }}</span>
-                        @if ($languageCount > 0)
-                            <span class="block text-2xl font-bold text-white dark:text-zinc-900 bg-zinc-600 dark:bg-zinc-300 rounded-full w-8 h-8 flex justify-center items-center text-center">{{ $languageCount }}</span>
-                        @endif
-                    </x-tollerus::panel>
-                </a>
-            </div>
-            <div>
-                <a
-                    href="{{ route('tollerus.public.index') }}"
-                    title="{{ __('tollerus::ui.browse_dictionary') }}"
-                    class="group text-zinc-900 dark:text-zinc-300 hover:text-zinc-900 hover:dark:text-zinc-300"
-                >
-                    <x-tollerus::panel class="relative flex flex-row gap-4 justify-center items-center group-has-hover:bg-zinc-100 group-has-hover:dark:bg-zinc-700">
-                        <x-tollerus::icons.eye class="w-12 h-12"/>
-                        <span class="text-3xl sr-only sm:not-sr-only">{{ __('tollerus::ui.browse_dictionary') }}</span>
-                    </x-tollerus::panel>
-                </a>
+            <div class="flex flex-row gap-4 justify-center items-center">
+                <div>
+                    <a
+                        href="{{ route('tollerus.public.index') }}"
+                        title="{{ __('tollerus::ui.browse_dictionary') }}"
+                        class="group text-zinc-900 dark:text-zinc-300 hover:text-zinc-900 hover:dark:text-zinc-300"
+                    >
+                        <x-tollerus::panel class="relative flex flex-row gap-4 justify-center items-center group-has-hover:bg-zinc-100 group-has-hover:dark:bg-zinc-700">
+                            <x-tollerus::icons.eye class="w-12 h-12"/>
+                            <span class="text-3xl sr-only sm:not-sr-only">{{ __('tollerus::ui.browse_dictionary') }}</span>
+                        </x-tollerus::panel>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
