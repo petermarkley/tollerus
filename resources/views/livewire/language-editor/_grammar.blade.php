@@ -119,7 +119,7 @@
                                             saveEvent="$wire.updateClass(groupId, wordClassId, 'name_brief', document.getElementById(id).value, id);" />
                                     </td>
                                     <td class="text-center px-2 py-1 min-w-24">
-                                        <label class="relative inline-block align-middle w-6 h-6 relative group">
+                                        <label class="relative inline-block align-middle w-6 h-6 group">
                                             <x-tollerus::icons.star
                                                 x-bind:fill="group.primaryClass == wordClassId ? 'currentColor' : 'none'"
                                                 class="rounded-lg text-zinc-600 group-has-hover:text-zinc-500 dark:text-zinc-500 group-has-hover:dark:text-zinc-400 group-has-checked:text-cyan-800 group-has-checked:group-has-hover:text-cyan-700 group-has-checked:dark:text-cyan-300 group-has-checked:group-has-hover:dark:text-cyan-200 group-has-checked:dark:saturate-50 group-has-disabled:text-zinc-300 group-has-disabled:dark:text-zinc-700 group-has-checked:group-has-hover:group-has-disabled:text-zinc-300 group-has-checked:group-has-hover:group-has-disabled:dark:text-zinc-700 group-has-focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white"
