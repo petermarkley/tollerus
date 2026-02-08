@@ -1,7 +1,7 @@
 <div class="mx-auto mt-4 w-full max-w-[1200px] flex flex-col gap-4 items-start">
     @if($languages->count() == 0)
         <div class="w-full flex flex-col gap-4 items-center">
-            <p class="text-center">{{ __('tollerus::ui.no_data_notice') }}</p>
+            <p class="text-center text-tollerus-text">{{ __('tollerus::ui.no_data_notice') }}</p>
             <a href="{{ route('tollerus.admin.index') }}" class="px-4 py-2 rounded-lg shadow font-bold bg-tollerus-primary hover:bg-tollerus-primary-hover text-tollerus-text-inverse">{{ __('tollerus::ui.admin_area') }}</a>
         </div>
     @else
