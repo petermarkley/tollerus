@@ -31,9 +31,6 @@ class PublicLanguageController extends Controller
         }
 
         return view('tollerus::public.languages.index', [
-            // 'breadcrumbs' => [
-            //     ['href' => route('tollerus.public.index'), 'text' => __('tollerus::ui.word_lookup')],
-            // ],
             'languages' => $languages,
             'title' => $pageTitle,
         ]);
@@ -44,6 +41,18 @@ class PublicLanguageController extends Controller
      */
     public function show(Language $language)
     {
-        return $language->name;
+        $pageTitle = config('tollerus.public_page_title_base', 'Tollerus');
+        if (config('tollerus.public_page_title_append', true)) {
+            $pageTitle .= ' ' . $language->name;
+        }
+        $langCount = Language::where('visible', true)->count();
+        return view('tollerus::public.languages.show', [
+            'breadcrumbs' => [
+                ['href' => route('tollerus.public.languages.index'), 'text' => trans_choice('tollerus::ui.language_info', $langCount)],
+            ],
+            'language' => $language,
+            'langCount' => $langCount,
+            'title' => $pageTitle,
+        ]);
     }
 }
