@@ -42,8 +42,8 @@ module.exports = {
               'margin-bottom': '0.25em',
             },
             div: {
-              'margin-top': '1em',
-              'margin-bottom': '1em',
+              'margin-top': '1.5em',
+              'margin-bottom': '1.5em',
             },
           },
         },
