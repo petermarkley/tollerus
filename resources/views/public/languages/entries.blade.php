@@ -8,23 +8,45 @@
             <div class="w-full flex flex-col md:flex-row gap-4 items-stretch md:items-center">
                 <h2 class="text-2xl font-bold">{{ __('tollerus::ui.all_entries_for_language', ['lang' => $language->name]) }}</h2>
                 <div class="flex flex-row gap-4 items-center justify-center">
-                    <a
-                        href="#"
-                        class="relative flex flex-row gap-2 items-center cursor-pointer px-4 py-2 rounded-lg shadow font-bold bg-tollerus-secondary hover:bg-tollerus-secondary-hover text-tollerus-text-inverse"
-                    >
-                        <x-tollerus::icons.bars-arrow-down/>
-                        <span>{{ __('tollerus::ui.sort_by_transliterated', ['transliterated' => config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))]) }}</span>
-                    </a>
-                    <a
-                        href="#"
-                        class="relative flex flex-row gap-2 items-center cursor-pointer px-4 py-2 rounded-lg shadow font-bold bg-tollerus-secondary hover:bg-tollerus-secondary-hover text-tollerus-text-inverse"
-                    >
-                        <x-tollerus::icons.bars-arrow-down/>
-                        <span>{{ __('tollerus::ui.sort_by_native') }}</span>
-                    </a>
+                    @if ($sortBy == 'transliterated')
+                        <span
+                            title="{{ __('tollerus::ui.sort_by_transliterated', ['transliterated' => config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))]) }}"
+                            class="relative flex flex-row gap-2 items-center cursor-not-allowed px-4 py-2 rounded-lg shadow font-bold bg-tollerus-secondary text-tollerus-text-inverse opacity-50"
+                        >
+                            <x-tollerus::icons.bars-arrow-down/>
+                            <span>{{ __('tollerus::ui.sort_by_transliterated', ['transliterated' => config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))]) }}</span>
+                        </span>
+                    @else
+                        <a
+                            href="{{ url()->query($paginator->url(1), ['sort' => 'transliterated']) }}"
+                            title="{{ __('tollerus::ui.sort_by_transliterated', ['transliterated' => config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))]) }}"
+                            class="relative flex flex-row gap-2 items-center cursor-pointer px-4 py-2 rounded-lg shadow font-bold bg-tollerus-secondary hover:bg-tollerus-secondary-hover text-tollerus-text-inverse"
+                        >
+                            <x-tollerus::icons.bars-arrow-down/>
+                            <span>{{ __('tollerus::ui.sort_by_transliterated', ['transliterated' => config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))]) }}</span>
+                        </a>
+                    @endif
+                    @if ($sortBy == 'native')
+                        <span
+                            title="{{ __('tollerus::ui.sort_by_native') }}"
+                            class="relative flex flex-row gap-2 items-center cursor-not-allowed px-4 py-2 rounded-lg shadow font-bold bg-tollerus-secondary text-tollerus-text-inverse opacity-50"
+                        >
+                            <x-tollerus::icons.bars-arrow-down/>
+                            <span>{{ __('tollerus::ui.sort_by_native') }}</span>
+                        </span>
+                    @else
+                        <a
+                            href="{{ url()->query($paginator->url(1), ['sort' => 'native']) }}"
+                            title="{{ __('tollerus::ui.sort_by_native') }}"
+                            class="relative flex flex-row gap-2 items-center cursor-pointer px-4 py-2 rounded-lg shadow font-bold bg-tollerus-secondary hover:bg-tollerus-secondary-hover text-tollerus-text-inverse"
+                        >
+                            <x-tollerus::icons.bars-arrow-down/>
+                            <span>{{ __('tollerus::ui.sort_by_native') }}</span>
+                        </a>
+                    @endif
                 </div>
             </div>
-            <div class="w-full p-4 h-auto md:h-200 lg:h-104 flex flex-col justify-start items-start flex-nowrap md:flex-wrap gap-2 border-y-2 border-tollerus-border">
+            <div class="w-full py-4 h-auto md:h-200 lg:h-104 flex flex-col justify-start items-start flex-nowrap md:flex-wrap gap-2 border-y-2 border-tollerus-border">
                 @if (count($paginator->items()) > 0)
                     @foreach ($paginator->items() as $entry)
                         <a
@@ -50,7 +72,7 @@
                 @endif
             </div>
             <div class="w-full">
-                {{ $paginator->links('tollerus::public.languages.pagination-links', data: ['scrollTo' => false]) }}
+                {{ $paginator->links('tollerus::public.languages.pagination-links', data: ['scrollTo' => false, 'sortBy' => $sortBy]) }}
             </div>
         </div>
     </div>

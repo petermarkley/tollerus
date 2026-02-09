@@ -67,7 +67,7 @@ class PublicLanguageController extends Controller
     /**
      * List all entries of a single language
      */
-    public function entries(Language $language)
+    public function entries(Language $language, Request $req)
     {
         $pageTitle = config('tollerus.public_page_title_base', 'Tollerus');
         if (config('tollerus.public_page_title_append', true)) {
@@ -76,7 +76,7 @@ class PublicLanguageController extends Controller
         $langCount = Language::where('visible', true)->count();
         $neographyId = $language->primaryNeography?->id;
 
-        $sortBy = 'transliterated';
+        $sortBy = $req->query('sort', 'transliterated');
 
         /**
          * It's best if we do all of our data prep and sorting
