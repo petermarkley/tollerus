@@ -15,7 +15,7 @@
                 @if ($neographies->count() == 0)
                     <p class="italic opacity-50">{{ __('tollerus::ui.no_writing_systems_notice') }}</p>
                 @else
-                    <div class="w-full flex flex-col gap-4" x-data="{ currentNeography: {{ $language->primary_neography ?? $neography->first()->id }} }">
+                    <div class="w-full flex flex-col gap-4" x-data="{ currentNeography: {{ $language->primary_neography ?? $neographies->first()->id }} }">
                         <ul role="tablist" class="w-full flex flex-row flex-wrap gap-4 justify-start items-center border-b-4 border-tollerus-surface">
                             @foreach ($neographies as $neography)
                                 <li
