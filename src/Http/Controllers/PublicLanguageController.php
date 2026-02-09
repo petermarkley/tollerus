@@ -46,14 +46,21 @@ class PublicLanguageController extends Controller
             $pageTitle .= ' ' . $language->name;
         }
         $langCount = Language::where('visible', true)->count();
+        $neographies = $language->neographies->where('visible', true)->sortBy('machine_name');
+        if ($language->primary_neography !== null && $language->primaryNeography->visible) {
+            $startingNeography = $language->primary_neography;
+        } else {
+            $startingNeography = $neographies->first()?->id;
+        }
         return view('tollerus::public.languages.show', [
             'breadcrumbs' => [
                 ['href' => route('tollerus.public.languages.index'), 'text' => trans_choice('tollerus::ui.language_info', $langCount)],
             ],
-            'language' => $language,
-            'neographies' => $language->neographies->where('visible', true)->sortBy('machine_name'),
-            'langCount' => $langCount,
             'title' => $pageTitle,
+            'language' => $language,
+            'neographies' => $neographies,
+            'langCount' => $langCount,
+            'startingNeography' => $startingNeography,
         ]);
     }
 }

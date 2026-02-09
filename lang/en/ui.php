@@ -570,7 +570,6 @@ return [
      */
     'language_info' => '{1} Language info|[2,*] Language info',
     'writing_systems' => 'Writing systems',
-    'no_writing_systems_notice' => 'This language has no writing systems configured.',
 
     /**
      * TRANSLATOR NOTE:

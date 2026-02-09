@@ -9,17 +9,15 @@
                 <h2 class="text-2xl font-bold">{{ $language->name }}</h2>
                 <div class="prose">{!! $language->intro !!}</div>
             </div>
-            <div class="w-full p-4 rounded-lg inset-shadow-sm bg-tollerus-muted flex flex-col gap-4">
-                @if ($neographies->count() > 1)
-                    <h3 class="text-lg font-bold flex flex-row gap-2 items-center">
-                        <x-tollerus::icons.neography />
-                        <span>{{ __('tollerus::ui.writing_systems') }}</span>
-                    </h3>
-                @endif
-                @if ($neographies->count() == 0)
-                    <p class="italic opacity-50">{{ __('tollerus::ui.no_writing_systems_notice') }}</p>
-                @else
-                    <div class="w-full flex flex-col gap-6" x-data="{ currentNeography: {{ $language->primary_neography ?? $neographies->first()->id }} }">
+            @if ($neographies->count() > 0)
+                <div class="w-full p-4 rounded-lg inset-shadow-sm bg-tollerus-muted flex flex-col gap-4">
+                    @if ($neographies->count() > 1)
+                        <h3 class="text-lg font-bold flex flex-row gap-2 items-center">
+                            <x-tollerus::icons.neography />
+                            <span>{{ __('tollerus::ui.writing_systems') }}</span>
+                        </h3>
+                    @endif
+                    <div class="w-full flex flex-col gap-6" x-data="{ currentNeography: {{ $startingNeography }} }">
                         @if ($neographies->count() > 1)
                             <ul role="tablist" class="w-full flex flex-row flex-wrap gap-4 justify-start items-center border-b-4 border-tollerus-surface">
                                 @foreach ($neographies as $neography)
@@ -56,8 +54,8 @@
                             </div>
                         @endforeach
                     </div>
-                @endif
-            </div>
+                </div>
+            @endif
         </div>
     </div>
 </x-tollerus::layouts.public>
