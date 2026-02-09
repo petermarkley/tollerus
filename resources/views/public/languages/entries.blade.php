@@ -29,7 +29,7 @@
                     @foreach ($paginator->items() as $entry)
                         <a
                             href="#"
-                            class="text-tollerus-secondary hover:text-tollerus-secondary-hover"
+                            class="text-tollerus-secondary hover:text-tollerus-secondary-hover font-bold"
                         >
                             @if ($entry['transliterated'])
                                 <div class="flex flex-row gap-4 justify-start items-center">

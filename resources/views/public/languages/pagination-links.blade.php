@@ -1,7 +1,7 @@
 <div class="w-full flex flex-row gap-4 justify-center items-center">
     @if ($paginator->hasPages())
         <div class="hidden md:block">
-            <p class="italic">{{ __('tollerus::ui.pagination_showing_numbers', [
+            <p class="italic opacity-80">{{ __('tollerus::ui.pagination_showing_numbers', [
                 'start' => ($paginator->currentPage()-1)*$paginator->perPage() + 1,
                 'end' => ($paginator->currentPage() == $paginator->lastPage() ? $paginator->total() : $paginator->currentPage()*$paginator->perPage()),
                 'total' => $paginator->total(),
