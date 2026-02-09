@@ -570,6 +570,7 @@ return [
      */
     'language_info' => '{1} Language info|[2,*] Language info',
     'writing_systems' => 'Writing systems',
+    'browse_entries' => 'Browse entries',
 
     /**
      * TRANSLATOR NOTE:

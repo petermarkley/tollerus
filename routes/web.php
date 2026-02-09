@@ -36,7 +36,10 @@ Route::as('tollerus.')
                     ->as('languages.')
                     ->group(function () {
                         Route::get('/', [PublicLanguageController::class, 'index'])->name('index');
-                        Route::get('{language:machine_name}', [PublicLanguageController::class, 'show'])->name('show');
+                        Route::prefix('{language:machine_name}')->group(function () {
+                            Route::get('/', [PublicLanguageController::class, 'show'])->name('show');
+                            Route::get('/entries', [PublicLanguageController::class, 'entries'])->name('entries');
+                        });
                     });
             });
 

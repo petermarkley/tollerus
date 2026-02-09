@@ -63,4 +63,25 @@ class PublicLanguageController extends Controller
             'startingNeography' => $startingNeography,
         ]);
     }
+
+    /**
+     * List all entries of a single language
+     */
+    public function entries(Language $language)
+    {
+        $pageTitle = config('tollerus.public_page_title_base', 'Tollerus');
+        if (config('tollerus.public_page_title_append', true)) {
+            $pageTitle .= ' ' . $language->name . ' ' . __('tollerus::ui.entries');
+        }
+        $langCount = Language::where('visible', true)->count();
+        return view('tollerus::public.languages.entries', [
+            'breadcrumbs' => [
+                ['href' => route('tollerus.public.languages.index'), 'text' => trans_choice('tollerus::ui.language_info', $langCount)],
+                ['href' => route('tollerus.public.languages.show', ['language' => $language]), 'text' => $language->name],
+            ],
+            'title' => $pageTitle,
+            'language' => $language,
+            'langCount' => $langCount,
+        ]);
+    }
 }

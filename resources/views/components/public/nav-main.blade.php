@@ -7,12 +7,12 @@
         'word_lookup' => [
             'href' => route('tollerus.public.index'),
             'text' => __('tollerus::ui.word_lookup'),
-            'icon' => 'entries',
+            'icon' => 'magnifying-glass',
         ],
         'language_info' => [
             'href' => route('tollerus.public.languages.index'),
             'text' => trans_choice('tollerus::ui.language_info', $langCount),
-            'icon' => 'info',
+            'icon' => 'academic-cap',
         ],
     ];
 @endphp
@@ -28,7 +28,7 @@
             ])
         >
             <x-dynamic-component :component="'tollerus::icons.' . $opt['icon']" />
-            <span class="sr-only md:not-sr-only">{{ $opt['text'] }}</span>
+            <span class="sr-only sm:not-sr-only">{{ $opt['text'] }}</span>
         </a>
     @endforeach
 </div>

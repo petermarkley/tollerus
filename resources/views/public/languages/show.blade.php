@@ -6,7 +6,16 @@
         @endif
         <div class="w-full flex flex-col gap-4 items-start bg-tollerus-surface rounded-lg shadow-lg p-6 text-tollerus-text">
             <div class="w-full">
-                <h2 class="text-2xl font-bold">{{ $language->name }}</h2>
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center">
+                    <h2 class="text-2xl font-bold">{{ $language->name }}</h2>
+                    <a
+                        href="{{ route('tollerus.public.languages.entries', ['language' => $language]) }}"
+                        class="relative flex flex-row gap-2 items-center cursor-pointer px-4 py-2 rounded-lg shadow font-bold bg-tollerus-secondary hover:bg-tollerus-secondary-hover text-tollerus-text-inverse"
+                    >
+                        <x-tollerus::icons.entries />
+                        <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.browse_entries') }}</span>
+                    </a>
+                </div>
                 <div class="prose">{!! $language->intro !!}</div>
             </div>
             @if ($neographies->count() > 0)
