@@ -92,7 +92,6 @@ return new class extends Migration
                 ->references('id')->on('languages')
                 ->cascadeOnDelete();
             $table->foreignId('primary_class')->nullable(); // Relationship defined after `word_classes` table
-            $table->boolean('inflected')->default(false); // FIXME not sure if we need this, can be derived
         });
 
         $connection->create('word_classes', function (Blueprint $table) {

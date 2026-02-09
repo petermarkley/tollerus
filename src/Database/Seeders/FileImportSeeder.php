@@ -477,10 +477,6 @@ class FileImportSeeder extends Seeder
     {
         $groupModel = new WordClassGroup();
         $groupModel->language_id = $this->currentLang->id;
-        $groupModel->inflected = (
-            isset($groupXML->list->class[0]['inflected']) &&
-            filter_var($groupXML->list->class[0]['inflected'], FILTER_VALIDATE_BOOLEAN)
-        );
         $groupModel->save();
         // Read through word classes in this group
         foreach ($groupXML->list->class as $classXML) {
