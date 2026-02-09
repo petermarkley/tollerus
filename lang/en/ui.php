@@ -539,6 +539,7 @@ return [
     'word_form_not_transliterated_alert' => 'This word form needs a :transliteration, or it will not be shown.',
     'sort_by_native' => 'Sort by native',
     'native_spelling' => 'Native spelling',
+
     /**
      * TRANSLATOR NOTE:
      *
@@ -568,6 +569,8 @@ return [
      * https://laravel.com/docs/12.x/localization#pluralization
      */
     'language_info' => '{1} Language info|[2,*] Language info',
+    'writing_systems' => 'Writing systems',
+    'no_writing_systems_notice' => 'This language has no writing systems configured.',
 
     /**
      * TRANSLATOR NOTE:

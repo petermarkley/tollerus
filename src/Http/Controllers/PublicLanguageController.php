@@ -51,6 +51,7 @@ class PublicLanguageController extends Controller
                 ['href' => route('tollerus.public.languages.index'), 'text' => trans_choice('tollerus::ui.language_info', $langCount)],
             ],
             'language' => $language,
+            'neographies' => $language->neographies->where('visible', true),
             'langCount' => $langCount,
             'title' => $pageTitle,
         ]);

@@ -6,11 +6,12 @@
     <ul class="flex flex-row gap-2 justify-start items-center">
         @foreach ($breadcrumbs as $breadcrumb)
             @if (isset($breadcrumb['href']))
-                @if (filter_var($isPublic, FILTER_VALIDATE_BOOLEAN))
-                    <li class="before:content-['→'] before:mr-2 first:before:content-none"><a href="{{ $breadcrumb['href'] }}" class="text-tollerus-primary hover:text-tollerus-primary-hover">{{ $breadcrumb['text'] }}</a></li>
-                @else
-                    <li class="before:content-['→'] before:mr-2 first:before:content-none"><a href="{{ $breadcrumb['href'] }}">{{ $breadcrumb['text'] }}</a></li>
-                @endif
+                <li class="before:content-['→'] before:mr-2 first:before:content-none">
+                    <a
+                        href="{{ $breadcrumb['href'] }}"
+                        @class(['text-tollerus-primary hover:text-tollerus-primary-hover'=>filter_var($isPublic, FILTER_VALIDATE_BOOLEAN)])
+                    >{{ $breadcrumb['text'] }}</a>
+                </li>
             @else
                 <li class="before:content-['→'] before:mr-2 first:before:content-none">{{ $breadcrumb['text'] }}</li>
             @endif
