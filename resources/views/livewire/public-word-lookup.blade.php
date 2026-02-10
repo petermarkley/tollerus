@@ -1,4 +1,4 @@
-<div class="mx-auto mt-4 w-full max-w-[1200px] flex flex-col gap-4 items-start">
+<div class="mx-auto mt-4 w-full xl:px-25 flex flex-col gap-4 items-start">
     @if($languages->count() == 0)
         <div class="w-full flex flex-col gap-4 items-center">
             <p class="text-center text-tollerus-text">{{ __('tollerus::ui.no_data_notice') }}</p>
@@ -50,9 +50,9 @@
                     </button>
                 </div>
             </form>
-            <div class="flex flex-col sm:flex-row gap-2 items-stretch">
-                <div class="min-w-60 min-h-30 rounded-lg rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">&nbsp;</div>
-                <div class="flex-grow min-h-30 rounded-lg rounded-br-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">&nbsp;</div>
+            <div class="flex flex-col xl:flex-row gap-2 items-stretch">
+                <div class="min-w-60 min-h-30 rounded-lg xl:rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">&nbsp;</div>
+                <div class="flex-grow min-h-30 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">&nbsp;</div>
             </div>
         </div>
     @endif
