@@ -52,7 +52,9 @@
             </form>
             <div class="flex flex-col xl:flex-row gap-2 items-stretch">
                 <div class="min-w-60 min-h-30 rounded-lg xl:rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">&nbsp;</div>
-                <div class="flex-grow min-h-30 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">&nbsp;</div>
+                <div class="flex-grow min-h-30 p-8 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
+                    <pre>{{ $id }}</pre>
+                </div>
             </div>
         </div>
     @endif

@@ -22,6 +22,19 @@ final class GlobalId extends Model
     protected $casts = ['kind' => GlobalIdKind::class];
 
     /**
+     * Return a GlobalId class instance from a string
+     */
+    public static function fromStr(string $globalId): ?self
+    {
+        try {
+            $rawId = self::decodeGlobalId($globalId);
+        } catch (InvalidArgumentException) {
+            return null;
+        }
+        return self::query()->find($rawId);
+    }
+
+    /**
      * Check 'kind' column and dereference
      */
     public function resolve(): ?Model
@@ -35,13 +48,11 @@ final class GlobalId extends Model
      */
     public static function resolveId(string $globalId): ?Model
     {
-        try {
-            $rawId = self::decodeGlobalId($globalId);
-        } catch (InvalidArgumentException) {
+        $object = self::fromStr($globalId);
+        if (!($object instanceof self)) {
             return null;
         }
-        $object = self::query()->find($rawId);
-        return $object?->resolve();
+        return $object->resolve();
     }
 
     /**
