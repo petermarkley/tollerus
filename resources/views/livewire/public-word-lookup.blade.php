@@ -6,11 +6,53 @@
         </div>
     @else
         <x-tollerus::public.nav-main currentPage="word_lookup" :langCount="$languages->count()"/>
-        <div class="w-full flex flex-col gap-4 bg-tollerus-surface rounded-lg shadow-lg p-6 text-tollerus-text">
-            <div>Lorem ipsum doolor sit amet. <a href="#" class="text-tollerus-primary hover:text-tollerus-primary-hover font-bold">Click Here</a></div>
-            <div class="flex flex-row gap-4 items-center justify-start">
-                <button class="appearance-none cursor-pointer px-4 py-2 rounded-lg shadow font-bold bg-tollerus-secondary hover:bg-tollerus-secondary-hover text-tollerus-text-inverse">Cancel</button>
-                <button class="appearance-none cursor-pointer px-4 py-2 rounded-lg shadow font-bold bg-tollerus-primary hover:bg-tollerus-primary-hover text-tollerus-text-inverse">Submit</button>
+        <div class="w-full flex flex-col gap-2 bg-tollerus-surface rounded-[32px] shadow-lg p-2 text-tollerus-text">
+            <form
+                wire:submit="search"
+                class="w-full rounded-full flex flex-row gap-1 items-stretch"
+            >
+                <div class="relative flex justify-center items-center">
+                    <label for="search_type" class="sr-only">{{ __('tollerus::ui.search_type') }}</label>
+                    <select
+                        id="search_type"
+                        wire:model="searchType"
+                        title="{{ __('tollerus::ui.search_type') }}"
+                        class="bg-tollerus-surface hover:bg-tollerus-surface-hover cursor-pointer py-2 px-4 h-11 flex justify-center items-center appearance-none rounded-l-[22px] rounded-r-lg pr-6 font-bold border-2 border-tollerus-border"
+                    >
+                        @foreach (\PeterMarkley\Tollerus\Enums\SearchType::cases() as $thisSearchType)
+                            <option value="{{ $thisSearchType->value }}">{{ mb_ucfirst($thisSearchType->localize()) }}</option>
+                        @endforeach
+                    </select>
+                    <x-tollerus::icons.triangle class="absolute pointer-events-none right-2 top-1/2 scale-[80%] rotate-90 -translate-y-1/2" />
+                </div>
+                <div class="flex-grow flex justify-center items-center">
+                    <div class="relative flex flex-col gap-1 items-start flex-grow">
+                        <label for="search_string" class="sr-only">{{ __('tollerus::ui.search_term') }}</label>
+                        <input
+                            type="text"
+                            id="search_string"
+                            wire:model.defer="searchStr"
+                            class="appearance-none w-full border p-2 w-full rounded-lg inset-shadow-sm bg-tollerus-muted border-tollerus-border/50"
+                            placeholder="{{ __('tollerus::ui.search_for_entry') }}"
+                        />
+                    </div>
+                </div>
+                <div class="shrink-0 flex justify-center items-center">
+                    <button
+                        type="secondary"
+                        size="small"
+                        htmlType="submit"
+                        title="{{ __('tollerus::ui.submit_search') }}"
+                        class="relative w-10 h-10 mr-[0.125rem] rounded-l-full rounded-r-full flex justify-center items-center cursor-pointer bg-tollerus-secondary hover:bg-tollerus-secondary-hover text-tollerus-text-inverse"
+                    >
+                        <x-tollerus::icons.magnifying-glass class="w-7 h-7"/>
+                        <span class="sr-only">{{ __('tollerus::ui.submit_search') }}</span>
+                    </button>
+                </div>
+            </form>
+            <div class="flex flex-col sm:flex-row gap-2 items-stretch">
+                <div class="min-w-60 min-h-30 rounded-lg rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">&nbsp;</div>
+                <div class="flex-grow min-h-30 rounded-lg rounded-br-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">&nbsp;</div>
             </div>
         </div>
     @endif
