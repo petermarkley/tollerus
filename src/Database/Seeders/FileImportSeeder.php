@@ -219,8 +219,11 @@ class FileImportSeeder extends Seeder
             $this->currentLang->dict_author = $langXML['author']->__toString();
         }
         if (isset($langXML->intro)) {
-            $this->currentLang->intro = collect($langXML->intro->children())
-                ->map(fn($item) => $item->asXML())
+            $domNode = dom_import_simplexml($langXML->intro);
+            $this->currentLang->intro = collect($domNode->childNodes)
+                ->map(function ($item) use ($domNode) {
+                    return $domNode->ownerDocument->saveXML($item);
+                })
                 ->implode('');
         }
         // Save model
@@ -357,8 +360,11 @@ class FileImportSeeder extends Seeder
             $neoSectModel->name = $neoSectXML['title']->__toString();
         }
         if (isset($neoSectXML->intro)) {
-            $neoSectModel->intro = collect($neoSectXML->intro->children())
-                ->map(fn($item) => $item->asXML())
+            $domNode = dom_import_simplexml($neoSectXML->intro);
+            $neoSectModel->intro = collect($domNode->childNodes)
+                ->map(function ($item) use ($domNode) {
+                    return $domNode->ownerDocument->saveXML($item);
+                })
                 ->implode('');
         }
         $neoSectModel->position = $position;
