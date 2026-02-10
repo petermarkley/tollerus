@@ -47,7 +47,7 @@ final class FontCssService
             ->implode(', ');
         $familyName = $neography->machine_name;
         if ($neography->direction_primary == WritingDirection::RightToLeft) {
-            $writingDirectionProps = 'direction: rtl; unicode-bidi: bidi-override;';
+            $writingDirectionProps = 'direction: rtl; unicode-bidi: bidi-override; text-align: right;';
         } else {
             $writingDirectionProps = '';
         }

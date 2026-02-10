@@ -54,10 +54,50 @@
                                 id="tabcontent-{{ $neography->id }}"
                                 class="w-full flex flex-col gap-4"
                             >
-                                @foreach ($neography->sections as $section)
+                                @foreach ($neography->sections->sortBy('position') as $section)
                                     <div class="w-full flex flex-col">
                                         <h4 class="text-lg font-bold">{{ $section->name }}</h4>
                                         <div class="prose">{!! $section->intro !!}</div>
+                                        <div class="w-full flex flex-col gap-6">
+                                            @foreach ($section->glyphGroups->sortBy('position') as $group)
+                                                <ol class="mx-4 w-full columns-1 sm:columns-2 md:columns-3 lg:columns-4 [column-fill:balance]">
+                                                    @foreach ($group->glyphs->sortBy('position') as $glyph)
+                                                        <li class="py-2 flex flex-row justify-start items-center">
+                                                            <a
+                                                                id="{{ $glyph->global_id }}"
+                                                                class="flex flex-row gap-3 text-tollerus-text"
+                                                            >
+                                                                <span
+                                                                    @class([
+                                                                        "min-w-12 tollerus_{$neography->machine_name}",
+                                                                        'text-4xl' => empty($glyph->pronunciation_transliterated),
+                                                                        'text-6xl' => !empty($glyph->pronunciation_transliterated),
+                                                                    ])
+                                                                >@if($glyph->render_base)&#x25CC;@endif{{ $glyph->glyph }}</span>
+                                                                <div class="flex flex-col items-start justify-center">
+                                                                    @if (!empty($glyph->transliterated))
+                                                                        <div class="flex flex-row gap-1 justify-start items-baseline">
+                                                                            <span class="text-sm min-w-15">{{ $glyph->transliterated }}</span>
+                                                                            <span class="text-sm min-w-15">/{{ $glyph->phonemic }}/</span>
+                                                                        </div>
+                                                                    @endif
+                                                                    @if (!empty($glyph->pronunciation_transliterated))
+                                                                        <div class="flex flex-row gap-1 justify-start items-baseline">
+                                                                            <span class="text-sm min-w-10">{{ $glyph->pronunciation_transliterated }}</span>
+                                                                            <span class="text-sm min-w-10">/{{ $glyph->pronunciation_phonemic }}/</span>
+                                                                            <span class="text-sm ml-2 tollerus_{{ $neography->machine_name }}">{{ $glyph->pronunciation_native }}</span>
+                                                                        </div>
+                                                                    @endif
+                                                                    @if (!empty($glyph->note))
+                                                                        <span class="text-sm">{{ $glyph->note }}</span>
+                                                                    @endif
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ol>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
