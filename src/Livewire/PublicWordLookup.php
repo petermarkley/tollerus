@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Enums\GlobalIdKind;
 use PeterMarkley\Tollerus\Enums\SearchType;
+use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\GlobalId;
 use PeterMarkley\Tollerus\Models\Language;
 
@@ -22,8 +23,9 @@ class PublicWordLookup extends Component
 {
     #[Locked] public Collection $languages;
     public ?string $id;
-    public ?string $type;
+    public SearchType $type;
     public ?string $key;
+    public ?string $frag;
     public array $results = [];
 
     /**
@@ -99,12 +101,40 @@ class PublicWordLookup extends Component
             }
         }
 
-        $this->type = $req->query('type', null);
+        $this->type = $req->query('type', SearchType::Transliterated);
         $this->key = $req->query('key', null);
     }
 
-    public function search()
+    public function search(string $type, ?string $key)
     {
-        //
+        $this->type = SearchType::from($type);
+        $this->key = $key;
+        $formsQuery = Form::query()
+            ->join('languages as l', 'l.id', '=', 'forms.language_id')
+            ->leftJoin('native_spellings as ns', function ($join) {
+                $join->on('ns.form_id', '=', 'forms.id')
+                    ->on('ns.neography_id', '=', 'l.primary_neography');
+            })->select([
+                'forms.*',
+                'ns.spelling as native',
+                'ns.sort_key as sort_key',
+                'l.primary_neography as primary_neography_id',
+            ])->orderBy('forms.transliterated');
+        if ($this->key !== null && strlen($this->key) > 0) {
+            switch ($this->type) {
+                case SearchType::Transliterated:
+                    $formsQuery->where('forms.transliterated', 'like', '%'.$this->key.'%');
+                break;
+                case SearchType::Native:
+                    $formsQuery->where('ns.spelling', 'like', '%'.$this->key.'%');
+                break;
+                case SearchType::Definition:
+                    //
+                break;
+            }
+            $this->results = $formsQuery->get()->all();
+        } else {
+            $this->results = [];
+        }
     }
 }
