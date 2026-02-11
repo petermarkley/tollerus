@@ -22,6 +22,9 @@ class PublicWordLookup extends Component
 {
     #[Locked] public Collection $languages;
     public ?string $id;
+    public ?string $type;
+    public ?string $key;
+    public array $results = [];
 
     /**
      * Livewire hooks
@@ -33,9 +36,8 @@ class PublicWordLookup extends Component
             $pageTitle .= ' My test page';
         }
 
-        return view('tollerus::livewire.public-word-lookup', [
-                // 'id' => $this->id,
-            ])->layout('tollerus::components.layouts.public')
+        return view('tollerus::livewire.public-word-lookup')
+            ->layout('tollerus::components.layouts.public')
             ->title($pageTitle);
     }
     public function mount(Request $req): void
@@ -96,10 +98,13 @@ class PublicWordLookup extends Component
                 break;
             }
         }
+
+        $this->type = $req->query('type', null);
+        $this->key = $req->query('key', null);
     }
 
     public function search()
     {
-        $this->resetPage();
+        //
     }
 }
