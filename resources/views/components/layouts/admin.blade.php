@@ -1,6 +1,7 @@
 @props([
     'title',
     'isPublic' => false,
+    'breadcrumbs' => null,
 ])
 <!DOCTYPE html>
 <html id="tollerus_root" data-layout="admin">
@@ -25,7 +26,7 @@
                     </a>
                 </div>
             </header>
-            @if (isset($breadcrumbs))
+            @if (isset($breadcrumbs) && $breadcrumbs !== null)
                 <x-tollerus::breadcrumbs :breadcrumbs="$breadcrumbs"/>
             @endif
             <main
