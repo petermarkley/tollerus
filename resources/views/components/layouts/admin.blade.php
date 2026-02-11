@@ -1,8 +1,3 @@
-@props([
-    'title',
-    'isPublic' => false,
-    'breadcrumbs' => null,
-])
 <!DOCTYPE html>
 <html id="tollerus_root" data-layout="admin">
     <head>
@@ -26,13 +21,13 @@
                     </a>
                 </div>
             </header>
-            @if (isset($breadcrumbs) && $breadcrumbs !== null)
+            @if (isset($breadcrumbs))
                 <x-tollerus::breadcrumbs :breadcrumbs="$breadcrumbs"/>
             @endif
             <main
                 @class([
                     'w-full mx-auto flex-grow',
-                    'md:max-w-[1200px]' => !filter_var($isPublic, FILTER_VALIDATE_BOOLEAN),
+                    'md:max-w-[1200px]' => !isset($isPublic),
                 ])
             >
                 {{ $slot }}

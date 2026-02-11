@@ -11,7 +11,7 @@
         'title' => $title,
     ])
 @else
-    <x-tollerus::layouts.admin :title="$title" isPublic="true">
+    <x-tollerus::layouts.admin :title="$title" isPublic>
         <div data-route="public" class="w-full">
             {{ $slot }}
         </div>
