@@ -66,22 +66,32 @@ class PublicWordLookup extends Component
             $primaryNeography = $language->primaryNeography;
             $primaryForm      = $entry->primaryForm;
             $lexemes          = $entry->lexemes->sortBy('position')
-                ->map(function ($lexeme) {
+                ->map(function ($lexeme) use ($primaryNeography) {
                     $group = $lexeme->wordClass->group;
                     $tables = $group->inflectionTables
                         ->where('visible', true)
                         ->sortBy('position')
-                        ->map(function ($table) use ($lexeme) {
+                        ->map(function ($table) use ($lexeme, $primaryNeography) {
                             $rows = $table->rows
                                 ->where('visible', true)
                                 ->sortBy('position')
-                                ->map(function ($row) use ($table, $lexeme) {
+                                ->map(function ($row) use ($table, $lexeme, $primaryNeography) {
                                     $filters = $table->filterValues->concat($row->filterValues);
-                                    $form = $lexeme->forms->filter(function ($form) use ($filters) {
-                                        return null; // FIXME
-                                    })->first();
+                                    $form = $lexeme->forms->filter(
+                                        fn ($form) => $filters->reduce(
+                                            fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
+                                            true
+                                        )
+                                    )->first();
+                                    if ($primaryNeography !== null) {
+                                        $formNative = $form->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
+                                    } else {
+                                        $formNaitve = null;
+                                    }
                                     return [
                                         'model' => $row,
+                                        'form' => $form,
+                                        'formNative' => $formNative,
                                     ];
                                 });
                             return [

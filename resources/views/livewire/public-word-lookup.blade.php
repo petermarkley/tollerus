@@ -68,7 +68,7 @@
                         <h3 class="text-2xl flex flex-row gap-12 justify-start items-center">
                             <a id="{{ $entry->global_id }}" class="flex flex-row gap-8 items-center justify-start text-tollerus-text">
                                 <span class="font-bold">{{ $primaryForm->transliterated }}</span>
-                                <span>/{{ $primaryForm->phonemic }}/</span>
+                                <span class="italic">/{{ $primaryForm->phonemic }}/</span>
                                 <span class="tollerus_{{ $primaryNeography->machine_name }}">{{ $primaryNativeSpelling->spelling }}</span>
                             </a>
                             <a
@@ -82,34 +82,44 @@
                         </h3>
                         <div class="flex flex-col gap-6">
                             @foreach ($lexemes as $lexeme)
-                                @php
-                                    /**
-                                     * Let's take a breather right here and prepare some data.
-                                     * It's easier to do this here than in the Livewire class
-                                     * because it's different for each lexeme and there's a
-                                     * lot of data to unpack.
-                                     *
-                                     * To do this in the Livewire class we'd have to
-                                     * recursively deconstruct the model into a parsed data
-                                     * object that would be probably denser and heavier than
-                                     * the model itself, including inflection tables and rows
-                                     * with filter values etc.
-                                     */
-                                    $group = $lexeme->wordClass->group;
-                                    $tables = $group->inflectionTables
-                                        ->where('visible', true)
-                                        ->sortBy('position');
-                                @endphp
                                 <div class="flex flex-col gap-4">
                                     <a
-                                        id="{{ $lexeme->global_id }}"
+                                        id="{{ $lexeme['model']->global_id }}"
                                         class="text-tollerus-text font-mono font-bold opacity-50 tracking-widest"
-                                    >{{ $lexeme->wordClass->name }}</a>
-                                    @if ($tables->count() > 0)
-                                        <div></div>
+                                    >{{ $lexeme['class']->name }}</a>
+                                    @if ($lexeme['tables']->count() > 0)
+                                        <div class="flex flex-row flex-wrap gap-4 items-start">
+                                            @foreach ($lexeme['tables'] as $table)
+                                                <table class="border border-tollerus-border">
+                                                    <thead>
+                                                        <tr>
+                                                            <td></td>
+                                                            <th scope="col" class="p-1">{{ $table['model']->label }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($table['rows'] as $row)
+                                                            <tr>
+                                                                <th scope="row" class="p-1 text-right">{{ $row['model']->label }}</th>
+                                                                <td class="p-1">
+                                                                    <a
+                                                                        id="{{ $row['form']->global_id }}"
+                                                                        class="flex flex-row gap-2 text-tollerus-text"
+                                                                    >
+                                                                        <span>{{ $row['form']->transliterated }}</span>
+                                                                        <span class="italic">/{{ $row['form']->phonemic }}/</span>
+                                                                        <span class="tollerus_{{ $primaryNeography->machine_name }}">{{ $row['formNative']->spelling }}</span>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            @endforeach
+                                        </div>
                                     @endif
                                     <ol class="pl-10 list-decimal flex flex-col gap-2">
-                                        @foreach ($lexeme->senses->sortBy('num') as $sense)
+                                        @foreach ($lexeme['model']->senses->sortBy('num') as $sense)
                                             <li class="space-y-2">
                                                 {!! $sense->body !!}
                                                 @if ($sense->subsenses->count() > 0)
