@@ -572,6 +572,7 @@ return [
     'writing_systems' => 'Writing systems',
     'browse_entries' => 'Browse entries',
     'all_entries_for_language' => 'All entries for :lang',
+    'canonical_url' => 'Canonical URL',
 
     /**
      * TRANSLATOR NOTE:

@@ -51,9 +51,36 @@
                 </div>
             </form>
             <div class="flex flex-col xl:flex-row gap-2 items-stretch">
-                <div class="min-w-60 min-h-30 rounded-lg xl:rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">&nbsp;</div>
+                <div class="min-w-60 min-h-30 rounded-lg xl:rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
+                    @foreach ($results as $result)
+                        <pre class="text-xs">{!! json_encode($result, JSON_PRETTY_PRINT) !!}</pre>
+                    @endforeach
+                </div>
                 <div class="flex-grow min-h-30 p-8 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
-                    <pre>{{ $id }}</pre>
+                    @if ($entry !== null)
+                        <div>
+                            <span>{{ __('tollerus::ui.language') }}:</span>
+                            <a
+                                href="{{ route('tollerus.public.languages.show', ['language' => $language]) }}"
+                                class="text-tollerus-primary hover:text-tollerus-primary-hover"
+                            >{{ $language->name }}</a>
+                        </div>
+                        <h3 class="my-6 text-lg font-bold flex flex-row gap-12 justify-start items-center">
+                            <a id="{{ $entry->global_id }}" class="flex flex-row gap-8 items-center justify-start text-tollerus-text">
+                                <span>{{ $primaryForm->transliterated }}</span>
+                                <span>/{{ $primaryForm->phonemic }}/</span>
+                                <span class="tollerus_{{ $primaryNeography->machine_name }}">{{ $primaryNativeSpelling->spelling }}</span>
+                            </a>
+                            <a
+                                href="{{ route('tollerus.public.index', ['id' => $entry->global_id]) }}"
+                                class="relative text-tollerus-secondary hover:text-tollerus-secondary-hover"
+                                title="{{ __('tollerus::ui.canonical_url') }}"
+                            >
+                                <x-tollerus::icons.link />
+                                <span class="sr-only">{{ __('tollerus::ui.canonical_url') }}</span>
+                            </a>
+                        </h3>
+                    @endif
                 </div>
             </div>
         </div>

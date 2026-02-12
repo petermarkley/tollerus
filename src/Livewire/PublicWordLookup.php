@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Enums\GlobalIdKind;
 use PeterMarkley\Tollerus\Enums\SearchType;
+use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\GlobalId;
 use PeterMarkley\Tollerus\Models\Language;
@@ -38,8 +39,46 @@ class PublicWordLookup extends Component
             $pageTitle .= ' My test page';
         }
 
-        return view('tollerus::livewire.public-word-lookup')
-            ->layout('tollerus::components.layouts.public')
+        // Initialize pessimistically
+        $entry                 = null;
+        $language              = null;
+        $primaryNeography      = null;
+        $primaryForm           = null;
+        $primaryNativeSpelling = null;
+        $lexemes               = null;
+        // Conditionally populate
+        if ($this->id !== null) {
+            $entry = GlobalId::resolveId($this->id);
+            if (!($entry instanceof Entry)) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['id' => [__('tollerus::error.invalid_entry')]]);
+            }
+            $entry->loadMissing([
+                'language.primaryNeography',
+                'primaryForm.nativeSpellings',
+                'lexemes.forms.nativeSpellings',
+                'lexemes.forms.inflectionValues',
+                'lexemes.wordClass.group.features.featureValues',
+                'lexemes.wordClass.group.inflectionTables.filterValues',
+                'lexemes.wordClass.group.inflectionTables.rows.filterValues',
+                'lexemes.senses.subsenses',
+            ]);
+            $language         = $entry->language;
+            $primaryNeography = $language->primaryNeography;
+            $primaryForm      = $entry->primaryForm;
+            $lexemes          = $entry->lexemes;
+            if ($primaryNeography !== null && $primaryForm !== null) {
+                $primaryNativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
+            }
+        }
+
+        return view('tollerus::livewire.public-word-lookup', [
+                'entry'                 => $entry,
+                'language'              => $language,
+                'primaryNeography'      => $primaryNeography,
+                'primaryForm'           => $primaryForm,
+                'primaryNativeSpelling' => $primaryNativeSpelling,
+                'lexemes'               => $lexemes,
+            ])->layout('tollerus::components.layouts.public')
             ->title($pageTitle);
     }
     public function mount(Request $req): void
