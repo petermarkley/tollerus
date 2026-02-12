@@ -56,7 +56,7 @@
                         <pre class="text-xs">{!! json_encode($result, JSON_PRETTY_PRINT) !!}</pre>
                     @endforeach
                 </div>
-                <div class="flex-grow min-h-30 p-8 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
+                <div class="flex-grow min-h-30 p-8 flex flex-col gap-6 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
                     @if ($entry !== null)
                         <div>
                             <span>{{ __('tollerus::ui.language') }}:</span>
@@ -65,9 +65,9 @@
                                 class="text-tollerus-primary hover:text-tollerus-primary-hover"
                             >{{ $language->name }}</a>
                         </div>
-                        <h3 class="my-6 text-lg font-bold flex flex-row gap-12 justify-start items-center">
+                        <h3 class="text-2xl flex flex-row gap-12 justify-start items-center">
                             <a id="{{ $entry->global_id }}" class="flex flex-row gap-8 items-center justify-start text-tollerus-text">
-                                <span>{{ $primaryForm->transliterated }}</span>
+                                <span class="font-bold">{{ $primaryForm->transliterated }}</span>
                                 <span>/{{ $primaryForm->phonemic }}/</span>
                                 <span class="tollerus_{{ $primaryNeography->machine_name }}">{{ $primaryNativeSpelling->spelling }}</span>
                             </a>
@@ -80,6 +80,40 @@
                                 <span class="sr-only">{{ __('tollerus::ui.canonical_url') }}</span>
                             </a>
                         </h3>
+                        <div class="flex flex-col gap-6">
+                            @foreach ($lexemes as $lexeme)
+                                @php
+                                    $group = $lexeme->wordClass->group;
+                                @endphp
+                                <div class="flex flex-col gap-4">
+                                    <a
+                                        id="{{ $lexeme->global_id }}"
+                                        class="text-tollerus-text font-mono font-bold opacity-50 tracking-widest"
+                                    >{{ $lexeme->wordClass->name }}</a>
+                                    <div></div>
+                                    <ol class="pl-10 list-decimal flex flex-col gap-2">
+                                        @foreach ($lexeme->senses->sortBy('num') as $sense)
+                                            <li class="space-y-2">
+                                                {!! $sense->body !!}
+                                                @if ($sense->subsenses->count() > 0)
+                                                    <ul class="pl-6 list-disc flex flex-col gap-2">
+                                                        @foreach ($sense->subsenses->sortBy('num') as $subsense)
+                                                            <li>{!! $subsense->body !!}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ol>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div>
+                            <p>
+                                <span>{{ __('tollerus::ui.origin') }}:</span>
+                                {!! $entry->etym !!}
+                            </p>
+                        </div>
                     @endif
                 </div>
             </div>

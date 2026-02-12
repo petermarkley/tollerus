@@ -573,6 +573,7 @@ return [
     'browse_entries' => 'Browse entries',
     'all_entries_for_language' => 'All entries for :lang',
     'canonical_url' => 'Canonical URL',
+    'origin' => 'Origin', // That is, a word origin / etymology.
 
     /**
      * TRANSLATOR NOTE:

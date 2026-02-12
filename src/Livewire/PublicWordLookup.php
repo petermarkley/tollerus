@@ -65,7 +65,7 @@ class PublicWordLookup extends Component
             $language         = $entry->language;
             $primaryNeography = $language->primaryNeography;
             $primaryForm      = $entry->primaryForm;
-            $lexemes          = $entry->lexemes;
+            $lexemes          = $entry->lexemes->sortBy('position');
             if ($primaryNeography !== null && $primaryForm !== null) {
                 $primaryNativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
             }
