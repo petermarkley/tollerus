@@ -83,14 +83,31 @@
                         <div class="flex flex-col gap-6">
                             @foreach ($lexemes as $lexeme)
                                 @php
+                                    /**
+                                     * Let's take a breather right here and prepare some data.
+                                     * It's easier to do this here than in the Livewire class
+                                     * because it's different for each lexeme and there's a
+                                     * lot of data to unpack.
+                                     *
+                                     * To do this in the Livewire class we'd have to
+                                     * recursively deconstruct the model into a parsed data
+                                     * object that would be probably denser and heavier than
+                                     * the model itself, including inflection tables and rows
+                                     * with filter values etc.
+                                     */
                                     $group = $lexeme->wordClass->group;
+                                    $tables = $group->inflectionTables
+                                        ->where('visible', true)
+                                        ->sortBy('position');
                                 @endphp
                                 <div class="flex flex-col gap-4">
                                     <a
                                         id="{{ $lexeme->global_id }}"
                                         class="text-tollerus-text font-mono font-bold opacity-50 tracking-widest"
                                     >{{ $lexeme->wordClass->name }}</a>
-                                    <div></div>
+                                    @if ($tables->count() > 0)
+                                        <div></div>
+                                    @endif
                                     <ol class="pl-10 list-decimal flex flex-col gap-2">
                                         @foreach ($lexeme->senses->sortBy('num') as $sense)
                                             <li class="space-y-2">

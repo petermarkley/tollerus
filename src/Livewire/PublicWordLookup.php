@@ -65,7 +65,37 @@ class PublicWordLookup extends Component
             $language         = $entry->language;
             $primaryNeography = $language->primaryNeography;
             $primaryForm      = $entry->primaryForm;
-            $lexemes          = $entry->lexemes->sortBy('position');
+            $lexemes          = $entry->lexemes->sortBy('position')
+                ->map(function ($lexeme) {
+                    $group = $lexeme->wordClass->group;
+                    $tables = $group->inflectionTables
+                        ->where('visible', true)
+                        ->sortBy('position')
+                        ->map(function ($table) use ($lexeme) {
+                            $rows = $table->rows
+                                ->where('visible', true)
+                                ->sortBy('position')
+                                ->map(function ($row) use ($table, $lexeme) {
+                                    $filters = $table->filterValues->concat($row->filterValues);
+                                    $form = $lexeme->forms->filter(function ($form) use ($filters) {
+                                        return null; // FIXME
+                                    })->first();
+                                    return [
+                                        'model' => $row,
+                                    ];
+                                });
+                            return [
+                                'model' => $table,
+                                'rows' => $rows,
+                            ];
+                        });
+                    return [
+                        'model' => $lexeme,
+                        'class' => $lexeme->wordClass,
+                        'group' => $group,
+                        'tables' => $tables,
+                    ];
+                });
             if ($primaryNeography !== null && $primaryForm !== null) {
                 $primaryNativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
             }
