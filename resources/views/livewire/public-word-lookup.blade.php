@@ -104,7 +104,11 @@
                                                                 <td class="p-1">
                                                                     <a
                                                                         id="{{ $row['form']->global_id }}"
-                                                                        class="flex flex-row gap-2 text-tollerus-text"
+                                                                        @class([
+                                                                            'flex flex-row gap-2',
+                                                                            'text-tollerus-text' => !($row['form']->irregular),
+                                                                            'text-red-500' => $row['form']->irregular,
+                                                                        ])
                                                                     >
                                                                         <span>{{ $row['form']->transliterated }}</span>
                                                                         <span class="italic">/{{ $row['form']->phonemic }}/</span>
