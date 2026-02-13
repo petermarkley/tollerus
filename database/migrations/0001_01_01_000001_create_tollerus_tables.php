@@ -501,45 +501,45 @@ return new class extends Migration
             $table->foreign('word_class_group_id')
                 ->references('id')->on('word_class_groups')
                 ->cascadeOnDelete();
-            $table->string('label');
             $table->integer('position');
             $table->boolean('visible')->default(true);
-            $table->boolean('show_label')->default(true);
             /**
-             * A 'stack' value of true means that on wide displays,
-             * this table is permitted to have other tables beside it,
-             * sharing the vertical space.
-             */
-            $table->boolean('stack');
-            /**
-             * If 'align_on_stack' is true, the table's label will
-             * align left when the table is stacked horizontally.
-             * (It's centered otherwise.)
-             */
-            $table->boolean('align_on_stack');
-            /**
-             * Here, true means the table's label is hidden when the
-             * table is NOT stacked horizontally (to avoid redundancy
+             * Here, true means the column labels are hidden when they
+             * are NOT stacked horizontally (to avoid redundancy
              * if it's the same as the label for the table directly
              * above it).
              */
-            $table->boolean('table_fold');
+            $table->boolean('cols_fold');
             /**
              * Here, true means the row labels are hidden when the
-             * table IS stacked horizontally (to avoid redundancy if
-             * it's the same as the label for the row directly across
-             * from it).
+             * columns ARE stacked horizontally (to avoid redundancy
+             * if it's the same as the label for the row directly
+             * across from it).
              */
             $table->boolean('rows_fold');
             // ensure only one of each position per word class group
             $table->unique(['word_class_group_id', 'position'], 'group_position_unique');
         });
 
-        $connection->create('inflect_table_filters', function (Blueprint $table) {
+        $connection->create('inflect_table_columns', function (Blueprint $table) {
             $table->id();
             $table->foreignId('inflect_table_id');
             $table->foreign('inflect_table_id')
                 ->references('id')->on('inflect_tables')
+                ->cascadeOnDelete();
+            $table->string('label');
+            $table->integer('position');
+            $table->boolean('visible')->default(true);
+            $table->boolean('show_label')->default(true);
+            // ensure only one of each position per inflection table
+            $table->unique(['inflect_table_id', 'position'], 'inflect_table_position_unique');
+        });
+
+        $connection->create('inflect_table_column_filters', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('inflect_table_column_id');
+            $table->foreign('inflect_table_column_id')
+                ->references('id')->on('inflect_table_columns')
                 ->cascadeOnDelete();
             $table->foreignId('feature_id');
             $table->foreign('feature_id')
@@ -550,16 +550,16 @@ return new class extends Migration
                 ->references('id')->on('feature_values')
                 ->cascadeOnDelete();
             // ensure only one of each feature per inflection table
-            $table->unique(['inflect_table_id', 'feature_id'], 'inflect_table_feature_unique');
+            $table->unique(['inflect_table_column_id', 'feature_id'], 'column_feature_unique');
             // ensure only one of each value per feature
-            $table->unique(['inflect_table_id', 'feature_id', 'value_id'], 'inflect_table_feature_value_unique');
+            $table->unique(['inflect_table_column_id', 'feature_id', 'value_id'], 'column_feature_value_unique');
         });
 
         $connection->create('inflect_table_rows', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('inflect_table_id');
-            $table->foreign('inflect_table_id')
-                ->references('id')->on('inflect_tables')
+            $table->foreignId('inflect_table_column_id');
+            $table->foreign('inflect_table_column_id')
+                ->references('id')->on('inflect_table_columns')
                 ->cascadeOnDelete();
             $table->string('label');
             $table->string('label_brief')->nullable();
@@ -578,11 +578,11 @@ return new class extends Migration
             $table->string('morph_template')->nullable()
                 ->default('{B}{P}');
             // ensure only one of each label per inflection table
-            $table->unique(['inflect_table_id', 'label'], 'inflect_table_label_unique');
-            $table->unique(['inflect_table_id', 'label_brief'], 'inflect_table_label_brief_unique');
-            $table->unique(['inflect_table_id', 'label_long'], 'inflect_table_label_long_unique');
+            $table->unique(['inflect_table_column_id', 'label'], 'column_label_unique');
+            $table->unique(['inflect_table_column_id', 'label_brief'], 'column_label_brief_unique');
+            $table->unique(['inflect_table_column_id', 'label_long'], 'column_label_long_unique');
             // ensure only one of each position per inflection table
-            $table->unique(['inflect_table_id', 'position'], 'inflect_table_position_unique');
+            $table->unique(['inflect_table_column_id', 'position'], 'column_position_unique');
         });
 
         $connection->create('inflect_table_row_filters', function (Blueprint $table) {
