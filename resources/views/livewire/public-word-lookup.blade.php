@@ -109,7 +109,7 @@
                                                                         @class([
                                                                             'flex flex-row gap-2',
                                                                             'text-tollerus-text' => !($row['form']->irregular),
-                                                                            'text-red-500' => $row['form']->irregular,
+                                                                            'text-tollerus-text-irregular' => $row['form']->irregular,
                                                                         ])
                                                                     >
                                                                         <span>{{ $row['form']->transliterated }}</span>

@@ -31,6 +31,7 @@
                 --tollerus-surface-hover: 246 250 248;    /* emerald-50, saturate-20 */
                 --tollerus-text: 55 63 61;                /* emerald-900, saturate-10 */
                 --tollerus-text-inverse: 255 255 255;     /* white */
+                --tollerus-text-irregular: 159 7 18;      /* red-800 */
                 --tollerus-muted: 246 250 248;            /* emerald-50, saturate-20 */
                 --tollerus-border: 146 167 161;           /* emerald-400, saturate-10 */
                 --tollerus-primary: 203 82 31;            /* orange-600, saturate-70 */
@@ -39,6 +40,7 @@
                 --tollerus-secondary-hover: 129 148 142;  /* emerald-500, saturate-10 */
                 --tollerus-ring: 20 71 230;               /* blue-700 */
                 --tollerus-font-main: "Baskerville";
+                --tollerus-font-mono: "Courier New";
             }
             @media (prefers-color-scheme: dark) {
                 :root {
@@ -48,6 +50,7 @@
                     --tollerus-surface-hover: 66 76 73;      /* emerald-700, saturate-10 */
                     --tollerus-text: 233 242 237;            /* emerald-100, saturate-20 */
                     --tollerus-text-inverse: 15 17 17;       /* emerald-950, saturate-10, 50% opaque over black */
+                    --tollerus-text-irregular: 255 100 103;  /* red-400 */
                     --tollerus-muted: 48 54 53;              /* emerald-950, saturate-10, 30% opaque over emerald-900 saturate-10 */
                     --tollerus-border: 129 148 142;          /* emerald-500, saturate-10 */
                     --tollerus-primary: 224 142 49;          /* orange-400, saturate-70 */

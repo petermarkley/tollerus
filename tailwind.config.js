@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       fontFamily: {
         main: ['var(--tollerus-font-main)', 'ui-sans-serif', 'system-ui'],
+        mono: ['var(--tollerus-font-mono)', 'ui-monospace', 'monospace'],
       },
       colors: {
         tollerus: {
@@ -16,6 +17,7 @@ module.exports = {
           'surface-hover': 'rgb(var(--tollerus-surface-hover) / <alpha-value>)',
           text: 'rgb(var(--tollerus-text) / <alpha-value>)',
           'text-inverse': 'rgb(var(--tollerus-text-inverse) / <alpha-value>)',
+          'text-irregular': 'rgb(var(--tollerus-text-irregular) / <alpha-value>)',
           muted: 'rgb(var(--tollerus-muted) / <alpha-value>)',
           border: 'rgb(var(--tollerus-border) / <alpha-value>)',
           primary: 'rgb(var(--tollerus-primary) / <alpha-value>)',
