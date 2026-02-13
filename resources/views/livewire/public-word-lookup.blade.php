@@ -92,7 +92,7 @@
                                     @if ($lexeme['tables']->count() > 0)
                                         <div class="flex flex-col gap-4 items-center">
                                             @foreach ($lexeme['tables'] as $tableStack)
-                                                <div class="flex flex-row flex-wrap gap-x-4 gap-y-6 items-start">
+                                                <div class="flex flex-row flex-wrap gap-x-4 gap-y-6 items-start justify-center">
                                                     @foreach ($tableStack as $table)
                                                         <table>
                                                             @if ($table['model']->show_label)
