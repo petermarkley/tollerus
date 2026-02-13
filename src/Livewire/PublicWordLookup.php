@@ -180,26 +180,32 @@ class PublicWordLookup extends Component
             }
         }
 
-        $this->type = $req->query('type', SearchType::Transliterated);
+        $this->type = SearchType::tryFrom($req->query('type')) ?? SearchType::Transliterated;
         $this->key = $req->query('key', null);
+        $this->searchExecute();
     }
 
-    public function search(string $type, ?string $key)
+    public function search(string $type, ?string $key): void
     {
         $this->type = SearchType::from($type);
         $this->key = $key;
-        $formsQuery = Form::query()
-            ->join('languages as l', 'l.id', '=', 'forms.language_id')
-            ->leftJoin('native_spellings as ns', function ($join) {
-                $join->on('ns.form_id', '=', 'forms.id')
-                    ->on('ns.neography_id', '=', 'l.primary_neography');
-            })->select([
-                'forms.*',
-                'ns.spelling as native',
-                'ns.sort_key as sort_key',
-                'l.primary_neography as primary_neography_id',
-            ])->orderBy('forms.transliterated');
+        $this->searchExecute();
+    }
+
+    private function searchExecute(): void
+    {
         if ($this->key !== null && strlen($this->key) > 0) {
+            $formsQuery = Form::query()
+                ->join('languages as l', 'l.id', '=', 'forms.language_id')
+                ->leftJoin('native_spellings as ns', function ($join) {
+                    $join->on('ns.form_id', '=', 'forms.id')
+                        ->on('ns.neography_id', '=', 'l.primary_neography');
+                })->select([
+                    'forms.*',
+                    'ns.spelling as native',
+                    'ns.sort_key as sort_key',
+                    'l.primary_neography as primary_neography_id',
+                ])->orderBy('forms.transliterated');
             switch ($this->type) {
                 case SearchType::Transliterated:
                     $formsQuery->where('forms.transliterated', 'like', '%'.$this->key.'%');

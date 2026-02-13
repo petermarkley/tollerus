@@ -51,10 +51,12 @@
                 </div>
             </form>
             <div class="flex flex-col xl:flex-row gap-2 items-stretch">
-                <div class="min-w-60 min-h-30 rounded-lg xl:rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
-                    @foreach ($results as $result)
-                        <pre class="text-xs">{!! json_encode($result, JSON_PRETTY_PRINT) !!}</pre>
-                    @endforeach
+                <div class="relative xl:w-80 shrink-0">
+                    <div class="w-full h-60 xl:h-auto min-h-60 xl:absolute xl:inset-y-0 overflow-y-scroll rounded-lg xl:rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
+                        @foreach ($results as $result)
+                            <pre class="text-xs">{!! json_encode($result, JSON_PRETTY_PRINT) !!}</pre>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="flex-grow min-h-30 p-8 flex flex-col gap-6 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
                     @if ($entry !== null)
