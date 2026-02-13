@@ -19,6 +19,7 @@ use PeterMarkley\Tollerus\Domain\Neography\Actions\SvgToKeyboard;
 use PeterMarkley\Tollerus\Domain\Neography\Services\FontAssetService;
 use PeterMarkley\Tollerus\Enums\FontFormat;
 use PeterMarkley\Tollerus\Enums\WritingDirection;
+use PeterMarkley\Tollerus\Maintenance\GlobalIdGarbageCollector;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Models\NeographyInputKey;
@@ -280,6 +281,7 @@ class NeographyEditor extends Component
     {
         NeographySection::findOrFail((int)$sectId)->delete();
         $this->refreshGlyphsForm();
+        app(GlobalIdGarbageCollector::class)->collect();
     }
     public function swapSections(string $sectId, string $neighborId): void
     {

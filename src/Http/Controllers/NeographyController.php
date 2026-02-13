@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Maintenance\GlobalIdGarbageCollector;
 use PeterMarkley\Tollerus\Models\Neography;
 
 class NeographyController extends Controller
@@ -73,6 +74,7 @@ class NeographyController extends Controller
     public function destroy(Neography $neography)
     {
         $neography->delete();
+        app(GlobalIdGarbageCollector::class)->collect();
         return response()->noContent();
     }
 }

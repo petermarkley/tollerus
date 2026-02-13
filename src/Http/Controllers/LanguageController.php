@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Maintenance\GlobalIdGarbageCollector;
 use PeterMarkley\Tollerus\Models\Language;
 
 class LanguageController extends Controller
@@ -120,6 +121,7 @@ class LanguageController extends Controller
     public function destroy(Language $language)
     {
         $language->delete();
+        app(GlobalIdGarbageCollector::class)->collect();
         return response()->noContent();
     }
 }

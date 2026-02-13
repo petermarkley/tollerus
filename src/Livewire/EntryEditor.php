@@ -14,6 +14,7 @@ use PeterMarkley\Tollerus\Domain\Morphology\Services\AutoInflector;
 use PeterMarkley\Tollerus\Domain\Neography\Services\NativeKeyboard;
 use PeterMarkley\Tollerus\Domain\Neography\Services\PhonemicKeyboard;
 use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
+use PeterMarkley\Tollerus\Maintenance\GlobalIdGarbageCollector;
 use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
@@ -478,6 +479,7 @@ class EntryEditor extends Component
     {
         Lexeme::findOrFail((int)$lexemeId)->delete();
         $this->refreshForm();
+        app(GlobalIdGarbageCollector::class)->collect();
     }
     public function swapLexemes(string $lexemeId, string $neighborId): void
     {
@@ -577,6 +579,7 @@ class EntryEditor extends Component
     {
         Form::findOrFail((int)$formId)->delete();
         $this->refreshForm();
+        app(GlobalIdGarbageCollector::class)->collect();
     }
     public function addFormValue(string $lexemeId, string $formId, string $valueId): void
     {

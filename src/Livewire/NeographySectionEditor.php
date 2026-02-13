@@ -15,6 +15,7 @@ use PeterMarkley\Tollerus\Domain\Neography\Services\NativeKeyboard;
 use PeterMarkley\Tollerus\Domain\Neography\Services\PhonemicKeyboard;
 use PeterMarkley\Tollerus\Enums\NeographyGlyphType;
 use PeterMarkley\Tollerus\Enums\NeographySectionType;
+use PeterMarkley\Tollerus\Maintenance\GlobalIdGarbageCollector;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\NeographyGlyph;
 use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
@@ -275,6 +276,7 @@ class NeographySectionEditor extends Component
     {
         NeographyGlyphGroup::findOrFail((int)$groupId)->delete();
         $this->refreshForm();
+        app(GlobalIdGarbageCollector::class)->collect();
     }
     public function swapGroups(string $groupId, string $neighborId): void
     {
@@ -396,6 +398,7 @@ class NeographySectionEditor extends Component
     {
         NeographyGlyph::findOrFail((int)$glyphId)->delete();
         $this->refreshForm();
+        app(GlobalIdGarbageCollector::class)->collect();
     }
     public function swapGlyphs(string $groupId, string $glyphId, string $neighborId): void
     {

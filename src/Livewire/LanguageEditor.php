@@ -14,6 +14,7 @@ use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
 use PeterMarkley\Tollerus\Enums\SearchType;
+use PeterMarkley\Tollerus\Maintenance\GlobalIdGarbageCollector;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Language;
@@ -379,6 +380,7 @@ class LanguageEditor extends Component
     {
         WordClassGroup::findOrFail((int)$groupId)->delete();
         $this->refreshGrammarForm();
+        app(GlobalIdGarbageCollector::class)->collect();
     }
     public function createWordClass(string|WordClassGroup $group, bool $setAsPrimary = false): void
     {
@@ -451,6 +453,7 @@ class LanguageEditor extends Component
     {
         WordClass::findOrFail((int)$wordClassId)->delete();
         $this->refreshGrammarForm();
+        app(GlobalIdGarbageCollector::class)->collect();
     }
     public function createFeature(string $groupId): void
     {
