@@ -90,37 +90,44 @@
                                         class="text-tollerus-text font-mono font-bold opacity-50 tracking-widest"
                                     >{{ $lexeme['class']->name }}</a>
                                     @if ($lexeme['tables']->count() > 0)
-                                        <div class="flex flex-row flex-wrap gap-4 items-start">
-                                            @foreach ($lexeme['tables'] as $table)
-                                                <table class="border border-tollerus-border">
-                                                    <thead>
-                                                        <tr>
-                                                            <td></td>
-                                                            <th scope="col" class="p-1">{{ $table['model']->label }}</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($table['rows'] as $row)
-                                                            <tr>
-                                                                <th scope="row" class="p-1 text-right">{{ $row['model']->label }}</th>
-                                                                <td class="p-1">
-                                                                    <a
-                                                                        id="{{ $row['form']->global_id }}"
-                                                                        @class([
-                                                                            'flex flex-row gap-2',
-                                                                            'text-tollerus-text' => !($row['form']->irregular),
-                                                                            'text-tollerus-text-irregular' => $row['form']->irregular,
-                                                                        ])
-                                                                    >
-                                                                        <span>{{ $row['form']->transliterated }}</span>
-                                                                        <span class="italic">/{{ $row['form']->phonemic }}/</span>
-                                                                        <span class="tollerus_{{ $primaryNeography->machine_name }}">{{ $row['formNative']->spelling }}</span>
-                                                                    </a>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
+                                        <div class="flex flex-col gap-4 items-center">
+                                            @foreach ($lexeme['tables'] as $tableStack)
+                                                <div class="flex flex-row flex-wrap gap-y-4 items-start">
+                                                    @foreach ($tableStack as $table)
+                                                        <table class="border border-tollerus-border">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td @class(['xl:hidden'=>$table['model']->rows_fold])></td>
+                                                                    <th scope="col" class="px-1">{{ $table['model']->label }}</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($table['rows'] as $row)
+                                                                    <tr>
+                                                                        <th
+                                                                            scope="row"
+                                                                            @class(['px-1 text-right', 'xl:hidden'=>$table['model']->rows_fold])
+                                                                        >{{ $row['model']->label }}</th>
+                                                                        <td class="px-1">
+                                                                            <a
+                                                                                id="{{ $row['form']->global_id }}"
+                                                                                @class([
+                                                                                    'grid grid-cols-3 gap-2',
+                                                                                    'text-tollerus-text' => !($row['form']->irregular),
+                                                                                    'text-tollerus-text-irregular' => $row['form']->irregular,
+                                                                                ])
+                                                                            >
+                                                                                <span>{{ $row['form']->transliterated }}</span>
+                                                                                <span class="italic">/{{ $row['form']->phonemic }}/</span>
+                                                                                <span class="tollerus_{{ $primaryNeography->machine_name }}">{{ $row['formNative']->spelling }}</span>
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    @endforeach
+                                                </div>
                                             @endforeach
                                         </div>
                                     @endif

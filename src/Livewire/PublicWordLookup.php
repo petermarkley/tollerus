@@ -98,6 +98,8 @@ class PublicWordLookup extends Component
                                 'model' => $table,
                                 'rows' => $rows,
                             ];
+                        })->chunkWhile(function ($table, $key, $chunk) {
+                            return $table['model']->stack && $chunk->last()['model']->stack;
                         });
                     return [
                         'model' => $lexeme,
