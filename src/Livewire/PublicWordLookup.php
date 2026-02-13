@@ -50,7 +50,7 @@ class PublicWordLookup extends Component
         if ($this->id !== null) {
             $entry = GlobalId::resolveId($this->id);
             if (!($entry instanceof Entry)) {
-                throw \Illuminate\Validation\ValidationException::withMessages(['id' => [__('tollerus::error.invalid_entry')]]);
+                abort(404);
             }
             $entry->loadMissing([
                 'language.primaryNeography',
