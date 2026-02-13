@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 
 use PeterMarkley\Tollerus\Models\Lexeme;
 use PeterMarkley\Tollerus\Models\Sense;
-use PeterMarkley\Tollerus\Models\Subsense;
 
 class LexemeFactory extends Factory
 {
@@ -34,10 +33,7 @@ class LexemeFactory extends Factory
                 ->for($lexeme)
                 ->count($senseNum)
                 ->state(new Sequence(fn($seq)=>['num'=>$seq->index+1]))
-                ->has(Subsense::factory()
-                    ->count(( ((bool)mt_rand(0,1)) ? mt_rand(1,4) : 0 ))
-                    ->state(new Sequence(fn($seq)=>['num'=>$seq->index+1]))
-                )->create();
+                ->create();
         });
     }
 }
