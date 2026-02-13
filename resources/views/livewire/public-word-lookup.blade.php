@@ -92,9 +92,9 @@
                                     @if ($lexeme['tables']->count() > 0)
                                         <div class="flex flex-col gap-4 items-center">
                                             @foreach ($lexeme['tables'] as $tableStack)
-                                                <div class="flex flex-row flex-wrap gap-x-4 gap-y-4 items-start">
+                                                <div class="flex flex-row flex-wrap gap-x-4 gap-y-6 items-start">
                                                     @foreach ($tableStack as $table)
-                                                        <table class="border border-tollerus-border">
+                                                        <table>
                                                             @if ($table['model']->show_label)
                                                                 <thead @class(['hidden xl:table-header-group'=>$table['model']->table_fold])>
                                                                     <tr @class(['xl:hidden'=>$table['model']->align_on_stack])>
@@ -114,7 +114,7 @@
                                                                         <th
                                                                             scope="row"
                                                                             @class([
-                                                                                'px-1 text-right font-normal',
+                                                                                'px-4 text-right font-normal',
                                                                                 'xl:hidden'=>$table['model']->rows_fold
                                                                             ])
                                                                         >
