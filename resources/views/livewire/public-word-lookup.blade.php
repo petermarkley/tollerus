@@ -92,22 +92,36 @@
                                     @if ($lexeme['tables']->count() > 0)
                                         <div class="flex flex-col gap-4 items-center">
                                             @foreach ($lexeme['tables'] as $tableStack)
-                                                <div class="flex flex-row flex-wrap gap-y-4 items-start">
+                                                <div class="flex flex-row flex-wrap gap-x-4 gap-y-4 items-start">
                                                     @foreach ($tableStack as $table)
                                                         <table class="border border-tollerus-border">
-                                                            <thead>
-                                                                <tr>
-                                                                    <td @class(['xl:hidden'=>$table['model']->rows_fold])></td>
-                                                                    <th scope="col" class="px-1">{{ $table['model']->label }}</th>
-                                                                </tr>
-                                                            </thead>
+                                                            @if ($table['model']->show_label)
+                                                                <thead @class(['hidden xl:table-header-group'=>$table['model']->table_fold])>
+                                                                    <tr @class(['xl:hidden'=>$table['model']->align_on_stack])>
+                                                                        <th scope="col" colspan="2" class="px-1 font-normal text-center">{{ $table['model']->label }}</th>
+                                                                    </tr>
+                                                                    @if ($table['model']->align_on_stack)
+                                                                        <tr class="hidden xl:table-row">
+                                                                            <td @class(['xl:hidden'=>$table['model']->rows_fold])></td>
+                                                                            <th scope="col" class="px-1 font-normal text-left">{{ $table['model']->label }}</th>
+                                                                        </tr>
+                                                                    @endif
+                                                                </thead>
+                                                            @endif
                                                             <tbody>
                                                                 @foreach ($table['rows'] as $row)
                                                                     <tr>
                                                                         <th
                                                                             scope="row"
-                                                                            @class(['px-1 text-right', 'xl:hidden'=>$table['model']->rows_fold])
-                                                                        >{{ $row['model']->label }}</th>
+                                                                            @class([
+                                                                                'px-1 text-right font-normal',
+                                                                                'xl:hidden'=>$table['model']->rows_fold
+                                                                            ])
+                                                                        >
+                                                                            @if ($row['model']->show_label)
+                                                                                <span>{{ $row['model']->label }}</span>
+                                                                            @endif
+                                                                        </th>
                                                                         <td class="px-1">
                                                                             <a
                                                                                 id="{{ $row['form']->global_id }}"

@@ -139,7 +139,7 @@ final class LoadGrammarPreset
                         'label'          => __($tableKey),
                         'position'       => $tablePos,
                         'visible'        => $tableJson->visible ?? true,
-                        'show_label'     => $tableJson->show_label ?? false,
+                        'show_label'     => $tableJson->show_label ?? true,
                         'stack'          => $tableJson->stack,
                         'align_on_stack' => $tableJson->align_on_stack,
                         'table_fold'     => $tableJson->table_fold,

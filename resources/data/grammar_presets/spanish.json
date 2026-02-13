@@ -142,7 +142,7 @@
                 {
                     "i18n_key": "verbs.singular_first_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": false,
                     "filters": [
@@ -188,7 +188,7 @@
                 {
                     "i18n_key": "verbs.singular_second_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -234,7 +234,7 @@
                 {
                     "i18n_key": "verbs.singular_third_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -280,7 +280,7 @@
                 {
                     "i18n_key": "verbs.plural_first_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -326,7 +326,7 @@
                 {
                     "i18n_key": "verbs.plural_second_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -372,7 +372,7 @@
                 {
                     "i18n_key": "verbs.plural_third_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -418,7 +418,7 @@
                 {
                     "i18n_key": "verbs.singular_first_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": false,
                     "filters": [
@@ -464,7 +464,7 @@
                 {
                     "i18n_key": "verbs.singular_second_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -510,7 +510,7 @@
                 {
                     "i18n_key": "verbs.singular_third_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -556,7 +556,7 @@
                 {
                     "i18n_key": "verbs.plural_first_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -602,7 +602,7 @@
                 {
                     "i18n_key": "verbs.plural_second_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -648,7 +648,7 @@
                 {
                     "i18n_key": "verbs.plural_third_person",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -694,7 +694,7 @@
                 {
                     "i18n_key": "number.singular",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": false,
                     "filters": [
@@ -738,7 +738,7 @@
                 {
                     "i18n_key": "number.plural",
                     "stack": true,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": true,
                     "filters": [
@@ -852,7 +852,7 @@
                     "i18n_key": "number.singular",
                     "visible": true,
                     "stack": false,
-                    "align_on_stack": false,
+                    "align_on_stack": true,
                     "table_fold": false,
                     "rows_fold": false,
                     "filters": [
