@@ -494,17 +494,28 @@ class FileImportSeeder extends Seeder
         }
         // Read through inflection tables in this group
         if (isset($groupXML->layout->table)) {
-            $previousModel = null;
-            $previousXML = null;
-            $tablePosition = 0;
-            $columnPosition = 0;
-            foreach (iterator_to_array($groupXML->layout->table, false) as $i => $tableXML) {
+            /**
+             * We have to be careful here, because the source XML schema long
+             * predates the separation of InflectionColumns from
+             * InflectionTables in the Tollerus data model.
+             *
+             * See: https://github.com/petermarkley/tollerus/pull/2
+             *
+             * So we have to infer hierarchy boundaries from the `stack` flag
+             * in the XML.
+             */
+            $chunkedTableCollection = collect(iterator_to_array($groupXML->layout->table, false))
+                ->chunkWhile(function ($tableXML, $key, $chunk) {
+                    return (
+                        filter_var($tableXML['stack'],      FILTER_VALIDATE_BOOLEAN) &&
+                        filter_var($chunk->last()['stack'], FILTER_VALIDATE_BOOLEAN)
+                    );
+                })->all();
+            foreach ($chunkedTableCollection as $position => $chunkedTableXML) {
                 $this->readInflectionTable(
                     groupModel: $groupModel,
-                    tableXML: $tableXML,
-                    tablePosition: $tablePosition,
-                    previousModel: $previousModel,
-                    previousXML: $previousXML,
+                    chunkedTableXML: $chunkedTableXML->values()->all(),
+                    position: $position,
                 );
             }
         }
@@ -551,63 +562,59 @@ class FileImportSeeder extends Seeder
     }
 
     /**
-     * Parse the relevant XML data in the inflections config into an InflectionTable model
+     * Parse the pre-chunked XML data in the inflections config into an InflectionTable model
      */
     protected function readInflectionTable(
         WordClassGroup $groupModel,
-        \SimpleXMLElement $tableXML,
-        int &$tablePosition,
-        int &$columnPosition,
-        ?InflectionTable &$previousModel,
-        ?\SimpleXMLElement &$previousXML,
+        array $chunkedTableXML,
+        int $position,
     ): void
     {
-        /**
-         * We have to be careful here, because the source XML schema long
-         * predates the separation of InflectionColumns from
-         * InflectionTables in the Tollerus data model.
-         *
-         * See: https://github.com/petermarkley/tollerus/pull/2
-         *
-         * So we have to infer hierarchy boundaries from the `stack` flag
-         * in the XML.
-         */
         $tableModel = new InflectionTable();
         $tableModel->word_class_group_id = $groupModel->id;
-        $tableModel->position = $tablePosition;
-        if (isset($tableXML['stack'])) {
-            $tableModel->stack = filter_var(
-                $tableXML['stack'],
-                FILTER_VALIDATE_BOOLEAN
-            );
-        }
-        if (isset($tableXML['align_on_stack'])) {
+        $tableModel->position = $position;
+        /**
+         * In typical usage of the legacy table schema, the row-level `fold`
+         * attribute of the second column in a stack was more significant
+         * than that of the first. The row labels of the first column were
+         * never folded in almost any scenario, whereas the next column
+         * (along with all following columns in the same stack) sometimes
+         * was, depending on author preference about that column. Because
+         * all columns from the second onward typically matched each other,
+         * the second serves as a suitable indicator for the entire table.
+         *
+         * So in mapping the old config to the new, we choose the second
+         * column if present, to represent the entire table, and only read
+         * the first one as a fallback.
+         */
+        $testTable = $chunkedTableXML[1] ?? $chunkedTableXML[0];
+        if (isset($testTable['align_on_stack'])) {
             $tableModel->align_on_stack = filter_var(
-                $tableXML['align_on_stack'],
+                $testTable['align_on_stack'],
                 FILTER_VALIDATE_BOOLEAN
             );
         }
-        if (isset($tableXML['fold'])) {
+        if (isset($testTable['fold'])) {
             $tableModel->cols_fold = filter_var(
-                $tableXML['fold'],
+                $testTable['fold'],
                 FILTER_VALIDATE_BOOLEAN
             );
         }
-        if (isset($tableXML->rows['fold'])) {
+        if (isset($testTable->rows['fold'])) {
             $tableModel->rows_fold = filter_var(
-                $tableXML->rows['fold'],
+                $testTable->rows['fold'],
                 FILTER_VALIDATE_BOOLEAN
             );
         }
         $tableModel->save();
-        $this->readInflectionColumn(
-            groupModel: $groupModel,
-            tableModel: $tableModel,
-            tableXML: $tableXML,
-            position: $columnPosition
-        );
-        $previousModel = $tableModel;
-        $previousXML = $tableXML;
+        foreach ($chunkedTableXML as $position => $tableXML) {
+            $this->readInflectionColumn(
+                groupModel: $groupModel,
+                tableModel: $tableModel,
+                tableXML: $tableXML,
+                position: $position
+            );
+        }
     }
 
     /**
@@ -626,6 +633,7 @@ class FileImportSeeder extends Seeder
         if (isset($tableXML['label'])) {
             $columnModel->label = $tableXML['label']->__toString();
         }
+        $columnModel->save();
         // Read through filters for this inflection table
         foreach ($tableXML->filter->inflect as $filterXML) {
             $dimension = $filterXML['dimension'];
@@ -675,7 +683,7 @@ class FileImportSeeder extends Seeder
     ): void
     {
         $rowModel = new InflectionRow();
-        $rowModel->inflect_table_id = $tableModel->id;
+        $rowModel->inflect_column_id = $columnModel->id;
         if (!isset($rowXML['label']) || empty($rowXML['label'])) {
             throw new \RuntimeException("There's a table row with no label in file '{$this->inflectionsFilePath}'");
         }
@@ -702,7 +710,7 @@ class FileImportSeeder extends Seeder
             ] = $array;
             // Add connection between inflection table and feature values
             $pivot = new InflectionRowFilter([
-                'inflect_table_row_id' => $rowModel->id,
+                'inflect_row_id' => $rowModel->id,
                 'feature_id' => $featureModel->id,
                 'value_id' => $valueModel->id,
             ]);
