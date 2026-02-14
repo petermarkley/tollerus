@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 
-class InflectionTable extends Model
+class InflectionColumn extends Model
 {
     use HasTablePrefix;
-    protected $table = 'inflect_tables';
+    protected $table = 'inflect_columns';
     public $timestamps = false;
     protected $guarded = [];
 
@@ -25,13 +25,13 @@ class InflectionTable extends Model
     }
     public function rows(): HasMany
     {
-        return $this->hasMany(InflectionTableRow::class, 'inflect_table_column_id');
+        return $this->hasMany(InflectionRow::class, 'inflect_column_id');
     }
     public function filterValues(): BelongsToMany
     {
         return $this
-            ->belongsToMany(FeatureValue::class, 'inflect_table_column_filters', 'inflect_table_column_id', 'value_id')
+            ->belongsToMany(FeatureValue::class, 'inflect_column_filters', 'inflect_column_id', 'value_id')
             ->withPivot('feature_id')
-            ->using(Pivots\InflectionTableColumnFilter::class);
+            ->using(Pivots\InflectionColumnFilter::class);
     }
 }

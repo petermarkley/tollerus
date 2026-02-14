@@ -520,7 +520,7 @@ return new class extends Migration
             $table->unique(['word_class_group_id', 'position'], 'group_position_unique');
         });
 
-        $connection->create('inflect_table_columns', function (Blueprint $table) {
+        $connection->create('inflect_columns', function (Blueprint $table) {
             $table->id();
             $table->foreignId('inflect_table_id');
             $table->foreign('inflect_table_id')
@@ -534,11 +534,11 @@ return new class extends Migration
             $table->unique(['inflect_table_id', 'position'], 'inflect_table_position_unique');
         });
 
-        $connection->create('inflect_table_column_filters', function (Blueprint $table) {
+        $connection->create('inflect_column_filters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('inflect_table_column_id');
-            $table->foreign('inflect_table_column_id')
-                ->references('id')->on('inflect_table_columns')
+            $table->foreignId('inflect_column_id');
+            $table->foreign('inflect_column_id')
+                ->references('id')->on('inflect_columns')
                 ->cascadeOnDelete();
             $table->foreignId('feature_id');
             $table->foreign('feature_id')
@@ -549,16 +549,16 @@ return new class extends Migration
                 ->references('id')->on('feature_values')
                 ->cascadeOnDelete();
             // ensure only one of each feature per inflection table
-            $table->unique(['inflect_table_column_id', 'feature_id'], 'column_feature_unique');
+            $table->unique(['inflect_column_id', 'feature_id'], 'column_feature_unique');
             // ensure only one of each value per feature
-            $table->unique(['inflect_table_column_id', 'feature_id', 'value_id'], 'column_feature_value_unique');
+            $table->unique(['inflect_column_id', 'feature_id', 'value_id'], 'column_feature_value_unique');
         });
 
-        $connection->create('inflect_table_rows', function (Blueprint $table) {
+        $connection->create('inflect_rows', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('inflect_table_column_id');
-            $table->foreign('inflect_table_column_id')
-                ->references('id')->on('inflect_table_columns')
+            $table->foreignId('inflect_column_id');
+            $table->foreign('inflect_column_id')
+                ->references('id')->on('inflect_columns')
                 ->cascadeOnDelete();
             $table->string('label');
             $table->string('label_brief')->nullable();
@@ -572,23 +572,23 @@ return new class extends Migration
                 ->nullOnDelete();
             $table->foreignId('src_base')->nullable();
             $table->foreign('src_base')
-                ->references('id')->on('inflect_table_rows')
+                ->references('id')->on('inflect_rows')
                 ->nullOnDelete();
             $table->string('morph_template')->nullable()
                 ->default('{B}{P}');
             // ensure only one of each label per inflection table
-            $table->unique(['inflect_table_column_id', 'label'], 'column_label_unique');
-            $table->unique(['inflect_table_column_id', 'label_brief'], 'column_label_brief_unique');
-            $table->unique(['inflect_table_column_id', 'label_long'], 'column_label_long_unique');
+            $table->unique(['inflect_column_id', 'label'], 'column_label_unique');
+            $table->unique(['inflect_column_id', 'label_brief'], 'column_label_brief_unique');
+            $table->unique(['inflect_column_id', 'label_long'], 'column_label_long_unique');
             // ensure only one of each position per inflection table
-            $table->unique(['inflect_table_column_id', 'position'], 'column_position_unique');
+            $table->unique(['inflect_column_id', 'position'], 'column_position_unique');
         });
 
-        $connection->create('inflect_table_row_filters', function (Blueprint $table) {
+        $connection->create('inflect_row_filters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('inflect_table_row_id');
-            $table->foreign('inflect_table_row_id')
-                ->references('id')->on('inflect_table_rows')
+            $table->foreignId('inflect_row_id');
+            $table->foreign('inflect_row_id')
+                ->references('id')->on('inflect_rows')
                 ->cascadeOnDelete();
             $table->foreignId('feature_id');
             $table->foreign('feature_id')
@@ -599,16 +599,16 @@ return new class extends Migration
                 ->references('id')->on('feature_values')
                 ->cascadeOnDelete();
             // ensure only one of each feature per inflection table
-            $table->unique(['inflect_table_row_id', 'feature_id'], 'row_feature_unique');
+            $table->unique(['inflect_row_id', 'feature_id'], 'row_feature_unique');
             // ensure only one of each value per feature
-            $table->unique(['inflect_table_row_id', 'feature_id', 'value_id'], 'row_feature_value_unique');
+            $table->unique(['inflect_row_id', 'feature_id', 'value_id'], 'row_feature_value_unique');
         });
 
         $connection->create('morph_rules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('inflect_table_row_id');
-            $table->foreign('inflect_table_row_id')
-                ->references('id')->on('inflect_table_rows')
+            $table->foreignId('inflect_row_id');
+            $table->foreign('inflect_row_id')
+                ->references('id')->on('inflect_rows')
                 ->cascadeOnDelete();
             /**
              * Each morph rule is a call to preg_replace(). These values will
@@ -653,7 +653,7 @@ return new class extends Migration
              */
             $table->string('input_slot')
                 ->storedAs("CONCAT(target_type,'|',pattern_type,'|',COALESCE(CAST(neography_id AS CHAR),'0'))");
-            $table->unique(['inflect_table_row_id', 'input_slot', 'order'], 'row_input_order_unique');
+            $table->unique(['inflect_row_id', 'input_slot', 'order'], 'row_input_order_unique');
         });
     }
 
@@ -678,9 +678,10 @@ return new class extends Migration
         $rawConnection->unprepared("DROP TRIGGER IF EXISTS ad_{$prefix}forms_delete_gid;");
         // inflection tables config
         $connection->dropIfExists('morph_rules');
-        $connection->dropIfExists('inflect_table_row_filters');
-        $connection->dropIfExists('inflect_table_rows');
-        $connection->dropIfExists('inflect_table_filters');
+        $connection->dropIfExists('inflect_row_filters');
+        $connection->dropIfExists('inflect_rows');
+        $connection->dropIfExists('inflect_column_filters');
+        $connection->dropIfExists('inflect_columns');
         $connection->dropIfExists('inflect_tables');
         // main lexical data
         $connection->dropIfExists('form_feature_values');

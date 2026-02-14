@@ -5,11 +5,11 @@ namespace PeterMarkley\Tollerus\Models\Pivots;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 
-class InflectionTableRowFilter extends Pivot
+class InflectionColumnFilter extends Pivot
 {
     use HasTablePrefix;
 
-    protected $table = 'inflect_table_row_filters';
+    protected $table = 'inflect_column_filters';
     public $timestamps = false;
     public $incrementing = true;
 
@@ -18,12 +18,12 @@ class InflectionTableRowFilter extends Pivot
         // Validate extended model relations
         static::saving(function (self $model): void {
             // Run only when relevant keys changed (or on create)
-            if (! $model->isDirty(['inflect_table_row_id', 'feature_id', 'value_id'])) {
+            if (! $model->isDirty(['inflect_column_id', 'feature_id', 'value_id'])) {
                 return;
             }
 
             // If any FK is missing, let DB FKs/uniques handle it.
-            if (is_null($model->inflect_table_row_id) || is_null($model->feature_id) || is_null($model->value_id)) {
+            if (is_null($model->inflect_column_id) || is_null($model->feature_id) || is_null($model->value_id)) {
                 return;
             }
 
@@ -37,7 +37,7 @@ class InflectionTableRowFilter extends Pivot
                 ->exists();
 
             if (!$valueMatchesFeature) {
-                throw new \LogicException('InflectionTableRowFilter.value_id must reference a FeatureValue that belongs to feature_id.');
+                throw new \LogicException('InflectionColumnFilter.value_id must reference a FeatureValue that belongs to feature_id.');
             }
 
             /**
@@ -45,11 +45,8 @@ class InflectionTableRowFilter extends Pivot
              */
 
             // Get the two `word_class_group_id`s via minimal scalar lookups
-            $columnId = \PeterMarkley\Tollerus\Models\InflectionTableRow::query()
-                ->whereKey($model->inflect_table_row_id)
-                ->value('inflect_table_column_id');
-            $inflectionTableId = \PeterMarkley\Tollerus\Models\InflectionTableColumn::query()
-                ->whereKey($columnId)
+            $inflectionTableId = \PeterMarkley\Tollerus\Models\InflectionColumn::query()
+                ->whereKey($model->inflect_column_id)
                 ->value('inflect_table_id');
             $groupIdOfTable = \PeterMarkley\Tollerus\Models\InflectionTable::query()
                 ->whereKey($inflectionTableId)
@@ -59,7 +56,7 @@ class InflectionTableRowFilter extends Pivot
                 ->value('word_class_group_id');
 
             if ((int)$groupIdOfTable !== (int)$groupIdOfFeature) {
-                throw new \LogicException('InflectionTableRowFilter.feature must belong to the same WordClassGroup as its InflectionTable.');
+                throw new \LogicException('InflectionColumnFilter.feature must belong to the same WordClassGroup as its InflectionTable.');
             }
         });
     }
