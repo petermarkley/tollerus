@@ -25,9 +25,9 @@ class MorphRule extends Model
     /**
      * Model relations
      */
-    public function inflectionTableRow(): BelongsTo
+    public function inflectionRow(): BelongsTo
     {
-        return $this->belongsTo(InflectionTableRow::class, 'inflect_table_row_id');
+        return $this->belongsTo(InflectionRow::class, 'inflect_row_id');
     }
     public function neography(): BelongsTo
     {

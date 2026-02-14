@@ -28,11 +28,18 @@ class FeatureValue extends Model
             ->belongsToMany(Form::class, 'form_feature_values', 'value_id', 'form_id')
             ->using(Pivots\FormFeatureValue::class);
     }
-    public function inflectionTables(): BelongsToMany
+    public function inflectionColumns(): BelongsToMany
     {
         return $this
-            ->belongsToMany(InflectionTable::class, 'form_feature_values', 'value_id', 'inflect_table_id')
+            ->belongsToMany(InflectionColumn::class, 'form_feature_values', 'value_id', 'inflect_column_id')
             ->withPivot('feature_id')
-            ->using(Pivots\InflectionTableFilter::class);
+            ->using(Pivots\InflectionColumnFilter::class);
+    }
+    public function inflectionRows(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(InflectionRow::class, 'form_feature_values', 'value_id', 'inflect_row_id')
+            ->withPivot('feature_id')
+            ->using(Pivots\InflectionRowFilter::class);
     }
 }
