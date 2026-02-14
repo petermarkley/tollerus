@@ -4,10 +4,10 @@ namespace PeterMarkley\Tollerus\Domain\Language\Actions;
 
 use Illuminate\Support\Facades\DB;
 use PeterMarkley\Tollerus\Models\Language;
-use PeterMarkley\Tollerus\Models\InflectionTableRow;
+use PeterMarkley\Tollerus\Models\InflectionRow;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
-use PeterMarkley\Tollerus\Models\Pivots\InflectionTableFilter;
-use PeterMarkley\Tollerus\Models\Pivots\InflectionTableRowFilter;
+use PeterMarkley\Tollerus\Models\Pivots\InflectionColumnFilter;
+use PeterMarkley\Tollerus\Models\Pivots\InflectionRowFilter;
 
 final class LoadGrammarPreset
 {
@@ -116,9 +116,23 @@ final class LoadGrammarPreset
                  * [
                  *     0 => [
                  *         'model' => <InflectionTable>,
-                 *         'rows' => [
-                 *             0 => <InflectionTableRow>,
-                 *             1 => <InflectionTableRow>,
+                 *         'columns' => [
+                 *             0 => [
+                 *                 'model' => <InflectionColumn>,
+                 *                 'rows' => [
+                 *                     0 => <InflectionRow>,
+                 *                     1 => <InflectionRow>,
+                 *                     ...
+                 *                 ]
+                 *             ],
+                 *             1 => [
+                 *                 'model' => <InflectionColumn>,
+                 *                 'rows' => [
+                 *                     0 => <InflectionRow>,
+                 *                     1 => <InflectionRow>,
+                 *                     ...
+                 *                 ]
+                 *             ],
                  *             ...
                  *         ]
                  *     ],
@@ -127,72 +141,81 @@ final class LoadGrammarPreset
                  * ]
                  */
                 $tables = collect($groupJson->inflection_tables)->map(function ($tableJson, $tablePos) use ($prefix, $wordClassGroup, $features, &$baseRow) {
-                    // Build next segment of i18n key
-                    $tableKey = "{$prefix}.inflection_tables.{$tableJson->i18n_key}";
-                    if (isset($tableJson->i18n_subkey)) {
-                        $tableKey .= ".{$tableJson->i18n_subkey}";
-                    } else {
-                        $tableKey .= "._label";
-                    }
                     // Create model
                     $table = $wordClassGroup->inflectionTables()->create([
-                        'label'          => __($tableKey),
                         'position'       => $tablePos,
                         'visible'        => $tableJson->visible ?? true,
-                        'show_label'     => $tableJson->show_label ?? true,
-                        'stack'          => $tableJson->stack,
                         'align_on_stack' => $tableJson->align_on_stack,
-                        'table_fold'     => $tableJson->table_fold,
+                        'rows_fold'      => $tableJson->rows_fold,
                         'rows_fold'      => $tableJson->rows_fold
                     ]);
-                    // Add filters
-                    foreach ($tableJson->filters as $filterJson) {
-                        /**
-                         * Look up models in the '$features' array that we built
-                         * earlier, so that we can assign IDs.
-                         */
-                        $feature = $features[$filterJson->feature]['model'];
-                        $value = $features[$filterJson->feature]['values'][$filterJson->value];
-                        (new InflectionTableFilter([
-                            'inflect_table_id' => $table->id,
-                            'feature_id' => $feature->id,
-                            'value_id' => $value->id,
-                        ]))->save();
-                    }
-                    // Build output
                     return [
                         'model' => $table,
-                        'rows' => collect($tableJson->rows)->map(function ($rowJson, $rowPos) use ($prefix, $table, $features, &$baseRow) {
-                            // Build another segment of i18n key
-                            $rowKey = "{$prefix}.inflection_tables.{$rowJson->i18n_key}";
+                        'columns' => collect($tableJson->columns)->map(function ($colJson, $colPos) use ($prefix, $table, $features, &$baseRow) {
+                            // Build next segment of i18n key
+                            $colKey = "{$prefix}.inflection_tables.{$colJson->i18n_key}";
+                            if (isset($colJson->i18n_subkey)) {
+                                $colKey .= ".{$colJson->i18n_subkey}";
+                            } else {
+                                $colKey .= "._label";
+                            }
                             // Create model
-                            $row = $table->rows()->create([
-                                'label' => __("{$rowKey}.label"),
-                                'label_brief' => tollerus_tr_optional("{$rowKey}.label_brief"),
-                                'label_long' => tollerus_tr_optional("{$rowKey}.label_long"),
-                                'position' => $rowPos,
-                                'src_base' => null,
+                            $column = $table->columns()->create([
+                                'label'          => __($colKey),
+                                'position'       => $colPos,
+                                'visible'        => $colJson->visible ?? true,
+                                'show_label'     => $colJson->show_label ?? true,
                             ]);
                             // Add filters
-                            foreach ($rowJson->filters as $filterJson) {
+                            foreach ($colJson->filters as $filterJson) {
                                 /**
-                                 * And again, look up IDs in the '$features' array
+                                 * Look up models in the '$features' array that we built
+                                 * earlier, so that we can assign IDs.
                                  */
                                 $feature = $features[$filterJson->feature]['model'];
                                 $value = $features[$filterJson->feature]['values'][$filterJson->value];
-                                (new InflectionTableRowFilter([
-                                    'inflect_table_row_id' => $row->id,
+                                (new InflectionColumnFilter([
+                                    'inflect_column_id' => $column->id,
                                     'feature_id' => $feature->id,
                                     'value_id' => $value->id,
                                 ]))->save();
                             }
-                            // Track base row
-                            if (isset($rowJson->base) && $rowJson->base) {
-                                $baseRow = $row;
-                            }
-                            // Pass output
-                            return $row;
-                        })->all()
+                            // Build output
+                            return [
+                                'model' => $column,
+                                'rows' => collect($colJson->rows)->map(function ($rowJson, $rowPos) use ($prefix, $column, $features, &$baseRow) {
+                                    // Build another segment of i18n key
+                                    $rowKey = "{$prefix}.inflection_tables.{$rowJson->i18n_key}";
+                                    // Create model
+                                    $row = $column->rows()->create([
+                                        'label' => __("{$rowKey}.label"),
+                                        'label_brief' => tollerus_tr_optional("{$rowKey}.label_brief"),
+                                        'label_long' => tollerus_tr_optional("{$rowKey}.label_long"),
+                                        'position' => $rowPos,
+                                        'src_base' => null,
+                                    ]);
+                                    // Add filters
+                                    foreach ($rowJson->filters as $filterJson) {
+                                        /**
+                                         * And again, look up IDs in the '$features' array
+                                         */
+                                        $feature = $features[$filterJson->feature]['model'];
+                                        $value = $features[$filterJson->feature]['values'][$filterJson->value];
+                                        (new InflectionRowFilter([
+                                            'inflect_row_id' => $row->id,
+                                            'feature_id' => $feature->id,
+                                            'value_id' => $value->id,
+                                        ]))->save();
+                                    }
+                                    // Track base row
+                                    if (isset($rowJson->base) && $rowJson->base) {
+                                        $baseRow = $row;
+                                    }
+                                    // Pass output
+                                    return $row;
+                                })->all()
+                            ];
+                        })->all(),
                     ];
                 })->toArray();
                 /**
@@ -204,11 +227,15 @@ final class LoadGrammarPreset
                  * was defined. But with the JSON templates, we can't really assume
                  * that the base row is first. That's why we need a 2nd pass.
                  */
-                foreach ($tables as $table) {
-                    foreach ($table['rows'] as $row) {
-                        if ($baseRow !== $row && $baseRow !== null) {
-                            $row->src_base = $baseRow->id;
-                            $row->save();
+                if ($baseRow !== null) {
+                    foreach ($tables as $table) {
+                        foreach ($table['columns'] as $column) {
+                            foreach ($column['rows'] as $row) {
+                                if ($baseRow !== $row) {
+                                    $row->src_base = $baseRow->id;
+                                    $row->save();
+                                }
+                            }
                         }
                     }
                 }

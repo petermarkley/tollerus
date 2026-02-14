@@ -4,7 +4,7 @@ namespace PeterMarkley\Tollerus\Domain\Morphology\DTO;
 
 use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
-use PeterMarkley\Tollerus\Models\InflectionTableRow;
+use PeterMarkley\Tollerus\Models\InflectionRow;
 
 final class AutoInflectorInput
 {
@@ -58,7 +58,7 @@ final class AutoInflectorInput
      * }
      */
     public static function fromRow(
-        InflectionTableRow $row,
+        InflectionRow $row,
         string $base,
         MorphRulePatternType $type,
         /**

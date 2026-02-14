@@ -506,8 +506,8 @@ return new class extends Migration
             /**
              * On small displays, the columns will break onto multiple
              * lines. If this flag is true, all column labels except the
-             * first will hide on small displays (to avoid redundancy
-             * if they're the same as the topmost column label).
+             * first will hide on small displays (to avoid redundancy if
+             * they're the same as the topmost column label).
              */
             $table->boolean('cols_fold');
             /**
@@ -516,6 +516,11 @@ return new class extends Migration
              * if they're the same as the leftmost labels).
              */
             $table->boolean('rows_fold');
+            /**
+             * Normally, each column label is centered over the column.
+             * If this flag is true it will left-align on wide displays.
+             */
+            $table->boolean('align_on_stack');
             // ensure only one of each position per word class group
             $table->unique(['word_class_group_id', 'position'], 'group_position_unique');
         });

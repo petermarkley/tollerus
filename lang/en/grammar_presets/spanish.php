@@ -294,7 +294,7 @@ return [
         ],
         'number' => [
             /**
-             * These are only used as table/column labels.
+             * These are only used as column labels.
              */
             'singular' => [
                 '_label' => 'singular',
