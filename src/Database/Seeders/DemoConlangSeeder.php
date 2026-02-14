@@ -71,8 +71,8 @@ class DemoConlangSeeder extends Seeder
 
         // Initialize some values with minimal queries
         $language->loadMissing([
-            'wordClassGroups.inflectionTables.filterValues.feature',
-            'wordClassGroups.inflectionTables.rows.filterValues.feature',
+            'wordClassGroups.inflectionTables.columns.filterValues.feature',
+            'wordClassGroups.inflectionTables.columns.rows.filterValues.feature',
             'wordClassGroups.primaryClass',
         ]);
 
@@ -83,22 +83,26 @@ class DemoConlangSeeder extends Seeder
         // Find built rows
         $inflectionTables = $language->wordClassGroups
             ->flatMap->inflectionTables;
-        $builtRows = $inflectionTables
+        $inflectionColumns = $inflectionTables
+            ->flatMap->columns;
+        $builtRows = $inflectionColumns
             ->flatMap->rows
             ->filter(fn ($t) => $t->src_base !== null);
 
         // Make particles for all inflected rows
         foreach ($builtRows as $row) {
             // First get some context
+            $column = $inflectionColumns
+                ->first(fn ($c) => $c->id === $row->inflect_column_id);
             $table = $inflectionTables
-                ->first(fn ($t) => $t->id === $row->inflect_table_id);
+                ->first(fn ($t) => $t->id === $column->inflect_table_id);
             $class = $language->wordClassGroups
                 ->first(fn ($t) => $t->id === $table->word_class_group_id)
                 ->primaryClass;
 
             // Now let's write out a definition for the particle
             $filterValues = collect([
-                $table->filterValues,
+                $column->filterValues,
                 $row->filterValues
             ])->filter()->collapse();
             $grammarFeatures = $filterValues

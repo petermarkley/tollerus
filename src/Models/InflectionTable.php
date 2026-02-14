@@ -25,6 +25,6 @@ class InflectionTable extends Model
     }
     public function columns(): HasMany
     {
-        return $this->hasMany(InflectionColumns::class, 'inflect_column_id');
+        return $this->hasMany(InflectionColumn::class, 'inflect_table_id');
     }
 }

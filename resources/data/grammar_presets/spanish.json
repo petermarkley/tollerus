@@ -960,7 +960,7 @@
                     "align_on_stack": true,
                     "cols_fold": false,
                     "rows_fold": true,
-                    "column": [
+                    "columns": [
                         {
                             "i18n_key": "pronouns.first_person",
                             "filters": [
