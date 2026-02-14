@@ -45,8 +45,11 @@ class InflectionTableRowFilter extends Pivot
              */
 
             // Get the two `word_class_group_id`s via minimal scalar lookups
-            $inflectionTableId = \PeterMarkley\Tollerus\Models\InflectionTableRow::query()
+            $columnId = \PeterMarkley\Tollerus\Models\InflectionTableRow::query()
                 ->whereKey($model->inflect_table_row_id)
+                ->value('inflect_table_column_id');
+            $inflectionTableId = \PeterMarkley\Tollerus\Models\InflectionTableColumn::query()
+                ->whereKey($columnId)
                 ->value('inflect_table_id');
             $groupIdOfTable = \PeterMarkley\Tollerus\Models\InflectionTable::query()
                 ->whereKey($inflectionTableId)

@@ -504,17 +504,16 @@ return new class extends Migration
             $table->integer('position');
             $table->boolean('visible')->default(true);
             /**
-             * Here, true means the column labels are hidden when they
-             * are NOT stacked horizontally (to avoid redundancy
-             * if it's the same as the label for the table directly
-             * above it).
+             * On small displays, the columns will break onto multiple
+             * lines. If this flag is true, all column labels except the
+             * first will hide on small displays (to avoid redundancy
+             * if they're the same as the topmost column label).
              */
             $table->boolean('cols_fold');
             /**
-             * Here, true means the row labels are hidden when the
-             * columns ARE stacked horizontally (to avoid redundancy
-             * if it's the same as the label for the row directly
-             * across from it).
+             * Here, true means the row labels in all except the first
+             * column are hidden on wide displays (to avoid redundancy
+             * if they're the same as the leftmost labels).
              */
             $table->boolean('rows_fold');
             // ensure only one of each position per word class group

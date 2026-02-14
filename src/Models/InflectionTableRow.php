@@ -19,16 +19,16 @@ class InflectionTableRow extends Model
     /**
      * Model relations
      */
-    public function inflectionTable(): BelongsTo
+    public function column(): BelongsTo
     {
-        return $this->belongsTo(InflectionTable::class, 'inflect_table_id');
+        return $this->belongsTo(InflectionTableColumn::class, 'inflect_table_column_id');
     }
     public function filterValues(): BelongsToMany
     {
         return $this
             ->belongsToMany(FeatureValue::class, 'inflect_table_row_filters', 'inflect_table_row_id', 'value_id')
             ->withPivot('feature_id')
-            ->using(Pivots\InflectionTableFilter::class);
+            ->using(Pivots\InflectionTableRowFilter::class);
     }
     public function sourceParticle(): BelongsTo
     {
@@ -52,7 +52,7 @@ class InflectionTableRow extends Model
         // Validate extended model relations
         static::saving(function (self $model) {
             // Run only when relevant keys changed (or on create)
-            if (! $model->isDirty(['inflect_table_id', 'src_particle', 'src_base'])) {
+            if (! $model->isDirty(['inflect_table_column_id', 'src_particle', 'src_base'])) {
                 return;
             }
             // src_base must not be this row
@@ -60,13 +60,16 @@ class InflectionTableRow extends Model
                 throw new \LogicException('An InflectionTableRow\'s src_base cannot refer to itself.');
             }
             // If the main FK is missing, let DB FKs/uniques handle it.
-            if (is_null($model->inflect_table_id)) {
+            if (is_null($model->inflect_table_column_id)) {
                 return;
             }
 
             // All the rules below need this
+            $inflectionTableIdOfColumn = InflectionTableColumn::query()
+                ->whereKey($model->inflect_table_column_id)
+                ->value('inflect_table_id');
             $groupIdOfInflectionTable = InflectionTable::query()
-                ->whereKey($model->inflect_table_id)
+                ->whereKey($inflectionTableIdOfColumn)
                 ->value('word_class_group_id');
 
             if (!is_null($model->src_particle)) {
@@ -89,18 +92,25 @@ class InflectionTableRow extends Model
 
             if (!is_null($model->src_base)) {
                 // Get some values via minimal lookups
-                $lookup = InflectionTableRow::select('inflect_table_id', 'src_base')
+                $lookup = InflectionTableRow::select('inflect_table_column_id', 'src_base')
                     ->whereKey($model->src_base)
                     ->first();
-                $tableIdOfBaseRow = $lookup?->inflect_table_id;
-                $srcOfBaseRow = $lookup?->src_base;
+                if ($lookup !== null) {
+                    $tableIdOfBaseRow = InflectionTableColumn::query()
+                        ->whereKey($lookup->inflect_table_column_id)
+                        ->value('inflect_table_id');
+                    $srcOfBaseRow = $lookup->src_base;
+                } else {
+                    $tableIdOfBaseRow = null;
+                    $srcOfBaseRow = null;
+                }
 
                 /**
                  * Rule 2: src_base must belong to word_class_group
                  */
 
                 // If it's in the same table, we're fine
-                if ((int)$model->inflect_table_id !== (int)$tableIdOfBaseRow) {
+                if ((int)$inflectionTableIdOfColumn !== (int)$tableIdOfBaseRow) {
                     // Otherwise proceed with `word_class_group_id` lookup
                     $groupIdOfBaseRow = InflectionTable::query()
                         ->whereKey($tableIdOfBaseRow)
