@@ -235,8 +235,8 @@ class LanguageEditor extends Component
             $group->loadMissing([
                 'wordClasses',
                 'features.featureValues',
-                'inflectionTables.filterValues',
-                'inflectionTables.rows.filterValues',
+                'inflectionTables.columns.filterValues',
+                'inflectionTables.columns.rows.filterValues',
             ]);
         }
         $this->grammarForm = collect($this->wordClassGroups)
@@ -262,15 +262,17 @@ class LanguageEditor extends Component
                         ],
                     ])->toArray(),
                     'tables' => $group->inflectionTables->sortBy('position')->mapWithKeys(fn ($table) => [
-                        $table->id => [
-                            'label' => $table->label,
-                            'rows' => $table->rows->sortBy('position')->mapWithKeys(fn ($row) => [
-                                $row->id => [
-                                    'label' => $row->label,
-                                    'labelBrief' => $row->label_brief,
-                                ],
-                            ])->toArray(),
-                        ],
+                        $table->id => $table->columns->sortBy('position')->mapWithKeys(fn ($column) => [
+                            $column->id => [
+                                'label' => $column->label,
+                                'rows' => $column->rows->sortBy('position')->mapWithKeys(fn ($row) => [
+                                    $row->id => [
+                                        'label' => $row->label,
+                                        'labelBrief' => $row->label_brief,
+                                    ],
+                                ])->toArray(),
+                            ]
+                        ])->toArray(),
                     ])->toArray(),
                     'tablesUrl' => route('tollerus.admin.languages.inflection-tables', [
                         'language' => $this->language,

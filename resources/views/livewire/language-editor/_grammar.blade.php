@@ -307,24 +307,28 @@
                         <span>{{ __('tollerus::ui.inflection_tables') }}</span>
                     </h3>
                     <template x-if="Object.keys(group.tables).length > 0">
-                        <div class="flex flex-row flex-wrap justify-center items-center gap-4 w-full">
+                        <div class="w-full flex flex-row flex-wrap gap-4 justify-center items-center">
                             <template x-for="(table, tableId) in group.tables">
-                                <div class="rounded-lg shadow overflow-hidden border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sm">
-                                    <table>
-                                        <thead>
-                                            <tr><th scope="col" colspan="2" x-text="table.label" class="text-center px-4 py-2 font-normal"></th></tr>
-                                        </thead>
-                                        <tbody>
-                                            <template x-for="(row, rowId) in table.rows">
-                                                <tr>
-                                                    <th scope="row" class="text-right p-1 font-normal border-t border-r border-zinc-300 dark:border-zinc-600">
-                                                        <abbr x-bind:title="row.label" x-text="row.labelBrief || row.label.slice(0,3)" class="no-underline"></abbr>
-                                                    </th>
-                                                    <td class="text-center px-4 py-1 border-t border-zinc-300 dark:border-zinc-600">&hellip;</td>
-                                                </tr>
-                                            </template>
-                                        </tbody>
-                                    </table>
+                                <div class="p-2 rounded-lg flex flex-row flex-wrap gap-2 justify-center items-center bg-white dark:bg-zinc-800 shadow-lg">
+                                    <template x-for="(column, columnId) in table">
+                                        <div class="rounded-lg overflow-hidden border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sm">
+                                            <table>
+                                                <thead>
+                                                    <tr><th scope="col" colspan="2" x-text="column.label" class="text-center px-4 py-2 font-normal"></th></tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template x-for="(row, rowId) in column.rows">
+                                                        <tr>
+                                                            <th scope="row" class="text-right p-1 font-normal border-t border-r border-zinc-300 dark:border-zinc-600">
+                                                                <abbr x-bind:title="row.label" x-text="row.labelBrief || row.label.slice(0,3)" class="no-underline"></abbr>
+                                                            </th>
+                                                            <td class="text-center px-4 py-1 border-t border-zinc-300 dark:border-zinc-600">&hellip;</td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </template>
                                 </div>
                             </template>
                             <x-tollerus::button
