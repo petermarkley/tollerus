@@ -131,7 +131,9 @@ class GroupInflectionEditor extends Component
         try {
             $connection = config('tollerus.connection', 'tollerus');
             DB::connection($connection)->transaction(function () use ($val) {
-                $rowsCollection = collect($this->tables)->flatMap->rows;
+                $rowsCollection = collect($this->tables)
+                    ->flatMap->columns
+                    ->flatMap->rows;
                 /**
                  * We need to first set the base row to comply with
                  * the model's logic constraints.

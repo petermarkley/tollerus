@@ -274,9 +274,9 @@ class LanguageEditor extends Component
                                 'labelBrief' => $row->label_brief,
                                 'labelLong' => $row->label_long,
                                 'position' => $row->position,
-                            ])->toArray(),
-                        ])->toArray(),
-                    ])->toArray(),
+                            ])->values()->toArray(),
+                        ])->values()->toArray(),
+                    ])->values()->toArray(),
                     'inflectionsUrl' => route('tollerus.admin.languages.inflections.edit', [
                         'language' => $this->language,
                         'wordClassGroup' => $group,
