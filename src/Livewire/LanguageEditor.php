@@ -261,20 +261,23 @@ class LanguageEditor extends Component
                             ])->toArray(),
                         ],
                     ])->toArray(),
-                    'tables' => $group->inflectionTables->sortBy('position')->mapWithKeys(fn ($table) => [
-                        $table->id => $table->columns->sortBy('position')->mapWithKeys(fn ($column) => [
-                            $column->id => [
-                                'label' => $column->label,
-                                'rows' => $column->rows->sortBy('position')->mapWithKeys(fn ($row) => [
-                                    $row->id => [
-                                        'label' => $row->label,
-                                        'labelBrief' => $row->label_brief,
-                                    ],
-                                ])->toArray(),
-                            ]
+                    'tables' => $group->inflectionTables->sortBy('position')->map(fn ($table) => [
+                        'tableId' => $table->id,
+                        'position' => $table->position,
+                        'columns' => $table->columns->sortBy('position')->map(fn ($column) => [
+                            'columnId' => $column->id,
+                            'label' => $column->label,
+                            'position' => $column->position,
+                            'rows' => $column->rows->sortBy('position')->map(fn ($row) => [
+                                'rowId' => $row->id,
+                                'label' => $row->label,
+                                'labelBrief' => $row->label_brief,
+                                'labelLong' => $row->label_long,
+                                'position' => $row->position,
+                            ])->toArray(),
                         ])->toArray(),
                     ])->toArray(),
-                    'tablesUrl' => route('tollerus.admin.languages.inflection-tables', [
+                    'inflectionsUrl' => route('tollerus.admin.languages.inflections.edit', [
                         'language' => $this->language,
                         'wordClassGroup' => $group,
                     ]),

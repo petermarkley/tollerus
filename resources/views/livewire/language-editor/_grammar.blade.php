@@ -308,19 +308,19 @@
                     </h3>
                     <template x-if="Object.keys(group.tables).length > 0">
                         <div class="w-full flex flex-row flex-wrap gap-4 justify-center items-center">
-                            <template x-for="(table, tableId) in group.tables">
+                            <template x-for="table in group.tables">
                                 <div class="p-2 rounded-lg flex flex-row flex-wrap gap-2 justify-center items-center bg-white dark:bg-zinc-800 shadow-lg">
-                                    <template x-for="(column, columnId) in table">
+                                    <template x-for="column in table.columns">
                                         <div class="rounded-lg overflow-hidden border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sm">
                                             <table>
                                                 <thead>
                                                     <tr><th scope="col" colspan="2" x-text="column.label" class="text-center px-4 py-2 font-normal"></th></tr>
                                                 </thead>
                                                 <tbody>
-                                                    <template x-for="(row, rowId) in column.rows">
+                                                    <template x-for="row in column.rows">
                                                         <tr>
                                                             <th scope="row" class="text-right p-1 font-normal border-t border-r border-zinc-300 dark:border-zinc-600">
-                                                                <abbr x-bind:title="row.label" x-text="row.labelBrief || row.label.slice(0,3)" class="no-underline"></abbr>
+                                                                <abbr x-bind:title="row.labelLong || row.label" x-text="row.labelBrief || row.label.slice(0,3)" class="no-underline"></abbr>
                                                             </th>
                                                             <td class="text-center px-4 py-1 border-t border-zinc-300 dark:border-zinc-600">&hellip;</td>
                                                         </tr>
@@ -335,7 +335,7 @@
                                 type="secondary"
                                 size="small"
                                 title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.inflection_tables')]) }}"
-                                x-bind:href="group.tablesUrl"
+                                x-bind:href="group.inflectionsUrl"
                                 class="flex flex-row gap-2 items-center"
                             >
                                 <x-tollerus::icons.edit class="m-2"/>
@@ -345,7 +345,7 @@
                     </template>
                     <template x-if="Object.keys(group.tables).length == 0">
                         <div class="flex flex-row justify-center items-center w-full">
-                            <x-tollerus::missing-data href x-bind:href="group.tablesUrl">{{ __('tollerus::ui.no_inflection_tables') }}</x-tollerus::missing-data>
+                            <x-tollerus::missing-data href x-bind:href="group.inflectionsUrl">{{ __('tollerus::ui.no_inflection_tables') }}</x-tollerus::missing-data>
                         </div>
                     </template>
                 </x-tollerus::pane>

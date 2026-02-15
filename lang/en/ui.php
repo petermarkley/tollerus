@@ -271,6 +271,7 @@ return [
     'preset' => 'Preset', // i.e. a predefined configuration for user convenience
     'inflection_tables' => 'Inflection tables',
     'inflection_table' => 'Inflection table',
+    'table_nameless' => '(table)',
     'no_inflection_tables' => 'No inflection tables',
     'add_inflection_table' => 'Add inflection table',
     'move_inflection_table_up' => 'Move table up',
@@ -278,6 +279,8 @@ return [
     'filters' => 'Filters',
     'add_filter' => 'Add filter',
     'remove_filter' => 'Remove filter',
+    'columns' => 'Columns',
+    'no_columns' => 'No columns',
     'rows' => 'Rows',
     'add_row' => 'Add row',
     'delete_row' => 'Delete row',

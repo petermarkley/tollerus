@@ -10,6 +10,7 @@ use PeterMarkley\Tollerus\Http\Controllers\NeographyController;
 use PeterMarkley\Tollerus\Http\Controllers\PublicLanguageController;
 use PeterMarkley\Tollerus\Livewire\AutoInflectionEditor;
 use PeterMarkley\Tollerus\Livewire\EntryEditor;
+use PeterMarkley\Tollerus\Livewire\GroupInflectionEditor;
 use PeterMarkley\Tollerus\Livewire\InflectionTableEditor;
 use PeterMarkley\Tollerus\Livewire\LanguageEditor;
 use PeterMarkley\Tollerus\Livewire\NeographyEditor;
@@ -61,15 +62,26 @@ Route::as('tollerus.')
                                 ->whereIn('tab', ['neographies', 'grammar', 'entries'])
                                 ->name('edit.tab');
                             Route::prefix('grammar/{wordClassGroup}')->group(function () {
-                                Route::get('/inflection-tables', InflectionTableEditor::class)
-                                    ->scopeBindings()
-                                    ->name('inflection-tables');
-                                /**
-                                 * We can't use `->scopeBindings()` here. See comment in
-                                 * Livewire class `mount()` method, where we manually
-                                 * validate the model bindings.
-                                 */
-                                Route::get('/inflection-rows/{row}/auto', AutoInflectionEditor::class)->name('auto-inflection');
+                                Route::prefix('inflections')
+                                    ->as('inflections.')
+                                    ->group(function () {
+                                        Route::get('/', GroupInflectionEditor::class)
+                                            ->scopeBindings()
+                                            ->name('edit');
+                                        Route::prefix('{table}')
+                                            ->as('table.')
+                                            ->group(function () {
+                                                Route::get('/', InflectionTableEditor::class)
+                                                    ->scopeBindings()
+                                                    ->name('edit');
+                                                /**
+                                                 * We can't use `->scopeBindings()` here. See comment in
+                                                 * Livewire class `mount()` method, where we manually
+                                                 * validate the model bindings.
+                                                 */
+                                                Route::get('/rows/{row}/auto', AutoInflectionEditor::class)->name('auto-inflection');
+                                            });
+                                    });
                             });
                             Route::prefix('entries')
                                 ->as('entries.')
