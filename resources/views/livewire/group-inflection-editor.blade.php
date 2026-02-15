@@ -6,6 +6,7 @@
             delete_inflection_table_confirmation: @js(__('tollerus::ui.delete_inflection_table_confirmation')),
         },
         tableForm: $wire.entangle('tableForm'),
+        baseRowOpts: $wire.entangle('baseRowOpts'),
         get tablesFiltered() {
             return Object.fromEntries(Object.entries(this.tableForm).filter(([k, v]) => !isNaN(k)));
         },
@@ -52,10 +53,10 @@
                                 @change="$wire.updateBaseRow($el.value);"
                             >
                                 <option value="" class="cursor-pointer italic" x-bind:selected="tableForm.baseRow===null || tableForm.baseRow===''">{{ __('tollerus::ui.none') }}</option>
-                                <template x-for="(table, tableId) in tablesFiltered">
-                                    <optgroup x-bind:label="table.label">
-                                        <template x-for="(row, rowId) in table.rows">
-                                            <option x-bind:value="rowId" class="cursor-pointer" x-text="row.label" x-bind:selected="tableForm.baseRow==rowId"></option>
+                                <template x-for="column in baseRowOpts">
+                                    <optgroup x-bind:label="column.label">
+                                        <template x-for="row in column.rows">
+                                            <option x-bind:value="row.rowId" class="cursor-pointer" x-text="row.label" x-bind:selected="tableForm.baseRow==row.rowId"></option>
                                         </template>
                                     </optgroup>
                                 </template>

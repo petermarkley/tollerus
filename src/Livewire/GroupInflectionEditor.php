@@ -25,6 +25,8 @@ class GroupInflectionEditor extends Component
     #[Locked] public array $tables;
     // UI input layer
     public array $tableForm = [];
+    // UI display properties
+    public array $baseRowOpts = [];
 
     /**
      * Livewire hooks
@@ -66,6 +68,18 @@ class GroupInflectionEditor extends Component
                 'columns.rows',
             ]);
         }
+        $this->baseRowOpts = collect($this->tables)
+            ->sortBy('position')
+            ->map(fn ($t) => $t->columns->sortBy('position'))
+            ->flatten(1)
+            ->map(fn ($column) => [
+                'columnId' => $column->id,
+                'label' => $column->label,
+                'rows' => $column->rows->sortBy('position')->map(fn ($row) => [
+                    'rowId' => $row->id,
+                    'label' => $row->label,
+                ])->values()->toArray(),
+            ])->values()->toArray();
         $this->tableForm = collect($this->tables)->mapWithKeys(function ($table) {
             return [$table->id => [
                 'position' => $table->position,
@@ -83,9 +97,9 @@ class GroupInflectionEditor extends Component
                                 'position' => $row->position,
                                 'srcBase' => $row->src_base,
                             ];
-                        })->toArray(),
+                        })->values()->toArray(),
                     ];
-                })->toArray(),
+                })->values()->toArray(),
                 'tableEditUrl' => route('tollerus.admin.languages.inflections.table.edit', [
                     'language' => $this->language,
                     'wordClassGroup' => $this->group,
@@ -94,6 +108,7 @@ class GroupInflectionEditor extends Component
             ]];
         })->toArray();
         $nullRows = collect($this->tables)
+            ->flatMap->columns
             ->flatMap->rows
             ->map(fn ($r) => [
                 'id' => $r->id,
