@@ -176,12 +176,14 @@
                                 </div>
                             @endforeach
                         </div>
-                        <div>
-                            <p>
-                                <span>{{ __('tollerus::ui.origin') }}:</span>
-                                {!! $entry->etym !!}
-                            </p>
-                        </div>
+                        @if ($entry->etym)
+                            <div>
+                                <p>
+                                    <span>{{ __('tollerus::ui.origin') }}:</span>
+                                    {!! $entry->etym !!}
+                                </p>
+                            </div>
+                        @endif
                     @endif
                 </div>
             </div>
