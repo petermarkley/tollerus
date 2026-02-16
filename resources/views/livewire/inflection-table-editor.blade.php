@@ -101,6 +101,9 @@
                     </div>
                 </fieldset>
             </x-tollerus::panel>
+            <h1 class="font-bold text-2xl px-6 xl:px-0">
+                <span>{{ __('tollerus::ui.columns') }}</span>
+            </h1>
             <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
                 <template x-for="([columnId, column], i) in $store.reorderFunctions.sortItems(tableForm.columns)">
                     <div
