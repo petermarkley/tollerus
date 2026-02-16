@@ -31,7 +31,7 @@ final class FontAssetService
         // Get path & URL
         $fileName = $neography->machine_name.'.'.$format->extension();
         $filePath = public_path($folderName . '/' . $fileName);
-        $assetUrl = asset($folderName . '/' . $fileName);
+        $assetUrl = '/' . $folderName . '/' . $fileName;
         if (file_exists($filePath)) {
             throw new \RuntimeException(__('tollerus::error.file_conflict'));
         }
