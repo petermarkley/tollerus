@@ -579,6 +579,7 @@ return [
      */
     'language_info' => '{1} Language info|[2,*] Language info',
     'writing_systems' => 'Writing systems',
+    'writing_system' => 'Writing system',
     'browse_entries' => 'Browse entries',
     'all_entries_for_language' => 'All entries for :lang',
     'canonical_url' => 'Canonical URL',

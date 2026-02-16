@@ -58,15 +58,31 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="w-full xl:w-[calc(100%-20.5rem)] flex-grow min-h-60 p-8 flex flex-col gap-6 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
+                <div
+                    x-data="{ currentNeography: {{ $primaryNeography->id }} }"
+                    class="w-full xl:w-[calc(100%-20.5rem)] flex-grow min-h-60 p-8 flex flex-col gap-6 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50"
+                >
                     @if ($entry !== null)
-                        <div>
-                            <span>{{ __('tollerus::ui.language') }}:</span>
-                            <a
-                                href="{{ route('tollerus.public.languages.show', ['language' => $language]) }}"
-                                class="text-tollerus-primary hover:text-tollerus-primary-hover"
-                            >{{ $language->name }}</a>
+                        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div @class(['md:col-span-2'=>!$multipleNeographies])>
+                                <span>{{ __('tollerus::ui.language') }}:</span>
+                                <a
+                                    href="{{ route('tollerus.public.languages.show', ['language' => $language]) }}"
+                                    class="text-tollerus-primary hover:text-tollerus-primary-hover"
+                                >{{ $language->name }}</a>
+                            </div>
+                            @if ($multipleNeographies)
+                                <div class="flex flex-row gap-2 items-center">
+                                    <label for="writing_system">{{ __('tollerus::ui.writing_system') }}</label>
+                                    <select id="writing_system" x-model="currentNeography">
+                                        @foreach ($neographies as $neography)
+                                            <option value="{{ $neography->id }}">{{ $neography->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
                         </div>
+                        {{-- <div>current neography is -- <span x-text="currentNeography"></span></div> --}}
                         <h3 class="text-2xl flex flex-row gap-12 justify-start items-center">
                             <a id="{{ $entry->global_id }}" class="flex flex-row flex-wrap sm:flex-nowrap gap-y-1 gap-x-8 items-center justify-start text-tollerus-text">
                                 <span class="font-bold whitespace-nowrap">{{ $primaryForm->transliterated }}</span>

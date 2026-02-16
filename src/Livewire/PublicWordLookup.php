@@ -43,6 +43,8 @@ class PublicWordLookup extends Component
         $entry                 = null;
         $language              = null;
         $primaryNeography      = null;
+        $neographies           = null;
+        $multipleNeographies   = false;
         $primaryForm           = null;
         $primaryNativeSpelling = null;
         $lexemes               = null;
@@ -53,6 +55,7 @@ class PublicWordLookup extends Component
                 abort(404);
             }
             $entry->loadMissing([
+                'language.neographies',
                 'language.primaryNeography',
                 'primaryForm.nativeSpellings',
                 'lexemes.forms.nativeSpellings',
@@ -62,10 +65,12 @@ class PublicWordLookup extends Component
                 'lexemes.wordClass.group.inflectionTables.columns.rows.filterValues',
                 'lexemes.senses.subsenses',
             ]);
-            $language         = $entry->language;
-            $primaryNeography = $language->primaryNeography;
-            $primaryForm      = $entry->primaryForm;
-            $lexemes          = $entry->lexemes->sortBy('position')
+            $language            = $entry->language;
+            $primaryNeography    = $language->primaryNeography;
+            $neographies         = $language->neographies->sortBy('machine_name')->filter(fn ($n) => $n->visible || $n->id == $primaryNeography->id);
+            $multipleNeographies = $primaryNeography !== null && $neographies->where('id', '!=', $primaryNeography->id)->isNotEmpty();
+            $primaryForm         = $entry->primaryForm;
+            $lexemes             = $entry->lexemes->sortBy('position')
                 ->map(function ($lexeme) use ($primaryNeography) {
                     $group = $lexeme->wordClass->group;
                     $tables = $group->inflectionTables
@@ -124,6 +129,8 @@ class PublicWordLookup extends Component
                 'entry'                 => $entry,
                 'language'              => $language,
                 'primaryNeography'      => $primaryNeography,
+                'neographies'           => $neographies,
+                'multipleNeographies'   => $multipleNeographies,
                 'primaryForm'           => $primaryForm,
                 'primaryNativeSpelling' => $primaryNativeSpelling,
                 'lexemes'               => $lexemes,
