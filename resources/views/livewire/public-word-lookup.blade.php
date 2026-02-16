@@ -82,12 +82,23 @@
                                 </div>
                             @endif
                         </div>
-                        {{-- <div>current neography is -- <span x-text="currentNeography"></span></div> --}}
                         <h3 class="text-2xl flex flex-row gap-12 justify-start items-center">
                             <a id="{{ $entry->global_id }}" class="flex flex-row flex-wrap sm:flex-nowrap gap-y-1 gap-x-8 items-center justify-start text-tollerus-text">
                                 <span class="font-bold whitespace-nowrap">{{ $primaryForm->transliterated }}</span>
                                 <span class="italic whitespace-nowrap">/{{ $primaryForm->phonemic }}/</span>
-                                <span class="whitespace-nowrap tollerus_{{ $primaryNeography->machine_name }}">{{ $primaryNativeSpelling->spelling }}</span>
+                                @foreach ($neographies as $neography)
+                                    @php($nativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $neography->id))
+                                    <span
+                                        x-show="currentNeography=={{ $neography->id }}" x-cloak
+                                        class="whitespace-nowrap tollerus_{{ $neography->machine_name }}"
+                                    >
+                                        @if ($nativeSpelling)
+                                            {{ $nativeSpelling->spelling }}
+                                        @else
+                                            &ndash;&nbsp;&ndash;&nbsp;&ndash;
+                                        @endif
+                                    </span>
+                                @endforeach
                             </a>
                             <a
                                 href="{{ route('tollerus.public.index', ['id' => $entry->global_id]) }}"
@@ -159,7 +170,19 @@
                                                                                     >
                                                                                         <span class="font-bold whitespace-nowrap">{{ $row['form']->transliterated }}</span>
                                                                                         <span class="italic whitespace-nowrap">/{{ $row['form']->phonemic }}/</span>
-                                                                                        <span class="whitespace-nowrap tollerus_{{ $primaryNeography->machine_name }}">{{ $row['formNative']->spelling }}</span>
+                                                                                        @foreach ($neographies as $neography)
+                                                                                            @php($nativeSpelling = $row['form']->nativeSpellings->firstWhere('neography_id', $neography->id))
+                                                                                            <span
+                                                                                                x-show="currentNeography=={{ $neography->id }}" x-cloak
+                                                                                                class="whitespace-nowrap tollerus_{{ $neography->machine_name }}"
+                                                                                            >
+                                                                                                @if ($nativeSpelling)
+                                                                                                    {{ $row['formNative']->spelling }}
+                                                                                                @else
+                                                                                                    &ndash;&nbsp;&ndash;&nbsp;&ndash;
+                                                                                                @endif
+                                                                                            </span>
+                                                                                        @endforeach
                                                                                     </a>
                                                                                 @else
                                                                                     <span>&ndash;&nbsp;&ndash;&nbsp;&ndash;</span>
