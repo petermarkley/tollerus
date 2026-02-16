@@ -188,7 +188,7 @@ return [
     'inflection_tables' => [
         'infinitive' => [
             /**
-             * This row label doubles as the label for the table itself,
+             * This row label doubles as the column label,
              * hence no `_label` key.
              */
             'label' => 'infinitive',

@@ -4,14 +4,14 @@ namespace PeterMarkley\Tollerus\Domain\Morphology\Services;
 
 use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Domain\Morphology\DTO\AutoInflectorInput;
-use PeterMarkley\Tollerus\Models\InflectionTableRow;
+use PeterMarkley\Tollerus\Models\InflectionRow;
 
 final class AutoInflector
 {
     private AutoInflectorInput $input;
 
     public function __construct(
-        InflectionTableRow $row,
+        InflectionRow $row,
         string $base,
         MorphRulePatternType $type,
         int $neographyId = null,

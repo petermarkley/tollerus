@@ -9,26 +9,26 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use PeterMarkley\Tollerus\Traits\HasTablePrefix;
 
-class InflectionTableRow extends Model
+class InflectionRow extends Model
 {
     use HasTablePrefix;
-    protected $table = 'inflect_table_rows';
+    protected $table = 'inflect_rows';
     public $timestamps = false;
     protected $guarded = [];
 
     /**
      * Model relations
      */
-    public function inflectionTable(): BelongsTo
+    public function column(): BelongsTo
     {
-        return $this->belongsTo(InflectionTable::class, 'inflect_table_id');
+        return $this->belongsTo(InflectionColumn::class, 'inflect_column_id');
     }
     public function filterValues(): BelongsToMany
     {
         return $this
-            ->belongsToMany(FeatureValue::class, 'inflect_table_row_filters', 'inflect_table_row_id', 'value_id')
+            ->belongsToMany(FeatureValue::class, 'inflect_row_filters', 'inflect_row_id', 'value_id')
             ->withPivot('feature_id')
-            ->using(Pivots\InflectionTableFilter::class);
+            ->using(Pivots\InflectionRowFilter::class);
     }
     public function sourceParticle(): BelongsTo
     {
@@ -36,15 +36,15 @@ class InflectionTableRow extends Model
     }
     public function sourceBase(): BelongsTo
     {
-        return $this->belongsTo(InflectionTableRow::class, 'src_base');
+        return $this->belongsTo(InflectionRow::class, 'src_base');
     }
     public function builtRows(): HasMany
     {
-        return $this->hasMany(InflectionTableRow::class, 'src_base');
+        return $this->hasMany(InflectionRow::class, 'src_base');
     }
     public function morphRules(): HasMany
     {
-        return $this->hasMany(MorphRule::class, 'inflect_table_row_id');
+        return $this->hasMany(MorphRule::class, 'inflect_row_id');
     }
 
     protected static function booted()
@@ -52,21 +52,24 @@ class InflectionTableRow extends Model
         // Validate extended model relations
         static::saving(function (self $model) {
             // Run only when relevant keys changed (or on create)
-            if (! $model->isDirty(['inflect_table_id', 'src_particle', 'src_base'])) {
+            if (! $model->isDirty(['inflect_column_id', 'src_particle', 'src_base'])) {
                 return;
             }
             // src_base must not be this row
             if (!is_null($model->src_base) && (int)$model->src_base === (int)$model->id) {
-                throw new \LogicException('An InflectionTableRow\'s src_base cannot refer to itself.');
+                throw new \LogicException('An InflectionRow\'s src_base cannot refer to itself.');
             }
             // If the main FK is missing, let DB FKs/uniques handle it.
-            if (is_null($model->inflect_table_id)) {
+            if (is_null($model->inflect_column_id)) {
                 return;
             }
 
             // All the rules below need this
+            $inflectionTableIdOfColumn = InflectionColumn::query()
+                ->whereKey($model->inflect_column_id)
+                ->value('inflect_table_id');
             $groupIdOfInflectionTable = InflectionTable::query()
-                ->whereKey($model->inflect_table_id)
+                ->whereKey($inflectionTableIdOfColumn)
                 ->value('word_class_group_id');
 
             if (!is_null($model->src_particle)) {
@@ -83,31 +86,38 @@ class InflectionTableRow extends Model
                     ->value('language_id');
 
                 if ((int)$languageIdOfParticle !== (int)$languageIdOfInflectionTable) {
-                    throw new \LogicException('InflectionTableRow.src_particle must belong to the same language as the InflectionTableRow.');
+                    throw new \LogicException('InflectionRow.src_particle must belong to the same language as the InflectionRow.');
                 }
             }
 
             if (!is_null($model->src_base)) {
                 // Get some values via minimal lookups
-                $lookup = InflectionTableRow::select('inflect_table_id', 'src_base')
+                $lookup = InflectionRow::select('inflect_column_id', 'src_base')
                     ->whereKey($model->src_base)
                     ->first();
-                $tableIdOfBaseRow = $lookup?->inflect_table_id;
-                $srcOfBaseRow = $lookup?->src_base;
+                if ($lookup !== null) {
+                    $tableIdOfBaseRow = InflectionColumn::query()
+                        ->whereKey($lookup->inflect_column_id)
+                        ->value('inflect_table_id');
+                    $srcOfBaseRow = $lookup->src_base;
+                } else {
+                    $tableIdOfBaseRow = null;
+                    $srcOfBaseRow = null;
+                }
 
                 /**
                  * Rule 2: src_base must belong to word_class_group
                  */
 
                 // If it's in the same table, we're fine
-                if ((int)$model->inflect_table_id !== (int)$tableIdOfBaseRow) {
+                if ((int)$inflectionTableIdOfColumn !== (int)$tableIdOfBaseRow) {
                     // Otherwise proceed with `word_class_group_id` lookup
                     $groupIdOfBaseRow = InflectionTable::query()
                         ->whereKey($tableIdOfBaseRow)
                         ->value('word_class_group_id');
 
                     if ((int)$groupIdOfBaseRow !== (int)$groupIdOfInflectionTable) {
-                        throw new \LogicException('InflectionTableRow.src_base must belong to the same WordClassGroup as the InflectionTableRow\'s parent InflectionTable.');
+                        throw new \LogicException('InflectionRow.src_base must belong to the same WordClassGroup as the InflectionRow\'s parent InflectionTable.');
                     }
                 }
 
@@ -116,7 +126,7 @@ class InflectionTableRow extends Model
                  */
 
                 if (!is_null($srcOfBaseRow)) {
-                    throw new \LogicException('InflectionTableRow.src_base must point to a base row (i.e. a row whose own src_base is NULL).');
+                    throw new \LogicException('InflectionRow.src_base must point to a base row (i.e. a row whose own src_base is NULL).');
                 }
             }
         });

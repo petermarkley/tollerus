@@ -58,8 +58,8 @@ class PublicWordLookup extends Component
                 'lexemes.forms.nativeSpellings',
                 'lexemes.forms.inflectionValues',
                 'lexemes.wordClass.group.features.featureValues',
-                'lexemes.wordClass.group.inflectionTables.filterValues',
-                'lexemes.wordClass.group.inflectionTables.rows.filterValues',
+                'lexemes.wordClass.group.inflectionTables.columns.filterValues',
+                'lexemes.wordClass.group.inflectionTables.columns.rows.filterValues',
                 'lexemes.senses.subsenses',
             ]);
             $language         = $entry->language;
@@ -72,42 +72,49 @@ class PublicWordLookup extends Component
                         ->where('visible', true)
                         ->sortBy('position')
                         ->map(function ($table) use ($lexeme, $primaryNeography) {
-                            $rows = $table->rows
+                            $columns = $table->columns
                                 ->where('visible', true)
                                 ->sortBy('position')
-                                ->map(function ($row) use ($table, $lexeme, $primaryNeography) {
-                                    $filters = $table->filterValues->concat($row->filterValues);
-                                    $form = $lexeme->forms->filter(
-                                        fn ($form) => $filters->reduce(
-                                            fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
-                                            true
-                                        )
-                                    )->first();
-                                    if ($primaryNeography !== null) {
-                                        $formNative = $form->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
-                                    } else {
-                                        $formNaitve = null;
-                                    }
+                                ->map(function ($column) use ($lexeme, $primaryNeography) {
+                                    $rows = $column->rows
+                                        ->where('visible', true)
+                                        ->sortBy('position')
+                                        ->map(function ($row) use ($column, $lexeme, $primaryNeography) {
+                                            $filters = $column->filterValues->concat($row->filterValues);
+                                            $form = $lexeme->forms->filter(
+                                                fn ($form) => $filters->reduce(
+                                                    fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
+                                                    true
+                                                )
+                                            )->first();
+                                            if ($form !== null && $primaryNeography !== null) {
+                                                $formNative = $form->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
+                                            } else {
+                                                $formNative = null;
+                                            }
+                                            return [
+                                                'model' => $row,
+                                                'form' => $form,
+                                                'formNative' => $formNative,
+                                            ];
+                                        })->values();
                                     return [
-                                        'model' => $row,
-                                        'form' => $form,
-                                        'formNative' => $formNative,
+                                        'model' => $column,
+                                        'rows' => $rows,
                                     ];
-                                });
+                                })->values();
                             return [
                                 'model' => $table,
-                                'rows' => $rows,
+                                'columns' => $columns,
                             ];
-                        })->chunkWhile(function ($table, $key, $chunk) {
-                            return $table['model']->stack && $chunk->last()['model']->stack;
-                        });
+                        })->values();
                     return [
                         'model' => $lexeme,
                         'class' => $lexeme->wordClass,
                         'group' => $group,
                         'tables' => $tables,
                     ];
-                });
+                })->values();
             if ($primaryNeography !== null && $primaryForm !== null) {
                 $primaryNativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
             }

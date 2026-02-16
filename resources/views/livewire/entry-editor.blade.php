@@ -284,7 +284,7 @@
                                                                 size="small"
                                                                 class="align-middle"
                                                                 title="{{ __('tollerus::ui.auto_inflect') }}"
-                                                                x-bind:disabled="lexeme.forms[form.srcForm].transliterated.length == 0"
+                                                                x-bind:disabled="form.srcForm===null || lexeme.forms[form.srcForm].transliterated.length == 0"
                                                                 @click="$wire.autoInflect(lexemeId, formId, form.matchingRowId, lexeme.forms[form.srcForm].transliterated, 'transliterated', null, id);"
                                                                 wire:loading.attr="disabled"
                                                                 wire:target="autoInflect"
@@ -311,7 +311,7 @@
                                                                 size="small"
                                                                 class="align-middle"
                                                                 title="{{ __('tollerus::ui.auto_inflect') }}"
-                                                                x-bind:disabled="lexeme.forms[form.srcForm].phonemic.length == 0"
+                                                                x-bind:disabled="form.srcForm===null || lexeme.forms[form.srcForm].phonemic.length == 0"
                                                                 @click="$wire.autoInflect(lexemeId, formId, form.matchingRowId, lexeme.forms[form.srcForm].phonemic, 'phonemic', null, id);"
                                                                 wire:loading.attr="disabled"
                                                                 wire:target="autoInflect"
@@ -488,15 +488,15 @@
                                                                         <span class="sr-only lg:not-sr-only !whitespace-nowrap">{{ __('tollerus::ui.match_to_inflection_row') }}</span>
                                                                     </x-tollerus::inputs.missing-data>
                                                                 </x-slot:button>
-                                                                <template x-for="table in wordClassGroup.tables">
+                                                                <template x-for="column in wordClassGroup.columns">
                                                                     <div class="flex flex-col items-start">
-                                                                        <span x-text="table.label" class="italic opacity-50"></span>
-                                                                        <template x-for="row in table.rows">
+                                                                        <span x-text="column.label" class="italic opacity-50"></span>
+                                                                        <template x-for="row in column.rows">
                                                                             <x-tollerus::inputs.button
                                                                                 type="inverse"
                                                                                 size="small"
                                                                                 x-text="row.label"
-                                                                                @click="open=false; $wire.matchFormToRow(lexemeId, formId, table.id, row.id);"
+                                                                                @click="open=false; $wire.matchFormToRow(lexemeId, formId, column.id, row.id);"
                                                                                 class="ml-4"
                                                                             />
                                                                         </template>

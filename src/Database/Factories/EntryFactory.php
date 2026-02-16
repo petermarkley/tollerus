@@ -26,8 +26,8 @@ class EntryFactory extends Factory
         $language->loadMissing([
             'wordClassGroups.wordClasses',
             'wordClassGroups.features.featureValues',
-            'wordClassGroups.inflectionTables.filterValues',
-            'wordClassGroups.inflectionTables.rows.filterValues',
+            'wordClassGroups.inflectionTables.columns.filterValues',
+            'wordClassGroups.inflectionTables.columns.rows.filterValues',
             'neographies.glyphs',
         ]);
 
@@ -75,96 +75,100 @@ class EntryFactory extends Factory
                     ->create(['position'=>$position]);
                 // Find base row(s) first
                 foreach ($wordClassGroup->inflectionTables as $table) {
-                    foreach ($table->rows as $row) {
-                        // Skip any non-base / derived rows
-                        if ($row->src_base !== null) {
-                            continue;
-                        }
-                        // Create form
-                        $baseForm = Form::factory()
-                            ->for($lexeme)
-                            ->for($language)
-                            ->withSpelling($language)
-                            ->create();
-                        // Add grammatical features
-                        $filterValues = collect([
-                            $table->filterValues,
-                            $row->filterValues
-                        ])->filter()->collapse();
-                        foreach ($filterValues as $featureValue) {
-                            (new FormFeatureValue([
-                                'form_id' => $baseForm->id,
-                                'feature_id' => $featureValue->feature_id,
-                                'value_id' => $featureValue->id,
-                            ]))->save();
-                        }
-                        // Mark first one as the entry's primary form
-                        if ($entry->primary_form === null) {
-                            $entry->primary_form = $baseForm->id;
-                            $entry->save();
+                    foreach ($table->columns as $column) {
+                        foreach ($column->rows as $row) {
+                            // Skip any non-base / derived rows
+                            if ($row->src_base !== null) {
+                                continue;
+                            }
+                            // Create form
+                            $baseForm = Form::factory()
+                                ->for($lexeme)
+                                ->for($language)
+                                ->withSpelling($language)
+                                ->create();
+                            // Add grammatical features
+                            $filterValues = collect([
+                                $column->filterValues,
+                                $row->filterValues
+                            ])->filter()->collapse();
+                            foreach ($filterValues as $featureValue) {
+                                (new FormFeatureValue([
+                                    'form_id' => $baseForm->id,
+                                    'feature_id' => $featureValue->feature_id,
+                                    'value_id' => $featureValue->id,
+                                ]))->save();
+                            }
+                            // Mark first one as the entry's primary form
+                            if ($entry->primary_form === null) {
+                                $entry->primary_form = $baseForm->id;
+                                $entry->save();
+                            }
                         }
                     }
                 }
                 // Create inflections
                 foreach ($wordClassGroup->inflectionTables as $table) {
-                    foreach ($table->rows as $row) {
-                        // Skip any base rows
-                        if ($row->src_base === null) {
-                            continue;
-                        }
-                        // Create form, irregular 1/20th of the time
-                        if ((bool)mt_rand(0,20)) {
-                            // Regular forms must follow inflection rules
-                            $transliterated = new AutoInflector(
-                                row: $row,
-                                base: $baseForm->transliterated,
-                                type: MorphRulePatternType::Transliterated,
-                            )->inflect();
-                            $phonemic = new AutoInflector(
-                                row: $row,
-                                base: $baseForm->phonemic,
-                                type: MorphRulePatternType::Phonemic,
-                            )->inflect();
-                            $form = Form::factory()
-                                ->for($lexeme)
-                                ->for($language)
-                                ->create([
-                                    'transliterated' => $transliterated,
-                                    'phonemic' => $phonemic,
-                                ]);
-                            foreach ($language->neographies as $neography) {
-                                $native = new AutoInflector(
-                                    row: $row,
-                                    base: $baseForm->nativeSpellings
-                                        ->first(fn($t)=>$t->neography_id===$neography->id)
-                                        ->spelling,
-                                    type: MorphRulePatternType::Native,
-                                    neographyId: $neography->id,
-                                )->inflect();
-                                NativeSpelling::factory()
-                                    ->for($form)
-                                    ->for($neography)
-                                    ->create(['spelling'=>$native]);
+                    foreach ($table->columns as $column) {
+                        foreach ($column->rows as $row) {
+                            // Skip any base rows
+                            if ($row->src_base === null) {
+                                continue;
                             }
-                        } else {
-                            // Irregular forms can be whatever
-                            $form = Form::factory()
-                                ->for($lexeme)
-                                ->for($language)
-                                ->withSpelling($language)
-                                ->create(['irregular'=>true]);
-                        }
-                        // Add grammatical features
-                        $filterValues = collect([
-                            $table->filterValues,
-                            $row->filterValues
-                        ])->filter()->collapse();
-                        foreach ($filterValues as $featureValue) {
-                            (new FormFeatureValue([
-                                'form_id' => $form->id,
-                                'feature_id' => $featureValue->feature_id,
-                                'value_id' => $featureValue->id,
-                            ]))->save();
+                            // Create form, irregular 1/20th of the time
+                            if ((bool)mt_rand(0,20)) {
+                                // Regular forms must follow inflection rules
+                                $transliterated = new AutoInflector(
+                                    row: $row,
+                                    base: $baseForm->transliterated,
+                                    type: MorphRulePatternType::Transliterated,
+                                )->inflect();
+                                $phonemic = new AutoInflector(
+                                    row: $row,
+                                    base: $baseForm->phonemic,
+                                    type: MorphRulePatternType::Phonemic,
+                                )->inflect();
+                                $form = Form::factory()
+                                    ->for($lexeme)
+                                    ->for($language)
+                                    ->create([
+                                        'transliterated' => $transliterated,
+                                        'phonemic' => $phonemic,
+                                    ]);
+                                foreach ($language->neographies as $neography) {
+                                    $native = new AutoInflector(
+                                        row: $row,
+                                        base: $baseForm->nativeSpellings
+                                            ->first(fn($t)=>$t->neography_id===$neography->id)
+                                            ->spelling,
+                                        type: MorphRulePatternType::Native,
+                                        neographyId: $neography->id,
+                                    )->inflect();
+                                    NativeSpelling::factory()
+                                        ->for($form)
+                                        ->for($neography)
+                                        ->create(['spelling'=>$native]);
+                                }
+                            } else {
+                                // Irregular forms can be whatever
+                                $form = Form::factory()
+                                    ->for($lexeme)
+                                    ->for($language)
+                                    ->withSpelling($language)
+                                    ->create(['irregular'=>true]);
+                            }
+                            // Add grammatical features
+                            $filterValues = collect([
+                                $column->filterValues,
+                                $row->filterValues
+                            ])->filter()->collapse();
+                            foreach ($filterValues as $featureValue) {
+                                (new FormFeatureValue([
+                                    'form_id' => $form->id,
+                                    'feature_id' => $featureValue->feature_id,
+                                    'value_id' => $featureValue->id,
+                                ]))->save();
+                            }
                         }
                     }
                 }

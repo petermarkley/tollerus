@@ -17,13 +17,12 @@ use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\GlobalId;
+use PeterMarkley\Tollerus\Models\InflectionColumn;
+use PeterMarkley\Tollerus\Models\InflectionRow;
 use PeterMarkley\Tollerus\Models\InflectionTable;
-use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\MorphRule;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
-use PeterMarkley\Tollerus\Models\Pivots\InflectionTableFilter;
-use PeterMarkley\Tollerus\Models\Pivots\InflectionTableRowFilter;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class AutoInflectionEditor extends Component
@@ -36,7 +35,8 @@ class AutoInflectionEditor extends Component
     // Models
     #[Locked] public Language $language;
     #[Locked] public WordClassGroup $group;
-    #[Locked] public InflectionTableRow $row;
+    #[Locked] public InflectionTable $table;
+    #[Locked] public InflectionRow $row;
     #[Locked] public array $rules;
     // UI input layer
     public array $ruleForm = [];
@@ -72,29 +72,34 @@ class AutoInflectionEditor extends Component
                         'language' => $this->language->id,
                         'tab' => 'grammar',
                     ]), 'text' => $this->language->name],
-                    ['href' => route('tollerus.admin.languages.inflection-tables', [
+                    ['href' => route('tollerus.admin.languages.inflections.edit', [
                         'language' => $this->language->id,
                         'wordClassGroup' => $this->group->id,
-                    ]), 'text' => mb_ucfirst($groupName) . ' ' . __('tollerus::ui.inflection_tables')],
+                    ]), 'text' => __('tollerus::ui.inflections')],
+                    ['href' => route('tollerus.admin.languages.inflections.table.edit', [
+                        'language' => $this->language->id,
+                        'wordClassGroup' => $this->group->id,
+                        'inflectionTable' => $this->table->id,
+                    ]), 'text' => __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.table')])],
                 ],
             ])->title($pageTitle);
     }
-    public function mount(Language $language, WordClassGroup $wordClassGroup, InflectionTableRow $row): void
+    public function mount(Language $language, WordClassGroup $wordClassGroup, InflectionTable $inflectionTable, InflectionRow $row): void
     {
         /**
-         * `/tollerus/admin/languages/{language}/grammar/{wordClassGroup}/inflection-rows/{row}/auto`
+         * `/tollerus/admin/languages/{language}/grammar/{wordClassGroup}/inflections/{inflectionTable}/rows/{row}/auto`
          *
          * We can't use `->scopeBindings()` on this route, because the
-         * user-friendly URL flattens the hierarchy of WordClassGroup >
-         * InflectionTable > InflectionTableRow, skipping over tables.
-         * (Because we handle tables as a single unit at
-         * `grammar/{wordClassGroup}/inflection-tables`, with no
-         * dedicated page per table.)
+         * user-friendly URL flattens the hierarchy of InflectionTable >
+         * InflectionColumn > InflectionRow, skipping over columns.
+         * (Because we handle columns as a single unit at
+         * `inflections/{inflectionTable}`, with no dedicated page per
+         * column.)
          *
          * Since there's no foreign key reference in the row object
-         * pointing to its grandparent word class group, the database
-         * schema makes it very awkward to have a model relation for
-         * this or therefore a scoped model binding.
+         * pointing to its grandparent table, the database schema makes
+         * it very awkward to have a model relation for this or
+         * therefore a scoped model binding.
          *
          * As a consequence of all that, we now have to manually
          * validate the model bindings for this page, across the entire
@@ -105,9 +110,13 @@ class AutoInflectionEditor extends Component
         if ($wordClassGroup->language_id != $language->id) {
             abort(404);
         }
-        // Validate binding for WordClassGroup >> InflectionTableRow
-        $row->loadMissing('inflectionTable');
-        if ($row->inflectionTable->word_class_group_id != $wordClassGroup->id) {
+        // Validate binding for WordClassGroup > InflectionTable
+        if ($inflectionTable->word_class_group_id != $wordClassGroup->id) {
+            abort(404);
+        }
+        // Validate binding for InflectionTable >> InflectionRow
+        $row->loadMissing('column');
+        if ($row->column->inflect_table_id != $inflectionTable->id) {
             abort(404);
         }
 
@@ -116,6 +125,7 @@ class AutoInflectionEditor extends Component
             'neographies',
         ]);
         $this->group = $wordClassGroup;
+        $this->table = $inflectionTable;
         $this->row = $row;
         if ($this->language->neographies->isNotEmpty()) {
             if ($this->language->primary_neography !== null) {
@@ -245,7 +255,6 @@ class AutoInflectionEditor extends Component
                 ],
             ],
         ];
-        // dd($this->ruleForm);
     }
 
     /**

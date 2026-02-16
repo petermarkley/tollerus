@@ -23,15 +23,8 @@ class InflectionTable extends Model
     {
         return $this->belongsTo(WordClassGroup::class);
     }
-    public function rows(): HasMany
+    public function columns(): HasMany
     {
-        return $this->hasMany(InflectionTableRow::class, 'inflect_table_id');
-    }
-    public function filterValues(): BelongsToMany
-    {
-        return $this
-            ->belongsToMany(FeatureValue::class, 'inflect_table_filters', 'inflect_table_id', 'value_id')
-            ->withPivot('feature_id')
-            ->using(Pivots\InflectionTableFilter::class);
+        return $this->hasMany(InflectionColumn::class, 'inflect_table_id');
     }
 }

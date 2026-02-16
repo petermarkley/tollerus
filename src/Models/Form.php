@@ -45,7 +45,7 @@ class Form extends Model
     }
     public function affectedInflections(): HasMany
     {
-        return $this->hasMany(InflectionTableRow::class, 'src_particle');
+        return $this->hasMany(InflectionRow::class, 'src_particle');
     }
 
     protected static function booted()

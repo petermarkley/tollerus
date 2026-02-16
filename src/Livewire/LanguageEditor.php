@@ -235,8 +235,8 @@ class LanguageEditor extends Component
             $group->loadMissing([
                 'wordClasses',
                 'features.featureValues',
-                'inflectionTables.filterValues',
-                'inflectionTables.rows.filterValues',
+                'inflectionTables.columns.filterValues',
+                'inflectionTables.columns.rows.filterValues',
             ]);
         }
         $this->grammarForm = collect($this->wordClassGroups)
@@ -261,18 +261,23 @@ class LanguageEditor extends Component
                             ])->toArray(),
                         ],
                     ])->toArray(),
-                    'tables' => $group->inflectionTables->sortBy('position')->mapWithKeys(fn ($table) => [
-                        $table->id => [
-                            'label' => $table->label,
-                            'rows' => $table->rows->sortBy('position')->mapWithKeys(fn ($row) => [
-                                $row->id => [
-                                    'label' => $row->label,
-                                    'labelBrief' => $row->label_brief,
-                                ],
-                            ])->toArray(),
-                        ],
-                    ])->toArray(),
-                    'tablesUrl' => route('tollerus.admin.languages.inflection-tables', [
+                    'tables' => $group->inflectionTables->sortBy('position')->map(fn ($table) => [
+                        'tableId' => $table->id,
+                        'position' => $table->position,
+                        'columns' => $table->columns->sortBy('position')->map(fn ($column) => [
+                            'columnId' => $column->id,
+                            'label' => $column->label,
+                            'position' => $column->position,
+                            'rows' => $column->rows->sortBy('position')->map(fn ($row) => [
+                                'rowId' => $row->id,
+                                'label' => $row->label,
+                                'labelBrief' => $row->label_brief,
+                                'labelLong' => $row->label_long,
+                                'position' => $row->position,
+                            ])->values()->toArray(),
+                        ])->values()->toArray(),
+                    ])->values()->toArray(),
+                    'inflectionsUrl' => route('tollerus.admin.languages.inflections.edit', [
                         'language' => $this->language,
                         'wordClassGroup' => $group,
                     ]),
