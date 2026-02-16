@@ -63,11 +63,15 @@ class DemoConlangSeeder extends Seeder
          * Step 2: Run actions
          */
         $fontAssetService->publish(FontFormat::from('svg'), $language->primaryNeography);
-        $this->command->call('tollerus:convert-font', [
-            'neography' => $language->primaryNeography->machine_name,
-            'src_format' => 'svg',
-            'dest_format' => 'ttf',
-        ]);
+        try {
+            $this->command->call('tollerus:convert-font', [
+                'neography' => $language->primaryNeography->machine_name,
+                'src_format' => 'svg',
+                'dest_format' => 'ttf',
+            ]);
+        } catch (\Throwable $e) {
+            $this->command->warn("Conversion of SVG font to TTF failed. (Do you have FontForge installed?)");
+        }
         $svgToKeyboard($language->primaryNeography);
 
         /**
