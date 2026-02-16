@@ -3,39 +3,34 @@
         msgs: {
             no_cancel: @js(__('tollerus::ui.no_cancel')),
             yes_delete: @js(__('tollerus::ui.yes_delete')),
-            stack: @js(__('tollerus::ui.stack')),
-            stack_description: @js(__('tollerus::ui.stack_description')),
             align_on_stack: @js(__('tollerus::ui.align_on_stack')),
             align_on_stack_description: @js(__('tollerus::ui.align_on_stack_description')),
-            table_fold: @js(__('tollerus::ui.table_fold')),
-            table_fold_description: @js(__('tollerus::ui.table_fold_description')),
+            cols_fold: @js(__('tollerus::ui.cols_fold')),
+            cols_fold_description: @js(__('tollerus::ui.cols_fold_description')),
             rows_fold: @js(__('tollerus::ui.rows_fold')),
             rows_fold_description: @js(__('tollerus::ui.rows_fold_description')),
-            delete_inflection_table_confirmation: @js(__('tollerus::ui.delete_inflection_table_confirmation')),
+            delete_inflection_column_confirmation: @js(__('tollerus::ui.delete_inflection_column_confirmation')),
             delete_inflection_row_confirmation: @js(__('tollerus::ui.delete_inflection_row_confirmation')),
         },
         tableForm: $wire.entangle('tableForm'),
         features: $wire.entangle('features'),
-        get tablesFiltered() {
-            return Object.fromEntries(Object.entries(this.tableForm).filter(([k, v]) => !isNaN(k)));
-        },
-        moveTable(tableElem, tableId, dir) {
-            let neighborId = $store.reorderFunctions.getNeighborId(this.tablesFiltered, tableId, dir);
+        moveColumn(columnElem, columnId, dir) {
+            let neighborId = $store.reorderFunctions.getNeighborId(this.tableForm.columns, columnId, dir);
             if (neighborId === null) {
                 return;
             }
-            let neighborElem = document.getElementById('table_' + neighborId);
-            $store.reorderFunctions.swapItems(tableElem, neighborElem);
+            let neighborElem = document.getElementById('column_' + neighborId);
+            $store.reorderFunctions.swapItems(columnElem, neighborElem);
             const onDone = (event) => {
                 // Listener should be ephemeral
                 event.target.removeEventListener('transitionend', onDone);
                 // Livewire request
-                $wire.swapTables(tableId, neighborId);
+                $wire.swapColumns(columnId, neighborId);
             };
-            tableElem.addEventListener('transitionend', onDone);
+            columnElem.addEventListener('transitionend', onDone);
         },
-        moveRow(tableId, rowElem, rowId, dir) {
-            let neighborId = $store.reorderFunctions.getNeighborId(this.tableForm[tableId].rows, rowId, dir);
+        moveRow(columnId, rowElem, rowId, dir) {
+            let neighborId = $store.reorderFunctions.getNeighborId(this.tableForm.columns[columnId].rows, rowId, dir);
             if (neighborId === null) {
                 return;
             }
@@ -45,56 +40,72 @@
                 // Listener should be ephemeral
                 event.target.removeEventListener('transitionend', onDone);
                 // Livewire request
-                $wire.swapRows(tableId, rowId, neighborId);
+                $wire.swapRows(columnId, rowId, neighborId);
             };
             rowElem.addEventListener('transitionend', onDone);
         },
     }"
-    @table-delete.window="$wire.deleteTable($event.detail.tableId);"
+    @column-delete.window="$wire.deleteColumn($event.detail.columnId);"
     @row-delete.window="$wire.deleteRow($event.detail.rowId);"
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
             <span>{{ mb_ucfirst($groupName) }}</span>
-            <span>{{ __('tollerus::ui.inflection_tables') }}</span>
+            <span>{{ __('tollerus::ui.inflection_table') }}</span>
         </h1>
         <div class="flex flex-col gap-6">
-            <x-tollerus::panel>
-                <fieldset class="flex flex-col gap-2 items-start">
-                    <h3 class="font-bold text-lg">
-                        <label for="base_row" class="flex flex-row gap-4 items-center">
-                            <x-tollerus::icons.bricks />
-                            <span>{{ __('tollerus::ui.base_row') }}</span>
-                        </label>
-                    </h3>
-                    <div class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                        <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }} {{ __('tollerus::ui.used_in_auto_inflection') }}</legend></div>
-                        <div>
-                            <x-tollerus::inputs.select
-                                idExpression="'base_row'"
-                                label="{{ __('tollerus::ui.base_row') }}"
-                                showLabel="false"
-                                model="tableForm.baseRow"
-                                @change="$wire.updateBaseRow($el.value);"
-                            >
-                                <option value="" class="cursor-pointer italic" x-bind:selected="tableForm.baseRow===null || tableForm.baseRow===''">{{ __('tollerus::ui.none') }}</option>
-                                <template x-for="(table, tableId) in tablesFiltered">
-                                    <optgroup x-bind:label="table.label">
-                                        <template x-for="(row, rowId) in table.rows">
-                                            <option x-bind:value="rowId" class="cursor-pointer" x-text="row.label" x-bind:selected="tableForm.baseRow==rowId"></option>
-                                        </template>
-                                    </optgroup>
-                                </template>
-                            </x-tollerus::inputs.select>
-                        </div>
+            <x-tollerus::panel class="flex flex-col gap-4">
+                <div class="flex flex-col items-start">
+                    <x-tollerus::inputs.toggle
+                        idExpression="'table_visible'"
+                        model="tableForm.visible"
+                        modelIsAlpine="true"
+                        label="{{ __('tollerus::ui.visible') }}"
+                        @change="$wire.updateTable('visible', $el.checked, id);"
+                    />
+                </div>
+                <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
+                    <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['align_on_stack_description']"></legend></div>
+                    <div class="flex flex-row justify-start md:justify-end md:w-70 shrink-0 text-left md:text-right">
+                        <x-tollerus::inputs.checkbox
+                            idExpression="'table_align_on_stack'"
+                            model="tableForm.alignOnStack"
+                            modelIsAlpine="true"
+                            label="{{ __('tollerus::ui.align_on_stack') }}"
+                            @change="$wire.updateTable('alignOnStack', $el.checked, id);"
+                        />
+                    </div>
+                </fieldset>
+                <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
+                    <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['cols_fold_description']"></legend></div>
+                    <div class="flex flex-row justify-start md:justify-end md:w-70 shrink-0 text-left md:text-right">
+                        <x-tollerus::inputs.checkbox
+                            idExpression="'table_cols_fold'"
+                            model="tableForm.colsFold"
+                            modelIsAlpine="true"
+                            label="{{ __('tollerus::ui.cols_fold') }}"
+                            @change="$wire.updateTable('colsFold', $el.checked, id);"
+                        />
+                    </div>
+                </fieldset>
+                <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
+                    <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['rows_fold_description']"></legend></div>
+                    <div class="flex flex-row justify-start md:justify-end md:w-70 shrink-0 text-left md:text-right">
+                        <x-tollerus::inputs.checkbox
+                            idExpression="'table_rows_fold'"
+                            model="tableForm.rowsFold"
+                            modelIsAlpine="true"
+                            label="{{ __('tollerus::ui.rows_fold') }}"
+                            @change="$wire.updateTable('rowsFold', $el.checked, id);"
+                        />
                     </div>
                 </fieldset>
             </x-tollerus::panel>
             <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-                <template x-for="([tableId, table], i) in $store.reorderFunctions.sortItems(tablesFiltered)">
+                <template x-for="([columnId, column], i) in $store.reorderFunctions.sortItems(tableForm.columns)">
                     <div
-                        x-bind:id="'table_' + tableId"
-                        data-obj="table"
+                        x-bind:id="'column_' + columnId"
+                        data-obj="column"
                         class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
                         x-bind:style="'order: '+i"
                         @transitionend="$nextTick(() => {animating=false});"
@@ -102,120 +113,72 @@
                         <x-tollerus::panel class="px-3 py-12 flex flex-col gap-6 justify-start shrink-0 rounded-l-full rounded-r-none">
                             <x-tollerus::inputs.button
                                 type="inverse"
-                                title="{{ __('tollerus::ui.move_inflection_table_up') }}"
-                                x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(tablesFiltered, tableId)"
-                                @click="animating=true; moveTable($el.closest('[data-obj=&quot;table&quot;]'), tableId, -1);"
+                                title="{{ __('tollerus::ui.move_column_up') }}"
+                                x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(tableForm.columns, columnId)"
+                                @click="animating=true; moveColumn($el.closest('[data-obj=&quot;column&quot;]'), columnId, -1);"
                             >
                                 <x-tollerus::icons.chevron-up class="h-8 w-8" />
-                                <span class="sr-only">{{ __('tollerus::ui.move_inflection_table_up') }}</span>
+                                <span class="sr-only">{{ __('tollerus::ui.move_column_up') }}</span>
                             </x-tollerus::inputs.button>
                             <x-tollerus::inputs.button
                                 type="inverse"
-                                title="{{ __('tollerus::ui.move_inflection_table_down') }}"
-                                x-bind:disabled="animating || $store.reorderFunctions.isLastItem(tablesFiltered, tableId)"
-                                @click="animating=true; moveTable($el.closest('[data-obj=&quot;table&quot;]'), tableId, +1);"
+                                title="{{ __('tollerus::ui.move_column_down') }}"
+                                x-bind:disabled="animating || $store.reorderFunctions.isLastItem(tableForm.columns, columnId)"
+                                @click="animating=true; moveColumn($el.closest('[data-obj=&quot;column&quot;]'), columnId, +1);"
                             >
                                 <x-tollerus::icons.chevron-down class="h-8 w-8" />
-                                <span class="sr-only">{{ __('tollerus::ui.move_inflection_table_down') }}</span>
+                                <span class="sr-only">{{ __('tollerus::ui.move_column_down') }}</span>
                             </x-tollerus::inputs.button>
                         </x-tollerus::panel>
                         <x-tollerus::panel class="flex flex-col gap-6 flex-grow rounded-l-none">
                             <h2 class="flex flex-row gap-2 items-center justify-between">
                                 <div class="font-bold text-xl flex flex-row gap-2 items-center">
-                                    <x-tollerus::icons.table class="h-8"/>
-                                    <span x-text="table.label" x-bind:class="{ 'font-normal italic': table.label.length==0 }"></span>
+                                    <x-tollerus::icons.columns class="h-8"/>
+                                    <span x-text="column.label" x-bind:class="{ 'font-normal italic': column.label.length==0 }"></span>
                                 </div>
                                 <x-tollerus::inputs.button
                                     type="secondary"
                                     size="small"
-                                    title="{{ __('tollerus::ui.delete_thing', ['thing' => __('tollerus::ui.inflection_table')]) }}"
+                                    title="{{ __('tollerus::ui.delete_thing', ['thing' => __('tollerus::ui.column')]) }}"
                                     @click="$dispatch('open-modal', {
-                                        message: msgs['delete_inflection_table_confirmation'],
+                                        message: msgs['delete_inflection_column_confirmation'],
                                         buttons: [
                                             { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
-                                            { text: msgs.yes_delete, type: 'primary', clickEvent: 'table-delete', payload: {tableId: tableId} }
+                                            { text: msgs.yes_delete, type: 'primary', clickEvent: 'column-delete', payload: {columnId: columnId} }
                                         ]
                                     });"
                                 >
                                     <x-tollerus::icons.delete/>
-                                    <span class="sr-only">{{ __('tollerus::ui.delete_thing', ['thing' => __('tollerus::ui.inflection_table')]) }}</span>
+                                    <span class="sr-only">{{ __('tollerus::ui.delete_thing', ['thing' => __('tollerus::ui.column')]) }}</span>
                                 </x-tollerus::inputs.button>
                             </h2>
                             <div class="flex flex-col items-start">
                                 <x-tollerus::inputs.toggle
-                                    idExpression="'table_' + tableId + '_visible'"
-                                    model="table.visible"
+                                    idExpression="'column_' + columnId + '_visible'"
+                                    model="column.visible"
                                     modelIsAlpine="true"
                                     label="{{ __('tollerus::ui.visible') }}"
-                                    @change="$wire.updateTable(tableId, 'visible', $el.checked, id);"
+                                    @change="$wire.updateColumn(columnId, 'visible', $el.checked, id);"
                                 />
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <x-tollerus::inputs.text-saveable
                                     showLabel="true"
-                                    idExpression="'table_' + tableId + '_label'"
-                                    model="table.label"
+                                    idExpression="'column_' + columnId + '_label'"
+                                    model="column.label"
                                     fieldName="{{ __('tollerus::ui.label') }}"
-                                    saveEvent="$wire.updateTable(tableId, 'label', document.getElementById(id).value, id);"
+                                    saveEvent="$wire.updateColumn(columnId, 'label', document.getElementById(id).value, id);"
                                 />
                                 <div class="flex flex-row justify-start">
                                     <x-tollerus::inputs.checkbox
-                                        idExpression="'table_' + tableId + '_show_label'"
-                                        model="table.showLabel"
+                                        idExpression="'column_' + columnId + '_show_label'"
+                                        model="column.showLabel"
                                         modelIsAlpine="true"
                                         label="{{ __('tollerus::ui.show_label') }}"
-                                        @change="$wire.updateTable(tableId, 'showLabel', $el.checked, id);"
+                                        @change="$wire.updateColumn(columnId, 'showLabel', $el.checked, id);"
                                     />
                                 </div>
                             </div>
-                            <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['stack_description']"></legend></div>
-                                <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                                    <x-tollerus::inputs.checkbox
-                                        idExpression="'table_' + tableId + '_stack'"
-                                        model="table.stack"
-                                        modelIsAlpine="true"
-                                        label="{{ __('tollerus::ui.stack') }}"
-                                        @change="$wire.updateTable(tableId, 'stack', $el.checked, id);"
-                                    />
-                                </div>
-                            </fieldset>
-                            <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['align_on_stack_description']"></legend></div>
-                                <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                                    <x-tollerus::inputs.checkbox
-                                        idExpression="'table_' + tableId + '_align_on_stack'"
-                                        model="table.alignOnStack"
-                                        modelIsAlpine="true"
-                                        label="{{ __('tollerus::ui.align_on_stack') }}"
-                                        @change="$wire.updateTable(tableId, 'alignOnStack', $el.checked, id);"
-                                    />
-                                </div>
-                            </fieldset>
-                            <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['table_fold_description']"></legend></div>
-                                <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                                    <x-tollerus::inputs.checkbox
-                                        idExpression="'table_' + tableId + '_table_fold'"
-                                        model="table.tableFold"
-                                        modelIsAlpine="true"
-                                        label="{{ __('tollerus::ui.table_fold') }}"
-                                        @change="$wire.updateTable(tableId, 'tableFold', $el.checked, id);"
-                                    />
-                                </div>
-                            </fieldset>
-                            <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
-                                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['rows_fold_description']"></legend></div>
-                                <div class="flex flex-row justify-start md:justify-end md:w-60 shrink-0 text-left md:text-right">
-                                    <x-tollerus::inputs.checkbox
-                                        idExpression="'table_' + tableId + '_rows_fold'"
-                                        model="table.rowsFold"
-                                        modelIsAlpine="true"
-                                        label="{{ __('tollerus::ui.rows_fold') }}"
-                                        @change="$wire.updateTable(tableId, 'rowsFold', $el.checked, id);"
-                                    />
-                                </div>
-                            </fieldset>
                             <x-tollerus::pane class="flex flex-col gap-4 items-start">
                                 <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
                                     <x-tollerus::icons.filter />
@@ -223,7 +186,7 @@
                                 </h3>
                                 <div class="flex flex-col gap-2 items-start w-full">
                                     <ul class="flex flex-row flex-wrap gap-2">
-                                        <template x-for="(filter, filterId) in table.filters">
+                                        <template x-for="(filter, filterId) in column.filters">
                                             <li class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm flex flex-row gap-1 items-center p-1">
                                                 <span x-text="filter.featureName + ': ' + filter.valueName"></span>
                                                 <x-tollerus::inputs.button
@@ -231,9 +194,9 @@
                                                     size="small"
                                                     class="align-middle"
                                                     title="{{ __('tollerus::ui.remove_filter') }}"
-                                                    @click="$wire.removeTableFilter(tableId, filter.valueId);"
+                                                    @click="$wire.removeColumnFilter(columnId, filter.valueId);"
                                                     wire:loading.attr="disabled"
-                                                    wire:target="removeTableFilter"
+                                                    wire:target="removeColumnFilter"
                                                 >
                                                     <x-tollerus::icons.x/>
                                                     <label class="sr-only">{{ __('tollerus::ui.remove_filter') }}</label>
@@ -260,10 +223,10 @@
                                                     <x-tollerus::inputs.button
                                                         type="inverse"
                                                         size="small"
-                                                        x-bind:class="{'ml-4': true, 'line-through': Object.values(table.filters).map((f)=>f.featureId).includes(feature.id)}"
-                                                        x-bind:disabled="Object.values(table.filters).map((f)=>f.featureId).includes(feature.id);"
+                                                        x-bind:class="{'ml-4': true, 'line-through': Object.values(column.filters).map((f)=>f.featureId).includes(feature.id)}"
+                                                        x-bind:disabled="Object.values(column.filters).map((f)=>f.featureId).includes(feature.id);"
                                                         x-text="value.name"
-                                                        @click="open=false; $wire.addTableFilter(tableId, value.id);"
+                                                        @click="open=false; $wire.addColumnFilter(columnId, value.id);"
                                                     />
                                                 </template>
                                             </div>
@@ -276,9 +239,9 @@
                                     <x-tollerus::icons.arrow-down-right />
                                     <span>{{ __('tollerus::ui.rows') }}</span>
                                 </h3>
-                                <template x-if="Object.keys(table.rows).length > 0">
+                                <template x-if="Object.keys(column.rows).length > 0">
                                     <div class="flex flex-col gap-4 items-start" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-                                        <template x-for="([rowId, row], i) in $store.reorderFunctions.sortItems(table.rows)">
+                                        <template x-for="([rowId, row], i) in $store.reorderFunctions.sortItems(column.rows)">
                                             <div
                                                 x-bind:id="'row_' + rowId"
                                                 data-obj="row"
@@ -290,8 +253,8 @@
                                                     <x-tollerus::inputs.button
                                                         type="inverse"
                                                         title="{{ __('tollerus::ui.move_row_up') }}"
-                                                        x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(table.rows, rowId)"
-                                                        @click="animating=true; moveRow(tableId, $el.closest('[data-obj=&quot;row&quot;]'), rowId, -1);"
+                                                        x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(column.rows, rowId)"
+                                                        @click="animating=true; moveRow(columnId, $el.closest('[data-obj=&quot;row&quot;]'), rowId, -1);"
                                                     >
                                                         <x-tollerus::icons.chevron-up class="h-8 w-8" />
                                                         <span class="sr-only">{{ __('tollerus::ui.move_row_up') }}</span>
@@ -299,8 +262,8 @@
                                                     <x-tollerus::inputs.button
                                                         type="inverse"
                                                         title="{{ __('tollerus::ui.move_row_down') }}"
-                                                        x-bind:disabled="animating || $store.reorderFunctions.isLastItem(table.rows, rowId)"
-                                                        @click="animating=true; moveRow(tableId, $el.closest('[data-obj=&quot;row&quot;]'), rowId, +1);"
+                                                        x-bind:disabled="animating || $store.reorderFunctions.isLastItem(column.rows, rowId)"
+                                                        @click="animating=true; moveRow(columnId, $el.closest('[data-obj=&quot;row&quot;]'), rowId, +1);"
                                                     >
                                                         <x-tollerus::icons.chevron-down class="h-8 w-8" />
                                                         <span class="sr-only">{{ __('tollerus::ui.move_row_down') }}</span>
@@ -315,7 +278,7 @@
                                                                     model="row.label"
                                                                     fieldName="{{ __('tollerus::ui.label') }}"
                                                                     showLabel="true"
-                                                                    saveEvent="$wire.updateRow(tableId, rowId, 'label', document.getElementById(id).value, id);"
+                                                                    saveEvent="$wire.updateRow(columnId, rowId, 'label', document.getElementById(id).value, id);"
                                                                 />
                                                             </div>
                                                             <div class="lg:w-80">
@@ -324,7 +287,7 @@
                                                                     model="row.labelBrief"
                                                                     fieldName="{{ __('tollerus::ui.abbreviation') }}"
                                                                     showLabel="true"
-                                                                    saveEvent="$wire.updateRow(tableId, rowId, 'labelBrief', document.getElementById(id).value, id);"
+                                                                    saveEvent="$wire.updateRow(columnId, rowId, 'labelBrief', document.getElementById(id).value, id);"
                                                                 />
                                                             </div>
                                                         </div>
@@ -351,7 +314,7 @@
                                                             model="row.labelLong"
                                                             fieldName="{{ __('tollerus::ui.label_long') }}"
                                                             showLabel="true"
-                                                            saveEvent="$wire.updateRow(tableId, rowId, 'labelLong', document.getElementById(id).value, id);"
+                                                            saveEvent="$wire.updateRow(columnId, rowId, 'labelLong', document.getElementById(id).value, id);"
                                                         />
                                                     </div>
                                                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
@@ -361,7 +324,7 @@
                                                                 model="row.visible"
                                                                 modelIsAlpine="true"
                                                                 label="{{ __('tollerus::ui.visible') }}"
-                                                                @change="$wire.updateRow(tableId, rowId, 'visible', $el.checked, id);"
+                                                                @change="$wire.updateRow(columnId, rowId, 'visible', $el.checked, id);"
                                                             />
                                                         </div>
                                                         <div class="flex flex-row justify-start">
@@ -370,7 +333,7 @@
                                                                 model="row.showLabel"
                                                                 modelIsAlpine="true"
                                                                 label="{{ __('tollerus::ui.show_label') }}"
-                                                                @change="$wire.updateRow(tableId, rowId, 'showLabel', $el.checked, id);"
+                                                                @change="$wire.updateRow(columnId, rowId, 'showLabel', $el.checked, id);"
                                                             />
                                                         </div>
                                                     </div>
@@ -417,13 +380,20 @@
                                                                             x-bind:class="{'ml-4': true, 'line-through': Object.values(row.filters).map((f)=>f.featureId).includes(feature.id)}"
                                                                             x-bind:disabled="Object.values(row.filters).map((f)=>f.featureId).includes(feature.id);"
                                                                             x-text="value.name"
-                                                                            @click="open=false; $wire.addRowFilter(tableId, rowId, value.id);"
+                                                                            @click="open=false; $wire.addRowFilter(columnId, rowId, value.id);"
                                                                         />
                                                                     </template>
                                                                 </div>
                                                             </template>
                                                         </x-tollerus::inputs.dropdown>
                                                     </div>
+                                                    <template x-if="row.isBaseRow">
+                                                        <p class="flex flex-row gap-2 justify-start items-center text-zinc-500 dark:text-zinc-500 italic">
+                                                            <x-tollerus::icons.bricks />
+                                                            <span>{{ __('tollerus::ui.base_row_cannot_auto_inflect') }}</span>
+                                                            <a x-bind:href="row.inflectionsUrl">{{ __('tollerus::ui.edit_at_group_level') }}</a>
+                                                        </p>
+                                                    </template>
                                                     <template x-if="row.srcBase !== null">
                                                         <x-tollerus::button type="secondary" size="small" x-bind:href="row.autoInflectionUrl" class="flex flex-row gap-1 items-center">
                                                             <x-tollerus::icons.bolt fill="currentColor" />
@@ -439,7 +409,7 @@
                                     size="small"
                                     title="{{ __('tollerus::ui.add_row') }}"
                                     class="relative flex flex-row gap-2 justify-center items-center w-full"
-                                    @click="$wire.createRow(tableId);"
+                                    @click="$wire.createRow(columnId);"
                                     wire:loading.attr="disabled"
                                     wire:target="createRow"
                                 >
@@ -454,14 +424,14 @@
             <div class="px-6 xl:px-0">
                 <x-tollerus::inputs.missing-data
                     size="medium" floating="true"
-                    title="{{ __('tollerus::ui.add_inflection_table') }}"
+                    title="{{ __('tollerus::ui.add_column') }}"
                     class="relative flex flex-row gap-2 justify-center items-center w-full"
-                    @click="$wire.createTable();"
+                    @click="$wire.createColumn();"
                     wire:loading.attr="disabled"
-                    wire:target="createTable"
+                    wire:target="createColumn"
                 >
                     <x-tollerus::icons.plus/>
-                    <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_inflection_table') }}</span>
+                    <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_column') }}</span>
                 </x-tollerus::inputs.missing-data>
             </div>
         </div>

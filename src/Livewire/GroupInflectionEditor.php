@@ -103,7 +103,7 @@ class GroupInflectionEditor extends Component
                 'tableEditUrl' => route('tollerus.admin.languages.inflections.table.edit', [
                     'language' => $this->language,
                     'wordClassGroup' => $this->group,
-                    'table' => $table,
+                    'inflectionTable' => $table,
                 ]),
             ]];
         })->toArray();

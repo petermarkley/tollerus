@@ -15,26 +15,29 @@ use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
 use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
+use PeterMarkley\Tollerus\Models\InflectionColumn;
+use PeterMarkley\Tollerus\Models\InflectionRow;
 use PeterMarkley\Tollerus\Models\InflectionTable;
-use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
-use PeterMarkley\Tollerus\Models\Pivots\InflectionTableFilter;
-use PeterMarkley\Tollerus\Models\Pivots\InflectionTableRowFilter;
+use PeterMarkley\Tollerus\Models\Pivots\InflectionColumnFilter;
+use PeterMarkley\Tollerus\Models\Pivots\InflectionRowFilter;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class InflectionTableEditor extends Component
 {
     use HasModelCache;
-    private $cacheRoot = 'tables';
+    private $cacheRoot = 'columns';
     // Models
     #[Locked] public Language $language;
     #[Locked] public WordClassGroup $group;
-    #[Locked] public array $tables;
+    #[Locked] public InflectionTable $table;
+    #[Locked] public array $columns;
     // UI input layer
     public array $tableForm = [];
     // UI display properties
     #[Locked] public array $features = [];
+    #[Locked] public $baseRow = null;
 
     /**
      * Livewire hooks
@@ -46,7 +49,7 @@ class InflectionTableEditor extends Component
         } else {
             $groupName = $this->group->primaryClass->name;
         }
-        $pageTitle = $this->language->name . ': ' . mb_ucfirst($groupName) . ': ' . __('tollerus::ui.inflection_tables');
+        $pageTitle = $this->language->name . ': ' . mb_ucfirst($groupName) . ': ' . __('tollerus::ui.inflection_table');
         return view('tollerus::livewire.inflection-table-editor', [
                 'groupName' => $groupName,
                 'pageTitle' => $pageTitle,
@@ -58,13 +61,18 @@ class InflectionTableEditor extends Component
                         'language' => $this->language->id,
                         'tab' => 'grammar',
                     ]), 'text' => $this->language->name],
+                    ['href' => route('tollerus.admin.languages.inflections.edit', [
+                        'language' => $this->language->id,
+                        'wordClassGroup' => $this->group->id,
+                    ]), 'text' => __('tollerus::ui.inflection_tables')],
                 ],
             ])->title($pageTitle);
     }
-    public function mount(Language $language, WordClassGroup $wordClassGroup): void
+    public function mount(Language $language, WordClassGroup $wordClassGroup, InflectionTable $inflectionTable): void
     {
         $this->language = $language;
         $this->group = $wordClassGroup;
+        $this->table = $inflectionTable;
         $this->refreshTableForm();
     }
 
@@ -73,9 +81,10 @@ class InflectionTableEditor extends Component
      */
     public function refreshTableForm(): void
     {
-        $this->tables = $this->group->inflectionTables->sortBy('position')->all();
+        $this->columns = $this->table->columns->sortBy('position')->all();
         $this->group->loadMissing([
             'features.featureValues',
+            'inflectionTables.columns.rows',
         ]);
         $this->features = $this->group->features->sortBy('name')->map(fn ($f) => [
             'id' => $f->id,
@@ -85,59 +94,14 @@ class InflectionTableEditor extends Component
                 'name' => $v->name,
             ])->toArray(),
         ])->toArray();
-        foreach ($this->tables as $table) {
-            $table->loadMissing([
+        foreach ($this->columns as $column) {
+            $column->loadMissing([
                 'filterValues.feature',
                 'rows.filterValues.feature',
             ]);
         }
-        $primaryNeographyId = $this->language->primary_neography;
-        $neographies = $this->language->neographies;
-        $this->tableForm = collect($this->tables)->mapWithKeys(function ($table) use ($primaryNeographyId, $neographies) {
-            return [$table->id => [
-                'label'        => $table->label,
-                'visible'      => (bool)($table->visible),
-                'showLabel'    => (bool)($table->show_label),
-                'position'     => $table->position,
-                'stack'        => (bool)($table->stack),
-                'alignOnStack' => (bool)($table->align_on_stack),
-                'tableFold'    => (bool)($table->table_fold),
-                'rowsFold'     => (bool)($table->rows_fold),
-                'filters' => $table->filterValues->mapWithKeys(function ($filterValue) {
-                    return [$filterValue->id => [
-                        'featureId'   => $filterValue->feature->id,
-                        'featureName' => $filterValue->feature->name,
-                        'valueId'     => $filterValue->id,
-                        'valueName'   => $filterValue->name,
-                    ]];
-                })->toArray(),
-                'rows' => $table->rows->sortBy('position')->mapWithKeys(function ($row) use ($primaryNeographyId, $neographies) {
-                    return [$row->id => [
-                        'label'      => $row->label,
-                        'labelBrief' => $row->label_brief,
-                        'labelLong'  => $row->label_long,
-                        'visible'    => (bool)($row->visible),
-                        'showLabel'  => (bool)($row->show_label),
-                        'position'   => $row->position,
-                        'srcBase'    => $row->src_base,
-                        'filters' => $row->filterValues->mapWithKeys(function ($filterValue) {
-                            return [$filterValue->id => [
-                                'featureId'   => $filterValue->feature->id,
-                                'featureName' => $filterValue->feature->name,
-                                'valueId'     => $filterValue->id,
-                                'valueName'   => $filterValue->name,
-                            ]];
-                        })->toArray(),
-                        'autoInflectionUrl' => route('tollerus.admin.languages.auto-inflection', [
-                            'language' => $this->language,
-                            'wordClassGroup' => $this->group,
-                            'row' => $row,
-                        ]),
-                    ]];
-                })->toArray(),
-            ]];
-        })->toArray();
-        $nullRows = collect($this->tables)
+        $nullRows = collect($this->group->inflectionTables)
+            ->flatMap->columns
             ->flatMap->rows
             ->map(fn ($r) => [
                 'id' => $r->id,
@@ -146,84 +110,126 @@ class InflectionTableEditor extends Component
             ->pluck('id')
             ->toArray();
         if (count($nullRows) !== 1) {
-            $this->tableForm['baseRow'] = null;
+            $this->baseRow = null;
         } else {
-            $this->tableForm['baseRow'] = $nullRows[0];
+            $this->baseRow = $nullRows[0];
         }
+        $this->tableForm = [
+            'visible'      => (bool)($this->table->visible),
+            'position'     => $this->table->position,
+            'alignOnStack' => (bool)($this->table->align_on_stack),
+            'colsFold'     => (bool)($this->table->cols_fold),
+            'rowsFold'     => (bool)($this->table->rows_fold),
+            'columns' => collect($this->columns)->mapWithKeys(function ($column) {
+                return [$column->id => [
+                    'label'        => $column->label,
+                    'visible'      => (bool)($column->visible),
+                    'showLabel'    => (bool)($column->show_label),
+                    'position'     => $column->position,
+                    'filters' => $column->filterValues->mapWithKeys(function ($filterValue) {
+                        return [$filterValue->id => [
+                            'featureId'   => $filterValue->feature->id,
+                            'featureName' => $filterValue->feature->name,
+                            'valueId'     => $filterValue->id,
+                            'valueName'   => $filterValue->name,
+                        ]];
+                    })->toArray(),
+                    'rows' => $column->rows->sortBy('position')->mapWithKeys(function ($row) {
+                        return [$row->id => [
+                            'label'      => $row->label,
+                            'labelBrief' => $row->label_brief,
+                            'labelLong'  => $row->label_long,
+                            'visible'    => (bool)($row->visible),
+                            'showLabel'  => (bool)($row->show_label),
+                            'position'   => $row->position,
+                            'srcBase'    => $row->src_base,
+                            'isBaseRow'  => $row->id === $this->baseRow,
+                            'inflectionsUrl' => route('tollerus.admin.languages.inflections.edit', [
+                                'language' => $this->language->id,
+                                'wordClassGroup' => $this->group->id,
+                            ]),
+                            'filters' => $row->filterValues->mapWithKeys(function ($filterValue) {
+                                return [$filterValue->id => [
+                                    'featureId'   => $filterValue->feature->id,
+                                    'featureName' => $filterValue->feature->name,
+                                    'valueId'     => $filterValue->id,
+                                    'valueName'   => $filterValue->name,
+                                ]];
+                            })->toArray(),
+                            'autoInflectionUrl' => route('tollerus.admin.languages.inflections.table.auto-inflection', [
+                                'language' => $this->language,
+                                'wordClassGroup' => $this->group,
+                                'inflectionTable' => $this->table,
+                                'row' => $row,
+                            ]),
+                        ]];
+                    })->toArray(),
+                ]];
+            })->toArray(),
+        ];
     }
 
     /**
      * Granular UI functions
      */
-    public function updateBaseRow(string $val): void
+    public function updateTable(string $propName, string $propVal, ?string $domId = ''): void
     {
+        // $propName whitelist
+        $allowedPropData = [
+            'visible'      => ['type' => 'boolean', 'column' => 'visible'],
+            'alignOnStack' => ['type' => 'boolean', 'column' => 'align_on_stack'],
+            'colsFold'     => ['type' => 'boolean', 'column' => 'cols_fold'],
+            'rowsFold'     => ['type' => 'boolean', 'column' => 'rows_fold'],
+        ];
+        $allowedPropNames = array_keys($allowedPropData);
+        if (!in_array($propName, $allowedPropNames, true)) {
+            $this->dispatch('column-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+        }
+        // Assign appropriately by type
+        switch ($allowedPropData[$propName]['type']) {
+            case 'boolean':
+                $this->table[$allowedPropData[$propName]['column']] = (bool) filter_var($propVal, FILTER_VALIDATE_BOOLEAN);
+            break;
+            case 'string':
+            default:
+                $this->table[$allowedPropData[$propName]['column']] = $propVal;
+            break;
+        }
+        // Save to database
         try {
-            $connection = config('tollerus.connection', 'tollerus');
-            DB::connection($connection)->transaction(function () use ($val) {
-                $rowsCollection = collect($this->tables)->flatMap->rows;
-                /**
-                 * We need to first set the base row to comply with
-                 * the model's logic constraints.
-                 */
-                if (!empty($val)) {
-                    foreach ($rowsCollection as $row) {
-                        if ($row->id == $val) {
-                            $row->src_base = null;
-                            $row->save();
-                            break;
-                        }
-                    }
-                }
-                /**
-                 * Now we can point all the other rows to it.
-                 */
-                foreach ($rowsCollection as $row) {
-                    if (empty($val)) {
-                        // If there is no base row, set everything to null.
-                        $row->src_base = null;
-                        $row->save();
-                    } elseif ($row->id != $val) {
-                        // If there is a base row, set all others to reference it.
-                        $row->src_base = (int)$val;
-                        $row->save();
-                    }
-                }
-            });
+            $this->table->save();
+            $this->dispatch('text-save-success', id: $domId);
         } catch (\Throwable $e) {
-            $this->dispatch('baserow-update-failure');
+            $this->dispatch('table-update-failure');
             throw $e;
         }
-        $this->refreshTableForm();
     }
-    public function createTable(): void
+    public function createColumn(): void
     {
         try {
-            $nextPosition = collect($this->tables)->max('position') + 1;
-            $table = CreateWithUniqueName::handle(
-                startNum: $this->group->inflectionTables()->count(),
-                createFunc: fn ($tryName) => $this->group->inflectionTables()->create([
+            $nextPosition = collect($this->columns)->max('position') + 1;
+            $column = CreateWithUniqueName::handle(
+                startNum: $this->table->columns()->count(),
+                createFunc: fn ($tryName) => $this->table->columns()->create([
                     'label' => $tryName,
                     'position' => $nextPosition,
-                    'stack' => false,
-                    'align_on_stack' => false,
-                    'table_fold' => false,
-                    'rows_fold' => false,
                 ]),
             );
         } catch (\Throwable $e) {
-            $this->dispatch('table-add-failure');
+            $this->dispatch('column-add-failure');
             throw $e;
         }
         $this->refreshTableForm();
     }
-    public function updateTable(string $tableId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateColumn(string $columnId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
-        $tableModel = $this->findInCache('table-update-failure', [
+        $columnModel = $this->findInCache('column-update-failure', [
             [
-                'id' => $tableId,
-                'objectType' => InflectionTable::class,
-                'failMessage' => ['tableId' => [__('tollerus::error.invalid_inflection_table')]],
+                'id' => $columnId,
+                'objectType' => InflectionColumn::class,
+                'failMessage' => ['columnId' => [__('tollerus::error.invalid_inflection_column')]],
             ],
         ]);
         // $propName whitelist
@@ -231,130 +237,127 @@ class InflectionTableEditor extends Component
             'label'        => ['type' => 'string', 'column' => 'label'],
             'visible'      => ['type' => 'boolean', 'column' => 'visible'],
             'showLabel'    => ['type' => 'boolean', 'column' => 'show_label'],
-            'stack'        => ['type' => 'boolean', 'column' => 'stack'],
-            'alignOnStack' => ['type' => 'boolean', 'column' => 'align_on_stack'],
-            'tableFold'    => ['type' => 'boolean', 'column' => 'table_fold'],
-            'rowsFold'     => ['type' => 'boolean', 'column' => 'rows_fold'],
         ];
         $allowedPropNames = array_keys($allowedPropData);
         if (!in_array($propName, $allowedPropNames, true)) {
-            $this->dispatch('table-update-failure');
+            $this->dispatch('column-update-failure');
             throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
         }
         // Assign appropriately by type
         switch ($allowedPropData[$propName]['type']) {
             case 'boolean':
-                $tableModel[$allowedPropData[$propName]['column']] = (bool) filter_var($propVal, FILTER_VALIDATE_BOOLEAN);
+                $columnModel[$allowedPropData[$propName]['column']] = (bool) filter_var($propVal, FILTER_VALIDATE_BOOLEAN);
             break;
             case 'string':
             default:
-                $tableModel[$allowedPropData[$propName]['column']] = $propVal;
+                $columnModel[$allowedPropData[$propName]['column']] = $propVal;
             break;
         }
         // Save to database
         try {
-            $tableModel->save();
+            $columnModel->save();
             $this->dispatch('text-save-success', id: $domId);
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages(['table.'.$propName => [__('tollerus::error.duplicate_of_unique_per_group')]]);
+                throw \Illuminate\Validation\ValidationException::withMessages(['column.'.$propName => [__('tollerus::error.duplicate_of_unique_per_group')]]);
             } else {
-                $this->dispatch('table-update-failure');
+                $this->dispatch('column-update-failure');
                 throw $e;
             }
         }
     }
-    public function deleteTable(string $tableId): void
+    public function deleteColumn(string $columnId): void
     {
-        InflectionTable::findOrFail((int)$tableId)->delete();
+        InflectionColumn::findOrFail((int)$columnId)->delete();
         $this->refreshTableForm();
     }
-    public function swapTables(string $tableId, string $neighborId): void
+    public function swapColumns(string $columnId, string $neighborId): void
     {
         try {
             $connection = config('tollerus.connection', 'tollerus');
-            DB::connection($connection)->transaction(function () use ($tableId, $neighborId) {
-                $tablesCollection = collect($this->tables);
-                $tableModel    = $tablesCollection->firstWhere('id', $tableId);
-                $neighborModel = $tablesCollection->firstWhere('id', $neighborId);
-                $oldTablePosition    = (int) $this->tableForm[$tableId]['position'];
-                $oldNeighborPosition = (int) $this->tableForm[$neighborId]['position'];
+            DB::connection($connection)->transaction(function () use ($columnId, $neighborId) {
+                $columnsCollection = collect($this->columns);
+                $columnsModel  = $columnsCollection->firstWhere('id', $columnId);
+                $neighborModel = $columnsCollection->firstWhere('id', $neighborId);
+                $oldColumnPosition   = (int) $this->tableForm['columns'][$columnId]['position'];
+                $oldNeighborPosition = (int) $this->tableForm['columns'][$neighborId]['position'];
                 /**
                  * Apparently the 'unique' constraint applies even within a transaction.
                  * So we need to carefully move one of the models out of the way first.
                  */
-                $minPosition = $tablesCollection->min('position');
+                $minPosition = $columnsCollection->min('position');
                 $neighborModel->position = $minPosition - 1;
                 $neighborModel->save();
                 /**
                  * And finally we can just set and save both correct values.
                  */
-                $tableModel->position = $oldNeighborPosition;
-                $tableModel->save();
-                $neighborModel->position = $oldTablePosition;
+                $columnsModel->position = $oldNeighborPosition;
+                $columnsModel->save();
+                $neighborModel->position = $oldColumnPosition;
                 $neighborModel->save();
             });
         } catch (\Throwable $e) {
-            $this->dispatch('table-swap-failure');
+            $this->dispatch('column-swap-failure');
             throw $e;
         }
         $this->refreshTableForm();
     }
-    public function addTableFilter(string $tableId, string $valueId): void
+    public function addColumnFilter(string $columnId, string $valueId): void
     {
         // Find models
-        $tableModel = $this->findInCache('table-filter-add-failure', [
+        $columnsModel = $this->findInCache('column-filter-add-failure', [
             [
-                'id' => $tableId,
-                'objectType' => InflectionTable::class,
-                'failMessage' => ['tableId' => [__('tollerus::error.invalid_inflection_table')]],
+                'id' => $columnId,
+                'objectType' => InflectionColumn::class,
+                'failMessage' => ['columnId' => [__('tollerus::error.invalid_inflection_column')]],
             ],
         ]);
         $valueModel = FeatureValue::find($valueId);
         if (!($valueModel instanceof FeatureValue)) {
-            $this->dispatch('table-filter-add-failure');
+            $this->dispatch('column-filter-add-failure');
             return;
         }
         // Create pivot row
         try {
-            (new InflectionTableFilter([
-                'inflect_table_id' => $tableModel->id,
+            (new InflectionColumnFilter([
+                'inflect_column_id' => $columnsModel->id,
                 'feature_id' => $valueModel->feature_id,
                 'value_id' => $valueModel->id,
             ]))->save();
         } catch (\Throwable $e) {
-            $this->dispatch('table-filter-add-failure');
+            $this->dispatch('column-filter-add-failure');
             throw $e;
         }
         $this->refreshTableForm();
     }
-    public function removeTableFilter(string $tableId, string $valueId): void
+    public function removeColumnFilter(string $columnId, string $valueId): void
     {
-        InflectionTableFilter::where('inflect_table_id', (int)$tableId)
+        InflectionColumnFilter::where('inflect_column_id', (int)$columnId)
             ->where('value_id', (int)$valueId)
             ->firstOrFail()
             ->delete();
         $this->refreshTableForm();
     }
-    public function createRow(string $tableId): void
+    public function createRow(string $columnId): void
     {
         // Find model
-        $tableModel = $this->findInCache('row-add-failure', [
+        $columnsModel = $this->findInCache('row-add-failure', [
             [
-                'id' => $tableId,
-                'objectType' => InflectionTable::class,
-                'failMessage' => ['tableId' => [__('tollerus::error.invalid_inflection_table')]],
+                'id' => $columnId,
+                'objectType' => InflectionColumn::class,
+                'failMessage' => ['columnId' => [__('tollerus::error.invalid_inflection_column')]],
             ],
         ]);
         // Create row
         try {
-            $nextPosition = $tableModel->rows->max('position') + 1;
+            $nextPosition = $columnsModel->rows->max('position') + 1;
             $row = CreateWithUniqueName::handle(
-                startNum: $tableModel->rows()->count(),
-                createFunc: fn ($tryName) => $tableModel->rows()->create([
+                startNum: $columnsModel->rows()->count(),
+                createFunc: fn ($tryName) => $columnsModel->rows()->create([
                     'label' => $tryName,
                     'position' => $nextPosition,
+                    'src_base' => $this->baseRow,
                 ]),
             );
         } catch (\Throwable $e) {
@@ -363,20 +366,20 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
-    public function updateRow(string $tableId, string $rowId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateRow(string $columnId, string $rowId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
         $rowModel = $this->findInCache('row-update-failure', [
             [
-                'id' => $tableId,
-                'objectType' => InflectionTable::class,
-                'failMessage' => ['tableId' => [__('tollerus::error.invalid_inflection_table')]],
+                'id' => $columnId,
+                'objectType' => InflectionColumn::class,
+                'failMessage' => ['columnId' => [__('tollerus::error.invalid_inflection_column')]],
                 'relation' => 'rows',
             ],
             [
                 'id' => $rowId,
-                'objectType' => InflectionTableRow::class,
-                'failMessage' => ['rowId' => [__('tollerus::error.invalid_inflection_table_row')]],
+                'objectType' => InflectionRow::class,
+                'failMessage' => ['rowId' => [__('tollerus::error.invalid_inflection_row')]],
             ],
         ]);
         // $propName whitelist
@@ -418,24 +421,24 @@ class InflectionTableEditor extends Component
     }
     public function deleteRow(string $rowId): void
     {
-        InflectionTableRow::findOrFail((int)$rowId)->delete();
+        InflectionRow::findOrFail((int)$rowId)->delete();
         $this->refreshTableForm();
     }
-    public function swapRows(string $tableId, string $rowId, string $neighborId): void
+    public function swapRows(string $columnId, string $rowId, string $neighborId): void
     {
         try {
             $connection = config('tollerus.connection', 'tollerus');
-            DB::connection($connection)->transaction(function () use ($tableId, $rowId, $neighborId) {
-                $tableModel = collect($this->tables)->firstWhere('id', $tableId);
-                $rowModel      = $tableModel->rows->firstWhere('id', $rowId);
-                $neighborModel = $tableModel->rows->firstWhere('id', $neighborId);
-                $oldRowPosition      = (int) $this->tableForm[$tableId]['rows'][$rowId]['position'];
-                $oldNeighborPosition = (int) $this->tableForm[$tableId]['rows'][$neighborId]['position'];
+            DB::connection($connection)->transaction(function () use ($columnId, $rowId, $neighborId) {
+                $columnModel = collect($this->columns)->firstWhere('id', $columnId);
+                $rowModel      = $columnModel->rows->firstWhere('id', $rowId);
+                $neighborModel = $columnModel->rows->firstWhere('id', $neighborId);
+                $oldRowPosition      = (int) $this->tableForm['columns'][$columnId]['rows'][$rowId]['position'];
+                $oldNeighborPosition = (int) $this->tableForm['columns'][$columnId]['rows'][$neighborId]['position'];
                 /**
                  * Apparently the 'unique' constraint applies even within a transaction.
                  * So we need to carefully move one of the models out of the way first.
                  */
-                $minPosition = $tableModel->rows->min('position');
+                $minPosition = $columnModel->rows->min('position');
                 $neighborModel->position = $minPosition - 1;
                 $neighborModel->save();
                 /**
@@ -452,20 +455,20 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
-    public function addRowFilter(string $tableId, string $rowId, string $valueId): void
+    public function addRowFilter(string $columnId, string $rowId, string $valueId): void
     {
         // Find models
         $rowModel = $this->findInCache('row-filter-add-failure', [
             [
-                'id' => $tableId,
-                'objectType' => InflectionTable::class,
-                'failMessage' => ['tableId' => [__('tollerus::error.invalid_inflection_table')]],
+                'id' => $columnId,
+                'objectType' => InflectionColumn::class,
+                'failMessage' => ['columnId' => [__('tollerus::error.invalid_inflection_column')]],
                 'relation' => 'rows',
             ],
             [
                 'id' => $rowId,
-                'objectType' => InflectionTableRow::class,
-                'failMessage' => ['rowId' => [__('tollerus::error.invalid_inflection_table_row')]],
+                'objectType' => InflectionRow::class,
+                'failMessage' => ['rowId' => [__('tollerus::error.invalid_inflection_row')]],
             ],
         ]);
         $valueModel = FeatureValue::find($valueId);
@@ -475,8 +478,8 @@ class InflectionTableEditor extends Component
         }
         // Create pivot row
         try {
-            (new InflectionTableRowFilter([
-                'inflect_table_row_id' => $rowModel->id,
+            (new InflectionRowFilter([
+                'inflect_row_id' => $rowModel->id,
                 'feature_id' => $valueModel->feature_id,
                 'value_id' => $valueModel->id,
             ]))->save();
@@ -488,7 +491,7 @@ class InflectionTableEditor extends Component
     }
     public function removeRowFilter(string $rowId, string $valueId): void
     {
-        InflectionTableRowFilter::where('inflect_table_row_id', (int)$rowId)
+        InflectionRowFilter::where('inflect_row_id', (int)$rowId)
             ->where('value_id', (int)$valueId)
             ->firstOrFail()
             ->delete();

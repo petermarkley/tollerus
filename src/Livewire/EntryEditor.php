@@ -648,7 +648,7 @@ class EntryEditor extends Component
         $row = $table->rows->firstWhere('id', $rowId);
         if (!($row instanceof InflectionTableRow)) {
             $this->dispatch('form-matchtorow-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_table_row')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_row')]]);
             return;
         }
         $table->loadMissing([
@@ -1031,7 +1031,7 @@ class EntryEditor extends Component
         $row = InflectionTableRow::find($rowId);
         if (!($row instanceof InflectionTableRow)) {
             $this->dispatch('form-autoinflect-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_table_row')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_row')]]);
             return;
         }
         // Backed enum instance

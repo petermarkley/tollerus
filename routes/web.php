@@ -68,7 +68,7 @@ Route::as('tollerus.')
                                         Route::get('/', GroupInflectionEditor::class)
                                             ->scopeBindings()
                                             ->name('edit');
-                                        Route::prefix('{table}')
+                                        Route::prefix('{inflectionTable}')
                                             ->as('table.')
                                             ->group(function () {
                                                 Route::get('/', InflectionTableEditor::class)
