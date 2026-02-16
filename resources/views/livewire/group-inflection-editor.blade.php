@@ -31,7 +31,7 @@
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
             <span>{{ mb_ucfirst($groupName) }}</span>
-            <span>{{ __('tollerus::ui.inflection_tables') }}</span>
+            <span>{{ __('tollerus::ui.inflections') }}</span>
         </h1>
         <div class="flex flex-col gap-6">
             <x-tollerus::panel>

@@ -64,7 +64,7 @@ class InflectionTableEditor extends Component
                     ['href' => route('tollerus.admin.languages.inflections.edit', [
                         'language' => $this->language->id,
                         'wordClassGroup' => $this->group->id,
-                    ]), 'text' => __('tollerus::ui.inflection_tables')],
+                    ]), 'text' => __('tollerus::ui.inflections')],
                 ],
             ])->title($pageTitle);
     }

@@ -53,7 +53,7 @@
                     </div>
                     <p class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }}</p>
                     <div>
-                        <a href="{{ route('tollerus.admin.languages.inflection-tables', ['language' => $language->id, 'wordClassGroup' => $group->id]) }}">{{ __('tollerus::ui.edit_at_group_level') }}</a>
+                        <a href="{{ route('tollerus.admin.languages.inflections.edit', ['language' => $language->id, 'wordClassGroup' => $group->id]) }}">{{ __('tollerus::ui.edit_at_group_level') }}</a>
                     </div>
                 </div>
                 <fieldset class="flex flex-col gap-2 items-start">

@@ -269,8 +269,10 @@ return [
     'add_feature_value' => 'Add value',
     'delete_feature_value' => 'Delete value',
     'preset' => 'Preset', // i.e. a predefined configuration for user convenience
+    'inflections' => 'Inflections',
     'inflection_tables' => 'Inflection tables',
     'inflection_table' => 'Inflection table',
+    'table' => 'Table',
     'table_nameless' => '(table)',
     'no_inflection_tables' => 'No inflection tables',
     'add_inflection_table' => 'Add inflection table',

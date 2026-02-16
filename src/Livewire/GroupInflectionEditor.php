@@ -38,7 +38,7 @@ class GroupInflectionEditor extends Component
         } else {
             $groupName = $this->group->primaryClass->name;
         }
-        $pageTitle = $this->language->name . ': ' . mb_ucfirst($groupName) . ': ' . __('tollerus::ui.inflection_tables');
+        $pageTitle = $this->language->name . ': ' . mb_ucfirst($groupName) . ': ' . __('tollerus::ui.inflections');
         return view('tollerus::livewire.group-inflection-editor', [
                 'groupName' => $groupName,
                 'pageTitle' => $pageTitle,
