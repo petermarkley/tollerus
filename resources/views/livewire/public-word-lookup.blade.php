@@ -159,7 +159,7 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <ol class="pl-10 list-decimal flex flex-col gap-2">
+                                    <ol class="pl-4 sm:pl-10 list-decimal flex flex-col gap-2">
                                         @foreach ($lexeme['model']->senses->sortBy('num') as $sense)
                                             <li class="space-y-2">
                                                 {!! $sense->body !!}
