@@ -69,7 +69,7 @@ class AddNewSpellingsToConlang extends Seeder
                 } else {
                     $len = 1;
                 }
-                $srcStr = mb_substr($srcStr, 1, null, self::ENC);
+                $srcStr = mb_substr($srcStr, $len, null, self::ENC);
             }
             $newSpelling = collect($newGlyphs)->pluck('glyph')->implode('');
             $form->nativeSpellings()->create([
