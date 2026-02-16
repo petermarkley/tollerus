@@ -90,67 +90,69 @@
                                         class="text-tollerus-text font-mono font-bold opacity-50 tracking-widest"
                                     >{{ $lexeme['class']->name }}</a>
                                     @if ($lexeme['tables']->count() > 0)
-                                        <div class="flex flex-col gap-4 items-center">
-                                            @foreach ($lexeme['tables'] as $table)
-                                                <div class="flex flex-row flex-wrap gap-x-4 gap-y-6 items-start justify-center">
-                                                    @foreach ($table['columns'] as $columnIndex => $column)
-                                                        <table>
-                                                            @if ($column['model']->show_label)
-                                                                <thead
-                                                                    @class([
-                                                                        'hidden xl:table-header-group' => $columnIndex!=0 && $table['model']->cols_fold,
-                                                                    ])
-                                                                >
-                                                                    <tr @class(['xl:hidden'=>$table['model']->align_on_stack])>
-                                                                        <th scope="col" colspan="2" class="px-1 font-normal text-center whitespace-nowrap">{{ $column['model']->label }}</th>
-                                                                    </tr>
-                                                                    @if ($table['model']->align_on_stack)
-                                                                        <tr class="hidden xl:table-row">
-                                                                            <td
+                                        <div class="overflow-x-scroll">
+                                            <div class="p-2 flex flex-col gap-4 items-center">
+                                                @foreach ($lexeme['tables'] as $table)
+                                                    <div class="flex flex-row flex-wrap xl:flex-nowrap gap-x-4 gap-y-6 items-start justify-center">
+                                                        @foreach ($table['columns'] as $columnIndex => $column)
+                                                            <table>
+                                                                @if ($column['model']->show_label)
+                                                                    <thead
+                                                                        @class([
+                                                                            'hidden xl:table-header-group' => $columnIndex!=0 && $table['model']->cols_fold,
+                                                                        ])
+                                                                    >
+                                                                        <tr @class(['xl:hidden'=>$table['model']->align_on_stack])>
+                                                                            <th scope="col" colspan="2" class="px-1 font-normal text-center whitespace-nowrap">{{ $column['model']->label }}</th>
+                                                                        </tr>
+                                                                        @if ($table['model']->align_on_stack)
+                                                                            <tr class="hidden xl:table-row">
+                                                                                <td
+                                                                                    @class([
+                                                                                        'xl:hidden' => $columnIndex!=0 && $table['model']->rows_fold,
+                                                                                    ])
+                                                                                ></td>
+                                                                                <th scope="col" class="px-1 font-normal text-left whitespace-nowrap">{{ $column['model']->label }}</th>
+                                                                            </tr>
+                                                                        @endif
+                                                                    </thead>
+                                                                @endif
+                                                                <tbody>
+                                                                    @foreach ($column['rows'] as $row)
+                                                                        <tr>
+                                                                            <th
+                                                                                scope="row"
                                                                                 @class([
+                                                                                    'px-4 text-right font-normal',
                                                                                     'xl:hidden' => $columnIndex!=0 && $table['model']->rows_fold,
                                                                                 ])
-                                                                            ></td>
-                                                                            <th scope="col" class="px-1 font-normal text-left whitespace-nowrap">{{ $column['model']->label }}</th>
-                                                                        </tr>
-                                                                    @endif
-                                                                </thead>
-                                                            @endif
-                                                            <tbody>
-                                                                @foreach ($column['rows'] as $row)
-                                                                    <tr>
-                                                                        <th
-                                                                            scope="row"
-                                                                            @class([
-                                                                                'px-4 text-right font-normal',
-                                                                                'xl:hidden' => $columnIndex!=0 && $table['model']->rows_fold
-                                                                            ])
-                                                                        >
-                                                                            @if ($row['model']->show_label)
-                                                                                <span>{{ $row['model']->label }}</span>
-                                                                            @endif
-                                                                        </th>
-                                                                        <td class="px-1">
-                                                                            <a
-                                                                                id="{{ $row['form']->global_id }}"
-                                                                                @class([
-                                                                                    'grid grid-cols-3 gap-2',
-                                                                                    'text-tollerus-text' => !($row['form']->irregular),
-                                                                                    'text-tollerus-text-irregular' => $row['form']->irregular,
-                                                                                ])
                                                                             >
-                                                                                <span class="whitespace-nowrap">{{ $row['form']->transliterated }}</span>
-                                                                                <span class="italic whitespace-nowrap">/{{ $row['form']->phonemic }}/</span>
-                                                                                <span class="whitespace-nowrap tollerus_{{ $primaryNeography->machine_name }}">{{ $row['formNative']->spelling }}</span>
-                                                                            </a>
-                                                                        </td>
-                                                                    </tr>
-                                                                @endforeach
-                                                            </tbody>
-                                                        </table>
-                                                    @endforeach
-                                                </div>
-                                            @endforeach
+                                                                                @if ($row['model']->show_label)
+                                                                                    <span class="whitespace-nowrap">{{ $row['model']->label }}</span>
+                                                                                @endif
+                                                                            </th>
+                                                                            <td class="px-1">
+                                                                                <a
+                                                                                    id="{{ $row['form']->global_id }}"
+                                                                                    @class([
+                                                                                        'grid grid-cols-3 gap-2',
+                                                                                        'text-tollerus-text' => !($row['form']->irregular),
+                                                                                        'text-tollerus-text-irregular' => $row['form']->irregular,
+                                                                                    ])
+                                                                                >
+                                                                                    <span class="whitespace-nowrap">{{ $row['form']->transliterated }}</span>
+                                                                                    <span class="italic whitespace-nowrap">/{{ $row['form']->phonemic }}/</span>
+                                                                                    <span class="whitespace-nowrap tollerus_{{ $primaryNeography->machine_name }}">{{ $row['formNative']->spelling }}</span>
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        @endforeach
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     @endif
                                     <ol class="pl-10 list-decimal flex flex-col gap-2">
