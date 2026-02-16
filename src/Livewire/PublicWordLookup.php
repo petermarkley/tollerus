@@ -87,7 +87,7 @@ class PublicWordLookup extends Component
                                                     true
                                                 )
                                             )->first();
-                                            if ($primaryNeography !== null) {
+                                            if ($form !== null && $primaryNeography !== null) {
                                                 $formNative = $form->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
                                             } else {
                                                 $formNative = null;

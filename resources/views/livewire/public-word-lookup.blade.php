@@ -132,18 +132,22 @@
                                                                                 @endif
                                                                             </th>
                                                                             <td class="px-1">
-                                                                                <a
-                                                                                    id="{{ $row['form']->global_id }}"
-                                                                                    @class([
-                                                                                        'grid grid-cols-3 gap-2',
-                                                                                        'text-tollerus-text' => !($row['form']->irregular),
-                                                                                        'text-tollerus-text-irregular' => $row['form']->irregular,
-                                                                                    ])
-                                                                                >
-                                                                                    <span class="whitespace-nowrap">{{ $row['form']->transliterated }}</span>
-                                                                                    <span class="italic whitespace-nowrap">/{{ $row['form']->phonemic }}/</span>
-                                                                                    <span class="whitespace-nowrap tollerus_{{ $primaryNeography->machine_name }}">{{ $row['formNative']->spelling }}</span>
-                                                                                </a>
+                                                                                @if ($row['form'] !== null)
+                                                                                    <a
+                                                                                        id="{{ $row['form']->global_id }}"
+                                                                                        @class([
+                                                                                            'grid grid-cols-3 gap-2',
+                                                                                            'text-tollerus-text' => !($row['form']->irregular),
+                                                                                            'text-tollerus-text-irregular' => $row['form']->irregular,
+                                                                                        ])
+                                                                                    >
+                                                                                        <span class="whitespace-nowrap">{{ $row['form']->transliterated }}</span>
+                                                                                        <span class="italic whitespace-nowrap">/{{ $row['form']->phonemic }}/</span>
+                                                                                        <span class="whitespace-nowrap tollerus_{{ $primaryNeography->machine_name }}">{{ $row['formNative']->spelling }}</span>
+                                                                                    </a>
+                                                                                @else
+                                                                                    <span>&ndash;&nbsp;&ndash;&nbsp;&ndash;</span>
+                                                                                @endif
                                                                             </td>
                                                                         </tr>
                                                                     @endforeach
