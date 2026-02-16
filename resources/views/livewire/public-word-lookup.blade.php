@@ -58,7 +58,7 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="flex-grow min-h-60 p-8 flex flex-col gap-6 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
+                <div class="w-full xl:w-[calc(100%-20.5rem)] flex-grow min-h-60 p-8 flex flex-col gap-6 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
                     @if ($entry !== null)
                         <div>
                             <span>{{ __('tollerus::ui.language') }}:</span>
@@ -91,11 +91,11 @@
                                     >{{ $lexeme['class']->name }}</a>
                                     @if ($lexeme['tables']->count() > 0)
                                         <div class="overflow-x-scroll">
-                                            <div class="p-2 flex flex-col gap-4 items-center">
+                                            <div class="w-max p-2 flex flex-col gap-4 items-center text-sm bg-tollerus-bg/30 rounded-lg">
                                                 @foreach ($lexeme['tables'] as $table)
                                                     <div class="flex flex-row flex-wrap xl:flex-nowrap gap-x-4 gap-y-6 items-start justify-center">
                                                         @foreach ($table['columns'] as $columnIndex => $column)
-                                                            <table>
+                                                            <table class="w-max">
                                                                 @if ($column['model']->show_label)
                                                                     <thead
                                                                         @class([
