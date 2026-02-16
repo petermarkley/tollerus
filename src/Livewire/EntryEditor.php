@@ -19,8 +19,8 @@ use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Form;
+use PeterMarkley\Tollerus\Models\InflectionColumn;
 use PeterMarkley\Tollerus\Models\InflectionRow;
-use PeterMarkley\Tollerus\Models\InflectionTable;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
 use PeterMarkley\Tollerus\Models\NativeSpelling;
@@ -447,8 +447,8 @@ class EntryEditor extends Component
 
         // Create forms if appropriate
         $wordClassModel->loadMissing([
-            'group.inflectionTables.filterValues',
-            'group.inflectionTables.rows.filterValues',
+            'group.inflectionTables.columns.filterValues',
+            'group.inflectionTables.columns.rows.filterValues',
         ]);
         $alreadyHadForm = collect($this->lexemes)
             ->reduce(fn ($c, $l) => $c || $l->forms()->exists(), false);
@@ -1109,7 +1109,7 @@ class EntryEditor extends Component
         // Okay, let's do it
         foreach ($group->inflectionTables->sortBy('position') as $table) {
             foreach ($table->columns->sortBy('position') as $column) {
-                foreach ($table->rows->sortBy('position') as $row) {
+                foreach ($column->rows->sortBy('position') as $row) {
 
                     // Establish filter list
                     $filters = $column->filterValues->concat($row->filterValues);
