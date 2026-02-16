@@ -15,7 +15,7 @@
                     <label for="search_type" class="sr-only">{{ __('tollerus::ui.search_type') }}</label>
                     <select
                         id="search_type"
-                        wire:model="searchType"
+                        wire:model="type"
                         title="{{ __('tollerus::ui.search_type') }}"
                         class="bg-tollerus-surface hover:bg-tollerus-surface-hover cursor-pointer py-2 px-4 h-11 flex justify-center items-center appearance-none rounded-l-[22px] rounded-r-lg pr-6 font-bold border-2 border-tollerus-border"
                     >
@@ -31,7 +31,7 @@
                         <input
                             type="text"
                             id="search_string"
-                            wire:model.defer="searchStr"
+                            wire:model.defer="key"
                             class="appearance-none w-full border p-2 w-full rounded-lg inset-shadow-sm bg-tollerus-muted border-tollerus-border/50"
                             placeholder="{{ __('tollerus::ui.search_for_entry') }}"
                         />
@@ -58,7 +58,7 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="flex-grow min-h-30 p-8 flex flex-col gap-6 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
+                <div class="flex-grow min-h-60 p-8 flex flex-col gap-6 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
                     @if ($entry !== null)
                         <div>
                             <span>{{ __('tollerus::ui.language') }}:</span>
@@ -68,10 +68,10 @@
                             >{{ $language->name }}</a>
                         </div>
                         <h3 class="text-2xl flex flex-row gap-12 justify-start items-center">
-                            <a id="{{ $entry->global_id }}" class="flex flex-row gap-8 items-center justify-start text-tollerus-text">
-                                <span class="font-bold">{{ $primaryForm->transliterated }}</span>
-                                <span class="italic">/{{ $primaryForm->phonemic }}/</span>
-                                <span class="tollerus_{{ $primaryNeography->machine_name }}">{{ $primaryNativeSpelling->spelling }}</span>
+                            <a id="{{ $entry->global_id }}" class="flex flex-row flex-wrap sm:flex-nowrap gap-y-1 gap-x-8 items-center justify-start text-tollerus-text">
+                                <span class="font-bold whitespace-nowrap">{{ $primaryForm->transliterated }}</span>
+                                <span class="italic whitespace-nowrap">/{{ $primaryForm->phonemic }}/</span>
+                                <span class="whitespace-nowrap tollerus_{{ $primaryNeography->machine_name }}">{{ $primaryNativeSpelling->spelling }}</span>
                             </a>
                             <a
                                 href="{{ route('tollerus.public.index', ['id' => $entry->global_id]) }}"
@@ -102,7 +102,7 @@
                                                                     ])
                                                                 >
                                                                     <tr @class(['xl:hidden'=>$table['model']->align_on_stack])>
-                                                                        <th scope="col" colspan="2" class="px-1 font-normal text-center">{{ $column['model']->label }}</th>
+                                                                        <th scope="col" colspan="2" class="px-1 font-normal text-center whitespace-nowrap">{{ $column['model']->label }}</th>
                                                                     </tr>
                                                                     @if ($table['model']->align_on_stack)
                                                                         <tr class="hidden xl:table-row">
@@ -111,7 +111,7 @@
                                                                                     'xl:hidden' => $columnIndex!=0 && $table['model']->rows_fold,
                                                                                 ])
                                                                             ></td>
-                                                                            <th scope="col" class="px-1 font-normal text-left">{{ $column['model']->label }}</th>
+                                                                            <th scope="col" class="px-1 font-normal text-left whitespace-nowrap">{{ $column['model']->label }}</th>
                                                                         </tr>
                                                                     @endif
                                                                 </thead>
@@ -139,9 +139,9 @@
                                                                                     'text-tollerus-text-irregular' => $row['form']->irregular,
                                                                                 ])
                                                                             >
-                                                                                <span>{{ $row['form']->transliterated }}</span>
-                                                                                <span class="italic">/{{ $row['form']->phonemic }}/</span>
-                                                                                <span class="tollerus_{{ $primaryNeography->machine_name }}">{{ $row['formNative']->spelling }}</span>
+                                                                                <span class="whitespace-nowrap">{{ $row['form']->transliterated }}</span>
+                                                                                <span class="italic whitespace-nowrap">/{{ $row['form']->phonemic }}/</span>
+                                                                                <span class="whitespace-nowrap tollerus_{{ $primaryNeography->machine_name }}">{{ $row['formNative']->spelling }}</span>
                                                                             </a>
                                                                         </td>
                                                                     </tr>
