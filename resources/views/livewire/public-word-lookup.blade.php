@@ -74,7 +74,11 @@
                             @if ($multipleNeographies)
                                 <div class="flex flex-row gap-2 items-center">
                                     <label for="writing_system">{{ __('tollerus::ui.writing_system') }}</label>
-                                    <select id="writing_system" x-model="currentNeography">
+                                    <select
+                                        id="writing_system"
+                                        x-model="currentNeography"
+                                        class="bg-tollerus-surface hover:bg-tollerus-surface-hover border-2 border-tollerus-bg hover:border-tollerus-bg/50 cursor-pointer rounded-lg py-2 px-4 h-11 flex justify-center items-center shadow-lg"
+                                    >
                                         @foreach ($neographies as $neography)
                                             <option value="{{ $neography->id }}">{{ $neography->name }}</option>
                                         @endforeach
