@@ -63,6 +63,11 @@ class DemoConlangSeeder extends Seeder
          * Step 2: Run actions
          */
         $fontAssetService->publish(FontFormat::from('svg'), $language->primaryNeography);
+        $this->command->call('tollerus:convert-font', [
+            'neography' => $language->primaryNeography->machine_name,
+            'src_format' => 'svg',
+            'dest_format' => 'ttf',
+        ]);
         $svgToKeyboard($language->primaryNeography);
 
         /**

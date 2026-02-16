@@ -13,6 +13,7 @@ use PeterMarkley\Tollerus\Console\Commands\TollerusImport;
 use PeterMarkley\Tollerus\Console\Commands\TollerusPopulate;
 use PeterMarkley\Tollerus\Console\Commands\TollerusAssetsGenerate;
 use PeterMarkley\Tollerus\Console\Commands\TollerusInstall;
+use PeterMarkley\Tollerus\Console\Commands\TollerusConvertFont;
 
 class TollerusServiceProvider extends ServiceProvider
 {
@@ -49,6 +50,7 @@ class TollerusServiceProvider extends ServiceProvider
 				TollerusPopulate::class,
 				TollerusAssetsGenerate::class,
 				TollerusInstall::class,
+				TollerusConvertFont::class,
 			]);
 			// Make `php artisan migrate` aware of our DB migrations
 			$this->loadMigrationsFrom(__DIR__.'/../../database/migrations');

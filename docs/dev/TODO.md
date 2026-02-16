@@ -5,7 +5,6 @@
 - [ ] Better form ID selector on auto-inflection page
 - [ ] Allow selecting an input word for auto-inflection preview
 - [ ] Correctly render `<word>` elements in body text of supporting data objects (lang intro, neography sect intro, entry definitions ...)
-- [ ] Research possible CLI tool for SVG->TTF pipeline, use in Console Command without adding as package dep (check for presence on system, fail gracefully?)
 
 ## Code health
 - [ ] Audit for uses of `->sortBy()->map()->toArray()` that need to be `->sortBy()->map()->values()->toArray()`?
