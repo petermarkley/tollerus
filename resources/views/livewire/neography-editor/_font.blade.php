@@ -32,22 +32,23 @@
                         <div class="flex flex-col justify-center items-center">
                             <div class="relative">
                                 <x-tollerus::icons.document class="w-24 h-24"/>
-                                <x-tollerus::inputs.button
-                                    type="secondary"
-                                    size="small"
-                                    class="absolute top-0 -right-6"
-                                    title="{{ __('tollerus::ui.delete_file') }}"
-                                    @click="$dispatch('open-modal', {
-                                        message: msgs['delete_font_file_confirmation'],
-                                        buttons: [
-                                            { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
-                                            { text: msgs.yes_delete, type: 'primary', clickEvent: 'font-delete', payload: {fontFormat: '{{ $fontFormat->value }}'} }
-                                        ]
-                                    });"
-                                >
-                                    <x-tollerus::icons.delete/>
-                                    <span class="sr-only">{{ __('tollerus::ui.delete_file') }}</span>
-                                </x-tollerus::inputs.button>
+                                <div class="absolute top-0 -right-6">
+                                    <x-tollerus::inputs.button
+                                        type="secondary"
+                                        size="small"
+                                        title="{{ __('tollerus::ui.delete_file') }}"
+                                        @click="$dispatch('open-modal', {
+                                            message: msgs['delete_font_file_confirmation'],
+                                            buttons: [
+                                                { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                                { text: msgs.yes_delete, type: 'primary', clickEvent: 'font-delete', payload: {fontFormat: '{{ $fontFormat->value }}'} }
+                                            ]
+                                        });"
+                                    >
+                                        <x-tollerus::icons.delete/>
+                                        <span class="sr-only">{{ __('tollerus::ui.delete_file') }}</span>
+                                    </x-tollerus::inputs.button>
+                                </div>
                             </div>
                         </div>
                         <template x-if="fontForm['{{ $fontFormat->value }}'].published">
