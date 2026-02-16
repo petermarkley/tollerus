@@ -13,7 +13,6 @@
 
 ## PublicWordLookup page
 - [ ] Use responsive `label`/`label_brief`/`label_long` fields on `InflectionRow` in Blade view
-- [ ] Show multiple `NativeSpelling`s per form, with neography switcher at top of entry?
 - [ ] Put inflection tables in collapsible drawer if beyond a threshold defined in `config/tollerus.php`? (Maybe by total `InflectionColumn` count across all the tables on the lexeme...)
 - [ ] Make search work, show clicked result in main view
 - [ ] Highlight form on page if there's a document fragment in the URL?
