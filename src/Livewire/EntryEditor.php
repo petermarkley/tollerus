@@ -19,8 +19,8 @@ use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
 use PeterMarkley\Tollerus\Models\Form;
+use PeterMarkley\Tollerus\Models\InflectionRow;
 use PeterMarkley\Tollerus\Models\InflectionTable;
-use PeterMarkley\Tollerus\Models\InflectionTableRow;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Lexeme;
 use PeterMarkley\Tollerus\Models\NativeSpelling;
@@ -103,8 +103,8 @@ class EntryEditor extends Component
             'wordClassGroups.wordClasses',
             'wordClassGroups.primaryClass',
             'wordClassGroups.features.featureValues',
-            'wordClassGroups.inflectionTables.filterValues',
-            'wordClassGroups.inflectionTables.rows.filterValues',
+            'wordClassGroups.inflectionTables.columns.filterValues',
+            'wordClassGroups.inflectionTables.columns.rows.filterValues',
         ]);
         $this->lexemes = $this->entry->lexemes->sortBy('position')->all();
 
@@ -113,11 +113,12 @@ class EntryEditor extends Component
          * ===================================
          *
          * In some ways the Tollerus data schema is designed to be very loose
-         * and flexible. A WordClassGroup can have any number of tables, with
-         * any number of rows, each having any number of filters that might
-         * overlap or leave gaps. Conversely a lexeme can have any number of
-         * word forms with any number of grammar features assigned. The
-         * correspondence between these two structures is completely implicit.
+         * and flexible. A WordClassGroup can have any number of tables and
+         * columns, with any number of rows, each having any number of filters
+         * that might overlap or leave gaps. Conversely a lexeme can have any
+         * number of word forms with any number of grammar features assigned.
+         * The correspondence between these two structures is completely
+         * implicit.
          *
          * This avoids enforcing too much about how a conlanger wants to use
          * the system. But the downside is that we have to do extra work right
@@ -152,22 +153,22 @@ class EntryEditor extends Component
             // Don't assume that we found any lexemes at all
             if ($lexeme) {
                 /**
-                 * We could use `flatMap->rows`, except that we need to know the
-                 * table filters when working on each row.
+                 * We could use `flatMap->columns->flatMap->rows`, except that
+                 * we need to know the column filters when working on each row.
                  */
-                $rows = $group->inflectionTables->map(function ($table) use ($group, $lexeme) {
-                    return $table->rows->map(function ($row) use ($group, $table, $lexeme) {
+                $rows = $group->inflectionTables->flatMap->columns->map(function ($column) use ($group, $lexeme) {
+                    return $column->rows->map(function ($row) use ($group, $column, $lexeme) {
                         /**
                          * We are now inside an inflection row. We now need to
-                         * apply the table and row filters to all the forms on
+                         * apply the column and row filters to all the forms on
                          * the relevant lexeme (if present).
                          */
-                        // Table vs. row filters are treated the same
-                        $filters = $table->filterValues->concat($row->filterValues);
+                        // Column vs. row filters are treated the same
+                        $filters = $column->filterValues->concat($row->filterValues);
                         // Package up the per-row data object
                         return [
                             'rowId' => $row->id,
-                            'rowLabel' => $table->label." \u{2192} ".$row->label,
+                            'rowLabel' => $column->label." \u{2192} ".$row->label,
                             'srcBase' => $row->src_base,
                             'matchingForms' => $lexeme?->forms->filter(
                                 fn ($form) => $filters->reduce(
@@ -193,7 +194,7 @@ class EntryEditor extends Component
          *     (WordClassGroup->id) => [
          *       'lexemeId' => <int>,
          *       'rows' => [
-         *         (InflectionTableRow->id) => [
+         *         (InflectionRow->id) => [
          *           'rowId' => <int>,
          *           'rowLabel' => <string>,
          *           'srcBase' => <int>,
@@ -259,7 +260,7 @@ class EntryEditor extends Component
                             true
                         )
                     );
-                    $inflectionEditUrl = route('tollerus.admin.languages.inflection-tables', [
+                    $inflectionEditUrl = route('tollerus.admin.languages.inflections.edit', [
                         'language' => $language,
                         'wordClassGroup' => $lexeme->wordClass->group_id,
                     ]);
@@ -313,7 +314,7 @@ class EntryEditor extends Component
                                     'neographyMachineName' => $n->machine_name,
                                     'spelling' => ($nativeSpelling===null? null : $nativeSpelling->spelling),
                                 ];
-                            })->toArray(),
+                            })->values()->toArray(),
                             'inflectionValues' => $form->inflectionValues->mapWithKeys(function ($value) {
                                 return [$value->id => [
                                     'featureId'   => $value->feature->id,
@@ -358,25 +359,29 @@ class EntryEditor extends Component
                 'classes' => $group->wordClasses->sortBy('id')->map(fn ($class) => [
                     'id' => $class->id,
                     'name' => $class->name,
-                ])->toArray(),
+                ])->values()->toArray(),
                 'features' => $group->features->sortBy('name')->map(fn ($feature) => [
                     'id' => $feature->id,
                     'name' => $feature->name,
                     'values' => $feature->featureValues->sortBy('name')->map(fn ($value) => [
                         'id' => $value->id,
                         'name' => $value->name
-                    ])->toArray(),
-                ])->toArray(),
-                'tables' => $group->inflectionTables->sortBy('position')->map(fn ($table) => [
-                    'id' => $table->id,
-                    'label' => $table->label,
-                    'rows' => $table->rows->sortBy('position')->map(fn ($row) => [
-                        'id' => $row->id,
-                        'label' => $row->label,
-                    ])->toArray(),
-                ])->toArray(),
+                    ])->values()->toArray(),
+                ])->values()->toArray(),
+                'columns' => $group->inflectionTables
+                    ->sortBy('position')
+                    ->map(fn ($t) => $t->columns->sortBy('position'))
+                    ->flatten(1)
+                    ->map(fn ($column) => [
+                        'id' => $column->id,
+                        'label' => $column->label,
+                        'rows' => $column->rows->sortBy('position')->map(fn ($row) => [
+                            'id' => $row->id,
+                            'label' => $row->label,
+                        ])->values()->toArray(),
+                    ])->values()->toArray(),
             ];
-        })->toArray();
+        })->values()->toArray();
     }
     public function infoSave(): void
     {
@@ -623,7 +628,7 @@ class EntryEditor extends Component
             ->delete();
         $this->refreshForm();
     }
-    public function matchFormToRow(string $lexemeId, string $formId, string $tableId, string $rowId): void
+    public function matchFormToRow(string $lexemeId, string $formId, string $columnId, string $rowId): void
     {
         // Find models
         $lexemeModel = collect($this->lexemes)->firstWhere('id', $lexemeId);
@@ -639,19 +644,19 @@ class EntryEditor extends Component
             return;
         }
         $wordClassGroup = $this->language->wordClassGroups->firstWhere('id', $lexemeModel->wordClass->group_id);
-        $table = $wordClassGroup->inflectionTables->firstWhere('id', $tableId);
-        if (!($table instanceof InflectionTable)) {
+        $column = $wordClassGroup->inflectionTables->flatMap->columns->firstWhere('id', $columnId);
+        if (!($column instanceof InflectionColumn)) {
             $this->dispatch('form-matchtorow-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['tableId' => [__('tollerus::error.invalid_inflection_table')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages(['columnId' => [__('tollerus::error.invalid_inflection_column')]]);
             return;
         }
-        $row = $table->rows->firstWhere('id', $rowId);
-        if (!($row instanceof InflectionTableRow)) {
+        $row = $column->rows->firstWhere('id', $rowId);
+        if (!($row instanceof InflectionRow)) {
             $this->dispatch('form-matchtorow-failure');
             throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_row')]]);
             return;
         }
-        $table->loadMissing([
+        $column->loadMissing([
             'filterValues',
         ]);
         $row->loadMissing([
@@ -662,7 +667,7 @@ class EntryEditor extends Component
         ]);
         try {
             $connection = config('tollerus.connection', 'tollerus');
-            DB::connection($connection)->transaction(function () use ($formModel, $table, $row) {
+            DB::connection($connection)->transaction(function () use ($formModel, $column, $row) {
                 // Remove any existing inflection values
                 foreach ($formModel->inflectionValues as $value) {
                     FormFeatureValue::where('form_id', (int)$formModel->id)
@@ -671,7 +676,7 @@ class EntryEditor extends Component
                         ->delete();
                 }
                 // Add values from table and row filters
-                $filters = $table->filterValues->concat($row->filterValues);
+                $filters = $column->filterValues->concat($row->filterValues);
                 foreach ($filters as $value) {
                     (new FormFeatureValue([
                         'form_id' => $formModel->id,
@@ -1028,8 +1033,8 @@ class EntryEditor extends Component
             ],
         ]);
         // Inflection row (directly)
-        $row = InflectionTableRow::find($rowId);
-        if (!($row instanceof InflectionTableRow)) {
+        $row = InflectionRow::find($rowId);
+        if (!($row instanceof InflectionRow)) {
             $this->dispatch('form-autoinflect-failure');
             throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_row')]]);
             return;
@@ -1094,8 +1099,8 @@ class EntryEditor extends Component
             'forms.inflectionValues'
         ]);
         $group->loadMissing([
-            'inflectionTables.filterValues',
-            'inflectionTables.rows.filterValues',
+            'inflectionTables.columns.filterValues',
+            'inflectionTables.columns.rows.filterValues',
         ]);
         // Check for non-inflected word class group
         if (!$group->features()->exists() || $group->inflectionTables->isEmpty()) {
@@ -1103,43 +1108,45 @@ class EntryEditor extends Component
         }
         // Okay, let's do it
         foreach ($group->inflectionTables->sortBy('position') as $table) {
-            foreach ($table->rows->sortBy('position') as $row) {
+            foreach ($table->columns->sortBy('position') as $column) {
+                foreach ($table->rows->sortBy('position') as $row) {
 
-                // Establish filter list
-                $filters = $table->filterValues->concat($row->filterValues);
+                    // Establish filter list
+                    $filters = $column->filterValues->concat($row->filterValues);
 
-                // Check if any forms already match
-                $matchingForms = $lexeme->forms->filter(
-                    fn ($form) => $filters->reduce(
-                        fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
-                        true
-                    )
-                );
-                if ($matchingForms->isNotEmpty()) {
-                    // If one or more matching form exists, then skip this row
-                    continue;
+                    // Check if any forms already match
+                    $matchingForms = $lexeme->forms->filter(
+                        fn ($form) => $filters->reduce(
+                            fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
+                            true
+                        )
+                    );
+                    if ($matchingForms->isNotEmpty()) {
+                        // If one or more matching form exists, then skip this row
+                        continue;
+                    }
+
+                    // Create the form
+                    $form = $lexeme->forms()->create([
+                        'language_id' => $this->language->id,
+                    ]);
+
+                    // Maybe set as primary
+                    if ($row->src_base === null && $this->entry->primary_form === null) {
+                        $this->entry->primary_form = $form->id;
+                        $this->entry->save();
+                    }
+
+                    // Add filter values
+                    foreach ($filters as $value) {
+                        (new FormFeatureValue([
+                            'form_id' => $form->id,
+                            'feature_id' => $value->feature_id,
+                            'value_id' => $value->id,
+                        ]))->save();
+                    }
+
                 }
-
-                // Create the form
-                $form = $lexeme->forms()->create([
-                    'language_id' => $this->language->id,
-                ]);
-
-                // Maybe set as primary
-                if ($row->src_base === null && $this->entry->primary_form === null) {
-                    $this->entry->primary_form = $form->id;
-                    $this->entry->save();
-                }
-
-                // Add filter values
-                foreach ($filters as $value) {
-                    (new FormFeatureValue([
-                        'form_id' => $form->id,
-                        'feature_id' => $value->feature_id,
-                        'value_id' => $value->id,
-                    ]))->save();
-                }
-
             }
         }
     }
