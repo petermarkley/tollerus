@@ -19,11 +19,14 @@ use PeterMarkley\Tollerus\Models\Entry;
 use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\GlobalId;
 use PeterMarkley\Tollerus\Models\Language;
+use PeterMarkley\Tollerus\Models\Neography;
 
 class PublicWordLookup extends Component
 {
     #[Locked] public Collection $languages;
+    #[Locked] public Collection $neographies;
     public ?string $id;
+    public ?Entry $entry;
     public SearchType $type;
     public ?string $key;
     public ?string $frag;
@@ -40,21 +43,19 @@ class PublicWordLookup extends Component
         }
 
         // Initialize pessimistically
-        $entry                 = null;
         $language              = null;
         $primaryNeography      = null;
-        $neographies           = null;
+        $languageNeographies   = null;
         $multipleNeographies   = false;
         $primaryForm           = null;
         $primaryNativeSpelling = null;
         $lexemes               = null;
         // Conditionally populate
         if ($this->id !== null) {
-            $entry = GlobalId::resolveId($this->id);
-            if (!($entry instanceof Entry)) {
+            if (!($this->entry instanceof Entry)) {
                 abort(404);
             }
-            $entry->loadMissing([
+            $this->entry->loadMissing([
                 'language.neographies',
                 'language.primaryNeography',
                 'primaryForm.nativeSpellings',
@@ -65,12 +66,12 @@ class PublicWordLookup extends Component
                 'lexemes.wordClass.group.inflectionTables.columns.rows.filterValues',
                 'lexemes.senses.subsenses',
             ]);
-            $language            = $entry->language;
+            $language            = $this->entry->language;
             $primaryNeography    = $language->primaryNeography;
-            $neographies         = $language->neographies->sortBy('machine_name')->filter(fn ($n) => $n->visible || $n->id == $primaryNeography->id);
-            $multipleNeographies = $primaryNeography !== null && $neographies->where('id', '!=', $primaryNeography->id)->isNotEmpty();
-            $primaryForm         = $entry->primaryForm;
-            $lexemes             = $entry->lexemes->sortBy('position')
+            $languageNeographies = $language->neographies->sortBy('machine_name')->filter(fn ($n) => $n->visible || $n->id == $primaryNeography->id);
+            $multipleNeographies = $primaryNeography !== null && $languageNeographies->count() > 1;
+            $primaryForm         = $this->entry->primaryForm;
+            $lexemes             = $this->entry->lexemes->sortBy('position')
                 ->map(function ($lexeme) use ($primaryNeography) {
                     $group = $lexeme->wordClass->group;
                     $tables = $group->inflectionTables
@@ -126,10 +127,9 @@ class PublicWordLookup extends Component
         }
 
         return view('tollerus::livewire.public-word-lookup', [
-                'entry'                 => $entry,
                 'language'              => $language,
                 'primaryNeography'      => $primaryNeography,
-                'neographies'           => $neographies,
+                'languageNeographies'   => $languageNeographies,
                 'multipleNeographies'   => $multipleNeographies,
                 'primaryForm'           => $primaryForm,
                 'primaryNativeSpelling' => $primaryNativeSpelling,
@@ -139,7 +139,11 @@ class PublicWordLookup extends Component
     }
     public function mount(Request $req): void
     {
-        $this->languages = Language::where('visible', true)->get();
+        $this->languages = Language::where('visible', true)
+            ->orderBy('machine_name')
+            ->get();
+        $this->neographies = Neography::all()
+            ->filter(fn ($n) => $n->visible || $n->languagesWherePrimary()->exists());
 
         /**
          * We need to check if the user has specified a global ID,
@@ -177,7 +181,7 @@ class PublicWordLookup extends Component
                     $this->redirect(route('tollerus.public.languages.show', ['language' => $language]) . '#'.$this->id);
                 break;
                 case GlobalIdKind::Entry:
-                    // Nothing to do
+                    $this->entry = $obj;
                 break;
                 case GlobalIdKind::Lexeme:
                     /**
@@ -252,9 +256,49 @@ class PublicWordLookup extends Component
                     //
                 break;
             }
-            $this->results = $formsQuery->get()->all();
+            $this->results = $formsQuery->get()->toArray();
         } else {
             $this->results = [];
+        }
+    }
+
+    public function selectResult(string $globalIdStr): void
+    {
+        // Look up global ID and its associated model
+        $globalId = GlobalId::fromStr($globalIdStr);
+        if (!($globalId instanceof GlobalId)) {
+            return;
+        }
+        $obj = $globalId->resolve();
+        // What kind of model is this?
+        switch ($globalId->kind) {
+            case GlobalIdKind::Glyph:
+                /**
+                 * This is a glyph inside a neography. Let's try to
+                 * redirect to an appropriate language page.
+                 */
+                $neography = $obj->neography;
+                $language = $neography->languagesWherePrimary->firstWhere('visible', true) ?? $neography->languages->firstWhere('visible', true);
+                if (!($language instanceof Language)) {
+                    return;
+                }
+                $this->redirect(route('tollerus.public.languages.show', ['language' => $language]) . '#'.$this->id);
+            break;
+            case GlobalIdKind::Entry:
+                $this->id = $globalIdStr;
+                $this->entry = $obj;
+                $this->frag = null;
+            break;
+            case GlobalIdKind::Lexeme:
+                $this->entry = $obj->entry;
+                $this->id = $this->entry->global_id;
+                $this->frag = $obj->global_id;
+            break;
+            case GlobalIdKind::Form:
+                $this->entry = $obj->lexeme->entry;
+                $this->id = $this->entry->global_id;
+                $this->frag = $obj->global_id;
+            break;
         }
     }
 }

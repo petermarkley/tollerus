@@ -52,7 +52,22 @@
                 <div class="relative xl:w-80 shrink-0">
                     <div class="w-full h-60 xl:h-auto min-h-60 xl:absolute xl:inset-y-0 overflow-y-scroll rounded-lg xl:rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
                         @foreach ($results as $result)
-                            <pre class="text-xs">{!! json_encode($result, JSON_PRETTY_PRINT) !!}</pre>
+                            @php
+                                $resultLanguage = $languages->firstWhere('id', $result['language_id']);
+                                $resultNeography = $neographies->firstWhere('id', $result['primary_neography_id']);
+                            @endphp
+                            <a
+                                data-global-id="{{ $result['global_id'] }}"
+                                @class([
+                                    'my-2 py-1 px-4 flex flex-row gap-2 justify-start items-center font-bold cursor-pointer hover:bg-tollerus-surface/50',
+                                    'text-tollerus-secondary hover:text-tollerus-secondary-hover' => !($result['irregular']),
+                                    'text-tollerus-text-irregular hover:opacity-70' => $result['irregular'],
+                                ])
+                                wire:click="selectResult($el.dataset.globalId)"
+                            >
+                                <span class="font-bold whitespace-nowrap">{{ $result['transliterated'] }}</span>
+                                <span class="whitespace-nowrap tollerus_{{ $resultNeography->machine_name }}">{{ $result['native'] }}</span>
+                            </a>
                         @endforeach
                     </div>
                 </div>
@@ -79,7 +94,7 @@
                                         x-model="currentNeography"
                                         class="bg-tollerus-surface hover:bg-tollerus-surface-hover border-2 border-tollerus-bg hover:border-tollerus-bg/50 cursor-pointer rounded-lg py-2 px-4 h-11 flex justify-center items-center shadow-lg"
                                     >
-                                        @foreach ($neographies as $neography)
+                                        @foreach ($languageNeographies as $neography)
                                             <option value="{{ $neography->id }}">{{ $neography->name }}</option>
                                         @endforeach
                                     </select>
@@ -90,7 +105,7 @@
                             <a id="{{ $entry->global_id }}" class="flex flex-row flex-wrap sm:flex-nowrap gap-y-1 gap-x-8 items-center justify-start text-tollerus-text">
                                 <span class="font-bold whitespace-nowrap">{{ $primaryForm->transliterated }}</span>
                                 <span class="italic whitespace-nowrap">/{{ $primaryForm->phonemic }}/</span>
-                                @foreach ($neographies as $neography)
+                                @foreach ($languageNeographies as $neography)
                                     @php($nativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $neography->id))
                                     <span
                                         x-show="currentNeography=={{ $neography->id }}" x-cloak
@@ -174,7 +189,7 @@
                                                                                     >
                                                                                         <span class="font-bold whitespace-nowrap">{{ $row['form']->transliterated }}</span>
                                                                                         <span class="italic whitespace-nowrap">/{{ $row['form']->phonemic }}/</span>
-                                                                                        @foreach ($neographies as $neography)
+                                                                                        @foreach ($languageNeographies as $neography)
                                                                                             @php($nativeSpelling = $row['form']->nativeSpellings->firstWhere('neography_id', $neography->id))
                                                                                             <span
                                                                                                 x-show="currentNeography=={{ $neography->id }}" x-cloak
