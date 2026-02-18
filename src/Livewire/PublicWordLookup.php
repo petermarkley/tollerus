@@ -50,6 +50,7 @@ class PublicWordLookup extends Component
         $primaryForm           = null;
         $primaryNativeSpelling = null;
         $lexemes               = null;
+        $selectedResult        = null;
         // Conditionally populate
         if ($this->id !== null) {
             if (!($this->entry instanceof Entry)) {
@@ -124,6 +125,14 @@ class PublicWordLookup extends Component
             if ($primaryNeography !== null && $primaryForm !== null) {
                 $primaryNativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
             }
+            $selectedResultObj = collect($this->results)->first(
+                fn ($result) =>
+                    ($this->id === $result['entryGlobalId'] && $this->frag === null && $result['id'] === $result['entryPrimaryFormId']) ||
+                    $this->frag === $result['global_id']
+            );
+            if ($selectedResultObj) {
+                $selectedResult = $selectedResultObj['global_id'];
+            }
         }
 
         return view('tollerus::livewire.public-word-lookup', [
@@ -134,6 +143,7 @@ class PublicWordLookup extends Component
                 'primaryForm'           => $primaryForm,
                 'primaryNativeSpelling' => $primaryNativeSpelling,
                 'lexemes'               => $lexemes,
+                'selectedResult'        => $selectedResult,
             ])->layout('tollerus::components.layouts.public')
             ->title($pageTitle);
     }
@@ -265,7 +275,6 @@ class PublicWordLookup extends Component
                 $result['entryPrimaryFormId'] = $entry->primary_form;
                 $result['languageMachineName'] = Language::find($result['language_id'])?->machine_name;
                 $result['primaryNeographyMachineName'] = Neography::find($result['primary_neography_id'])?->machine_name;
-                $result['selected'] = ($id === $result['entryGlobalId'] && $frag === null && $result['id'] === $result['entryPrimaryFormId']) || $frag === $result['global_id'];
                 return $result;
             })->toArray();
             $this->results = $resultsFinal;
