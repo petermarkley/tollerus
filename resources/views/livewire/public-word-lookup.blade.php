@@ -1,4 +1,4 @@
-<div x-data="{ type: $wire.entangle('type') }" class="mx-auto mt-4 w-full xl:px-25 flex flex-col gap-4 items-start">
+<div class="mx-auto mt-4 w-full xl:px-25 flex flex-col gap-4 items-start">
     @if($languages->count() == 0)
         <div class="w-full flex flex-col gap-4 items-center">
             <p class="text-center text-tollerus-text">{{ __('tollerus::ui.no_data_notice') }}</p>
@@ -33,7 +33,6 @@
                             id="search_string"
                             wire:model.defer="key"
                             class="appearance-none w-full border p-2 w-full rounded-lg inset-shadow-sm bg-tollerus-muted border-tollerus-border/50"
-                            x-bind:class="{'tollerus_{{ $primaryNeography->machine_name }}': type == '{{ \PeterMarkley\Tollerus\Enums\SearchType::Native->value }}'}"
                             placeholder="{{ __('tollerus::ui.search_for_entry') }}"
                         />
                     </div>
@@ -58,7 +57,9 @@
                     </div>
                 </div>
                 <div
-                    x-data="{ currentNeography: {{ $primaryNeography->id }} }"
+                    @if ($primaryNeography !== null)
+                        x-data="{ currentNeography: {{ $primaryNeography->id }} }"
+                    @endif
                     class="w-full xl:w-[calc(100%-20.5rem)] flex-grow min-h-60 p-8 flex flex-col gap-6 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50"
                 >
                     @if ($entry !== null)
