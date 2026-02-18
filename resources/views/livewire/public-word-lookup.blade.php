@@ -39,9 +39,7 @@
                 </div>
                 <div class="shrink-0 flex justify-center items-center">
                     <button
-                        type="secondary"
-                        size="small"
-                        htmlType="submit"
+                        type="submit"
                         title="{{ __('tollerus::ui.submit_search') }}"
                         class="relative w-10 h-10 mr-[0.125rem] rounded-l-full rounded-r-full flex justify-center items-center cursor-pointer bg-tollerus-secondary hover:bg-tollerus-secondary-hover text-tollerus-text-inverse"
                     >

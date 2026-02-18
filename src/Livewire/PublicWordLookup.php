@@ -198,18 +198,13 @@ class PublicWordLookup extends Component
 
         $this->type = SearchType::tryFrom($req->query('type')) ?? SearchType::Transliterated;
         $this->key = $req->query('key', null);
-        $this->searchExecute();
+        $this->search();
     }
 
-    public function search(string $type, ?string $key): void
+    public function search(): void
     {
-        $this->type = SearchType::from($type);
-        $this->key = $key;
-        $this->searchExecute();
-    }
-
-    private function searchExecute(): void
-    {
+        $rawConnection = DB::connection(config('tollerus.connection'));
+        $prefix = $rawConnection->getTablePrefix();
         if ($this->key !== null && strlen($this->key) > 0) {
             $formsQuery = Form::query()
                 ->join('languages as l', 'l.id', '=', 'forms.language_id')
@@ -221,12 +216,36 @@ class PublicWordLookup extends Component
                     'ns.spelling as native',
                     'ns.sort_key as sort_key',
                     'l.primary_neography as primary_neography_id',
-                ])->orderBy('forms.transliterated');
+                ]);
             switch ($this->type) {
                 case SearchType::Transliterated:
+                    $formsQuery
+                        ->selectRaw("
+                            CASE
+                            WHEN {$prefix}forms.transliterated = ? THEN 0
+                            WHEN {$prefix}forms.transliterated LIKE ? THEN 1
+                            WHEN {$prefix}forms.transliterated LIKE ? THEN 2
+                            ELSE 3
+                            END AS relevance
+                        ", [$this->key, $this->key.'%', '%'.$this->key.'%'])
+                        ->orderBy('relevance')
+                        ->orderByRaw("CHAR_LENGTH({$prefix}forms.transliterated) ASC")
+                        ->orderBy('forms.transliterated');
                     $formsQuery->where('forms.transliterated', 'like', '%'.$this->key.'%');
                 break;
                 case SearchType::Native:
+                    $formsQuery
+                        ->selectRaw("
+                            CASE
+                            WHEN {$prefix}ns.spelling = ? THEN 0
+                            WHEN {$prefix}ns.spelling LIKE ? THEN 1
+                            WHEN {$prefix}ns.spelling LIKE ? THEN 2
+                            ELSE 3
+                            END AS relevance
+                        ", [$this->key, $this->key.'%', '%'.$this->key.'%'])
+                        ->orderBy('relevance')
+                        ->orderByRaw("CHAR_LENGTH({$prefix}ns.spelling) ASC")
+                        ->orderBy('ns.spelling');
                     $formsQuery->where('ns.spelling', 'like', '%'.$this->key.'%');
                 break;
                 case SearchType::Definition:
