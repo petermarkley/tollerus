@@ -52,21 +52,18 @@
                 <div class="relative xl:w-80 shrink-0">
                     <div class="w-full h-60 xl:h-auto min-h-60 xl:absolute xl:inset-y-0 overflow-y-scroll rounded-lg xl:rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
                         @foreach ($results as $result)
-                            @php
-                                $resultLanguage = $languages->firstWhere('id', $result['language_id']);
-                                $resultNeography = $neographies->firstWhere('id', $result['primary_neography_id']);
-                            @endphp
                             <a
                                 data-global-id="{{ $result['global_id'] }}"
                                 @class([
-                                    'my-2 py-1 px-4 flex flex-row gap-2 justify-start items-center font-bold cursor-pointer hover:bg-tollerus-surface/50',
-                                    'text-tollerus-secondary hover:text-tollerus-secondary-hover' => !($result['irregular']),
-                                    'text-tollerus-text-irregular hover:opacity-70' => $result['irregular'],
+                                    'my-2 py-1 px-4 flex flex-row gap-2 justify-start items-center font-bold cursor-pointer',
+                                    'hover:bg-tollerus-surface/50 text-tollerus-secondary hover:text-tollerus-secondary-hover' => !($result['selected']) && !($result['irregular']),
+                                    'hover:bg-tollerus-surface/50 text-tollerus-text-irregular hover:opacity-70' => !($result['selected']) && $result['irregular'],
+                                    'bg-tollerus-secondary text-tollerus-text-inverse hover:bg-tollerus-secondary-hover' => $result['selected'],
                                 ])
                                 wire:click="selectResult($el.dataset.globalId)"
                             >
                                 <span class="font-bold whitespace-nowrap">{{ $result['transliterated'] }}</span>
-                                <span class="whitespace-nowrap tollerus_{{ $resultNeography->machine_name }}">{{ $result['native'] }}</span>
+                                <span class="whitespace-nowrap tollerus_{{ $result['primaryNeographyMachineName'] }}">{{ $result['native'] }}</span>
                             </a>
                         @endforeach
                     </div>

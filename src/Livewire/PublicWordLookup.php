@@ -25,11 +25,11 @@ class PublicWordLookup extends Component
 {
     #[Locked] public Collection $languages;
     #[Locked] public Collection $neographies;
-    public ?string $id;
-    public ?Entry $entry;
+    public ?string $id = null;
+    public ?Entry $entry = null;
     public SearchType $type;
-    public ?string $key;
-    public ?string $frag;
+    public ?string $key = null;
+    public ?string $frag = null;
     public array $results = [];
 
     /**
@@ -256,7 +256,19 @@ class PublicWordLookup extends Component
                     //
                 break;
             }
-            $this->results = $formsQuery->get()->toArray();
+            $results = $formsQuery->get();
+            $id = $this->id;
+            $frag = $this->frag;
+            $resultsFinal = $results->map(function ($result) use ($id, $frag) {
+                $entry = $result->lexeme->entry;
+                $result['entryGlobalId'] = $entry->global_id;
+                $result['entryPrimaryFormId'] = $entry->primary_form;
+                $result['languageMachineName'] = Language::find($result['language_id'])?->machine_name;
+                $result['primaryNeographyMachineName'] = Neography::find($result['primary_neography_id'])?->machine_name;
+                $result['selected'] = ($id === $result['entryGlobalId'] && $frag === null && $result['id'] === $result['entryPrimaryFormId']) || $frag === $result['global_id'];
+                return $result;
+            })->toArray();
+            $this->results = $resultsFinal;
         } else {
             $this->results = [];
         }
