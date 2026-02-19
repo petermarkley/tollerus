@@ -13,6 +13,4 @@
 ## PublicWordLookup page
 - [ ] Use responsive `label`/`label_brief`/`label_long` fields on `InflectionRow` in Blade view
 - [ ] Put inflection tables in collapsible drawer if beyond a threshold defined in `config/tollerus.php`? (Maybe by total `InflectionColumn` count across all the tables on the lexeme...)
-- [ ] Make search work, show clicked result in main view
-- [ ] Highlight form on page if there's a document fragment in the URL?
-- [ ] Make sure search form changes update URL and push to browser window history
+- [ ] Highlight form on page based on `hl` URL param
