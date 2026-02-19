@@ -50,14 +50,14 @@
             </form>
             <div class="flex flex-col xl:flex-row gap-2 items-stretch">
                 <div class="relative xl:w-80 shrink-0">
-                    <div class="w-full h-60 xl:h-auto min-h-60 xl:absolute xl:inset-y-0 overflow-y-scroll rounded-lg xl:rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
+                    <div class="w-full h-60 xl:h-auto min-h-60 xl:absolute xl:inset-y-0 overflow-y-scroll flex flex-col gap-2 justify-start items-stretch rounded-lg xl:rounded-bl-[22px] inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50">
                         @foreach ($results as $result)
                             @php($selected = $selectedResult === $result['global_id'])
-                            <a
+                            <button
                                 data-entry-id="{{ $result['entryGlobalId'] }}"
                                 data-form-id="{{ $result['global_id'] }}"
                                 @class([
-                                    'my-2 py-1 px-4 flex flex-row gap-2 justify-start items-center font-bold cursor-pointer',
+                                    'py-1 px-4 flex flex-row gap-2 justify-start items-center font-bold cursor-pointer',
                                     'hover:bg-tollerus-surface/50 text-tollerus-secondary hover:text-tollerus-secondary-hover' => !$selected && !($result['irregular']),
                                     'hover:bg-tollerus-surface/50 text-tollerus-text-irregular hover:opacity-70' => !$selected && $result['irregular'],
                                     'bg-tollerus-secondary text-tollerus-text-inverse hover:bg-tollerus-secondary-hover' => $selected,
@@ -66,7 +66,7 @@
                             >
                                 <span class="font-bold whitespace-nowrap">{{ $result['transliterated'] }}</span>
                                 <span class="whitespace-nowrap tollerus_{{ $result['primaryNeographyMachineName'] }}">{{ $result['native'] }}</span>
-                            </a>
+                            </button>
                         @endforeach
                     </div>
                 </div>
