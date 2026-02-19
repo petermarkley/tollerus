@@ -54,14 +54,15 @@
                         @foreach ($results as $result)
                             @php($selected = $selectedResult === $result['global_id'])
                             <a
-                                data-global-id="{{ $result['global_id'] }}"
+                                data-entry-id="{{ $result['entryGlobalId'] }}"
+                                data-form-id="{{ $result['global_id'] }}"
                                 @class([
                                     'my-2 py-1 px-4 flex flex-row gap-2 justify-start items-center font-bold cursor-pointer',
                                     'hover:bg-tollerus-surface/50 text-tollerus-secondary hover:text-tollerus-secondary-hover' => !$selected && !($result['irregular']),
                                     'hover:bg-tollerus-surface/50 text-tollerus-text-irregular hover:opacity-70' => !$selected && $result['irregular'],
                                     'bg-tollerus-secondary text-tollerus-text-inverse hover:bg-tollerus-secondary-hover' => $selected,
                                 ])
-                                wire:click="selectResult($el.dataset.globalId)"
+                                wire:click="selectResult($el.dataset.formId)"
                             >
                                 <span class="font-bold whitespace-nowrap">{{ $result['transliterated'] }}</span>
                                 <span class="whitespace-nowrap tollerus_{{ $result['primaryNeographyMachineName'] }}">{{ $result['native'] }}</span>

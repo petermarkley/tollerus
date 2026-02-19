@@ -4,6 +4,7 @@ namespace PeterMarkley\Tollerus\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Url;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Model;
@@ -25,11 +26,12 @@ class PublicWordLookup extends Component
 {
     #[Locked] public Collection $languages;
     #[Locked] public Collection $neographies;
-    public ?string $id = null;
+    #[Url(history: false)] public ?string $id = null;
     public ?Entry $entry = null;
-    public SearchType $type;
-    public ?string $key = null;
-    public ?string $frag = null;
+    #[Url(history: true)] public SearchType $type = SearchType::Transliterated;
+    #[Url(history: true)] public ?string $key = null;
+    #[Url(as: 'hl', history: true)] public ?string $highlight = null;
+    public ?GlobalIdKind $highlightKind = null;
     public array $results = [];
 
     /**
@@ -127,8 +129,8 @@ class PublicWordLookup extends Component
             }
             $selectedResultObj = collect($this->results)->first(
                 fn ($result) =>
-                    ($this->id === $result['entryGlobalId'] && $this->frag === null && $result['id'] === $result['entryPrimaryFormId']) ||
-                    $this->frag === $result['global_id']
+                    ($this->id === $result['entryGlobalId'] && $this->highlightKind != GlobalIdKind::Form && $result['isPrimary']) ||
+                    $this->highlight === $result['global_id']
             );
             if ($selectedResultObj) {
                 $selectedResult = $selectedResultObj['global_id'];
@@ -158,15 +160,6 @@ class PublicWordLookup extends Component
         /**
          * We need to check if the user has specified a global ID,
          * and if so we need to validate & resolve it.
-         *
-         * The only canonical variants of this page we should
-         * accept are entry IDs. Other IDs underneath that should
-         * redirect to the entry ID with the appropriate document
-         * fragment inside it.
-         *
-         * The only other thing we want to catch is a glyph ID,
-         * which we should redirect to an appropriate language
-         * detail page (again, with document fragment).
          */
         $this->id = $req->query('id', null);
         if ($this->id !== null) {
@@ -188,24 +181,26 @@ class PublicWordLookup extends Component
                     if (!($language instanceof Language)) {
                         abort(404);
                     }
-                    $this->redirect(route('tollerus.public.languages.show', ['language' => $language]) . '#'.$this->id);
+                    $this->redirect(route('tollerus.public.languages.show', ['language' => $language, 'hl' => $this->id]));
                 break;
                 case GlobalIdKind::Entry:
                     $this->entry = $obj;
+                    $this->highlight = $obj->primaryForm?->global_id;
+                    $this->highlightKind = GlobalIdKind::Entry;
                 break;
                 case GlobalIdKind::Lexeme:
                     /**
                      * For a lexeme, we need to redirect to the entry
                      */
                     $entry = $obj->entry;
-                    $this->redirect(route('tollerus.public.index', ['id' => $entry->global_id]) . '#'.$this->id);
+                    $this->redirect(route('tollerus.public.index', ['id' => $entry->global_id, 'hl' => $this->id]));
                 break;
                 case GlobalIdKind::Form:
                     /**
                      * For a form, we also need to redirect to the entry
                      */
                     $entry = $obj->lexeme->entry;
-                    $this->redirect(route('tollerus.public.index', ['id' => $entry->global_id]) . '#'.$this->id);
+                    $this->redirect(route('tollerus.public.index', ['id' => $entry->global_id, 'hl' => $this->id]));
                 break;
             }
         }
@@ -268,11 +263,11 @@ class PublicWordLookup extends Component
             }
             $results = $formsQuery->get();
             $id = $this->id;
-            $frag = $this->frag;
-            $resultsFinal = $results->map(function ($result) use ($id, $frag) {
+            $resultsFinal = $results->map(function ($result) {
                 $entry = $result->lexeme->entry;
                 $result['entryGlobalId'] = $entry->global_id;
                 $result['entryPrimaryFormId'] = $entry->primary_form;
+                $result['isPrimary'] = $result['entryPrimaryFormId'] === $result['id'];
                 $result['languageMachineName'] = Language::find($result['language_id'])?->machine_name;
                 $result['primaryNeographyMachineName'] = Neography::find($result['primary_neography_id'])?->machine_name;
                 return $result;
@@ -283,8 +278,11 @@ class PublicWordLookup extends Component
         }
     }
 
-    public function selectResult(string $globalIdStr): void
+    public function selectResult(?string $globalIdStr, bool $updateParams = true): void
     {
+        if ($globalIdStr === null) {
+            return;
+        }
         // Look up global ID and its associated model
         $globalId = GlobalId::fromStr($globalIdStr);
         if (!($globalId instanceof GlobalId)) {
@@ -306,20 +304,49 @@ class PublicWordLookup extends Component
                 $this->redirect(route('tollerus.public.languages.show', ['language' => $language]) . '#'.$this->id);
             break;
             case GlobalIdKind::Entry:
-                $this->id = $globalIdStr;
                 $this->entry = $obj;
-                $this->frag = null;
+                if ($updateParams) {
+                    $this->id = $globalIdStr;
+                    $this->highlight = $obj->primaryForm?->global_id;
+                    $this->highlightKind = GlobalIdKind::Entry;
+                }
             break;
             case GlobalIdKind::Lexeme:
                 $this->entry = $obj->entry;
-                $this->id = $this->entry->global_id;
-                $this->frag = $obj->global_id;
+                if ($updateParams) {
+                    $this->id = $this->entry->global_id;
+                    $this->highlight = $obj->global_id;
+                    $this->highlightKind = GlobalIdKind::Lexeme;
+                }
             break;
             case GlobalIdKind::Form:
                 $this->entry = $obj->lexeme->entry;
-                $this->id = $this->entry->global_id;
-                $this->frag = $obj->global_id;
+                if ($updateParams) {
+                    $this->id = $this->entry->global_id;
+                    $this->highlight = $obj->global_id;
+                    $this->highlightKind = GlobalIdKind::Form;
+                }
             break;
         }
+    }
+
+    /**
+     * Livewire `#[Url]` hooks
+     */
+    public function updatedId($value): void
+    {
+        $this->selectResult($value, false);
+    }
+    public function updatedHighlight($value): void
+    {
+        $this->selectResult($value ?? $this->id, false);
+    }
+    public function updatedType(): void
+    {
+        $this->search();
+    }
+    public function updatedKey(): void
+    {
+        $this->search();
     }
 }
