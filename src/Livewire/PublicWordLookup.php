@@ -358,61 +358,8 @@ class PublicWordLookup extends Component
                                                 ->values();
 
                                             /**
-                                             * ======================================================
-                                             *             (benchmark comparisons)
-                                             * ======================================================
-                                             */
-
-                                            /**
-                                             * A. Implementation using `->reduce(isset())` ...
-                                             * ===============================================
-                                             * 200-rep benchmark on a Spanish verb inflection
-                                             * table (58 forms): 32.707ms
-                                             *
-                                             * Much better than using `->contains()` on a
-                                             * collection, but still bad compared to B and C.
-                                             */
-                                            // // In the lexeme scope:
-                                            // //---------------------
-                                            // $formInflectionValueIds = $lexeme->forms
-                                            //     ->mapWithKeys(fn ($f) => [$f->id => $f->inflectionValues->pluck('id')->flip()])
-                                            //     ->toArray();
-                                            // //---------------------
-                                            // // Then, in the row scope:
-                                            // //------------------------
-                                            // $form = $lexeme->forms->filter(
-                                            //     fn ($form) => $filters->reduce(
-                                            //         fn ($carry, $filter) => $carry && isset($formInflectionValueIds[$form->id][$filter->id]),
-                                            //         true
-                                            //     )
-                                            // )->first();
-                                            // //------------------------
-
-                                            /**
-                                             *
-                                             * B. Implementation using classical imperative syntax ...
-                                             * =======================================================
-                                             * 200-rep benchmark on a Spanish verb inflection
-                                             * table (58 forms): 4.990ms
-                                             *
-                                             * Marginally faster than declarative syntax, but less
-                                             * readable.
-                                             */
-                                            // $candidates = null;
-                                            // foreach ($filterIds as $vid) {
-                                            //     $ids = $formIdsByValueId[$vid] ?? [];
-                                            //     $candidates = $candidates === null ? $ids : array_values(array_intersect($candidates, $ids));
-                                            //     if (!$candidates) break;
-                                            // }
-                                            // $formId = $candidates[0] ?? null;
-
-                                            /**
-                                             * C. Implementation using declarative Collection syntax ...
-                                             * =========================================================
-                                             * 200-rep benchmark on a Spanish verb inflection
-                                             * table (58 forms): 5.647ms
-                                             *
-                                             * Performance cost is outweighed by readability benefit.
+                                             * For benchmark notes on alternative implementations:
+                                             * `docs/performance/inflection-matching.md`
                                              */
                                             $formId = $filterIds->reduce(
                                                 function ($candidates, $filterId) use ($formIdsByValueId) {
@@ -426,12 +373,6 @@ class PublicWordLookup extends Component
                                                 // Start with all forms on the lexeme
                                                 collect(array_keys($formsById))
                                             )->first(); // Done, now pick the first remaining form
-
-                                            /**
-                                             * ======================================================
-                                             *             (end of benchmark comparisons)
-                                             * ======================================================
-                                             */
 
                                             if ($formId !== null && $primaryNeography !== null) {
                                                 $form = $formsById[$formId];
