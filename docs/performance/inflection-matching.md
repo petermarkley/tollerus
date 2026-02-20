@@ -1,7 +1,20 @@
-# Benchmarks for Implementation Options in `src/Livewire/PublicWordLookup.php`
+# Benchmarks for Implementation Options in `\PeterMarkley\Tollerus\Livewire\PublicWordLookup::displayEntry()`
 
 Performed on a Spanish verb inflection set (58 forms).
 
+## Results
+
+### With original
+```
+array:4 [▼ // vendor/laravel/framework/src/Illuminate/Support/Benchmark.php:70
+  "original contains on collection" => "107.364ms"
+  "isset per-form scan" => "33.015ms"
+  "formIdsByValueId imperative intersect" => "5.080ms"
+  "formIdsByValueId collection intersect" => "5.629ms"
+]
+```
+
+### Without original
 ```
 array:3 [▼ // vendor/laravel/framework/src/Illuminate/Support/Benchmark.php:70
   "isset per-form scan" => "32.707ms"
@@ -10,10 +23,64 @@ array:3 [▼ // vendor/laravel/framework/src/Illuminate/Support/Benchmark.php:70
 ]
 ```
 
-Code:
+## Code
 ```
             $lexemeModels = $this->entry->lexemes;
+            set_time_limit(300);
             Benchmark::dd([
+                'original contains on collection' => function () use ($lexemeModels, $primaryNeography) {
+                    $lexemes = $lexemeModels->sortBy('position')
+                        ->map(function ($lexeme) use ($primaryNeography) {
+                            $group = $lexeme->wordClass->group;
+                            $tables = $group->inflectionTables
+                                ->where('visible', true)
+                                ->sortBy('position')
+                                ->map(function ($table) use ($lexeme, $primaryNeography) {
+                                    $columns = $table->columns
+                                        ->where('visible', true)
+                                        ->sortBy('position')
+                                        ->map(function ($column) use ($lexeme, $primaryNeography) {
+                                            $rows = $column->rows
+                                                ->where('visible', true)
+                                                ->sortBy('position')
+                                                ->map(function ($row) use ($column, $lexeme, $primaryNeography) {
+                                                    $filters = $column->filterValues->concat($row->filterValues);
+                                                    $form = $lexeme->forms->filter(
+                                                        fn ($form) => $filters->reduce(
+                                                            fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
+                                                            true
+                                                        )
+                                                    )->first();
+                                                    if ($form !== null && $primaryNeography !== null) {
+                                                        $formNative = $form->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
+                                                    } else {
+                                                        $formNative = null;
+                                                    }
+                                                    return [
+                                                        'model' => $row,
+                                                        'form' => $form,
+                                                        'formNative' => $formNative,
+                                                    ];
+                                                })->values();
+                                            return [
+                                                'model' => $column,
+                                                'rows' => $rows,
+                                            ];
+                                        })->values();
+                                    return [
+                                        'model' => $table,
+                                        'columns' => $columns,
+                                    ];
+                                })->values();
+                            return [
+                                'model' => $lexeme,
+                                'class' => $lexeme->wordClass,
+                                'group' => $group,
+                                'tables' => $tables,
+                            ];
+                        })->values();
+                },
+
                 'isset per-form scan' => function () use ($lexemeModels, $primaryNeography) {
                     $lexemes = $lexemeModels->sortBy('position')
                         ->map(function ($lexeme) use ($primaryNeography) {
