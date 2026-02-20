@@ -359,7 +359,7 @@ class PublicWordLookup extends Component
 
                                             /**
                                              * For benchmark notes on alternative implementations:
-                                             * `docs/performance/inflection-matching.md`
+                                             * `docs/dev/performance/inflection-matching.md`
                                              */
                                             $formId = $filterIds->reduce(
                                                 function ($candidates, $filterId) use ($formIdsByValueId) {
