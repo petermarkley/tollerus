@@ -24,15 +24,21 @@ use PeterMarkley\Tollerus\Models\Neography;
 
 class PublicWordLookup extends Component
 {
+    // Models
     #[Locked] public Collection $languages;
     #[Locked] public Collection $neographies;
+    // Page parameters
     #[Url(history: false)] public ?string $id = null;
-    public ?Entry $entry = null;
     #[Url(history: true)] public SearchType $type = SearchType::Transliterated;
     #[Url(history: true)] public ?string $key = null;
     #[Url(as: 'hl', history: true)] public ?string $highlight = null;
+    // Internal state
+    public ?Entry $entry = null;
     public ?GlobalIdKind $highlightKind = null;
     public array $results = [];
+    // Cache of entry display info
+    private ?string $displayedId = null;
+    private array $display = [];
 
     /**
      * Livewire hooks
@@ -44,113 +50,18 @@ class PublicWordLookup extends Component
             $pageTitle .= ' My test page';
         }
 
-        // Initialize pessimistically
-        $language              = null;
-        $primaryNeography      = null;
-        $languageNeographies   = null;
-        $multipleNeographies   = false;
-        $primaryForm           = null;
-        $primaryNativeSpelling = null;
-        $lexemes               = null;
-        $selectedResult        = null;
         // Conditionally populate
-        if ($this->id !== null) {
-            if (!($this->entry instanceof Entry)) {
-                abort(404);
-            }
-            $this->entry->loadMissing([
-                'language.neographies',
-                'language.primaryNeography',
-                'primaryForm.nativeSpellings',
-                'lexemes.forms.nativeSpellings',
-                'lexemes.forms.inflectionValues',
-                'lexemes.wordClass.group.features.featureValues',
-                'lexemes.wordClass.group.inflectionTables.columns.filterValues',
-                'lexemes.wordClass.group.inflectionTables.columns.rows.filterValues',
-                'lexemes.senses.subsenses',
-            ]);
-            $language            = $this->entry->language;
-            $primaryNeography    = $language->primaryNeography;
-            $languageNeographies = $language->neographies->sortBy('machine_name')->filter(fn ($n) => $n->visible || $n->id == $primaryNeography->id);
-            $multipleNeographies = $primaryNeography !== null && $languageNeographies->count() > 1;
-            $primaryForm         = $this->entry->primaryForm;
-            $lexemes             = $this->entry->lexemes->sortBy('position')
-                ->map(function ($lexeme) use ($primaryNeography) {
-                    $group = $lexeme->wordClass->group;
-                    $tables = $group->inflectionTables
-                        ->where('visible', true)
-                        ->sortBy('position')
-                        ->map(function ($table) use ($lexeme, $primaryNeography) {
-                            $columns = $table->columns
-                                ->where('visible', true)
-                                ->sortBy('position')
-                                ->map(function ($column) use ($lexeme, $primaryNeography) {
-                                    $rows = $column->rows
-                                        ->where('visible', true)
-                                        ->sortBy('position')
-                                        ->map(function ($row) use ($column, $lexeme, $primaryNeography) {
-                                            $filters = $column->filterValues->concat($row->filterValues);
-                                            $form = $lexeme->forms->filter(
-                                                fn ($form) => $filters->reduce(
-                                                    fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
-                                                    true
-                                                )
-                                            )->first();
-                                            if ($form !== null && $primaryNeography !== null) {
-                                                $formNative = $form->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
-                                            } else {
-                                                $formNative = null;
-                                            }
-                                            return [
-                                                'model' => $row,
-                                                'form' => $form,
-                                                'formNative' => $formNative,
-                                            ];
-                                        })->values();
-                                    return [
-                                        'model' => $column,
-                                        'rows' => $rows,
-                                    ];
-                                })->values();
-                            return [
-                                'model' => $table,
-                                'columns' => $columns,
-                            ];
-                        })->values();
-                    return [
-                        'model' => $lexeme,
-                        'class' => $lexeme->wordClass,
-                        'group' => $group,
-                        'tables' => $tables,
-                    ];
-                })->values();
-            if ($primaryNeography !== null && $primaryForm !== null) {
-                $primaryNativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
-            }
-            $selectedResultObj = collect($this->results)->first(
-                fn ($result) =>
-                    ($this->id === $result['entryGlobalId'] && $this->highlightKind != GlobalIdKind::Form && $result['isPrimary']) ||
-                    $this->highlight === $result['global_id']
-            );
-            if ($selectedResultObj) {
-                $selectedResult = $selectedResultObj['global_id'];
-            }
+        if ($this->id !== $this->displayedId) {
+            $this->displayEntry();
         }
 
-        return view('tollerus::livewire.public-word-lookup', [
-                'language'              => $language,
-                'primaryNeography'      => $primaryNeography,
-                'languageNeographies'   => $languageNeographies,
-                'multipleNeographies'   => $multipleNeographies,
-                'primaryForm'           => $primaryForm,
-                'primaryNativeSpelling' => $primaryNativeSpelling,
-                'lexemes'               => $lexemes,
-                'selectedResult'        => $selectedResult,
-            ])->layout('tollerus::components.layouts.public')
+        return view('tollerus::livewire.public-word-lookup', $this->display)
+            ->layout('tollerus::components.layouts.public')
             ->title($pageTitle);
     }
     public function mount(Request $req): void
     {
+        // Initialize models
         $this->languages = Language::where('visible', true)
             ->orderBy('machine_name')
             ->get();
@@ -205,6 +116,7 @@ class PublicWordLookup extends Component
             }
         }
 
+        // Initialize page state
         $this->type = SearchType::tryFrom($req->query('type')) ?? SearchType::Transliterated;
         $this->key = $req->query('key', null);
         $this->search();
@@ -331,6 +243,111 @@ class PublicWordLookup extends Component
                 }
             break;
         }
+    }
+
+    private function displayEntry(): void
+    {
+        // Initialize pessimistically
+        $language              = null;
+        $primaryNeography      = null;
+        $languageNeographies   = null;
+        $multipleNeographies   = false;
+        $primaryForm           = null;
+        $primaryNativeSpelling = null;
+        $lexemes               = null;
+        $selectedResult        = null;
+        // Conditionally populate
+        if ($this->id !== null) {
+            if (!($this->entry instanceof Entry)) {
+                abort(404);
+            }
+            $this->entry->loadMissing([
+                'language.neographies',
+                'language.primaryNeography',
+                'primaryForm.nativeSpellings',
+                'lexemes.forms.nativeSpellings',
+                'lexemes.forms.inflectionValues',
+                'lexemes.wordClass.group.features.featureValues',
+                'lexemes.wordClass.group.inflectionTables.columns.filterValues',
+                'lexemes.wordClass.group.inflectionTables.columns.rows.filterValues',
+                'lexemes.senses.subsenses',
+            ]);
+            $language            = $this->entry->language;
+            $primaryNeography    = $language->primaryNeography;
+            $languageNeographies = $language->neographies->sortBy('machine_name')->filter(fn ($n) => $n->visible || $n->id == $primaryNeography->id);
+            $multipleNeographies = $primaryNeography !== null && $languageNeographies->count() > 1;
+            $primaryForm         = $this->entry->primaryForm;
+            $lexemes             = $this->entry->lexemes->sortBy('position')
+                ->map(function ($lexeme) use ($primaryNeography) {
+                    $group = $lexeme->wordClass->group;
+                    $tables = $group->inflectionTables
+                        ->where('visible', true)
+                        ->sortBy('position')
+                        ->map(function ($table) use ($lexeme, $primaryNeography) {
+                            $columns = $table->columns
+                                ->where('visible', true)
+                                ->sortBy('position')
+                                ->map(function ($column) use ($lexeme, $primaryNeography) {
+                                    $rows = $column->rows
+                                        ->where('visible', true)
+                                        ->sortBy('position')
+                                        ->map(function ($row) use ($column, $lexeme, $primaryNeography) {
+                                            $filters = $column->filterValues->concat($row->filterValues);
+                                            $form = $lexeme->forms->filter(
+                                                fn ($form) => $filters->reduce(
+                                                    fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
+                                                    true
+                                                )
+                                            )->first();
+                                            if ($form !== null && $primaryNeography !== null) {
+                                                $formNative = $form->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
+                                            } else {
+                                                $formNative = null;
+                                            }
+                                            return [
+                                                'model' => $row,
+                                                'form' => $form,
+                                                'formNative' => $formNative,
+                                            ];
+                                        })->values();
+                                    return [
+                                        'model' => $column,
+                                        'rows' => $rows,
+                                    ];
+                                })->values();
+                            return [
+                                'model' => $table,
+                                'columns' => $columns,
+                            ];
+                        })->values();
+                    return [
+                        'model' => $lexeme,
+                        'class' => $lexeme->wordClass,
+                        'group' => $group,
+                        'tables' => $tables,
+                    ];
+                })->values();
+            if ($primaryNeography !== null && $primaryForm !== null) {
+                $primaryNativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
+            }
+            $selectedResultObj = collect($this->results)->first(
+                fn ($result) =>
+                    ($this->id === $result['entryGlobalId'] && $this->highlightKind != GlobalIdKind::Form && $result['isPrimary']) ||
+                    $this->highlight === $result['global_id']
+            );
+            if ($selectedResultObj) {
+                $selectedResult = $selectedResultObj['global_id'];
+            }
+        }
+        // Store the final values
+        $this->display['language']              = $language;
+        $this->display['primaryNeography']      = $primaryNeography;
+        $this->display['languageNeographies']   = $languageNeographies;
+        $this->display['multipleNeographies']   = $multipleNeographies;
+        $this->display['primaryForm']           = $primaryForm;
+        $this->display['primaryNativeSpelling'] = $primaryNativeSpelling;
+        $this->display['lexemes']               = $lexemes;
+        $this->display['selectedResult']        = $selectedResult;
     }
 
     /**
