@@ -122,6 +122,9 @@ class PublicWordLookup extends Component
         $this->search();
     }
 
+    /**
+     * Page interactions
+     */
     public function search(): void
     {
         $rawConnection = DB::connection(config('tollerus.connection'));
@@ -192,7 +195,6 @@ class PublicWordLookup extends Component
             $this->results = [];
         }
     }
-
     public function selectResult(?string $globalIdStr, bool $updateParams = true): void
     {
         if ($globalIdStr === null) {
@@ -244,7 +246,6 @@ class PublicWordLookup extends Component
             break;
         }
     }
-
     private function displayEntry(): void
     {
         // Initialize pessimistically
