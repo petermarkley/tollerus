@@ -281,22 +281,42 @@ class PublicWordLookup extends Component
             $lexemes             = $this->entry->lexemes->sortBy('position')
                 ->map(function ($lexeme) use ($primaryNeography) {
                     $group = $lexeme->wordClass->group;
+
+                    /**
+                     * Precompute a data lookup for faster matching logic:
+                     * [
+                     *   <formId> => [
+                     *     <filterId> => 0,
+                     *     <filterId> => 1,
+                     *     ...
+                     *   ],
+                     *   ...
+                     * ]
+                     * This lets us use `isset()` on a keyed array instead of
+                     * `->contains()` on a collection, which offers _noticeably
+                     * better performance_ when rendering large inflection
+                     * tables (50+ word forms).
+                     */
+                    $formInflectionValueIds = $lexeme->forms
+                        ->mapWithKeys(fn ($f) => [$f->id => $f->inflectionValues->pluck('id')->flip()])
+                        ->toArray();
+
                     $tables = $group->inflectionTables
                         ->where('visible', true)
                         ->sortBy('position')
-                        ->map(function ($table) use ($lexeme, $primaryNeography) {
+                        ->map(function ($table) use ($lexeme, $formInflectionValueIds, $primaryNeography) {
                             $columns = $table->columns
                                 ->where('visible', true)
                                 ->sortBy('position')
-                                ->map(function ($column) use ($lexeme, $primaryNeography) {
+                                ->map(function ($column) use ($lexeme, $formInflectionValueIds, $primaryNeography) {
                                     $rows = $column->rows
                                         ->where('visible', true)
                                         ->sortBy('position')
-                                        ->map(function ($row) use ($column, $lexeme, $primaryNeography) {
+                                        ->map(function ($row) use ($column, $lexeme, $formInflectionValueIds, $primaryNeography) {
                                             $filters = $column->filterValues->concat($row->filterValues);
                                             $form = $lexeme->forms->filter(
                                                 fn ($form) => $filters->reduce(
-                                                    fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
+                                                    fn ($carry, $filter) => $carry && isset($formInflectionValueIds[$form->id][$filter->id]),
                                                     true
                                                 )
                                             )->first();
