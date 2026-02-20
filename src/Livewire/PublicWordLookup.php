@@ -220,11 +220,16 @@ class PublicWordLookup extends Component
                 ->leftJoin('native_spellings as ns', function ($join) {
                     $join->on('ns.form_id', '=', 'forms.id')
                         ->on('ns.neography_id', '=', 'l.primary_neography');
-                })->select([
+                })->leftJoin('neographies as pn', function ($join) {
+                    $join->on('pn.id', '=', 'l.primary_neography');
+                })
+                ->select([
                     'forms.*',
                     'ns.spelling as native',
                     'ns.sort_key as sort_key',
                     'l.primary_neography as primary_neography_id',
+                    'l.machine_name as languageMachineName',
+                    'pn.machine_name as primaryNeographyMachineName',
                 ]);
             switch ($this->type) {
                 case SearchType::Transliterated:
@@ -262,14 +267,12 @@ class PublicWordLookup extends Component
                 break;
             }
             $results = $formsQuery->get();
-            $id = $this->id;
+            $results->load('lexeme.entry');
             $resultsFinal = $results->map(function ($result) {
                 $entry = $result->lexeme->entry;
                 $result['entryGlobalId'] = $entry->global_id;
                 $result['entryPrimaryFormId'] = $entry->primary_form;
                 $result['isPrimary'] = $result['entryPrimaryFormId'] === $result['id'];
-                $result['languageMachineName'] = Language::find($result['language_id'])?->machine_name;
-                $result['primaryNeographyMachineName'] = Neography::find($result['primary_neography_id'])?->machine_name;
                 return $result;
             })->toArray();
             $this->results = $resultsFinal;
