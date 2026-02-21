@@ -11,7 +11,6 @@
 - [ ] Why does filename conflict cause server error when uploading TTF?
 
 ## PublicWordLookup page
-- [ ] Use responsive `label`/`label_brief`/`label_long` fields on `InflectionRow` in Blade view
 - [ ] Put inflection tables in collapsible drawer if beyond a threshold defined in `config/tollerus.php`? (Maybe by total `InflectionColumn` count across all the tables on the lexeme...)
 - [ ] Highlight form on page based on `hl` URL param
 - [ ] Offer native keyboard(s)??? (Do not base on primary neography of currently displayed entry!)
