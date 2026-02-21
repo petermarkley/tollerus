@@ -173,7 +173,16 @@
                                                                                 ])
                                                                             >
                                                                                 @if ($row['model']->show_label)
-                                                                                    <span class="whitespace-nowrap inline sm:hidden">{{ $row['labelBrief'] }}</span>
+                                                                                    <span class="whitespace-nowrap inline sm:hidden">
+                                                                                        @if (empty($row['model']->label_brief))
+                                                                                            {{ $row['model']->label }}
+                                                                                        @else
+                                                                                            <abbr
+                                                                                                title="{{ $row['model']->label }}"
+                                                                                                class="no-underline"
+                                                                                            >{{ $row['labelBrief'] }}</abbr>
+                                                                                        @endif
+                                                                                    </span>
                                                                                     <span class="whitespace-nowrap hidden sm:inline xl:hidden">{{ $row['label'] }}</span>
                                                                                     <span class="whitespace-nowrap hidden xl:inline">{{ $row['labelLong'] }}</span>
                                                                                 @endif
