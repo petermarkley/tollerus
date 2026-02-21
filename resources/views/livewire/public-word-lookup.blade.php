@@ -173,9 +173,9 @@
                                                                                 ])
                                                                             >
                                                                                 @if ($row['model']->show_label)
-                                                                                    <span class="whitespace-nowrap inline sm:hidden">{{ $row['model']->label_brief }}</span>
-                                                                                    <span class="whitespace-nowrap hidden sm:inline xl:hidden">{{ $row['model']->label }}</span>
-                                                                                    <span class="whitespace-nowrap hidden xl:inline">{{ $row['model']->label_long }}</span>
+                                                                                    <span class="whitespace-nowrap inline sm:hidden">{{ $row['labelBrief'] }}</span>
+                                                                                    <span class="whitespace-nowrap hidden sm:inline xl:hidden">{{ $row['label'] }}</span>
+                                                                                    <span class="whitespace-nowrap hidden xl:inline">{{ $row['labelLong'] }}</span>
                                                                                 @endif
                                                                             </th>
                                                                             <td class="px-1">

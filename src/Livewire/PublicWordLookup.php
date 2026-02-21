@@ -385,6 +385,9 @@ class PublicWordLookup extends Component
                                                 'model' => $row,
                                                 'form' => $form,
                                                 'formNative' => $formNative,
+                                                'labelBrief' => (empty($row->label_brief) ? $row->label : $row->label_brief),
+                                                'label' => $row->label,
+                                                'labelLong' => (empty($row->label_long) ? $row->label : $row->label_long),
                                             ];
                                         })->values();
                                     return [
