@@ -1,6 +1,7 @@
 @props([
 	'open' => 'true',
 	'rootClass' => '',
+	'isPublic' => false,
 ])
 <div class="{{ (empty($rootClass) ? '' : $rootClass) }}" x-id="['drawer']" x-data="{ drawerOpen: {{ $open }} }">
 	<h2 class="font-bold text-xl flex flex-row items-end w-full mb-4">
@@ -13,7 +14,11 @@
 		>
 			<div
 				x-bind:class="{ 'rotate-90': drawerOpen }"
-				class="transition-transform text-zinc-600 dark:text-zinc-400 group-has-hover:text-zinc-500 group-has-hover:dark:text-zinc-300 font-bold cursor-pointer disabled:cursor-not-allowed disabled:font-normal disabled:text-zinc-300 disabled:dark:text-zinc-600"
+				@class([
+					'transition-transform font-bold cursor-pointer disabled:cursor-not-allowed disabled:font-normal',
+					'text-zinc-600 dark:text-zinc-400 group-has-hover:text-zinc-500 group-has-hover:dark:text-zinc-300 disabled:text-zinc-300 disabled:dark:text-zinc-600' => !filter_var($isPublic, FILTER_VALIDATE_BOOLEAN),
+					'text-tollerus-text-secondary group-has-hover:text-tollerus-secondary-hover' => filter_var($isPublic, FILTER_VALIDATE_BOOLEAN),
+				])
 			>
 				<x-tollerus::icons.triangle/>
 			</div>

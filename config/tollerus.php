@@ -34,6 +34,12 @@ return [
      */
     'public_page_title_base' => 'Tollerus',
     'public_page_title_append' => true,
+    /**
+     * If a word's inflection tables have more rows than this,
+     * the inflection tables will be hidden inside a collapsible
+     * section.
+     */
+    'public_inflections_max_rows' => 30,
 
     /**
      * Locale-specific words for transliteration (the process,
