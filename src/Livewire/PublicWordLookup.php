@@ -55,7 +55,14 @@ class PublicWordLookup extends Component
             $this->displayEntry();
         }
 
-        return view('tollerus::livewire.public-word-lookup', $this->display)
+        $selectedResultObj = collect($this->results)->first(
+            fn ($result) =>
+                ($this->id === $result['entryGlobalId'] && $this->highlightKind != GlobalIdKind::Form && $result['isPrimary']) ||
+                $this->highlight === $result['global_id']
+        );
+        $selectedResult = $selectedResultObj['global_id'] ?? null;
+
+        return view('tollerus::livewire.public-word-lookup', $this->display + ['selectedResult' => $selectedResult])
             ->layout('tollerus::components.layouts.public')
             ->title($pageTitle);
     }
@@ -96,8 +103,6 @@ class PublicWordLookup extends Component
                 break;
                 case GlobalIdKind::Entry:
                     $this->entry = $obj;
-                    $this->highlight = $obj->primaryForm?->global_id;
-                    $this->highlightKind = GlobalIdKind::Entry;
                 break;
                 case GlobalIdKind::Lexeme:
                     /**
@@ -114,6 +119,19 @@ class PublicWordLookup extends Component
                     $this->redirect(route('tollerus.public.index', ['id' => $entry->global_id, 'hl' => $this->id]));
                 break;
             }
+        }
+        // Check the highlight too
+        $highlightDefault = $obj->primaryForm?->global_id;
+        $highlightKindDefault = GlobalIdKind::Form;
+        $this->highlight = $req->query('hl', $highlightDefault);
+        $this->highlightKind = $highlightKindDefault;
+        if ($this->highlight !== null) {
+            $hlGlobalId = GlobalId::fromStr($this->highlight);
+            if (!($hlGlobalId instanceof GlobalId)) {
+                $this->highlight = $highlightDefault;
+                $this->highlightKind = $highlightKindDefault;
+            }
+            $this->highlightKind = $hlGlobalId->kind;
         }
 
         // Initialize page state
@@ -256,7 +274,6 @@ class PublicWordLookup extends Component
         $primaryForm           = null;
         $primaryNativeSpelling = null;
         $lexemes               = null;
-        $selectedResult        = null;
         // Conditionally populate
         if ($this->id !== null) {
             if (!($this->entry instanceof Entry)) {
@@ -410,14 +427,6 @@ class PublicWordLookup extends Component
             if ($primaryNeography !== null && $primaryForm !== null) {
                 $primaryNativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $primaryNeography->id);
             }
-            $selectedResultObj = collect($this->results)->first(
-                fn ($result) =>
-                    ($this->id === $result['entryGlobalId'] && $this->highlightKind != GlobalIdKind::Form && $result['isPrimary']) ||
-                    $this->highlight === $result['global_id']
-            );
-            if ($selectedResultObj) {
-                $selectedResult = $selectedResultObj['global_id'];
-            }
         }
         // Store the final values
         $this->display['language']              = $language;
@@ -427,7 +436,6 @@ class PublicWordLookup extends Component
         $this->display['primaryForm']           = $primaryForm;
         $this->display['primaryNativeSpelling'] = $primaryNativeSpelling;
         $this->display['lexemes']               = $lexemes;
-        $this->display['selectedResult']        = $selectedResult;
     }
 
     /**
