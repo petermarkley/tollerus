@@ -91,7 +91,23 @@ class LanguageEditor extends Component
                     $entriesQuery->where('ns.spelling', 'like', '%'.$this->searchStr.'%');
                 break;
                 case SearchType::Definition:
-                    // FIXME
+                    $like = '%'.$this->searchStr.'%';
+                    $entriesQuery->where(function ($q) use ($like) {
+                        $q->whereExists(function ($sq) use ($like) {
+                            $sq->selectRaw('1')
+                                ->from('lexemes')
+                                ->join('senses', 'senses.lexeme_id', '=', 'lexemes.id')
+                                ->whereColumn('lexemes.entry_id', 'entries.id')
+                                ->where('senses.body', 'like', $like);
+                        })->orWhereExists(function ($sq) use ($like) {
+                            $sq->selectRaw('1')
+                                ->from('lexemes')
+                                ->join('senses', 'senses.lexeme_id', '=', 'lexemes.id')
+                                ->join('subsenses', 'subsenses.sense_id', '=', 'senses.id')
+                                ->whereColumn('lexemes.entry_id', 'entries.id')
+                                ->where('subsenses.body', 'like', $like);
+                        });
+                    });
                 break;
             }
         }

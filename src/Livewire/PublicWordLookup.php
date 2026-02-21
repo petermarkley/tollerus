@@ -204,7 +204,71 @@ class PublicWordLookup extends Component
                     $formsQuery->where('ns.spelling', 'like', '%'.$this->key.'%');
                 break;
                 case SearchType::Definition:
-                    //
+                    $exact  = $this->key;
+                    $start  = $this->key.'%';
+                    $like   = '%'.$this->key.'%';
+                    $formsQuery
+                        ->selectRaw("
+                            CASE
+                            WHEN (
+                                EXISTS (
+                                SELECT 1 FROM {$prefix}senses
+                                WHERE {$prefix}senses.lexeme_id = {$prefix}forms.lexeme_id
+                                    AND {$prefix}senses.body = ?
+                                )
+                                OR EXISTS (
+                                SELECT 1 FROM {$prefix}subsenses
+                                JOIN {$prefix}senses ON {$prefix}senses.id = {$prefix}subsenses.sense_id
+                                WHERE {$prefix}senses.lexeme_id = {$prefix}forms.lexeme_id
+                                    AND {$prefix}subsenses.body = ?
+                                )
+                            ) THEN 0
+                            WHEN (
+                                EXISTS (
+                                SELECT 1 FROM {$prefix}senses
+                                WHERE {$prefix}senses.lexeme_id = {$prefix}forms.lexeme_id
+                                    AND {$prefix}senses.body LIKE ?
+                                )
+                                OR EXISTS (
+                                SELECT 1 FROM {$prefix}subsenses
+                                JOIN {$prefix}senses ON {$prefix}senses.id = {$prefix}subsenses.sense_id
+                                WHERE {$prefix}senses.lexeme_id = {$prefix}forms.lexeme_id
+                                    AND {$prefix}subsenses.body LIKE ?
+                                )
+                            ) THEN 1
+                            WHEN (
+                                EXISTS (
+                                SELECT 1 FROM {$prefix}senses
+                                WHERE {$prefix}senses.lexeme_id = {$prefix}forms.lexeme_id
+                                    AND {$prefix}senses.body LIKE ?
+                                )
+                                OR EXISTS (
+                                SELECT 1 FROM {$prefix}subsenses
+                                JOIN {$prefix}senses ON {$prefix}senses.id = {$prefix}subsenses.sense_id
+                                WHERE {$prefix}senses.lexeme_id = {$prefix}forms.lexeme_id
+                                    AND {$prefix}subsenses.body LIKE ?
+                                )
+                            ) THEN 2
+                            ELSE 3
+                            END AS relevance
+                        ", [$exact, $exact, $start, $start, $like, $like])
+                        ->orderBy('relevance')
+                        ->orderByRaw("CHAR_LENGTH({$prefix}forms.transliterated) ASC")
+                        ->orderBy('forms.transliterated');
+                    $formsQuery->where(function ($q) use ($like) {
+                        $q->whereExists(function ($sq) use ($like) {
+                            $sq->selectRaw('1')
+                            ->from('senses')
+                            ->whereColumn('senses.lexeme_id', 'forms.lexeme_id')
+                            ->where('senses.body', 'like', $like);
+                        })->orWhereExists(function ($sq) use ($like) {
+                            $sq->selectRaw('1')
+                            ->from('subsenses')
+                            ->join('senses', 'senses.id', '=', 'subsenses.sense_id')
+                            ->whereColumn('senses.lexeme_id', 'forms.lexeme_id')
+                            ->where('subsenses.body', 'like', $like);
+                        });
+                    });
                 break;
             }
             $results = $formsQuery->get();
