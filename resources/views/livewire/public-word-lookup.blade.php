@@ -74,7 +74,7 @@
                     </div>
                 </div>
                 <div
-                    @if ($primaryNeography !== null)
+                    @if (isset($primaryNeography) && $primaryNeography !== null)
                         x-data="{ currentNeography: {{ $primaryNeography->id }} }"
                     @endif
                     class="w-full xl:w-[calc(100%-20.5rem)] flex-grow min-h-60 p-8 flex flex-col gap-6 rounded-lg rounded-b-[22px] xl:rounded-bl-lg inset-shadow-sm bg-tollerus-muted border-2 border-tollerus-border/50"

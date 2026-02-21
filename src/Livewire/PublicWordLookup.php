@@ -50,6 +50,14 @@ class PublicWordLookup extends Component
             $pageTitle .= ' My test page';
         }
 
+        // Initialize pessimistically
+        $this->display['language']              = null;
+        $this->display['primaryNeography']      = null;
+        $this->display['languageNeographies']   = null;
+        $this->display['multipleNeographies']   = null;
+        $this->display['primaryForm']           = null;
+        $this->display['primaryNativeSpelling'] = null;
+        $this->display['lexemes']               = null;
         // Conditionally populate
         if ($this->id !== $this->displayedId) {
             $this->displayEntry();
@@ -121,7 +129,7 @@ class PublicWordLookup extends Component
             }
         }
         // Check the highlight too
-        $highlightDefault = $obj->primaryForm?->global_id;
+        $highlightDefault = ($this->id !== null ? $obj->primaryForm?->global_id : null);
         $highlightKindDefault = GlobalIdKind::Form;
         $this->highlight = $req->query('hl', $highlightDefault);
         $this->highlightKind = $highlightKindDefault;
