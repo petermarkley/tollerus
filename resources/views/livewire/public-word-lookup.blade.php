@@ -1,4 +1,7 @@
-<div class="mx-auto mt-4 w-full xl:px-25 flex flex-col gap-4 items-start">
+<div
+    x-data="{ highlight: $wire.entangle('highlight') }"
+    class="mx-auto mt-4 w-full xl:px-25 flex flex-col gap-4 items-start"
+>
     @if($languages->count() == 0)
         <div class="w-full flex flex-col gap-4 items-center">
             <p class="text-center text-tollerus-text">{{ __('tollerus::ui.no_data_notice') }}</p>
@@ -101,7 +104,11 @@
                             @endif
                         </div>
                         <h3 class="text-2xl flex flex-row gap-12 justify-start items-center">
-                            <a id="{{ $entry->global_id }}" class="flex flex-row flex-wrap sm:flex-nowrap gap-y-1 gap-x-8 items-center justify-start text-tollerus-text">
+                            <a
+                                id="{{ $entry->global_id }}"
+                                class="relative flex flex-row flex-wrap sm:flex-nowrap gap-y-1 gap-x-8 items-center justify-start text-tollerus-text"
+                                wire:click="selectResult('{{ $entry->primaryForm->global_id }}')"
+                            >
                                 <span class="font-bold whitespace-nowrap">{{ $primaryForm->transliterated }}</span>
                                 <span class="italic whitespace-nowrap">/{{ $primaryForm->phonemic }}/</span>
                                 @foreach ($languageNeographies as $neography)
@@ -117,6 +124,7 @@
                                         @endif
                                     </span>
                                 @endforeach
+                                <x-tollerus::public.highlight :globalId="$entry->primaryForm->global_id"/>
                             </a>
                             <a
                                 href="{{ route('tollerus.public.index', ['id' => $entry->global_id]) }}"
@@ -129,11 +137,15 @@
                         </h3>
                         <div class="flex flex-col gap-6">
                             @foreach ($lexemes as $lexeme)
-                                <div class="flex flex-col gap-4">
+                                <div class="flex flex-col gap-4 items-start">
                                     <a
                                         id="{{ $lexeme['model']->global_id }}"
-                                        class="text-tollerus-text font-mono font-bold opacity-50 tracking-widest"
-                                    >{{ $lexeme['class']->name }}</a>
+                                        class="relative"
+                                        wire:click="selectResult($el.id)"
+                                    >
+                                        <span class="text-tollerus-text font-mono font-bold opacity-50 tracking-widest">{{ $lexeme['class']->name }}</span>
+                                        <x-tollerus::public.highlight :globalId="$lexeme['model']->global_id"/>
+                                    </a>
                                     @if ($lexeme['tables']->count() > 0)
                                         <div class="w-full overflow-x-scroll">
                                             <div class="w-fit xl:w-max p-2 flex flex-col gap-4 items-start xl:items-center text-sm bg-tollerus-bg/30 rounded-lg">
@@ -192,10 +204,11 @@
                                                                                     <a
                                                                                         id="{{ $row['form']->global_id }}"
                                                                                         @class([
-                                                                                            'grid grid-cols-3 gap-2',
+                                                                                            'relative grid grid-cols-3 gap-2',
                                                                                             'text-tollerus-text' => !($row['form']->irregular),
                                                                                             'text-tollerus-text-irregular' => $row['form']->irregular,
                                                                                         ])
+                                                                                        wire:click="selectResult($el.id)"
                                                                                     >
                                                                                         <span class="font-bold whitespace-nowrap">{{ $row['form']->transliterated }}</span>
                                                                                         <span class="italic whitespace-nowrap">/{{ $row['form']->phonemic }}/</span>
@@ -212,6 +225,7 @@
                                                                                                 @endif
                                                                                             </span>
                                                                                         @endforeach
+                                                                                        <x-tollerus::public.highlight :globalId="$row['form']->global_id"/>
                                                                                     </a>
                                                                                 @else
                                                                                     <span>&ndash;&nbsp;&ndash;&nbsp;&ndash;</span>
@@ -227,7 +241,7 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <ol class="pl-4 sm:pl-10 list-decimal flex flex-col gap-2">
+                                    <ol class="w-full pl-4 sm:pl-10 list-decimal flex flex-col gap-2">
                                         @foreach ($lexeme['model']->senses->sortBy('num') as $sense)
                                             <li class="space-y-2">
                                                 {!! $sense->body !!}

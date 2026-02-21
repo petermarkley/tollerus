@@ -1,5 +1,9 @@
 <x-tollerus::layouts.public :title="$title">
-    <div class="mx-auto mt-4 w-full max-w-[1200px] flex flex-col gap-4 items-start">
+    <div
+        x-data="{ highlight: new URLSearchParams(window.location.search).get('hl') }"
+        class="mx-auto mt-4 w-full max-w-[1200px] flex flex-col gap-4 items-start"
+        @popstate.window="highlight = new URLSearchParams(window.location.search).get('hl')"
+    >
         <x-tollerus::public.nav-main currentPage="language_info" :langCount="$langCount"/>
         @if (isset($breadcrumbs))
             <x-tollerus::breadcrumbs :breadcrumbs="$breadcrumbs" isPublic="true"/>
@@ -65,7 +69,8 @@
                                                         <li class="py-2 flex flex-row justify-start items-center">
                                                             <a
                                                                 id="{{ $glyph->global_id }}"
-                                                                class="flex flex-row gap-3 text-tollerus-text"
+                                                                class="relative flex flex-row gap-3 text-tollerus-text"
+                                                                @click="highlight = $el.id; $store.highlightFunctions.updateParam($el.id)"
                                                             >
                                                                 <span
                                                                     @class([
@@ -92,6 +97,7 @@
                                                                         <span class="text-sm">{{ $glyph->note }}</span>
                                                                     @endif
                                                                 </div>
+                                                                <x-tollerus::public.highlight :globalId="$glyph->global_id"/>
                                                             </a>
                                                         </li>
                                                     @endforeach
@@ -108,3 +114,14 @@
         </div>
     </div>
 </x-tollerus::layouts.public>
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.store('highlightFunctions', {
+        updateParam(newHl) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('hl', newHl);
+            window.history.pushState({}, '', url);
+        },
+    });
+});
+</script>

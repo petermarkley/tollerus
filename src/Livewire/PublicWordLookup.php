@@ -264,6 +264,10 @@ class PublicWordLookup extends Component
             break;
         }
     }
+
+    /**
+     * Page render logic
+     */
     private function displayEntry(): void
     {
         // Initialize pessimistically
