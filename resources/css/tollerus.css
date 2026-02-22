@@ -36,6 +36,7 @@
     }
     #tollerus_root [data-tollerus="word"] {
         font-weight: bold !important;
+        text-decoration: underline;
     }
     #tollerus_root [data-tollerus="phonemic"] {
         font-style: italic;
