@@ -110,6 +110,10 @@ class PublicWordLookup extends Component
                     $this->redirect(route('tollerus.public.languages.show', ['language' => $language, 'hl' => $this->id]));
                 break;
                 case GlobalIdKind::Entry:
+                    if (!$this->languages->pluck('id')->contains($obj->language_id)) {
+                        // This language is set to `visible=false`, so don't show it
+                        abort(404);
+                    }
                     $this->entry = $obj;
                 break;
                 case GlobalIdKind::Lexeme:
@@ -271,6 +275,7 @@ class PublicWordLookup extends Component
                     });
                 break;
             }
+            $formsQuery->where('l.visible', true);
             $results = $formsQuery->get();
             $results->load('lexeme.entry');
             $resultsFinal = $results->map(function ($result) {
@@ -311,6 +316,10 @@ class PublicWordLookup extends Component
                 $this->redirect(route('tollerus.public.languages.show', ['language' => $language]) . '#'.$this->id);
             break;
             case GlobalIdKind::Entry:
+                if (!$this->languages->pluck('id')->contains($obj->language_id)) {
+                    // This language is set to `visible=false`, so don't show it
+                    return;
+                }
                 $this->entry = $obj;
                 if ($updateParams) {
                     $this->id = $globalIdStr;
@@ -319,6 +328,10 @@ class PublicWordLookup extends Component
                 }
             break;
             case GlobalIdKind::Lexeme:
+                if (!$this->languages->pluck('id')->contains($obj->language_id)) {
+                    // This language is set to `visible=false`, so don't show it
+                    return;
+                }
                 $this->entry = $obj->entry;
                 if ($updateParams) {
                     $this->id = $this->entry->global_id;
@@ -327,6 +340,10 @@ class PublicWordLookup extends Component
                 }
             break;
             case GlobalIdKind::Form:
+                if (!$this->languages->pluck('id')->contains($obj->language_id)) {
+                    // This language is set to `visible=false`, so don't show it
+                    return;
+                }
                 $this->entry = $obj->lexeme->entry;
                 if ($updateParams) {
                     $this->id = $this->entry->global_id;
