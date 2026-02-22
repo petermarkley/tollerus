@@ -220,12 +220,7 @@ class FileImportSeeder extends Seeder
             $this->currentLang->dict_author = $langXML['author']->__toString();
         }
         if (isset($langXML->intro)) {
-            $domNode = dom_import_simplexml($langXML->intro);
-            $this->currentLang->intro = collect($domNode->childNodes)
-                ->map(function ($item) use ($domNode) {
-                    return $domNode->ownerDocument->saveXML($item);
-                })
-                ->implode('');
+            $this->currentLang->intro = $this->parseBodyText($langXML->intro);
         }
         // Save model
         $this->currentLang->save();
@@ -361,12 +356,7 @@ class FileImportSeeder extends Seeder
             $neoSectModel->name = $neoSectXML['title']->__toString();
         }
         if (isset($neoSectXML->intro)) {
-            $domNode = dom_import_simplexml($neoSectXML->intro);
-            $neoSectModel->intro = collect($domNode->childNodes)
-                ->map(function ($item) use ($domNode) {
-                    return $domNode->ownerDocument->saveXML($item);
-                })
-                ->implode('');
+            $neoSectModel->intro = $this->parseBodyText($neoSectXML->intro);
         }
         $neoSectModel->position = $position;
         $neoSectModel->save();
@@ -729,12 +719,7 @@ class FileImportSeeder extends Seeder
         }
         $entryModel->language_id = $this->currentLang->id;
         if (isset($entryXML->etym)) {
-            $domNode = dom_import_simplexml($entryXML->etym);
-            $entryModel->etym = collect($domNode->childNodes)
-                ->map(function ($item) use ($domNode) {
-                    return $domNode->ownerDocument->saveXML($item);
-                })
-                ->implode('');
+            $entryModel->etym = $this->parseBodyText($entryXML->etym);
         }
         $entryModel->save();
         // Read through lexemes
@@ -921,11 +906,7 @@ class FileImportSeeder extends Seeder
         } else {
             $senseModel->num = $position;
         }
-        if (isset($senseXML->p)) {
-            $senseModel->body = $senseXML->p->asXML();
-        } else {
-            $senseModel->body = $senseXML->__toString();
-        }
+        $senseModel->body = $this->parseBodyText($senseXML, 'p');
         $senseModel->save();
         // Read through subsenses
         if (isset($senseXML->subsense)) {
@@ -955,11 +936,55 @@ class FileImportSeeder extends Seeder
         } else {
             $subsenseModel->num = $position;
         }
-        if (isset($subsenseXML->p)) {
-            $subsenseModel->body = $subsenseXML->p->asXML();
-        } else {
-            $subsenseModel->body = $subsenseXML->__toString();
-        }
+        $subsenseModel->body = $this->parseBodyText($subsenseXML, 'p');
         $subsenseModel->save();
+    }
+
+    /**
+     * Parse body/intro text fields to convert custom tags:
+     *
+     *   - `<c>`                               => `<span class="font-[variant-caps:small-caps]">`,
+     *   - `<word href="AAR3" lang="chetnum">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-gid="AAR3" data-lang="chetnum" class="font-bold">`,
+     *   - `<chetnum>`                         => `<span data-tollerus="native" data-neog="chetnum" class="tollerus_chetnum">`,
+     *   - `<phonemic>`                        => `<span data-tollerus="phonemic" class="italic">`,
+     *
+     * Notes:
+     *
+     *   - The `<chetnum>` tag is just an example. This should be
+     *     matched by neography machine_name.
+     *
+     *   - The URL in `<word> => <a href="">` is a placeholder, to
+     *     be overwritten on display. But it should reflect the
+     *     host app's `config('tollerus.public_route_prefix')`.
+     */
+    protected function parseBodyText(\SimpleXMLElement $inpXML, ?string $filterBy = null): string
+    {
+        $domNode = dom_import_simplexml($inpXML);
+
+        /**
+         * Perform substitutions
+         */
+        // `<c>` => `<span class="font-[variant-caps:small-caps]">`
+        foreach ($domNode->getElementsByTagName('c') as $oldTag) {
+            $newTag = $domNode->ownerDocument->createElement('span');
+            foreach (iterator_to_array($oldTag->childNodes) as $child) {
+                $newTag->appendChild($oldTag->removeChild($child));
+            }
+            $newTag->setAttribute('class', 'font-[variant-caps:small-caps]');
+            $oldTag->parentNode->replaceChild($newTag, $oldTag);
+        }
+
+        /**
+         * Omit root tag on output
+         */
+        return collect($domNode->childNodes)
+            ->map(function ($item) use ($domNode, $filterBy) {
+                if (empty($filterBy) || ($item->nodeType === XML_ELEMENT_NODE && $item->nodeName === $filterBy)) {
+                    return $domNode->ownerDocument->saveXML($item);
+                } else {
+                    return '';
+                }
+            })
+            ->implode('');
     }
 }
