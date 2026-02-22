@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       fontFamily: {
         main: ['var(--tollerus-font-main)', 'ui-sans-serif', 'system-ui'],
+        transliterated: ['var(--tollerus-font-transliterated)', 'ui-sans-serif', 'system-ui'],
         mono: ['var(--tollerus-font-mono)', 'ui-monospace', 'monospace'],
       },
       colors: {

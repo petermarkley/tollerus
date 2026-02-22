@@ -40,6 +40,7 @@
                 --tollerus-secondary-hover: 129 148 142;  /* emerald-500, saturate-10 */
                 --tollerus-ring: 20 71 230;               /* blue-700 */
                 --tollerus-font-main: "Baskerville";
+                --tollerus-font-transliterated: "Baskerville";
                 --tollerus-font-mono: "Courier New";
             }
             @media (prefers-color-scheme: dark) {

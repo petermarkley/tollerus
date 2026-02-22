@@ -31,16 +31,6 @@
         max-height: 0in;
         transition: margin-top 0.5s ease-out 0s, opacity 0.5s ease-out 0s, max-height 0s linear 0.5s;
     }
-    #tollerus_root [data-tollerus="smallcaps"] {
-        font-variant-caps: small-caps;
-    }
-    #tollerus_root [data-tollerus="word"] {
-        font-weight: bold !important;
-        text-decoration: underline;
-    }
-    #tollerus_root [data-tollerus="phonemic"] {
-        font-style: italic;
-    }
 
     /* Default values for CSS variables on public pages, customizable by host app */
     :root {
@@ -59,6 +49,7 @@
         --tollerus-secondary-hover: 113 113 123;  /* zinc-500 */
         --tollerus-ring: 20 71 230;               /* blue-700 */
         --tollerus-font-main: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        --tollerus-font-transliterated: Palatino, "Times New Roman", serif;
         --tollerus-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
     @media (prefers-color-scheme: dark) {
@@ -78,5 +69,20 @@
             --tollerus-secondary-hover: 212 212 216; /* zinc-300 */
             --tollerus-ring: 255 255 255;
         }
+    }
+
+    /* Styles for semantic elements inside body text fields like `languages.intro`, `entries.etym`, or `senses.body` */
+    #tollerus_root [data-tollerus="smallcaps"] {
+        font-variant-caps: small-caps;
+    }
+    #tollerus_root [data-tollerus="word"] {
+        font-weight: bold !important;
+        font-family: var(--tollerus-font-transliterated);
+    }
+    #tollerus_root a[data-tollerus="word"] {
+        text-decoration: underline;
+    }
+    #tollerus_root [data-tollerus="phonemic"] {
+        font-style: italic;
     }
 }
