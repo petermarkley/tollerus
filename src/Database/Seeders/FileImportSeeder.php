@@ -938,10 +938,10 @@ class FileImportSeeder extends Seeder
     /**
      * Parse body/intro text fields to convert custom tags:
      *
-     *   - `<c>`                               => `<span class="font-[variant-caps:small-caps]">`,
-     *   - `<word href="AAR3" lang="chetnum">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="chetnum" class="font-bold">`,
+     *   - `<c>`                               => `<span data-tollerus="smallcaps">`,
+     *   - `<word href="AAR3" lang="chetnum">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="chetnum">`,
      *   - `<chetnum>`                         => `<span data-tollerus="native" data-neography="chetnum" class="tollerus_chetnum">`,
-     *   - `<phonemic>`                        => `<span data-tollerus="phonemic" class="italic">`,
+     *   - `<phonemic>`                        => `<span data-tollerus="phonemic">`,
      *
      * Notes:
      *
@@ -960,18 +960,18 @@ class FileImportSeeder extends Seeder
          * Perform substitutions
          */
 
-        // `<c>` => `<span class="font-[variant-caps:small-caps]">`
+        // `<c>` => `<span data-tollerus="smallcaps">`
         $tags = iterator_to_array($domNode->getElementsByTagName('c'));
         foreach ($tags as $oldTag) {
             $newTag = $domNode->ownerDocument->createElement('span');
             foreach (iterator_to_array($oldTag->childNodes) as $child) {
                 $newTag->appendChild($oldTag->removeChild($child));
             }
-            $newTag->setAttribute('class', 'font-[variant-caps:small-caps]');
+            $newTag->setAttribute('data-tollerus', 'smallcaps');
             $oldTag->parentNode->replaceChild($newTag, $oldTag);
         }
 
-        // `<word href="AAR3" lang="chetnum">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="chetnum" class="font-bold">`,
+        // `<word href="AAR3" lang="chetnum">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="chetnum">`,
         $tags = iterator_to_array($domNode->getElementsByTagName('word'));
         foreach ($tags as $oldTag) {
             $newTag = $domNode->ownerDocument->createElement('a');
@@ -983,7 +983,6 @@ class FileImportSeeder extends Seeder
             $newTag->setAttribute('data-tollerus', 'word');
             $newTag->setAttribute('data-id', $id);
             $newTag->setAttribute('data-lang', $oldTag->getAttribute('lang'));
-            $newTag->setAttribute('class', 'font-bold');
             $oldTag->parentNode->replaceChild($newTag, $oldTag);
         }
 
@@ -1002,7 +1001,7 @@ class FileImportSeeder extends Seeder
             }
         }
 
-        // `<phonemic>` => `<span data-tollerus="phonemic" class="italic">`,
+        // `<phonemic>` => `<span data-tollerus="phonemic">`,
         $tags = iterator_to_array($domNode->getElementsByTagName('phonemic'));
         foreach ($tags as $oldTag) {
             $newTag = $domNode->ownerDocument->createElement('span');
@@ -1010,7 +1009,6 @@ class FileImportSeeder extends Seeder
                 $newTag->appendChild($oldTag->removeChild($child));
             }
             $newTag->setAttribute('data-tollerus', 'phonemic');
-            $newTag->setAttribute('class', 'italic');
             $oldTag->parentNode->replaceChild($newTag, $oldTag);
         }
 

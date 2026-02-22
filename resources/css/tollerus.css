@@ -31,6 +31,15 @@
         max-height: 0in;
         transition: margin-top 0.5s ease-out 0s, opacity 0.5s ease-out 0s, max-height 0s linear 0.5s;
     }
+    #tollerus_root [data-tollerus="smallcaps"] {
+        font-variant-caps: small-caps;
+    }
+    #tollerus_root [data-tollerus="word"] {
+        font-weight: bold !important;
+    }
+    #tollerus_root [data-tollerus="phonemic"] {
+        font-style: italic;
+    }
 
     /* Default values for CSS variables on public pages, customizable by host app */
     :root {
