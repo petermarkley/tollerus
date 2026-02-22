@@ -219,9 +219,6 @@ class FileImportSeeder extends Seeder
         if (isset($langXML['author'])) {
             $this->currentLang->dict_author = $langXML['author']->__toString();
         }
-        if (isset($langXML->intro)) {
-            $this->currentLang->intro = $this->parseBodyText($langXML->intro);
-        }
         // Save model
         $this->currentLang->save();
         // Read neographies in this dictionary file
@@ -230,6 +227,11 @@ class FileImportSeeder extends Seeder
             $this->readNeography($neoXML);
         }
         $this->currentNeo = null;
+        // Parse intro
+        if (isset($langXML->intro)) {
+            $this->currentLang->intro = $this->parseBodyText($langXML->intro);
+            $this->currentLang->save();
+        }
         // Initialize caches
         $this->currentFeatures = [];
         $this->currentClasses = [];
@@ -279,14 +281,6 @@ class FileImportSeeder extends Seeder
                     $this->currentNeo->font_ttf = $fontFile;
                 }
                 $this->currentNeo->save();
-                if (isset($neoXML->section)) {
-                    foreach (iterator_to_array($neoXML->section, false) as $position => $neoSectXML) {
-                        $this->readNeographySection(
-                            neoSectXML: $neoSectXML,
-                            position: $position
-                        );
-                    }
-                }
             }
         } else {
             // If none found, create one
@@ -313,17 +307,18 @@ class FileImportSeeder extends Seeder
                 $this->currentNeo->font_ttf = $fontFile;
             }
             $this->currentNeo->save();
-            if (isset($neoXML->section)) {
-                foreach (iterator_to_array($neoXML->section, false) as $position => $neoSectXML) {
-                    $this->readNeographySection(
-                        neoSectXML: $neoSectXML,
-                        position: $position
-                    );
-                }
-            }
         }
         // Save in cache
         $this->validNeos[$this->currentNeo->machine_name] = $this->currentNeo;
+        // Parse sections
+        if (isset($neoXML->section)) {
+            foreach (iterator_to_array($neoXML->section, false) as $position => $neoSectXML) {
+                $this->readNeographySection(
+                    neoSectXML: $neoSectXML,
+                    position: $position
+                );
+            }
+        }
         // Check if this neography is the language's primary one
         if (isset($neoXML['primary']) && filter_var($neoXML['primary'], FILTER_VALIDATE_BOOLEAN)) {
             $this->currentLang->primary_neography = $this->currentNeo->id;
@@ -944,8 +939,8 @@ class FileImportSeeder extends Seeder
      * Parse body/intro text fields to convert custom tags:
      *
      *   - `<c>`                               => `<span class="font-[variant-caps:small-caps]">`,
-     *   - `<word href="AAR3" lang="chetnum">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-gid="AAR3" data-lang="chetnum" class="font-bold">`,
-     *   - `<chetnum>`                         => `<span data-tollerus="native" data-neog="chetnum" class="tollerus_chetnum">`,
+     *   - `<word href="AAR3" lang="chetnum">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="chetnum" class="font-bold">`,
+     *   - `<chetnum>`                         => `<span data-tollerus="native" data-neography="chetnum" class="tollerus_chetnum">`,
      *   - `<phonemic>`                        => `<span data-tollerus="phonemic" class="italic">`,
      *
      * Notes:
@@ -964,13 +959,58 @@ class FileImportSeeder extends Seeder
         /**
          * Perform substitutions
          */
+
         // `<c>` => `<span class="font-[variant-caps:small-caps]">`
-        foreach ($domNode->getElementsByTagName('c') as $oldTag) {
+        $tags = iterator_to_array($domNode->getElementsByTagName('c'));
+        foreach ($tags as $oldTag) {
             $newTag = $domNode->ownerDocument->createElement('span');
             foreach (iterator_to_array($oldTag->childNodes) as $child) {
                 $newTag->appendChild($oldTag->removeChild($child));
             }
             $newTag->setAttribute('class', 'font-[variant-caps:small-caps]');
+            $oldTag->parentNode->replaceChild($newTag, $oldTag);
+        }
+
+        // `<word href="AAR3" lang="chetnum">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="chetnum" class="font-bold">`,
+        $tags = iterator_to_array($domNode->getElementsByTagName('word'));
+        foreach ($tags as $oldTag) {
+            $newTag = $domNode->ownerDocument->createElement('a');
+            foreach (iterator_to_array($oldTag->childNodes) as $child) {
+                $newTag->appendChild($oldTag->removeChild($child));
+            }
+            $id = $oldTag->getAttribute('href');
+            $newTag->setAttribute('href', route('tollerus.public.index', ['id' => $id], false)); // Placeholder, to be overwritten at render time by named route created from `data-*` attrs
+            $newTag->setAttribute('data-tollerus', 'word');
+            $newTag->setAttribute('data-id', $id);
+            $newTag->setAttribute('data-lang', $oldTag->getAttribute('lang'));
+            $newTag->setAttribute('class', 'font-bold');
+            $oldTag->parentNode->replaceChild($newTag, $oldTag);
+        }
+
+        // `<chetnum>` => `<span data-tollerus="native" data-neography="chetnum" class="tollerus_chetnum">`,
+        foreach (array_keys($this->validNeos) as $neoMachineName) {
+            $tags = iterator_to_array($domNode->getElementsByTagName($neoMachineName));
+            foreach ($tags as $oldTag) {
+                $newTag = $domNode->ownerDocument->createElement('span');
+                foreach (iterator_to_array($oldTag->childNodes) as $child) {
+                    $newTag->appendChild($oldTag->removeChild($child));
+                }
+                $newTag->setAttribute('data-tollerus', 'native');
+                $newTag->setAttribute('data-neography', $neoMachineName);
+                $newTag->setAttribute('class', 'tollerus_' . $neoMachineName);
+                $oldTag->parentNode->replaceChild($newTag, $oldTag);
+            }
+        }
+
+        // `<phonemic>` => `<span data-tollerus="phonemic" class="italic">`,
+        $tags = iterator_to_array($domNode->getElementsByTagName('phonemic'));
+        foreach ($tags as $oldTag) {
+            $newTag = $domNode->ownerDocument->createElement('span');
+            foreach (iterator_to_array($oldTag->childNodes) as $child) {
+                $newTag->appendChild($oldTag->removeChild($child));
+            }
+            $newTag->setAttribute('data-tollerus', 'phonemic');
+            $newTag->setAttribute('class', 'italic');
             $oldTag->parentNode->replaceChild($newTag, $oldTag);
         }
 
