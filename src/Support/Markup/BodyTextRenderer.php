@@ -27,7 +27,7 @@ class BodyTextRenderer
         $dom = $html5->loadHTMLFragment($html);
         $xp  = new \DOMXPath($dom->ownerDocument);
 
-        $tags = iterator_to_array($xp->query('*[@data-tollerus]', $dom));
+        $tags = iterator_to_array($xp->query('*[@data-tollerus]|.//*[@data-tollerus]', $dom));
         foreach ($tags as $tag) {
             switch ($tag->getAttribute('data-tollerus')) {
                 case 'smallcaps':
