@@ -384,11 +384,11 @@ class InflectionTableEditor extends Component
         ]);
         // $propName whitelist
         $allowedPropData = [
-            'label'      => ['type' => 'string', 'column' => 'label'],
-            'labelBrief' => ['type' => 'string', 'column' => 'label_brief'],
-            'labelLong'  => ['type' => 'string', 'column' => 'label_long'],
-            'visible'    => ['type' => 'boolean', 'column' => 'visible'],
-            'showLabel'  => ['type' => 'boolean', 'column' => 'show_label'],
+            'label'      => ['type' => 'string', 'column' => 'label', 'nullable' => false],
+            'labelBrief' => ['type' => 'string', 'column' => 'label_brief', 'nullable' => true],
+            'labelLong'  => ['type' => 'string', 'column' => 'label_long', 'nullable' => true],
+            'visible'    => ['type' => 'boolean', 'column' => 'visible', 'nullable' => false],
+            'showLabel'  => ['type' => 'boolean', 'column' => 'show_label', 'nullable' => false],
         ];
         $allowedPropNames = array_keys($allowedPropData);
         if (!in_array($propName, $allowedPropNames, true)) {
@@ -402,6 +402,9 @@ class InflectionTableEditor extends Component
             break;
             case 'string':
             default:
+                if ($allowedPropData[$propName]['nullable'] && mb_strlen($propVal)==0) {
+                    $propVal = null;
+                }
                 $rowModel[$allowedPropData[$propName]['column']] = $propVal;
             break;
         }

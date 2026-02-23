@@ -676,6 +676,9 @@ class FileImportSeeder extends Seeder
         if (isset($rowXML['brief'])) {
             $rowModel->label_brief = $rowXML['brief']->__toString();
         }
+        if (isset($rowXML['long'])) {
+            $rowModel->label_long = $rowXML['long']->__toString();
+        }
         $rowModel->position = $position;
         $rowModel->save();
         // Read through filters for this table row
