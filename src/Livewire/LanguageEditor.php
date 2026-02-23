@@ -161,6 +161,7 @@ class LanguageEditor extends Component
                     ->values();
                 return [$file->i18n_file => [
                     'name' => __($i18n_prefix . '.preset_name'),
+                    'description' => __($i18n_prefix . '.preset_description'),
                     'previewHeading' => __('tollerus::ui.preview_of_thing', ['thing' => __($i18n_prefix . '.preset_name')]),
                     'groups' => collect($file->groups)
                         ->map(function ($group) use ($i18n_prefix) {

@@ -10,6 +10,7 @@
  */
 return [
     'preset_name' => 'Spanish Grammar',
+    'preset_description' => 'This preset scaffolds a conlang grammar that resembles Spanish. It is heavily inflected across many word classes.',
 
     /**
      * ===========================================================

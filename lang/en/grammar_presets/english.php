@@ -10,6 +10,7 @@
  */
 return [
     'preset_name' => 'English Grammar',
+    'preset_description' => 'This preset scaffolds a conlang grammar that resembles English. It is lightly inflected in nouns, pronouns, and verbs.',
 
     /**
      * ===========================================================

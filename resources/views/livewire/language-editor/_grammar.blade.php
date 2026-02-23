@@ -33,6 +33,7 @@
                             </div>
                         </div>
                     </x-tollerus::pane>
+                    <p x-text="$wire.presetData[preset]['description']"></p>
                     <x-tollerus::inputs.button
                         x-text="msgs[btn]"
                         @click="btn = 'loading'; $wire.loadGrammarPreset(preset);"
