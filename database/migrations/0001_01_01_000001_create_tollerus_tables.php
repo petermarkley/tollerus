@@ -39,6 +39,7 @@ return new class extends Migration
             $table->string('font_svg_url')->nullable();
             $table->string('font_ttf_file_path')->nullable();
             $table->string('font_ttf_url')->nullable();
+            $table->text('font_css')->nullable();
             $table->enum('direction_primary', WritingDirection::values())
                 ->default(WritingDirection::LeftToRight->value);
             // This should always be perpendicular to the primary direction

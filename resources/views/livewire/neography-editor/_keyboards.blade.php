@@ -14,7 +14,7 @@
                         @click="btn1 = 'extracting'; $wire.extractSvgToKeyboard();"
                         @svgtoglyphs-failure.window="btn1 = 'extract_from_svg';"
                         @svgtoglyphs-success.window="btn1 = 'extract_from_svg';"
-                        x-bind:disabled="!fontForm.{{ \PeterMarkley\Tollerus\Enums\FontFormat::Svg->value }}.blobExists"
+                        x-bind:disabled="!fontForm.formats.{{ \PeterMarkley\Tollerus\Enums\FontFormat::Svg->value }}.blobExists"
                         wire:loading.attr="disabled"
                         wire:target="extractSvgToKeyboard"
                     />

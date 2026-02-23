@@ -27,7 +27,7 @@
         @foreach(\PeterMarkley\Tollerus\Enums\FontFormat::cases() as $fontFormat)
             <div class="flex flex-col gap-4 items-start">
                 <h3 class="font-bold text-lg">{{ $fontFormat->localizeFormat() }}</h3>
-                <template x-if="fontForm['{{ $fontFormat->value }}'].blobExists">
+                <template x-if="fontForm.formats['{{ $fontFormat->value }}'].blobExists">
                     <div class="flex flex-col gap-2 items-center">
                         <div class="flex flex-col justify-center items-center">
                             <div class="relative">
@@ -51,7 +51,7 @@
                                 </div>
                             </div>
                         </div>
-                        <template x-if="fontForm['{{ $fontFormat->value }}'].published">
+                        <template x-if="fontForm.formats['{{ $fontFormat->value }}'].published">
                             <div class="flex flex-col gap-2 items-center">
                                 <div
                                     x-data="{ id: $id('font_url') }"
@@ -62,7 +62,7 @@
                                         <input
                                             x-bind:id="id"
                                             type="text"
-                                            x-bind:value="fontForm['{{ $fontFormat->value }}'].url"
+                                            x-bind:value="fontForm.formats['{{ $fontFormat->value }}'].url"
                                             class="text-right"
                                             x-init="$nextTick(() => { $el.scrollLeft = $el.scrollWidth; });"
                                         />
@@ -88,12 +88,12 @@
                                         </template>
                                     </x-tollerus::inputs.button>
                                 </div>
-                                <template x-if="!fontForm['{{ $fontFormat->value }}'].valid">
+                                <template x-if="!fontForm.formats['{{ $fontFormat->value }}'].valid">
                                     <x-tollerus::alert type="error">{{ __('tollerus::error.asset_invalid') }}</x-tollerus::alert>
                                 </template>
                             </div>
                         </template>
-                        <template x-if="!fontForm['{{ $fontFormat->value }}'].published">
+                        <template x-if="!fontForm.formats['{{ $fontFormat->value }}'].published">
                             <x-tollerus::inputs.button
                                 title="{{ __('tollerus::ui.get_url') }}"
                                 class="flex flex-row gap-2 items-center"
@@ -107,7 +107,7 @@
                         </template>
                     </div>
                 </template>
-                <template x-if="!fontForm['{{ $fontFormat->value }}'].blobExists">
+                <template x-if="!fontForm.formats['{{ $fontFormat->value }}'].blobExists">
                     <div x-data="{ id: $id('file-input') }" class="flex flex-col gap-2 items-start">
                         <label
                             title="{{ __('tollerus::ui.upload_file') }}"
@@ -126,6 +126,25 @@
                 </template>
             </div>
         @endforeach
+    </div>
+    <div class="w-full flex flex-col gap-2">
+        <h3 class="font-bold text-lg">
+            <label for="font_css" class="flex flex-row gap-4 items-center">
+                <span>{{ __('tollerus::ui.custom_font_css') }}</span>
+            </label>
+        </h3>
+        <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{!! Str::markdown(__('tollerus::ui.custom_font_css_description')) !!}</legend></div>
+        <x-tollerus::inputs.textarea id="font_css" model="fontForm.css" rows="2" @input="btn = 'save'; dirty=true;" monospace="true" />
+    </div>
+    <div class="flex flex-row justify-start gap-2">
+        <x-tollerus::inputs.button
+            @click="btn = 'saving'; $wire.fontSave();"
+            x-bind:disabled="!dirty"
+            wire:loading.attr="disabled"
+            wire:target="fontSave"
+            @save-font-success.window="btn = 'saved'; dirty=false; if ($event.detail[0].afterSuccess) {$dispatch($event.detail[0].afterSuccess, $event.detail[0].payload);}"
+            @save-font-failure.window="btn = 'save';"
+            x-text="msgs[btn]" />
     </div>
 </x-tollerus::panel>
 @once

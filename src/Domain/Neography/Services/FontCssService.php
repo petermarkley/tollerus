@@ -51,6 +51,7 @@ final class FontCssService
         } else {
             $writingDirectionProps = '';
         }
+        $userDefinedProps = $neography->font_css;
 
         // Build final CSS output
         $style = <<<CSS
@@ -61,6 +62,7 @@ final class FontCssService
         .tollerus_{$familyName} {
             font-family: {$familyName};
             {$writingDirectionProps}
+            {$userDefinedProps}
         }
         CSS;
 

@@ -33,9 +33,9 @@
         fontForm: $wire.entangle('fontForm'),
         get hasFont() {
             let fileFound = false;
-            for (let formatStr in this.fontForm) {
-                let format = this.fontForm[formatStr];
-                if (this.fontForm.hasOwnProperty(formatStr) && typeof format === 'object' && format.blobExists) {
+            for (let formatStr in this.fontForm.formats) {
+                let format = this.fontForm.formats[formatStr];
+                if (this.fontForm.formats.hasOwnProperty(formatStr) && typeof format === 'object' && format.blobExists) {
                     fileFound = true;
                     break;
                 }

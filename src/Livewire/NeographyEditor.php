@@ -133,6 +133,9 @@ class NeographyEditor extends Component
             case 'info':
                 $this->infoSave($afterSuccess, $payload);
             break;
+            case 'font':
+                $this->fontSave($afterSuccess, $payload);
+            break;
         }
     }
 
@@ -153,23 +156,26 @@ class NeographyEditor extends Component
     public function refreshFontForm(): void
     {
         $neography = $this->neography;
-        $this->fontForm = collect(FontFormat::cases())->mapWithKeys(function ($fontFormat) use ($neography) {
-            $path = $neography->{$fontFormat->pathColumn()};
-            $url = $neography->{$fontFormat->urlColumn()};
-            $published = (!empty($path) && !empty($url));
-            $mimeTypes = $fontFormat->mimeTypes();
-            if ($published && is_file($path) && in_array(mime_content_type($path), $mimeTypes)) {
-                $valid = true;
-            } else {
-                $valid = false;
-            }
-            return [$fontFormat->value => [
-                'blobExists' => !empty($neography->{$fontFormat->blobColumn()}),
-                'published' => $published,
-                'url' => $url,
-                'valid' => $valid,
-            ]];
-        })->toArray();
+        $this->fontForm = [
+            'formats' => collect(FontFormat::cases())->mapWithKeys(function ($fontFormat) use ($neography) {
+                $path = $neography->{$fontFormat->pathColumn()};
+                $url = $neography->{$fontFormat->urlColumn()};
+                $published = (!empty($path) && !empty($url));
+                $mimeTypes = $fontFormat->mimeTypes();
+                if ($published && is_file($path) && in_array(mime_content_type($path), $mimeTypes)) {
+                    $valid = true;
+                } else {
+                    $valid = false;
+                }
+                return [$fontFormat->value => [
+                    'blobExists' => !empty($neography->{$fontFormat->blobColumn()}),
+                    'published' => $published,
+                    'url' => $url,
+                    'valid' => $valid,
+                ]];
+            })->toArray(),
+            'css' => $this->neography->font_css,
+        ];
     }
     public function refreshGlyphsForm(): void
     {
@@ -253,6 +259,21 @@ class NeographyEditor extends Component
             $this->dispatch('save-info-success', ['afterSuccess'=>$afterSuccess, 'payload'=>$payload]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('save-info-failure');
+            // Let error keep propagating
+            throw $e;
+        }
+    }
+    public function fontSave(string $afterSuccess = '', array $payload = []): void
+    {
+        try {
+            // $this->validate([
+            //     'fontForm.css' => [],
+            // ]);
+            $this->neography->font_css = $this->fontForm['css'];
+            $this->neography->save();
+            $this->dispatch('save-font-success', ['afterSuccess'=>$afterSuccess, 'payload'=>$payload]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('save-font-failure');
             // Let error keep propagating
             throw $e;
         }

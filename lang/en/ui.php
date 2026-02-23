@@ -118,6 +118,7 @@ return [
     'copied_to_clipboard' => 'Copied to clipboard',
     'asset_url' => 'Asset URL',
     'get_url' => 'Get URL',
+    'custom_font_css' => 'Custom font CSS',
     /**
      * TRANSLATOR NOTE:
      *
@@ -657,4 +658,12 @@ return [
     'keyboard_tab_description' => "These settings define an input utility that lets you **type using your own neography.**\n\nIn most cases you'll want one keyboard button for each glyph in your font. (Because what's the point of a glyph that you can't type?)",
     // 'donate_url' = https://paypal.me/petermarkley
     'donate_request' => 'I\'m a one-man dev team. If you like this software, please consider [supporting me](:donate_url)!',
+    /**
+     * TRANSLATOR NOTE:
+     *
+     * This message encloses a string of technical code in
+     * backticks ``, which Markdown will render as a
+     * <code> element to the browser.
+     */
+    'custom_font_css_description' => 'Here you can define custom CSS properties that you want to apply to rendered text of this neography, for example `font-size:1.5em;`.',
 ];
