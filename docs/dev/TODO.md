@@ -4,6 +4,8 @@
 - [ ] WYSIWYG & sanitizer for 'intro' box on Language, NeographySection, etc. (look for 3rd party package?)
 - [ ] Better form ID selector on auto-inflection page
 - [ ] Allow selecting an input word for auto-inflection preview
+- [ ] (Language emblems?)
+- [ ] Console command to generate grammar preset from current config?
 
 ## Code health
 - [ ] Audit for uses of `->sortBy()->map()->toArray()` that need to be `->sortBy()->map()->values()->toArray()`?
