@@ -75,6 +75,10 @@ class TollerusServiceProvider extends ServiceProvider
 		Livewire::component('tollerus.auto-inflection-editor', \PeterMarkley\Tollerus\Livewire\AutoInflectionEditor::class);
 		Livewire::component('tollerus.entry-editor', \PeterMarkley\Tollerus\Livewire\EntryEditor::class);
 		Livewire::component('tollerus.public-word-lookup', \PeterMarkley\Tollerus\Livewire\PublicWordLookup::class);
+		// Blade directives
+		Blade::directive('tollerusBodyText', function ($expression) {
+			return "<?php echo tollerus_body_text($expression); ?>";
+		});
 		// Model observers
 		\PeterMarkley\Tollerus\Models\Neography::observe(\PeterMarkley\Tollerus\Observers\NeographyObserver::class);
 		\PeterMarkley\Tollerus\Models\NeographySection::observe(\PeterMarkley\Tollerus\Observers\NeographySectionObserver::class);

@@ -166,11 +166,11 @@
                                     <ol class="w-full pl-4 sm:pl-10 list-decimal flex flex-col gap-2">
                                         @foreach ($lexeme['model']->senses->sortBy('num') as $sense)
                                             <li class="space-y-2">
-                                                {!! $sense->body !!}
+                                                @tollerusBodyText($sense->body)
                                                 @if ($sense->subsenses->count() > 0)
                                                     <ul class="pl-6 list-disc flex flex-col gap-2">
                                                         @foreach ($sense->subsenses->sortBy('num') as $subsense)
-                                                            <li>{!! $subsense->body !!}</li>
+                                                            <li>@tollerusBodyText($subsense->body)</li>
                                                         @endforeach
                                                     </ul>
                                                 @endif
@@ -184,7 +184,7 @@
                             <div>
                                 <p>
                                     <span>{{ __('tollerus::ui.origin') }}:</span>
-                                    {!! $entry->etym !!}
+                                    @tollerusBodyText($entry->etym)
                                 </p>
                             </div>
                         @endif

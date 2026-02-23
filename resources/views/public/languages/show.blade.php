@@ -20,7 +20,9 @@
                         <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.browse_entries') }}</span>
                     </a>
                 </div>
-                <div class="prose">{!! $language->intro !!}</div>
+                <div class="prose">
+                    @tollerusBodyText($language->intro)
+                </div>
             </div>
             @if ($neographies->count() > 0)
                 <div class="w-full p-4 rounded-lg inset-shadow-sm bg-tollerus-muted flex flex-col gap-4">
@@ -61,7 +63,9 @@
                                 @foreach ($neography->sections->sortBy('position') as $section)
                                     <div class="w-full flex flex-col">
                                         <h4 class="text-lg font-bold">{{ $section->name }}</h4>
-                                        <div class="prose">{!! $section->intro !!}</div>
+                                        <div class="prose">
+                                            @tollerusBodyText($section->intro)
+                                        </div>
                                         <div class="w-full flex flex-col gap-6">
                                             @foreach ($section->glyphGroups->sortBy('position') as $group)
                                                 <ol class="mx-4 w-full columns-1 sm:columns-2 md:columns-3 lg:columns-4 [column-fill:balance]">

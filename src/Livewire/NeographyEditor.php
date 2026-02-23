@@ -24,6 +24,7 @@ use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Models\NeographyInputKey;
 use PeterMarkley\Tollerus\Models\NeographyInputKeyboard;
+use PeterMarkley\Tollerus\Support\Markup\BodyTextRenderer;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class NeographyEditor extends Component
@@ -181,7 +182,7 @@ class NeographyEditor extends Component
             return [$sect->id => [
                 'type' => ($sect->type === null ? null : $sect->type->value),
                 'name' => $sect->name,
-                'intro' => $sect->intro,
+                'intro' => app(BodyTextRenderer::class)->render($sect->intro),
                 'position' => $sect->position,
                 'editUrl' => route('tollerus.admin.neographies.glyphs.edit', ['neography' => $neography, 'section' => $sect]),
                 'editUrlText' => __('tollerus::ui.edit_thing', ['thing' => $sect->name]),
