@@ -51,7 +51,7 @@ final class FontCssService
         } else {
             $writingDirectionProps = '';
         }
-        $userDefinedProps = $neography->font_css;
+        $userDefinedProps = htmlspecialchars($neography->font_css, ENT_QUOTES, 'UTF-8', true);
 
         // Build final CSS output
         $style = <<<CSS

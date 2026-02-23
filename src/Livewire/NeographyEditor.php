@@ -266,9 +266,14 @@ class NeographyEditor extends Component
     public function fontSave(string $afterSuccess = '', array $payload = []): void
     {
         try {
-            // $this->validate([
-            //     'fontForm.css' => [],
-            // ]);
+            $this->validate([
+                'fontForm.css' => [
+                    'nullable',
+                    'string',
+                    'max:2000',
+                    'regex:/\A[A-Za-z0-9 \t\n\-:.;,%]*\z/',
+                ],
+            ]);
             $this->neography->font_css = $this->fontForm['css'];
             $this->neography->save();
             $this->dispatch('save-font-success', ['afterSuccess'=>$afterSuccess, 'payload'=>$payload]);

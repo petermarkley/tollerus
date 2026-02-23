@@ -665,5 +665,5 @@ return [
      * backticks ``, which Markdown will render as a
      * <code> element to the browser.
      */
-    'custom_font_css_description' => 'Here you can define custom CSS properties that you want to apply to rendered text of this neography, for example `font-size:1.5em;`.',
+    'custom_font_css_description' => "Here you can define custom CSS properties that you want to apply to rendered text of this neography, for example `font-size:1.5em;`.\n\nOnly alphanumeric characters and `-:.;,%` are allowed in this field.",
 ];
