@@ -68,7 +68,7 @@
                                 wire:click="selectResult($el.dataset.formId)"
                             >
                                 <span class="font-bold whitespace-nowrap">{{ $result['transliterated'] }}</span>
-                                <span class="whitespace-nowrap tollerus_{{ $result['primaryNeographyMachineName'] }}">{{ $result['native'] }}</span>
+                                <span class="whitespace-nowrap tollerus_custom_{{ $result['primaryNeographyMachineName'] }}">{{ $result['native'] }}</span>
                             </button>
                         @endforeach
                     </div>
@@ -103,7 +103,7 @@
                                 </div>
                             @endif
                         </div>
-                        <h3 class="text-2xl flex flex-row gap-12 justify-start items-center">
+                        <h3 class="text-lg flex flex-row gap-12 justify-start items-center">
                             <a
                                 id="{{ $entry->global_id }}"
                                 class="relative flex flex-row flex-wrap sm:flex-nowrap gap-y-1 gap-x-8 items-center justify-start text-tollerus-text"
@@ -115,7 +115,7 @@
                                     @php($nativeSpelling = $primaryForm->nativeSpellings->firstWhere('neography_id', $neography->id))
                                     <span
                                         x-show="currentNeography=={{ $neography->id }}" x-cloak
-                                        class="whitespace-nowrap tollerus_{{ $neography->machine_name }}"
+                                        class="whitespace-nowrap tollerus_custom_{{ $neography->machine_name }}"
                                     >
                                         @if ($nativeSpelling)
                                             {{ $nativeSpelling->spelling }}

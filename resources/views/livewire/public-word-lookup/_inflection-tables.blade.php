@@ -67,7 +67,7 @@
                                                     @php($nativeSpelling = $row['form']->nativeSpellings->firstWhere('neography_id', $neography->id))
                                                     <span
                                                         x-show="currentNeography=={{ $neography->id }}" x-cloak
-                                                        class="whitespace-nowrap tollerus_{{ $neography->machine_name }}"
+                                                        class="whitespace-nowrap tollerus_custom_{{ $neography->machine_name }}"
                                                     >
                                                         @if ($nativeSpelling)
                                                             {{ $row['formNative']->spelling }}
