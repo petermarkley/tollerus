@@ -10,14 +10,13 @@ use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\Neography;
 
 /**
+ * This validates and normalizes body text for display.
+ *
  * Expected element example formats:
  *   - `<span data-tollerus="smallcaps">`
  *   - `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="myconlang">` or `<span data-tollerus="word" data-id="AAR3" data-lang="myconlang">`
  *   - `<span data-tollerus="native" data-neography="myneography" class="tollerus_myneography">`
  *   - `<span data-tollerus="phonemic">`
- *
- * This validates the attributes above and ensures compliance
- * with certain required data correlations
  */
 class BodyTextRenderer
 {
@@ -39,15 +38,29 @@ class BodyTextRenderer
                         continue 2;
                     }
                     $id = $tag->getAttribute('data-id');
-                    // Validate ID and language
+                    // Validate ID
                     $globalId = GlobalId::fromStr($id);
                     if (!($globalId instanceof GlobalId)) {
                         continue 2;
                     }
                     $obj = $globalId->resolve();
-                    $language = $obj->language;
-                    if ($language->visible) {
-                        // Language is visible; make sure this is an `<a>` tag
+                    $visible = false;
+                    if ($globalId->kind == GlobalIdKind::Glyph) {
+                        $neography = $obj->neography;
+                        $language = $neography->languagesWherePrimary->firstWhere('visible', true) ?? $neography->languages->firstWhere('visible', true);
+                        if ($neography->visible && ($language instanceof Language)) {
+                            $visible = true;
+                            $url = route('tollerus.public.languages.show', ['language' => $language, 'hl' => $id], false);
+                        }
+                    } else {
+                        $language = $obj->language;
+                        if ($language->visible) {
+                            $visible = true;
+                            $url = route('tollerus.public.index', ['id' => $id], false);
+                        }
+                    }
+                    if ($visible) {
+                        // Language is visible; make sure this is an `<a>` tag with correct href
                         if ($tag->tagName == 'a') {
                             $newTag = $tag;
                         } else {
@@ -59,7 +72,7 @@ class BodyTextRenderer
                             $newTag->setAttribute('data-tollerus', 'word');
                             $newTag->setAttribute('data-id', $id);
                         }
-                        $newTag->setAttribute('href', route('tollerus.public.index', ['id' => $id], false));
+                        $newTag->setAttribute('href', $url);
                         $newTag->setAttribute('data-lang', $language->machine_name);
                     } else {
                         // Language is NOT visible; make sure this is a `<span>` tag with no href
@@ -91,17 +104,20 @@ class BodyTextRenderer
                         continue 2;
                     }
                     $className = 'tollerus_' . $neography->machine_name;
+                    $classList = explode(' ', $tag->getAttribute('class'));
                     if ($neography->visible) {
                         // Ensure presence of neography style class
-                        if (!$tag->classList->contains($className)) {
-                            $tag->classList->add($className);
+                        if (!in_array($className, $classList)) {
+                            $classList[] = $className;
+                            $tag->setAttribute('class', implode(' ', $classList));
                         }
                     } else {
                         // Neography should be invisible; demote this to just a regular `<span>` or whatever
                         $tag->removeAttribute('data-tollerus');
                         $tag->removeAttribute('data-neography');
-                        if ($tag->classList->contains($className)) {
-                            $tag->classList->remove($className);
+                        if (in_array($className, $classList)) {
+                            $classList = array_filter($classList, fn ($c) => $c !== $className);
+                            $tag->setAttribute('class', implode(' ', $classList));
                         }
                     }
                 break;
