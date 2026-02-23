@@ -6,7 +6,7 @@
 - [ ] Allow selecting an input word for auto-inflection preview
 - [ ] (Language emblems/artwork?)
 - [ ] Console command to generate grammar preset from current config?
-- [ ] Web documentation (driven by `.md` files in Tollerus repo)?
+- [ ] Web documentation (driven by `.md` files in Tollerus repo, inside `docs/user`)?
 - [ ] Make example host app layouts publishable (like views for Laravel pagination links)?
 - [ ] Dockerfile for easier hosting? (Maybe also publishable--or would that be circular...?)
 
