@@ -9,6 +9,7 @@
 - [ ] Web documentation (driven by `.md` files in Tollerus repo)?
 - [ ] Make example host app layouts publishable (like views for Laravel pagination links)?
 - [ ] Dockerfile for easier hosting? (Maybe also publishable--or would that be circular...?)
+- [ ] Note/description field in grammar presets?
 
 ## Code health
 - [ ] Audit for uses of `->sortBy()->map()->toArray()` that need to be `->sortBy()->map()->values()->toArray()`?
