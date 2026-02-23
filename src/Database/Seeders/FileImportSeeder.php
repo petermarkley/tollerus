@@ -938,14 +938,14 @@ class FileImportSeeder extends Seeder
     /**
      * Parse body/intro text fields to convert custom tags:
      *
-     *   - `<c>`                               => `<span data-tollerus="smallcaps">`,
-     *   - `<word href="AAR3" lang="chetnum">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="chetnum">`,
-     *   - `<chetnum>`                         => `<span data-tollerus="native" data-neography="chetnum" class="tollerus_chetnum">`,
-     *   - `<phonemic>`                        => `<span data-tollerus="phonemic">`,
+     *   - `<c>`                                 => `<span data-tollerus="smallcaps">`,
+     *   - `<word href="AAR3" lang="myconlang">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="myconlang">`,
+     *   - `<myneography>`                       => `<span data-tollerus="native" data-neography="myneography" class="tollerus_myneography">`,
+     *   - `<phonemic>`                          => `<span data-tollerus="phonemic">`,
      *
      * Notes:
      *
-     *   - The `<chetnum>` tag is just an example. This should be
+     *   - The `<myneography>` tag is just an example. This should be
      *     matched by neography machine_name.
      *
      *   - The URL in `<word> => <a href="">` is a placeholder, to
@@ -971,7 +971,7 @@ class FileImportSeeder extends Seeder
             $oldTag->parentNode->replaceChild($newTag, $oldTag);
         }
 
-        // `<word href="AAR3" lang="chetnum">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="chetnum">`,
+        // `<word href="AAR3" lang="myconlang">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="myconlang">`,
         $tags = iterator_to_array($domNode->getElementsByTagName('word'));
         foreach ($tags as $oldTag) {
             $newTag = $domNode->ownerDocument->createElement('a');
@@ -986,7 +986,7 @@ class FileImportSeeder extends Seeder
             $oldTag->parentNode->replaceChild($newTag, $oldTag);
         }
 
-        // `<chetnum>` => `<span data-tollerus="native" data-neography="chetnum" class="tollerus_chetnum">`,
+        // `<myneography>` => `<span data-tollerus="native" data-neography="myneography" class="tollerus_myneography">`,
         foreach (array_keys($this->validNeos) as $neoMachineName) {
             $tags = iterator_to_array($domNode->getElementsByTagName($neoMachineName));
             foreach ($tags as $oldTag) {
