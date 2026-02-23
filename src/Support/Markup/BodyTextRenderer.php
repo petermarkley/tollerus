@@ -15,7 +15,7 @@ use PeterMarkley\Tollerus\Models\Neography;
  * Expected element example formats:
  *   - `<span data-tollerus="smallcaps">`
  *   - `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="myconlang">` or `<span data-tollerus="word" data-id="AAR3" data-lang="myconlang">`
- *   - `<span data-tollerus="native" data-neography="myneography" class="tollerus_myneography">`
+ *   - `<span data-tollerus="native" data-neography="myneography" class="tollerus_custom_myneography">`
  *   - `<span data-tollerus="phonemic">`
  */
 class BodyTextRenderer
@@ -103,7 +103,7 @@ class BodyTextRenderer
                     if (!($neography instanceof Neography)) {
                         continue 2;
                     }
-                    $className = 'tollerus_' . $neography->machine_name;
+                    $className = 'tollerus_custom_' . $neography->machine_name;
                     $classList = explode(' ', $tag->getAttribute('class'));
                     if ($neography->visible) {
                         // Ensure presence of neography style class

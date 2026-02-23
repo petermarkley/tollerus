@@ -62,6 +62,10 @@ final class FontCssService
         .tollerus_{$familyName} {
             font-family: {$familyName};
             {$writingDirectionProps}
+        }
+        .tollerus_custom_{$familyName} {
+            font-family: {$familyName};
+            {$writingDirectionProps}
             {$userDefinedProps}
         }
         CSS;
