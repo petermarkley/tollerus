@@ -8,10 +8,10 @@
     <template x-if="Object.keys(glyphsForm).length == 0">
         <div class="flex flex-col gap-4 items-start w-full px-6 xl:px-0" x-data="{ btn: 'extract_from_svg' }">
             <x-tollerus::alert>
-                <template x-if="fontForm.{{ \PeterMarkley\Tollerus\Enums\FontFormat::Svg->value }}.blobExists">
+                <template x-if="fontForm.formats.{{ \PeterMarkley\Tollerus\Enums\FontFormat::Svg->value }}.blobExists">
                     <p class="m-0">{{ __('tollerus::ui.svg_to_glyphs_notice') }}</p>
                 </template>
-                <template x-if="!fontForm.{{ \PeterMarkley\Tollerus\Enums\FontFormat::Svg->value }}.blobExists">
+                <template x-if="!fontForm.formats.{{ \PeterMarkley\Tollerus\Enums\FontFormat::Svg->value }}.blobExists">
                     <div>{!! Str::markdown(__('tollerus::ui.svg_to_glyphs_notice_no_font', [
                         'font_url' => route('tollerus.admin.neographies.edit.tab', ['neography' => $neography, 'tab' => 'font'])
                     ])) !!}</div>
@@ -22,7 +22,7 @@
                 @click="btn = 'extracting'; $wire.extractSvgToGlyphs();"
                 @svgtoglyphs-failure.window="btn = 'extract_from_svg';"
                 @svgtoglyphs-success.window="btn = 'extract_from_svg';"
-                x-bind:disabled="!fontForm.{{ \PeterMarkley\Tollerus\Enums\FontFormat::Svg->value }}.blobExists"
+                x-bind:disabled="!fontForm.formats.{{ \PeterMarkley\Tollerus\Enums\FontFormat::Svg->value }}.blobExists"
                 wire:loading.attr="disabled"
                 wire:target="extractSvgToGlyphs"
             />
