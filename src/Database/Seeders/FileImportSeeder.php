@@ -562,7 +562,7 @@ class FileImportSeeder extends Seeder
          * In typical usage of the legacy table schema, the row-level `fold`
          * attribute of the second column in a stack was more significant
          * than that of the first. The row labels of the first column were
-         * never folded in known any scenario, whereas the next column
+         * never folded in any known scenario, whereas the next column
          * (along with all following columns in the same stack) often was,
          * depending on author preference about that column. Furthermore
          * because all columns from the second onward always matched each
