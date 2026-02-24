@@ -3,6 +3,9 @@
     <head>
         <title>{{ $title }}</title>
         <link rel="stylesheet" href="{{ asset('vendor/tollerus/tollerus.css') }}">
+        @if (class_exists(\Livewire\Livewire::class) && config('livewire.inject_assets') === false)
+            @livewireStyles
+        @endif
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <script src="{{ asset('vendor/tollerus/tollerus.js') }}" defer></script>
         @if(!empty($tollerusNeographyFontCss))
@@ -40,6 +43,9 @@
                 ])) !!}
             </footer>
         </div>
+        @if (class_exists(\Livewire\Livewire::class) && config('livewire.inject_assets') === false)
+            @livewireScripts
+        @endif
         @stack('tollerus-scripts')
     </body>
 </html>
