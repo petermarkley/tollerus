@@ -7,7 +7,7 @@
                         @if ($column['model']->show_label)
                             <thead
                                 @class([
-                                    'hidden xl:table-header-group' => $columnIndex!=0 && $table['model']->cols_fold,
+                                    'xl:hidden' => $table['model']->cols_fold,
                                 ])
                             >
                                 <tr @class(['xl:hidden'=>$table['model']->align_on_stack])>

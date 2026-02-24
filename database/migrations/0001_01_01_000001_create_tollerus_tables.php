@@ -505,16 +505,16 @@ return new class extends Migration
             $table->integer('position');
             $table->boolean('visible')->default(true);
             /**
-             * On small displays, the columns will break onto multiple
-             * lines. If this flag is true, all column labels except the
-             * first will hide on small displays (to avoid redundancy if
-             * they're the same as the topmost column label).
+             * On wide displays, when the `label_long` variant of the
+             * row label is shown, this will hide the column label.
+             * Use to create a responsive design that swaps info
+             * between `label_long` and the column label.
              */
             $table->boolean('cols_fold');
             /**
              * Here, true means the row labels in all except the first
-             * column are hidden on wide displays (to avoid redundancy
-             * if they're the same as the leftmost labels).
+             * column are hidden on wide displays, to avoid redundancy
+             * if they're the same as the leftmost labels.
              */
             $table->boolean('rows_fold');
             /**

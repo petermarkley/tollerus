@@ -517,9 +517,9 @@ return [
      */
     'align_on_stack' => 'Align left on stack',
     'align_on_stack_description' => 'By default, column labels are centered. On wide displays, should they align left instead?',
-    'cols_fold' => 'Column labels are redundant',
-    'cols_fold_description' => 'When the table wraps on small displays, should column labels hide? Use if redundant with the first column.',
-    'rows_fold' => 'Row labels are redundant',
+    'cols_fold' => 'Long row label contains column label',
+    'cols_fold_description' => 'When the long row labels show, should the column labels hide? Use to create a responsive design that swaps info between these.',
+    'rows_fold' => 'Row labels are repeating',
     'rows_fold_description' => 'On wide displays when the columns stack into a single table, should the row labels hide? Use if redundant with the first column.',
     'pagination_navigation' => 'Pagination Navigation',
     'first' => 'First',

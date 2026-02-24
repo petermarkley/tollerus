@@ -9,7 +9,6 @@
 - [ ] Web documentation (driven by `.md` files in Tollerus repo, inside `docs/user`)?
 - [ ] Make example host app layouts publishable (like views for Laravel pagination links)?
 - [ ] Dockerfile for easier hosting? (Maybe also publishable--or would that be circular...?)
-- [ ] Add label fold toggle on `InflectionColumn`s (separate from `cols_fold` on `InflectionTable`) and in `resources/views/livewire/public-word-lookup/_inflection-tables.blade.php` do something like `'hidden xl:table-header-group' => ($columnIndex!=0 && $table['model']->cols_fold) || $column['model']->label_fold` ? (This would allow the fancy label-juggling like the word "participle" in Inluaita verbs in legacy Tollerus.)
 
 ## Code health
 - [ ] Audit for uses of `->sortBy()->map()->toArray()` that need to be `->sortBy()->map()->values()->toArray()`?

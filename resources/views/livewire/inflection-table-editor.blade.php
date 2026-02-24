@@ -66,7 +66,7 @@
                 </div>
                 <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                     <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['align_on_stack_description']"></legend></div>
-                    <div class="flex flex-row justify-start md:justify-end md:w-70 shrink-0 text-left md:text-right">
+                    <div class="flex flex-row justify-start md:justify-end md:w-80 shrink-0 text-left md:text-right">
                         <x-tollerus::inputs.checkbox
                             idExpression="'table_align_on_stack'"
                             model="tableForm.alignOnStack"
@@ -78,7 +78,7 @@
                 </fieldset>
                 <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                     <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['cols_fold_description']"></legend></div>
-                    <div class="flex flex-row justify-start md:justify-end md:w-70 shrink-0 text-left md:text-right">
+                    <div class="flex flex-row justify-start md:justify-end md:w-80 shrink-0 text-left md:text-right">
                         <x-tollerus::inputs.checkbox
                             idExpression="'table_cols_fold'"
                             model="tableForm.colsFold"
@@ -90,7 +90,7 @@
                 </fieldset>
                 <fieldset class="flex flex-col md:flex-row-reverse items-start md:items-center justify-end gap-2 md:gap-4">
                     <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500" x-text="msgs['rows_fold_description']"></legend></div>
-                    <div class="flex flex-row justify-start md:justify-end md:w-70 shrink-0 text-left md:text-right">
+                    <div class="flex flex-row justify-start md:justify-end md:w-80 shrink-0 text-left md:text-right">
                         <x-tollerus::inputs.checkbox
                             idExpression="'table_rows_fold'"
                             model="tableForm.rowsFold"

@@ -562,15 +562,16 @@ class FileImportSeeder extends Seeder
          * In typical usage of the legacy table schema, the row-level `fold`
          * attribute of the second column in a stack was more significant
          * than that of the first. The row labels of the first column were
-         * never folded in almost any scenario, whereas the next column
-         * (along with all following columns in the same stack) sometimes
-         * was, depending on author preference about that column. Because
-         * all columns from the second onward typically matched each other,
-         * the second serves as a suitable indicator for the entire table.
+         * never folded in known any scenario, whereas the next column
+         * (along with all following columns in the same stack) often was,
+         * depending on author preference about that column. Furthermore
+         * because all columns from the second onward always matched each
+         * other, the second serves as a suitable indicator for the entire
+         * table.
          *
          * So in mapping the old config to the new, we choose the second
-         * column if present, to represent the entire table, and only read
-         * the first one as a fallback.
+         * column if present, to represent the entire table for these
+         * properties, and only read the first one as a fallback.
          */
         $testTable = $chunkedTableXML[1] ?? $chunkedTableXML[0];
         if (isset($testTable['align_on_stack'])) {
@@ -579,15 +580,18 @@ class FileImportSeeder extends Seeder
                 FILTER_VALIDATE_BOOLEAN
             );
         }
-        if (isset($testTable['fold'])) {
-            $tableModel->cols_fold = filter_var(
-                $testTable['fold'],
-                FILTER_VALIDATE_BOOLEAN
-            );
-        }
         if (isset($testTable->rows['fold'])) {
             $tableModel->rows_fold = filter_var(
                 $testTable->rows['fold'],
+                FILTER_VALIDATE_BOOLEAN
+            );
+        }
+        /**
+         * Here, the first table is the preferred indicator.
+         */
+        if (isset($chunkedTableXML[0]['fold'])) {
+            $tableModel->cols_fold = filter_var(
+                $chunkedTableXML[0]['fold'],
                 FILTER_VALIDATE_BOOLEAN
             );
         }
