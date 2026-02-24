@@ -40,7 +40,7 @@ class TollerusServiceProvider extends ServiceProvider
 			$this->publishes([
 				__DIR__.'/../../config/tollerus.php' => config_path('tollerus.php'),
 			], 'tollerus-config');
-			// Publish our compiled Tailwind asset
+			// Publish our compiled Tailwind and other assets
 			$this->publishes([
 				__DIR__.'/../../dist' => public_path('vendor/tollerus'),
 			], 'tollerus-assets');
