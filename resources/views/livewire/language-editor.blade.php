@@ -48,6 +48,7 @@
     @popstate.window="updateTabFromUrl();"
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
     @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
+    @tollerus-wysiwyg-input.window="btn = 'save'; dirty = true;"
     @grammar-group-delete.window="$wire.deleteGroup($event.detail.groupId);"
     @grammar-class-delete.window="$wire.deleteWordClass($event.detail.wordClassId);"
     @grammar-feature-delete.window="$wire.deleteFeature($event.detail.featureId);"

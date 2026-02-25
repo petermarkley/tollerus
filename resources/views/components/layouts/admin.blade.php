@@ -7,11 +7,6 @@
             @livewireStyles
         @endif
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        @if (request()->routeIs('tollerus.admin.*'))
-            <script type="module" src="{{ asset('vendor/tollerus/tollerus-admin.js') }}"></script>
-        @else
-            <script type="module" src="{{ asset('vendor/tollerus/tollerus-public.js') }}"></script>
-        @endif
         @if(!empty($tollerusNeographyFontCss))
             <style>{!! $tollerusNeographyFontCss !!}</style>
         @endif
@@ -51,5 +46,10 @@
             @livewireScripts
         @endif
         @stack('tollerus-scripts')
+        @if (request()->routeIs('tollerus.admin.*'))
+            <script type="module" src="{{ asset('vendor/tollerus/tollerus-admin.js') }}"></script>
+        @else
+            <script type="module" src="{{ asset('vendor/tollerus/tollerus-public.js') }}"></script>
+        @endif
     </body>
 </html>
