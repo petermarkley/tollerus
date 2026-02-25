@@ -30,12 +30,6 @@ function registerAdminComponents(A) {
                     }, this.debounceMs);
                 },
             });
-            // Hydrate after entangle settles
-            // queueMicrotask(() => {
-            //     const html = this.state ?? '';
-            //     this.editor.commands.setContent(html, false);
-            // });
-            // Keep the editor in sync.
             this.$watch('state', (html) => {
                 if (!this.editor) return;
                 if (this.syncingFromEditor) return;
@@ -58,19 +52,8 @@ function registerAdminComponents(A) {
 
 if (!window.Alpine) {
     window.Alpine = Alpine;
-    registerAdminComponents(window.Alpine);
-    window.Alpine.start();
-} else {
-    registerAdminComponents(window.Alpine);
-    const init = () => {
-        document.querySelectorAll('[data-tollerus-wysiwyg]').forEach((el) => {
-            window.Alpine.initTree(el);
-        });
-    };
-    if (window.Livewire) {
-        document.addEventListener('livewire:initialized', init, { once: true });
-        queueMicrotask(init);
-    } else {
-        init();
-    }
 }
+
+document.addEventListener('alpine:init', () => {
+    registerAdminComponents(window.Alpine);
+});
