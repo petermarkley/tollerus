@@ -4,15 +4,17 @@ module.exports = defineConfig({
     build: {
         outDir: 'dist',
         emptyOutDir: false,
-        lib: {
-            entry: 'resources/js/tollerus.js',
-            name: 'Tollerus',
-            formats: ['iife'],
-            fileName: () => 'tollerus.js',
-        },
+        assetsDir: '',
+        manifest: false,
         rollupOptions: {
+            input: {
+                'tollerus-admin': 'resources/js/tollerus-admin.js',
+                'tollerus-public': 'resources/js/tollerus-public.js',
+            },
             output: {
-                inlineDynamicImports: true,
+                format: 'es',
+                entryFileNames: '[name].js',
+                inlineDynamicImports: false,
             },
         },
     },

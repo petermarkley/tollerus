@@ -9,7 +9,7 @@
     @endif
 @endpush
 @push('scripts')
-    <script src="{{ asset('vendor/tollerus/tollerus.js') }}" defer></script>
+    <script type="module" src="{{ asset('vendor/tollerus/tollerus-public.js') }}"></script>
     @if (class_exists(\Livewire\Livewire::class) && config('livewire.inject_assets') === false)
         @livewireScripts
     @endif
