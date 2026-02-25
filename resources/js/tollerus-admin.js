@@ -27,6 +27,7 @@ function registerAdminComponents(A) {
                         this.syncingFromEditor = true;
                         this.state = html;
                         this.syncingFromEditor = false;
+                        this.$dispatch('tollerus-wysiwyg-input');
                     }, this.debounceMs);
                 },
             });
