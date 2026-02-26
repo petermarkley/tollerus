@@ -561,7 +561,8 @@ return [
     'link' => 'Link',
     'bullet_list' => 'Bullet list',
     'numbered_list' => 'Numbered list',
-    'edit_raw_html' => 'Edit raw HTML',
+    'edit_as_raw_html' => 'Edit as raw HTML',
+    'edit_as_rendered_html' => 'Edit as rendered HTML',
     'conlang_word' => 'Conlang word',
     'neography_letters' => 'Neography letters',
 

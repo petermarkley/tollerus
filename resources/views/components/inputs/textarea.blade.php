@@ -23,8 +23,9 @@
                 <div class="flex flex-row gap-1 items-center">
                     <x-tollerus::inputs.button
                         type="inverse"
-                        size="small"
+                        size="tiny"
                         title="{{ __('tollerus::ui.bold') }}"
+                        x-bind:disabled="rawMode"
                         class="relative"
                     >
                         <x-tollerus::icons.micro.bold class="sm:h-6" />
@@ -32,8 +33,9 @@
                     </x-tollerus::inputs.button>
                     <x-tollerus::inputs.button
                         type="inverse"
-                        size="small"
+                        size="tiny"
                         title="{{ __('tollerus::ui.italic') }}"
+                        x-bind:disabled="rawMode"
                         class="relative"
                     >
                         <x-tollerus::icons.micro.italic class="sm:h-6" />
@@ -41,8 +43,9 @@
                     </x-tollerus::inputs.button>
                     <x-tollerus::inputs.button
                         type="inverse"
-                        size="small"
+                        size="tiny"
                         title="{{ __('tollerus::ui.smallcaps') }}"
+                        x-bind:disabled="rawMode"
                         class="relative"
                     >
                         <x-tollerus::icons.micro.smallcaps class="sm:h-6" />
@@ -50,8 +53,9 @@
                     </x-tollerus::inputs.button>
                     <x-tollerus::inputs.button
                         type="inverse"
-                        size="small"
+                        size="tiny"
                         title="{{ __('tollerus::ui.link') }}"
+                        x-bind:disabled="rawMode"
                         class="relative"
                     >
                         <x-tollerus::icons.micro.link class="sm:h-6" />
@@ -59,8 +63,9 @@
                     </x-tollerus::inputs.button>
                     <x-tollerus::inputs.button
                         type="inverse"
-                        size="small"
+                        size="tiny"
                         title="{{ __('tollerus::ui.bullet_list') }}"
+                        x-bind:disabled="rawMode"
                         class="relative"
                     >
                         <x-tollerus::icons.micro.list-bullet class="sm:h-6" />
@@ -68,8 +73,9 @@
                     </x-tollerus::inputs.button>
                     <x-tollerus::inputs.button
                         type="inverse"
-                        size="small"
+                        size="tiny"
                         title="{{ __('tollerus::ui.numbered_list') }}"
+                        x-bind:disabled="rawMode"
                         class="relative"
                     >
                         <x-tollerus::icons.micro.list-numbered class="sm:h-6" />
@@ -77,8 +83,9 @@
                     </x-tollerus::inputs.button>
                     <x-tollerus::inputs.button
                         type="inverse"
-                        size="small"
+                        size="tiny"
                         title="{{ __('tollerus::ui.conlang_word') }}"
+                        x-bind:disabled="rawMode"
                         class="relative"
                     >
                         <x-tollerus::icons.micro.language class="sm:h-6" />
@@ -86,8 +93,9 @@
                     </x-tollerus::inputs.button>
                     <x-tollerus::inputs.button
                         type="inverse"
-                        size="small"
+                        size="tiny"
                         title="{{ __('tollerus::ui.phonemic') }}"
+                        x-bind:disabled="rawMode"
                         class="relative"
                     >
                         <x-tollerus::icons.micro.speech class="sm:h-6" />
@@ -95,8 +103,9 @@
                     </x-tollerus::inputs.button>
                     <x-tollerus::inputs.button
                         type="inverse"
-                        size="small"
+                        size="tiny"
                         title="{{ __('tollerus::ui.neography_letters') }}"
+                        x-bind:disabled="rawMode"
                         class="relative"
                     >
                         <x-tollerus::icons.micro.neography class="sm:h-6" />
@@ -105,20 +114,33 @@
                 </div>
                 <div class="flex flex-row gap-1 items-center">
                     <x-tollerus::inputs.button
+                        x-show="!rawMode"
                         type="inverse"
-                        size="small"
-                        title="{{ __('tollerus::ui.edit_raw_html') }}"
+                        size="tiny"
+                        title="{{ __('tollerus::ui.edit_as_raw_html') }}"
                         class="relative"
+                        @click="rawMode = true"
                     >
                         <x-tollerus::icons.micro.code class="sm:h-6" />
-                        <span class="sr-only">{{ __('tollerus::ui.edit_raw_html') }}</span>
+                        <span class="sr-only">{{ __('tollerus::ui.edit_as_raw_html') }}</span>
+                    </x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button
+                        x-show="rawMode" x-cloak
+                        type="primary"
+                        size="tiny"
+                        title="{{ __('tollerus::ui.edit_as_rendered_html') }}"
+                        class="relative"
+                        @click="rawMode = false"
+                    >
+                        <x-tollerus::icons.micro.code class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.edit_as_rendered_html') }}</span>
                     </x-tollerus::inputs.button>
                 </div>
             </div>
             <div
                 data-tollerus-wysiwyg-mount
                 x-show="!rawMode"
-                class="w-full border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600"
+                class="w-full border p-2 w-full rounded-b-lg rounded-t inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600"
             ></div>
             <textarea
                 x-show="rawMode" x-cloak
@@ -126,7 +148,7 @@
                 wire:model.defer="{{ $model }}"
                 rows="{{ $rows }}"
                 {{ $attributes }}
-                class="@if(filter_var($monospace, FILTER_VALIDATE_BOOLEAN)) font-mono @endif border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 @error($model) border-red-700 dark:border-red-500 @else border-zinc-400 dark:border-zinc-600 @enderror"
+                class="@if(filter_var($monospace, FILTER_VALIDATE_BOOLEAN)) font-mono @endif border p-2 w-full rounded-b-lg rounded-t inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 @error($model) border-red-700 dark:border-red-500 @else border-zinc-400 dark:border-zinc-600 @enderror"
             ></textarea>
         </div>
     @else
