@@ -64,6 +64,7 @@ function registerAdminComponents(A) {
         _t: null,
         syncingFromEditor: false,
         syncingFromLivewire: false,
+        rawMode: false,
         init() {
             const mountEl = this.$el.querySelector('[data-tollerus-wysiwyg-mount]');
             if (!mountEl) {

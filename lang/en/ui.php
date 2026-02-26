@@ -549,6 +549,21 @@ return [
     'word_form_not_transliterated_alert' => 'This word form needs a :transliteration, or it will not be shown.',
     'sort_by_native' => 'Sort by native',
     'native_spelling' => 'Native spelling',
+    /**
+     * TRANSLATOR NOTE:
+     *
+     * These are messages for a WYSIWYG toolbar for editing
+     * rich text.
+     */
+    'bold' => 'Bold',
+    'italic' => 'Italic',
+    'smallcaps' => 'Small caps',
+    'link' => 'Link',
+    'bullet_list' => 'Bullet list',
+    'numbered_list' => 'Numbered list',
+    'edit_raw_html' => 'Edit raw HTML',
+    'conlang_word' => 'Conlang word',
+    'neography_letters' => 'Neography letters',
 
     /**
      * TRANSLATOR NOTE:

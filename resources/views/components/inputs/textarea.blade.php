@@ -18,7 +18,117 @@
 >
     <label for="{{ $id }}">{{ $label }}</label>
     @if (filter_var($wysiwyg, FILTER_VALIDATE_BOOLEAN))
-        <div class="w-full border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600" data-tollerus-wysiwyg-mount></div>
+        <div class="w-full flex flex-col items-stretch">
+            <div class="w-full p-2 flex flex-row gap-1 justify-between items-center rounded-t-lg border rounded-b border-zinc-400 dark:border-zinc-600">
+                <div class="flex flex-row gap-1 items-center">
+                    <x-tollerus::inputs.button
+                        type="inverse"
+                        size="small"
+                        title="{{ __('tollerus::ui.bold') }}"
+                        class="relative"
+                    >
+                        <x-tollerus::icons.micro.bold class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.bold') }}</span>
+                    </x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button
+                        type="inverse"
+                        size="small"
+                        title="{{ __('tollerus::ui.italic') }}"
+                        class="relative"
+                    >
+                        <x-tollerus::icons.micro.italic class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.italic') }}</span>
+                    </x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button
+                        type="inverse"
+                        size="small"
+                        title="{{ __('tollerus::ui.smallcaps') }}"
+                        class="relative"
+                    >
+                        <x-tollerus::icons.micro.smallcaps class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.smallcaps') }}</span>
+                    </x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button
+                        type="inverse"
+                        size="small"
+                        title="{{ __('tollerus::ui.link') }}"
+                        class="relative"
+                    >
+                        <x-tollerus::icons.micro.link class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.link') }}</span>
+                    </x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button
+                        type="inverse"
+                        size="small"
+                        title="{{ __('tollerus::ui.bullet_list') }}"
+                        class="relative"
+                    >
+                        <x-tollerus::icons.micro.list-bullet class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.bullet_list') }}</span>
+                    </x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button
+                        type="inverse"
+                        size="small"
+                        title="{{ __('tollerus::ui.numbered_list') }}"
+                        class="relative"
+                    >
+                        <x-tollerus::icons.micro.list-numbered class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.numbered_list') }}</span>
+                    </x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button
+                        type="inverse"
+                        size="small"
+                        title="{{ __('tollerus::ui.conlang_word') }}"
+                        class="relative"
+                    >
+                        <x-tollerus::icons.micro.language class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
+                    </x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button
+                        type="inverse"
+                        size="small"
+                        title="{{ __('tollerus::ui.phonemic') }}"
+                        class="relative"
+                    >
+                        <x-tollerus::icons.micro.speech class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.phonemic') }}</span>
+                    </x-tollerus::inputs.button>
+                    <x-tollerus::inputs.button
+                        type="inverse"
+                        size="small"
+                        title="{{ __('tollerus::ui.neography_letters') }}"
+                        class="relative"
+                    >
+                        <x-tollerus::icons.micro.neography class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.neography_letters') }}</span>
+                    </x-tollerus::inputs.button>
+                </div>
+                <div class="flex flex-row gap-1 items-center">
+                    <x-tollerus::inputs.button
+                        type="inverse"
+                        size="small"
+                        title="{{ __('tollerus::ui.edit_raw_html') }}"
+                        class="relative"
+                    >
+                        <x-tollerus::icons.micro.code class="sm:h-6" />
+                        <span class="sr-only">{{ __('tollerus::ui.edit_raw_html') }}</span>
+                    </x-tollerus::inputs.button>
+                </div>
+            </div>
+            <div
+                data-tollerus-wysiwyg-mount
+                x-show="!rawMode"
+                class="w-full border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600"
+            ></div>
+            <textarea
+                x-show="rawMode" x-cloak
+                id="{{ $id }}"
+                wire:model.defer="{{ $model }}"
+                rows="{{ $rows }}"
+                {{ $attributes }}
+                class="@if(filter_var($monospace, FILTER_VALIDATE_BOOLEAN)) font-mono @endif border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 @error($model) border-red-700 dark:border-red-500 @else border-zinc-400 dark:border-zinc-600 @enderror"
+            ></textarea>
+        </div>
     @else
         <textarea id="{{ $id }}" wire:model.defer="{{ $model }}" rows="{{ $rows }}" {{ $attributes }} class="@if(filter_var($monospace, FILTER_VALIDATE_BOOLEAN)) font-mono @endif border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 @error($model) border-red-700 dark:border-red-500 @else border-zinc-400 dark:border-zinc-600 @enderror"></textarea>
         @error($model)
