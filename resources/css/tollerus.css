@@ -85,4 +85,18 @@
     #tollerus_root [data-tollerus="phonemic"] {
         font-style: italic;
     }
+
+    /* Tiptap editor styles */
+    #tollerus_root .tiptap {
+        min-height: 150px;
+    }
+    #tollerus_root .tiptap div {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+    #tollerus_root .tiptap p {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        text-indent: 1em;
+    }
 }

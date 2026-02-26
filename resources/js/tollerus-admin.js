@@ -4,7 +4,6 @@ import StarterKit from '@tiptap/starter-kit';
 
 function registerAdminComponents(A) {
     A.data('tollerusWysiwyg', (opts = {}) => ({
-        editor: null,
         state: opts.state,
         debounceMs: opts.debounceMs ?? 250,
         _t: null,
@@ -15,7 +14,7 @@ function registerAdminComponents(A) {
             if (!mountEl) {
                 throw new Error('[Tollerus] WYSIWYG mount element not found ([data-tollerus-wysiwyg-mount]).');
             }
-            this.editor = new Editor({
+            this.$el._tollerusEditor = new Editor({
                 element: mountEl,
                 extensions: [StarterKit],
                 content: this.state ?? '',
@@ -32,20 +31,21 @@ function registerAdminComponents(A) {
                 },
             });
             this.$watch('state', (html) => {
-                if (!this.editor) return;
+                const editor = this.$el._tollerusEditor;
+                if (!editor) return;
                 if (this.syncingFromEditor) return;
                 const next = html ?? '';
-                // Avoid resetting selection/history if content didn't change
-                if (next === this.editor.getHTML()) return;
+                if (next === editor.getHTML()) return;
                 this.syncingFromLivewire = true;
-                this.editor.commands.setContent(next, false);
+                editor.commands.setContent(next, false);
                 this.syncingFromLivewire = false;
             });
         },
         destroy() {
-            if (this.editor) {
-                this.editor.destroy();
-                this.editor = null;
+            const editor = this.$el._tollerusEditor;
+            if (editor) {
+                editor.destroy();
+                delete this.$el._tollerusEditor;
             }
         },
     }));
