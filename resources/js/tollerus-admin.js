@@ -1,6 +1,61 @@
 import Alpine from 'alpinejs';
-import { Editor } from '@tiptap/core';
+import { Editor, Mark, mergeAttributes } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
+
+/**
+ * <span data-tollerus="smallcaps">
+ */
+const TollerusSmallcaps = Mark.create({
+    name: 'tollerusSmallcaps',
+    inclusive: true,
+
+    parseHTML() {
+        return [{ tag: 'span[data-tollerus="smallcaps"]' }];
+    },
+
+    renderHTML({ HTMLAttributes }) {
+        return ['span', mergeAttributes(HTMLAttributes, { 'data-tollerus': 'smallcaps' }), 0];
+    },
+});
+
+/**
+ * <span data-tollerus="phonemic">
+ */
+const TollerusPhonemic = Mark.create({
+    name: 'tollerusPhonemic',
+    inclusive: true,
+
+    parseHTML() {
+        return [{ tag: 'span[data-tollerus="phonemic"]' }];
+    },
+
+    renderHTML({ HTMLAttributes }) {
+        return ['span', mergeAttributes(HTMLAttributes, { 'data-tollerus': 'phonemic' }), 0];
+    },
+});
+
+/**
+ * <span data-tollerus="native" data-neography="myneography" class="tollerus_custom_myneography">
+ */
+const TollerusNative = Mark.create({
+    name: 'tollerusNative',
+    inclusive: true,
+
+    addAttributes() {
+        return {
+            'data-neography': { default: null },
+            class: { default: null },
+        };
+    },
+
+    parseHTML() {
+        return [{ tag: 'span[data-tollerus="native"]' }];
+    },
+
+    renderHTML({ HTMLAttributes }) {
+        return ['span', mergeAttributes(HTMLAttributes, { 'data-tollerus': 'native' }), 0];
+    },
+});
 
 function registerAdminComponents(A) {
     A.data('tollerusWysiwyg', (opts = {}) => ({
@@ -25,6 +80,9 @@ function registerAdminComponents(A) {
                         hardBreak: false,
                         underline: false,
                     }),
+                    TollerusSmallcaps,
+                    TollerusPhonemic,
+                    TollerusNative,
                 ],
                 content: this.state ?? '',
                 onUpdate: ({ editor }) => {
