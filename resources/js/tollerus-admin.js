@@ -16,7 +16,16 @@ function registerAdminComponents(A) {
             }
             this.$el._tollerusEditor = new Editor({
                 element: mountEl,
-                extensions: [StarterKit],
+                extensions: [
+                    StarterKit.configure({
+                        heading: false,
+                        blockquote: false,
+                        codeBlock: false,
+                        code: false,
+                        hardBreak: false,
+                        underline: false,
+                    }),
+                ],
                 content: this.state ?? '',
                 onUpdate: ({ editor }) => {
                     if (this.syncingFromLivewire) return;
