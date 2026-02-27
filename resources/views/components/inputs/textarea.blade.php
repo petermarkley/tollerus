@@ -28,7 +28,7 @@
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.bold') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('bold')"
                             class="relative"
                             @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'bold' })"
                         >
@@ -40,7 +40,7 @@
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.bold') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('bold')"
                             class="relative"
                             @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'bold' })"
                         >
@@ -54,7 +54,7 @@
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.italic') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('italic')"
                             class="relative"
                             @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'italic' })"
                         >
@@ -66,7 +66,7 @@
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.italic') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('italic')"
                             class="relative"
                             @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'italic' })"
                         >
@@ -76,11 +76,11 @@
                     </div>
                     <div>
                         <x-tollerus::inputs.button
-                            x-show="!isActive('smallcaps')"
+                            x-show="!isActive('tollerusSmallcaps')"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.smallcaps') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('tollerusSmallcaps')"
                             class="relative"
                             @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'smallcaps' })"
                         >
@@ -88,11 +88,11 @@
                             <span class="sr-only">{{ __('tollerus::ui.smallcaps') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="isActive('smallcaps')" x-cloak
+                            x-show="isActive('tollerusSmallcaps')" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.smallcaps') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('tollerusSmallcaps')"
                             class="relative"
                             @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'smallcaps' })"
                         >
@@ -102,22 +102,22 @@
                     </div>
                     <div>
                         <x-tollerus::inputs.button
-                            x-show="true"
+                            x-show="!isActive('link')"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.link') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('link')"
                             class="relative"
                         >
                             <x-tollerus::icons.micro.link class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.link') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="false" x-cloak
+                            x-show="isActive('link')" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.link') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('link')"
                             class="relative"
                         >
                             <x-tollerus::icons.micro.link class="sm:h-6" />
@@ -174,22 +174,22 @@
                     </div>
                     <div>
                         <x-tollerus::inputs.button
-                            x-show="true"
+                            x-show="!isActive('tollerusWord')"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.conlang_word') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('tollerusWord')"
                             class="relative"
                         >
                             <x-tollerus::icons.micro.language class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="false" x-cloak
+                            x-show="isActive('tollerusWord')" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.conlang_word') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('tollerusWord')"
                             class="relative"
                         >
                             <x-tollerus::icons.micro.language class="sm:h-6" />
@@ -198,11 +198,11 @@
                     </div>
                     <div>
                         <x-tollerus::inputs.button
-                            x-show="!isActive('phonemic')"
+                            x-show="!isActive('tollerusPhonemic')"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.phonemic') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('tollerusPhonemic')"
                             class="relative"
                             @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'phonemic' })"
                         >
@@ -210,11 +210,11 @@
                             <span class="sr-only">{{ __('tollerus::ui.phonemic') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="isActive('phonemic')" x-cloak
+                            x-show="isActive('tollerusPhonemic')" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.phonemic') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('tollerusPhonemic')"
                             class="relative"
                             @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'phonemic' })"
                         >
@@ -224,22 +224,22 @@
                     </div>
                     <div>
                         <x-tollerus::inputs.button
-                            x-show="true"
+                            x-show="!isActive('tollerusNative')"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.neography_letters') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('tollerusNative')"
                             class="relative"
                         >
                             <x-tollerus::icons.micro.neography class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.neography_letters') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="false" x-cloak
+                            x-show="isActive('tollerusNative')" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.neography_letters') }}"
-                            x-bind:disabled="rawMode"
+                            x-bind:disabled="rawMode || isExcluded('tollerusNative')"
                             class="relative"
                         >
                             <x-tollerus::icons.micro.neography class="sm:h-6" />

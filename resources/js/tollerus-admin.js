@@ -25,6 +25,7 @@ const TollerusSmallcaps = Mark.create({
 const TollerusWord = Mark.create({
     name: 'tollerusWord',
     inclusive: false,
+    excludes: '_',
 
     addAttributes() {
         return {
@@ -117,10 +118,11 @@ function registerAdminComponents(A) {
             toolbarHighlights: {
                 bold: false,
                 italic: false,
-                smallcaps: false,
-                phonemic: false,
                 link: false,
+                tollerusSmallcaps: false,
+                tollerusPhonemic: false,
                 tollerusWord: false,
+                tollerusNative: false,
             },
             getEditor() {
                 return editor;
@@ -190,15 +192,26 @@ function registerAdminComponents(A) {
             },
             refreshToolbar() {
                 if (!editor) return;
-                this.toolbarHighlights.bold = editor.isActive('bold');
-                this.toolbarHighlights.italic = editor.isActive('italic');
-                this.toolbarHighlights.smallcaps = editor.isActive('tollerusSmallcaps');
-                this.toolbarHighlights.phonemic = editor.isActive('tollerusPhonemic');
-                this.toolbarHighlights.link = editor.isActive('link');
-                this.toolbarHighlights.tollerusWord = editor.isActive('tollerusWord');
+                this.toolbarHighlights.bold      = editor.isActive('bold');
+                this.toolbarHighlights.italic    = editor.isActive('italic');
+                this.toolbarHighlights.link      = editor.isActive('link');
+                this.toolbarHighlights.tollerusSmallcaps = editor.isActive('tollerusSmallcaps');
+                this.toolbarHighlights.tollerusPhonemic  = editor.isActive('tollerusPhonemic');
+                this.toolbarHighlights.tollerusWord      = editor.isActive('tollerusWord');
+                this.toolbarHighlights.tollerusNative    = editor.isActive('tollerusNative');
             },
             isActive(name) {
                 return !!this.toolbarHighlights[name];
+            },
+            isExcluded(markName) {
+                if (!editor) return false;
+                const activeMarks = editor.state.selection.$from.marks();
+                return activeMarks.some(mark => {
+                    const excludes = mark.type.spec.excludes;
+                    if (!excludes) return false;
+                    if (excludes === '_') return mark.type.name !== markName;
+                    return excludes.split(' ').includes(markName);
+                });
             },
             handleToolbar(action) {
                 if (!editor || this.rawMode) return;
