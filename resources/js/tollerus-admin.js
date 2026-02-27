@@ -2,6 +2,8 @@ import Alpine from 'alpinejs';
 import { Editor, Mark, mergeAttributes } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
+import Bold from '@tiptap/extension-bold';
+import Italic from '@tiptap/extension-italic';
 
 /**
  * <span data-tollerus="smallcaps">
@@ -9,6 +11,7 @@ import Link from '@tiptap/extension-link';
 const TollerusSmallcaps = Mark.create({
     name: 'tollerusSmallcaps',
     inclusive: true,
+    excludes: 'tollerusWord tollerusPhonemic',
 
     parseHTML() {
         return [{ tag: 'span[data-tollerus="smallcaps"]' }];
@@ -59,6 +62,7 @@ const TollerusWord = Mark.create({
 const TollerusPhonemic = Mark.create({
     name: 'tollerusPhonemic',
     inclusive: true,
+    excludes: '_',
 
     parseHTML() {
         return [{ tag: 'span[data-tollerus="phonemic"]' }];
@@ -75,6 +79,7 @@ const TollerusPhonemic = Mark.create({
 const TollerusNative = Mark.create({
     name: 'tollerusNative',
     inclusive: true,
+    excludes: 'tollerusWord tollerusPhonemic',
 
     addAttributes() {
         return {
@@ -96,6 +101,7 @@ const TollerusNative = Mark.create({
  * Modify Tiptap's `link` extension to play nice with Tollerus conlang words
  */
 const TollerusLink = Link.extend({
+    excludes: 'tollerusWord tollerusPhonemic',
     parseHTML() {
         return [
             {
@@ -103,6 +109,16 @@ const TollerusLink = Link.extend({
             },
         ];
     },
+});
+
+/**
+ * Modify Tiptap's bold and italic extensions to say they can't have a conlang word inside them
+ */
+const TollerusBold = Bold.extend({
+    excludes: 'tollerusWord tollerusPhonemic',
+});
+const TollerusItalic = Italic.extend({
+    excludes: 'tollerusWord tollerusPhonemic',
 });
 
 function registerAdminComponents(A) {
@@ -116,6 +132,15 @@ function registerAdminComponents(A) {
             syncingFromLivewire: false,
             rawMode: false,
             toolbarHighlights: {
+                bold: false,
+                italic: false,
+                link: false,
+                tollerusSmallcaps: false,
+                tollerusPhonemic: false,
+                tollerusWord: false,
+                tollerusNative: false,
+            },
+            toolbarExcludes: {
                 bold: false,
                 italic: false,
                 link: false,
@@ -143,7 +168,11 @@ function registerAdminComponents(A) {
                             hardBreak: false,
                             underline: false,
                             link: false,
+                            bold: false,
+                            italic: false,
                         }),
+                        TollerusBold,
+                        TollerusItalic,
                         TollerusSmallcaps,
                         TollerusLink,
                         TollerusWord,
@@ -199,11 +228,21 @@ function registerAdminComponents(A) {
                 this.toolbarHighlights.tollerusPhonemic  = editor.isActive('tollerusPhonemic');
                 this.toolbarHighlights.tollerusWord      = editor.isActive('tollerusWord');
                 this.toolbarHighlights.tollerusNative    = editor.isActive('tollerusNative');
+                this.toolbarExcludes.bold      = this.calculateExcluded('bold');
+                this.toolbarExcludes.italic    = this.calculateExcluded('italic');
+                this.toolbarExcludes.link      = this.calculateExcluded('link');
+                this.toolbarExcludes.tollerusSmallcaps = this.calculateExcluded('tollerusSmallcaps');
+                this.toolbarExcludes.tollerusPhonemic  = this.calculateExcluded('tollerusPhonemic');
+                this.toolbarExcludes.tollerusWord      = this.calculateExcluded('tollerusWord');
+                this.toolbarExcludes.tollerusNative    = this.calculateExcluded('tollerusNative');
             },
             isActive(name) {
                 return !!this.toolbarHighlights[name];
             },
-            isExcluded(markName) {
+            isExcluded(name) {
+                return !!this.toolbarExcludes[name];
+            },
+            calculateExcluded(markName) {
                 if (!editor) return false;
                 const activeMarks = editor.state.selection.$from.marks();
                 return activeMarks.some(mark => {
