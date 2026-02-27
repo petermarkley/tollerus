@@ -114,6 +114,14 @@ function registerAdminComponents(A) {
             syncingFromEditor: false,
             syncingFromLivewire: false,
             rawMode: false,
+            toolbarHighlights: {
+                bold: false,
+                italic: false,
+                smallcaps: false,
+                phonemic: false,
+                link: false,
+                tollerusWord: false,
+            },
             getEditor() {
                 return editor;
             },
@@ -141,6 +149,9 @@ function registerAdminComponents(A) {
                         TollerusNative,
                     ],
                     content: this.state ?? '',
+                    onSelectionUpdate: () => {
+                        this.refreshToolbar();
+                    },
                     onUpdate: ({ editor: ed }) => {
                         if (this.syncingFromLivewire) return;
                         const html = ed.getHTML();
@@ -151,6 +162,10 @@ function registerAdminComponents(A) {
                             this.syncingFromEditor = false;
                             this.$dispatch('tollerus-wysiwyg-input');
                         }, this.debounceMs);
+                        this.refreshToolbar();
+                    },
+                    onCreate: () => {
+                        this.refreshToolbar();
                     },
                 });
                 this.$watch('state', (html) => {
@@ -173,9 +188,17 @@ function registerAdminComponents(A) {
                     editor = null;
                 }
             },
-            isActive(name, attrs) {
-                if (!editor) return false;
-                return editor.isActive(name, attrs || {});
+            refreshToolbar() {
+                if (!editor) return;
+                this.toolbarHighlights.bold = editor.isActive('bold');
+                this.toolbarHighlights.italic = editor.isActive('italic');
+                this.toolbarHighlights.smallcaps = editor.isActive('tollerusSmallcaps');
+                this.toolbarHighlights.phonemic = editor.isActive('tollerusPhonemic');
+                this.toolbarHighlights.link = editor.isActive('link');
+                this.toolbarHighlights.tollerusWord = editor.isActive('tollerusWord');
+            },
+            isActive(name) {
+                return !!this.toolbarHighlights[name];
             },
             handleToolbar(action) {
                 if (!editor || this.rawMode) return;
