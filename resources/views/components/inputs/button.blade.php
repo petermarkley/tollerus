@@ -33,4 +33,7 @@
     @case('inverse')
         <button type="{{ $htmlType }}" {{ $attributes->merge(['class' => 'relative text-zinc-600 dark:text-zinc-400 hover:text-zinc-500 hover:dark:text-zinc-300 font-bold cursor-pointer disabled:cursor-not-allowed disabled:font-normal disabled:text-zinc-300 disabled:dark:text-zinc-600']) }}>{{ $slot }}</button>
     @break;
+    @case('inverse-highlight')
+        <button type="{{ $htmlType }}" {{ $attributes->merge(['class' => 'relative text-cyan-800 dark:text-cyan-500 hover:text-cyan-700 hover:dark:text-cyan-400 font-bold cursor-pointer disabled:cursor-not-allowed disabled:font-normal disabled:opacity-50']) }}>{{ $slot }}</button>
+    @break;
 @endswitch

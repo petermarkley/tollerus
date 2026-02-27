@@ -1,6 +1,7 @@
 import Alpine from 'alpinejs';
 import { Editor, Mark, mergeAttributes } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
 
 /**
  * <span data-tollerus="smallcaps">
@@ -15,6 +16,39 @@ const TollerusSmallcaps = Mark.create({
 
     renderHTML({ HTMLAttributes }) {
         return ['span', mergeAttributes(HTMLAttributes, { 'data-tollerus': 'smallcaps' }), 0];
+    },
+});
+
+/**
+ * <a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="myconlang">
+ */
+const TollerusWord = Mark.create({
+    name: 'tollerusWord',
+    inclusive: false,
+
+    addAttributes() {
+        return {
+            'data-id': { default: null },
+            'data-lang': { default: null },
+            href: { default: null },
+        };
+    },
+
+    parseHTML() {
+        return [
+            { tag: 'a[data-tollerus="word"]' },
+            { tag: 'span[data-tollerus="word"]' },
+        ];
+    },
+
+    renderHTML({ HTMLAttributes }) {
+        return [
+            'a',
+            mergeAttributes(HTMLAttributes, {
+                'data-tollerus': 'word',
+            }),
+            0,
+        ];
     },
 });
 
@@ -57,6 +91,19 @@ const TollerusNative = Mark.create({
     },
 });
 
+/**
+ * Modify Tiptap's `link` extension to play nice with Tollerus conlang words
+ */
+const TollerusLink = Link.extend({
+    parseHTML() {
+        return [
+            {
+                tag: 'a[href]:not([data-tollerus="word"])',
+            },
+        ];
+    },
+});
+
 function registerAdminComponents(A) {
     A.data('tollerusWysiwyg', (opts = {}) => ({
         state: opts.state,
@@ -80,8 +127,10 @@ function registerAdminComponents(A) {
                         code: false,
                         hardBreak: false,
                         underline: false,
+                        link: false,
                     }),
                     TollerusSmallcaps,
+                    TollerusWord,
                     TollerusPhonemic,
                     TollerusNative,
                 ],

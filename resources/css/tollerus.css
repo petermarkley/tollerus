@@ -49,7 +49,7 @@
         --tollerus-secondary-hover: 113 113 123;  /* zinc-500 */
         --tollerus-ring: 20 71 230;               /* blue-700 */
         --tollerus-font-main: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        --tollerus-font-transliterated: Palatino, "Times New Roman", serif;
+        --tollerus-font-transliterated: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         --tollerus-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
     @media (prefers-color-scheme: dark) {
