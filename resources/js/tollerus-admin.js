@@ -112,6 +112,12 @@ function registerAdminComponents(A) {
         syncingFromEditor: false,
         syncingFromLivewire: false,
         rawMode: false,
+        get editor() {
+            return this.$el.closest('[data-tollerus-wysiwyg]')._tollerusEditor;
+        },
+        focus() {
+            if (this.editor) this.editor.chain().focus().run();
+        },
         init() {
             const mountEl = this.$el.querySelector('[data-tollerus-wysiwyg-mount]');
             if (!mountEl) {
@@ -165,6 +171,27 @@ function registerAdminComponents(A) {
                 editor.destroy();
                 delete this.$el._tollerusEditor;
             }
+        },
+        isActive(name, attrs) {
+            if (!this.editor) return false;
+            return this.editor.isActive(name, attrs || {});
+        },
+        toggleBold() {
+            console.log([this.editor, this.rawMode]);
+            if (!this.editor || this.rawMode) return;
+            this.editor.chain().focus().toggleBold().run();
+        },
+        toggleItalic() {
+            if (!this.editor || this.rawMode) return;
+            this.editor.chain().focus().toggleItalic().run();
+        },
+        toggleSmallcaps() {
+            if (!this.editor || this.rawMode) return;
+            this.editor.chain().focus().toggleMark('tollerusSmallcaps').run();
+        },
+        togglePhonemic() {
+            if (!this.editor || this.rawMode) return;
+            this.editor.chain().focus().toggleMark('tollerusPhonemic').run();
         },
     }));
 }

@@ -21,81 +21,87 @@
         <div class="w-full flex flex-col items-stretch">
             <div class="w-full p-2 flex flex-row gap-1 justify-between items-center rounded-t-lg border rounded-b border-zinc-400 dark:border-zinc-600">
                 <div class="flex flex-row gap-1 items-center">
-                    <div x-data="{ highlight: false }">
+                    <div>
                         <x-tollerus::inputs.button
-                            x-show="!highlight"
+                            x-show="!isActive('bold')"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.bold') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
+                            @click="toggleBold()"
                         >
                             <x-tollerus::icons.micro.bold class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.bold') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="highlight" x-cloak
+                            x-show="isActive('bold')" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.bold') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
+                            @click="toggleBold()"
                         >
                             <x-tollerus::icons.micro.bold class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.bold') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div x-data="{ highlight: false }">
+                    <div>
                         <x-tollerus::inputs.button
-                            x-show="!highlight"
+                            x-show="!isActive('italic')"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.italic') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
+                            @click="toggleItalic()"
                         >
                             <x-tollerus::icons.micro.italic class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.italic') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="highlight" x-cloak
+                            x-show="isActive('italic')" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.italic') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
+                            @click="toggleItalic()"
                         >
                             <x-tollerus::icons.micro.italic class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.italic') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div x-data="{ highlight: false }">
+                    <div>
                         <x-tollerus::inputs.button
-                            x-show="!highlight"
+                            x-show="!isActive('smallcaps')"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.smallcaps') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
+                            @click="toggleSmallcaps()"
                         >
                             <x-tollerus::icons.micro.smallcaps class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.smallcaps') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="highlight" x-cloak
+                            x-show="isActive('smallcaps')" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.smallcaps') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
+                            @click="toggleSmallcaps()"
                         >
                             <x-tollerus::icons.micro.smallcaps class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.smallcaps') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div x-data="{ highlight: false }">
+                    <div>
                         <x-tollerus::inputs.button
-                            x-show="!highlight"
+                            x-show="true"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.link') }}"
@@ -106,7 +112,7 @@
                             <span class="sr-only">{{ __('tollerus::ui.link') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="highlight" x-cloak
+                            x-show="false" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.link') }}"
@@ -117,9 +123,9 @@
                             <span class="sr-only">{{ __('tollerus::ui.link') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div x-data="{ highlight: false }">
+                    <div>
                         <x-tollerus::inputs.button
-                            x-show="!highlight"
+                            x-show="true"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.bullet_list') }}"
@@ -130,7 +136,7 @@
                             <span class="sr-only">{{ __('tollerus::ui.bullet_list') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="highlight" x-cloak
+                            x-show="false" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.bullet_list') }}"
@@ -141,9 +147,9 @@
                             <span class="sr-only">{{ __('tollerus::ui.bullet_list') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div x-data="{ highlight: false }">
+                    <div>
                         <x-tollerus::inputs.button
-                            x-show="!highlight"
+                            x-show="true"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.numbered_list') }}"
@@ -154,7 +160,7 @@
                             <span class="sr-only">{{ __('tollerus::ui.numbered_list') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="highlight" x-cloak
+                            x-show="false" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.numbered_list') }}"
@@ -165,9 +171,9 @@
                             <span class="sr-only">{{ __('tollerus::ui.numbered_list') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div x-data="{ highlight: false }">
+                    <div>
                         <x-tollerus::inputs.button
-                            x-show="!highlight"
+                            x-show="true"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.conlang_word') }}"
@@ -178,7 +184,7 @@
                             <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="highlight" x-cloak
+                            x-show="false" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.conlang_word') }}"
@@ -189,33 +195,35 @@
                             <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div x-data="{ highlight: false }">
+                    <div>
                         <x-tollerus::inputs.button
-                            x-show="!highlight"
+                            x-show="!isActive('phonemic')"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.phonemic') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
+                            @click="togglePhonemic()"
                         >
                             <x-tollerus::icons.micro.speech class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.phonemic') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="highlight" x-cloak
+                            x-show="isActive('phonemic')" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.phonemic') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
+                            @click="togglePhonemic()"
                         >
                             <x-tollerus::icons.micro.speech class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.phonemic') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div x-data="{ highlight: false }">
+                    <div>
                         <x-tollerus::inputs.button
-                            x-show="!highlight"
+                            x-show="true"
                             type="inverse"
                             size="tiny"
                             title="{{ __('tollerus::ui.neography_letters') }}"
@@ -226,7 +234,7 @@
                             <span class="sr-only">{{ __('tollerus::ui.neography_letters') }}</span>
                         </x-tollerus::inputs.button>
                         <x-tollerus::inputs.button
-                            x-show="highlight" x-cloak
+                            x-show="false" x-cloak
                             type="inverse-highlight"
                             size="tiny"
                             title="{{ __('tollerus::ui.neography_letters') }}"
