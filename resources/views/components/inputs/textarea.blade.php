@@ -14,6 +14,7 @@
         x-data="tollerusWysiwyg({
             state: $wire.entangle('{{ $model }}'),
         })"
+        @tollerus-wysiwyg-toolbar="handleToolbar($event.detail.action)"
     @endif
 >
     <label for="{{ $id }}">{{ $label }}</label>
@@ -29,7 +30,7 @@
                             title="{{ __('tollerus::ui.bold') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
-                            @click="toggleBold()"
+                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'bold' })"
                         >
                             <x-tollerus::icons.micro.bold class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.bold') }}</span>
@@ -41,7 +42,7 @@
                             title="{{ __('tollerus::ui.bold') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
-                            @click="toggleBold()"
+                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'bold' })"
                         >
                             <x-tollerus::icons.micro.bold class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.bold') }}</span>
@@ -55,7 +56,7 @@
                             title="{{ __('tollerus::ui.italic') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
-                            @click="toggleItalic()"
+                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'italic' })"
                         >
                             <x-tollerus::icons.micro.italic class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.italic') }}</span>
@@ -67,7 +68,7 @@
                             title="{{ __('tollerus::ui.italic') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
-                            @click="toggleItalic()"
+                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'italic' })"
                         >
                             <x-tollerus::icons.micro.italic class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.italic') }}</span>
@@ -81,7 +82,7 @@
                             title="{{ __('tollerus::ui.smallcaps') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
-                            @click="toggleSmallcaps()"
+                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'smallcaps' })"
                         >
                             <x-tollerus::icons.micro.smallcaps class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.smallcaps') }}</span>
@@ -93,7 +94,7 @@
                             title="{{ __('tollerus::ui.smallcaps') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
-                            @click="toggleSmallcaps()"
+                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'smallcaps' })"
                         >
                             <x-tollerus::icons.micro.smallcaps class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.smallcaps') }}</span>
@@ -203,7 +204,7 @@
                             title="{{ __('tollerus::ui.phonemic') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
-                            @click="togglePhonemic()"
+                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'phonemic' })"
                         >
                             <x-tollerus::icons.micro.speech class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.phonemic') }}</span>
@@ -215,7 +216,7 @@
                             title="{{ __('tollerus::ui.phonemic') }}"
                             x-bind:disabled="rawMode"
                             class="relative"
-                            @click="togglePhonemic()"
+                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'phonemic' })"
                         >
                             <x-tollerus::icons.micro.speech class="sm:h-6" />
                             <span class="sr-only">{{ __('tollerus::ui.phonemic') }}</span>

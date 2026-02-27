@@ -105,95 +105,100 @@ const TollerusLink = Link.extend({
 });
 
 function registerAdminComponents(A) {
-    A.data('tollerusWysiwyg', (opts = {}) => ({
-        state: opts.state,
-        debounceMs: opts.debounceMs ?? 250,
-        _t: null,
-        syncingFromEditor: false,
-        syncingFromLivewire: false,
-        rawMode: false,
-        get editor() {
-            return this.$el.closest('[data-tollerus-wysiwyg]')._tollerusEditor;
-        },
-        focus() {
-            if (this.editor) this.editor.chain().focus().run();
-        },
-        init() {
-            const mountEl = this.$el.querySelector('[data-tollerus-wysiwyg-mount]');
-            if (!mountEl) {
-                throw new Error('[Tollerus] WYSIWYG mount element not found ([data-tollerus-wysiwyg-mount]).');
-            }
-            this.$el._tollerusEditor = new Editor({
-                element: mountEl,
-                extensions: [
-                    StarterKit.configure({
-                        heading: false,
-                        blockquote: false,
-                        codeBlock: false,
-                        code: false,
-                        hardBreak: false,
-                        underline: false,
-                        link: false,
-                    }),
-                    TollerusSmallcaps,
-                    TollerusLink,
-                    TollerusWord,
-                    TollerusPhonemic,
-                    TollerusNative,
-                ],
-                content: this.state ?? '',
-                onUpdate: ({ editor }) => {
-                    if (this.syncingFromLivewire) return;
-                    const html = editor.getHTML();
+    A.data('tollerusWysiwyg', (opts = {}) => {
+        let editor = null;
+        return {
+            state: opts.state,
+            debounceMs: opts.debounceMs ?? 250,
+            _t: null,
+            syncingFromEditor: false,
+            syncingFromLivewire: false,
+            rawMode: false,
+            getEditor() {
+                return editor;
+            },
+            init() {
+                const mountEl = this.$el.querySelector('[data-tollerus-wysiwyg-mount]');
+                if (!mountEl) {
+                    throw new Error('[Tollerus] WYSIWYG mount element not found ([data-tollerus-wysiwyg-mount]).');
+                }
+                editor = new Editor({
+                    element: mountEl,
+                    extensions: [
+                        StarterKit.configure({
+                            heading: false,
+                            blockquote: false,
+                            codeBlock: false,
+                            code: false,
+                            hardBreak: false,
+                            underline: false,
+                            link: false,
+                        }),
+                        TollerusSmallcaps,
+                        TollerusLink,
+                        TollerusWord,
+                        TollerusPhonemic,
+                        TollerusNative,
+                    ],
+                    content: this.state ?? '',
+                    onUpdate: ({ editor: ed }) => {
+                        if (this.syncingFromLivewire) return;
+                        const html = ed.getHTML();
+                        clearTimeout(this._t);
+                        this._t = setTimeout(() => {
+                            this.syncingFromEditor = true;
+                            this.state = html;
+                            this.syncingFromEditor = false;
+                            this.$dispatch('tollerus-wysiwyg-input');
+                        }, this.debounceMs);
+                    },
+                });
+                this.$watch('state', (html) => {
+                    if (!editor) return;
+                    if (this.syncingFromEditor) return;
+                    const next = html ?? '';
+                    if (next === editor.getHTML()) return;
+                    this.syncingFromLivewire = true;
                     clearTimeout(this._t);
-                    this._t = setTimeout(() => {
-                        this.syncingFromEditor = true;
-                        this.state = html;
-                        this.syncingFromEditor = false;
-                        this.$dispatch('tollerus-wysiwyg-input');
-                    }, this.debounceMs);
-                },
-            });
-            this.$watch('state', (html) => {
-                const editor = this.$el._tollerusEditor;
-                if (!editor) return;
-                if (this.syncingFromEditor) return;
-                const next = html ?? '';
-                if (next === editor.getHTML()) return;
-                this.syncingFromLivewire = true;
-                editor.commands.setContent(next, false);
-                this.syncingFromLivewire = false;
-            });
-        },
-        destroy() {
-            const editor = this.$el._tollerusEditor;
-            if (editor) {
-                editor.destroy();
-                delete this.$el._tollerusEditor;
-            }
-        },
-        isActive(name, attrs) {
-            if (!this.editor) return false;
-            return this.editor.isActive(name, attrs || {});
-        },
-        toggleBold() {
-            console.log([this.editor, this.rawMode]);
-            if (!this.editor || this.rawMode) return;
-            this.editor.chain().focus().toggleBold().run();
-        },
-        toggleItalic() {
-            if (!this.editor || this.rawMode) return;
-            this.editor.chain().focus().toggleItalic().run();
-        },
-        toggleSmallcaps() {
-            if (!this.editor || this.rawMode) return;
-            this.editor.chain().focus().toggleMark('tollerusSmallcaps').run();
-        },
-        togglePhonemic() {
-            if (!this.editor || this.rawMode) return;
-            this.editor.chain().focus().toggleMark('tollerusPhonemic').run();
-        },
-    }));
+                    queueMicrotask(() => {
+                        if (!editor) return;
+                        editor.commands.setContent(next, false);
+                        this.syncingFromLivewire = false;
+                    });
+                });
+            },
+            destroy() {
+                if (editor) {
+                    editor.destroy();
+                    editor = null;
+                }
+            },
+            isActive(name, attrs) {
+                if (!editor) return false;
+                return editor.isActive(name, attrs || {});
+            },
+            handleToolbar(action) {
+                if (!editor || this.rawMode) return;
+                switch (action) {
+                    case 'bold':
+                        editor.chain().focus().toggleBold().run();
+                    break;
+                    case 'italic':
+                        editor.chain().focus().toggleItalic().run();
+                    break;
+                    case 'smallcaps':
+                        editor.chain().focus().toggleMark('tollerusSmallcaps').run();
+                    break;
+                    case 'phonemic':
+                        editor.chain().focus().toggleMark('tollerusPhonemic').run();
+                    break;
+                    default:
+                        if (import.meta?.env?.DEV) console.warn('[Tollerus] Unknown toolbar action:', action);
+                    break;
+                }
+            },
+        };
+    });
 }
 
 if (!window.Alpine) {
