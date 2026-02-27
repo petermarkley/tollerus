@@ -16,7 +16,7 @@
             <x-tollerus::inputs.text id="dict_title_full" model="infoForm.dict_title_full" label="{{ __('tollerus::ui.title_full') }}" @input="btn = 'save'; dirty=true;" />
         </div>
         <x-tollerus::inputs.text id="dict_author" model="infoForm.dict_author" label="{{ __('tollerus::ui.author') }}" @input="btn = 'save'; dirty=true;" />
-        <x-tollerus::inputs.textarea wysiwyg="true" id="intro" model="infoForm.intro" label="{{ __('tollerus::ui.intro') }}" />
+        <x-tollerus::inputs.textarea wysiwyg="true" id="intro" model="infoForm.intro" label="{{ __('tollerus::ui.intro') }}" @input="$dispatch('tollerus-wysiwyg-input')" />
     </div>
     <div class="flex flex-row justify-start gap-2">
         <x-tollerus::inputs.button type="secondary" x-bind:disabled="!dirty" @click="$wire.refreshInfoForm(); dirty=false;">{{ __('tollerus::ui.reset') }}</x-tollerus::inputs.button>

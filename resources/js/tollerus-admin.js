@@ -130,6 +130,7 @@ function registerAdminComponents(A) {
                         link: false,
                     }),
                     TollerusSmallcaps,
+                    TollerusLink,
                     TollerusWord,
                     TollerusPhonemic,
                     TollerusNative,
