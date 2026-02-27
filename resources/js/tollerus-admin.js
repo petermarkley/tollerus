@@ -121,6 +121,19 @@ const TollerusItalic = Italic.extend({
     excludes: 'tollerusWord tollerusPhonemic',
 });
 
+/**
+ * List of marks that participate in UI hinting logic (highlight/exclusion)
+ */
+const TOOLBAR_MARKS = [
+    'bold',
+    'italic',
+    'link',
+    'tollerusSmallcaps',
+    'tollerusPhonemic',
+    'tollerusWord',
+    'tollerusNative',
+];
+
 function registerAdminComponents(A) {
     A.data('tollerusWysiwyg', (opts = {}) => {
         let editor = null;
@@ -221,20 +234,10 @@ function registerAdminComponents(A) {
             },
             refreshToolbar() {
                 if (!editor) return;
-                this.toolbarHighlights.bold      = editor.isActive('bold');
-                this.toolbarHighlights.italic    = editor.isActive('italic');
-                this.toolbarHighlights.link      = editor.isActive('link');
-                this.toolbarHighlights.tollerusSmallcaps = editor.isActive('tollerusSmallcaps');
-                this.toolbarHighlights.tollerusPhonemic  = editor.isActive('tollerusPhonemic');
-                this.toolbarHighlights.tollerusWord      = editor.isActive('tollerusWord');
-                this.toolbarHighlights.tollerusNative    = editor.isActive('tollerusNative');
-                this.toolbarExcludes.bold      = this.calculateExcluded('bold');
-                this.toolbarExcludes.italic    = this.calculateExcluded('italic');
-                this.toolbarExcludes.link      = this.calculateExcluded('link');
-                this.toolbarExcludes.tollerusSmallcaps = this.calculateExcluded('tollerusSmallcaps');
-                this.toolbarExcludes.tollerusPhonemic  = this.calculateExcluded('tollerusPhonemic');
-                this.toolbarExcludes.tollerusWord      = this.calculateExcluded('tollerusWord');
-                this.toolbarExcludes.tollerusNative    = this.calculateExcluded('tollerusNative');
+                for (const name of TOOLBAR_MARKS) {
+                    this.toolbarHighlights[name] = editor.isActive(name);
+                    this.toolbarExcludes[name] = this.calculateExcluded(name);
+                }
             },
             isActive(name) {
                 return !!this.toolbarHighlights[name];
@@ -244,13 +247,20 @@ function registerAdminComponents(A) {
             },
             calculateExcluded(markName) {
                 if (!editor) return false;
-                const activeMarks = editor.state.selection.$from.marks();
-                return activeMarks.some(mark => {
-                    const excludes = mark.type.spec.excludes;
-                    if (!excludes) return false;
-                    if (excludes === '_') return mark.type.name !== markName;
-                    return excludes.split(' ').includes(markName);
-                });
+                const marks = this.getSelectionMarksStrict();
+                // If the mark is already present somewhere, do NOT consider it excluded
+                if (marks.some(m => m.type.name === markName)) return false;
+                for (const m of marks) {
+                    const excludes = m.type.spec.excludes;
+                    if (!excludes) continue;
+                    if (excludes === '_') {
+                        // Exclude everything except itself
+                        return m.type.name !== markName;
+                    }
+                    const list = excludes.split(' ').filter(Boolean);
+                    if (list.includes(markName)) return true;
+                }
+                return false;
             },
             handleToolbar(action) {
                 if (!editor || this.rawMode) return;
@@ -271,6 +281,27 @@ function registerAdminComponents(A) {
                         if (import.meta?.env?.DEV) console.warn('[Tollerus] Unknown toolbar action:', action);
                     break;
                 }
+            },
+            getSelectionMarksStrict() {
+                if (!editor) return [];
+                const { state } = editor;
+                const { from, to, empty } = state.selection;
+                // Cursor case: use storedMarks/marks at cursor
+                if (empty) {
+                    const marks =
+                        state.storedMarks ??
+                        state.selection.$from.marks();
+                    return marks ?? [];
+                }
+                // Range case: gather marks from any text node that overlaps the selection.
+                const markMap = new Map(); // key => markType
+                state.doc.nodesBetween(from, to, (node) => {
+                    if (!node.isText) return;
+                    for (const m of node.marks) {
+                        markMap.set(m.type.name, m);
+                    }
+                });
+                return Array.from(markMap.values());
             },
         };
     });
