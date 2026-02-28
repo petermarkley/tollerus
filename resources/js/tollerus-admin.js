@@ -321,10 +321,20 @@ function registerAdminComponents(A) {
             openLinkDialog() {
                 if (!editor || this.rawMode) return;
                 const ctx = this.getLinkContext();
-                const href = ctx?.href ?? '';
-                const text = ctx?.text ?? '';
+                let href = '';
+                let text = '';
+                let active = false;
+                if (ctx) {
+                    href = ctx.href ?? '';
+                    text = ctx.text ?? '';
+                    active = true;
+                } else {
+                    // No link under cursor/selection: prefill with selected text (if any)
+                    const { from, to, empty } = editor.state.selection;
+                    text = empty ? '' : editor.state.doc.textBetween(from, to, ' ');
+                }
                 window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-link-dialog-open', {
-                    detail: { href, text, active: !!ctx },
+                    detail: { href, text, active },
                 }));
             },
             getLinkContext() {
@@ -372,7 +382,7 @@ function registerAdminComponents(A) {
                 if (!url) return;
                 const label = (text ?? '').trim(); // (Nobody wants trailing whitespace on their links)
                 const { state } = editor;
-                const { empty } = state.selection;
+                const { from, to, empty } = state.selection;
                 const ctx = this.getLinkContext();
                 /**
                  * If we're inside a link, or selection includes
@@ -405,9 +415,20 @@ function registerAdminComponents(A) {
                  * first we normalize to avoid overlapping or
                  * nested links.
                  */
-                editor.chain().focus().unsetLink();
+                editor.chain().focus().unsetLink().run();
+                /**
+                 * If user provided text, replace entire selection
+                 * with that. If user left it blank, we keep
+                 * existing selection text.
+                 */
+                const wantsReplace = label.length > 0;
                 if (empty) {
-                    const insertText = label.length > 0 ? label : url;
+                    const insertText = wantsReplace ? label : url;
+                    /**
+                     * Insert, then select the inserted text using
+                     * a stable reference: selection.from is after
+                     * insertion, so we compute start from that.
+                     */
                     editor.chain()
                         .insertContent(insertText)
                         .setTextSelection({
@@ -415,20 +436,24 @@ function registerAdminComponents(A) {
                             to: editor.state.selection.from,
                         }).setLink({ href: url })
                         .run();
+                    this.refreshToolbar();
+                    return;
+                }
+                // Range selection
+                if (wantsReplace) {
+                    /**
+                     * Replace the exact original range, then
+                     * reselect the inserted label at that same
+                     * start.
+                     */
+                    editor.chain()
+                        .insertContentAt({ from, to }, label)
+                        .setTextSelection({ from, to: from + label.length })
+                        .setLink({ href: url })
+                        .run();
                 } else {
-                    if (label.length > 0) {
-                        // Replace selection with the provided label, then link it
-                        editor.chain()
-                            .insertContent(label)
-                            .setTextSelection({
-                                from: editor.state.selection.from - label.length,
-                                to: editor.state.selection.from,
-                            }).setLink({ href: url })
-                            .run();
-                    } else {
-                        // Keep selected text, apply link
-                        editor.chain().setLink({ href: url }).run();
-                    }
+                    // Keep selected text; just apply link to the selection
+                    editor.chain().setLink({ href: url }).run();
                 }
                 this.refreshToolbar();
             },
