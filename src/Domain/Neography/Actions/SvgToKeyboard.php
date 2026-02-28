@@ -11,7 +11,16 @@ final class SvgToKeyboard
      * These words, as well as the neography's name, will be ignored when assigning
      * key labels from the font glyph names.
      */
-    const IGNORE = ['letter', 'symbol', 'mark', 'character'];
+    const IGNORE = [
+        'letter',
+        'symbol',
+        'mark',
+        'character',
+        'syllable',
+        'consonant',
+        'vowel',
+        'numeral',
+    ];
 
     /**
      * This will import glyphs from the stored SVG font into NeographyInputKey objects.
