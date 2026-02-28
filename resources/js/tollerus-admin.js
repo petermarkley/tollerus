@@ -554,11 +554,37 @@ function registerAdminComponents(A) {
                 }
             },
             /**
-             * User submitted the phonemic dialogue.
+             * User submitted the phonemic dialogue. Insert
+             * the given text as a phonemic mark, merged with
+             * any pre-existing phonemic marks.
              */
-            applyPhonemic({ text }) {
-                console.log(text);
-            },
+            applyPhonemic({ text /*, brackets */ }) {
+                if (!editor || this.rawMode) return;
+                const { state } = editor;
+                const { empty } = state.selection;
+                // This should only run for a single caret position (not a range selection)
+                if (!empty) return;
+                let insertText = (text ?? '').toString();
+                if (!insertText.trim()) return;
+                // Merge with any pre-existing marks at the selection point
+                const baseMarks = state.storedMarks ?? state.selection.$from.marks() ?? [];
+                const hasPhonemic = baseMarks.some(m => m.type?.name === 'tollerusPhonemic');
+                const marksSpec = baseMarks.map(m => ({
+                    type: m.type.name,
+                    attrs: m.attrs,
+                }));
+                if (!hasPhonemic) {
+                    marksSpec.push({ type: 'tollerusPhonemic' });
+                }
+                editor.chain()
+                    .focus()
+                    .insertContent({
+                        type: 'text',
+                        text: insertText,
+                        marks: marksSpec,
+                    }).run();
+                this.refreshToolbar();
+            }
         };
     });
 }
