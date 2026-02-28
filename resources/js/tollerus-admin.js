@@ -1,5 +1,5 @@
 import Alpine from 'alpinejs';
-import { Editor, Mark, mergeAttributes } from '@tiptap/core';
+import { Editor, Mark, mergeAttributes, getMarkRange } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Bold from '@tiptap/extension-bold';
@@ -320,32 +320,115 @@ function registerAdminComponents(A) {
             },
             openLinkDialog() {
                 if (!editor || this.rawMode) return;
-                const attrs = editor.getAttributes('link') || {};
-                const href = attrs.href || '';
-                const { from, to, empty } = editor.state.selection;
-                const text = empty ? '' : editor.state.doc.textBetween(from, to, ' ');
+                const ctx = this.getLinkContext();
+                const href = ctx?.href ?? '';
+                const text = ctx?.text ?? '';
                 window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-link-dialog-open', {
-                    detail: { href, text, active: editor.isActive('link') },
+                    detail: { href, text, active: !!ctx },
                 }));
+            },
+            getLinkContext() {
+                if (!editor) return null;
+                const { state } = editor;
+                const linkType = editor.schema.marks.link;
+                const { from, to, empty } = state.selection;
+                /**
+                 * Case A
+                 * ======
+                 * Cursor is inside a link (or selection anchor is)
+                 */
+                const directRange = getMarkRange(state.selection.$from, linkType);
+                if (directRange) {
+                    const href = editor.getAttributes('link')?.href ?? '';
+                    const text = state.doc.textBetween(directRange.from, directRange.to, ' ');
+                    return { href, text, range: directRange };
+                }
+                /**
+                 * Case B
+                 * ======
+                 * Selection spans content and includes one or more
+                 * links. Pick the first link we encounter, and
+                 * expand to its full mark range.
+                 */
+                let found = null;
+                state.doc.nodesBetween(from, to, (node, pos) => {
+                    if (found) return false;
+                    if (!node.isText) return;
+                    const linkMark = node.marks.find(m => m.type === linkType);
+                    if (!linkMark) return;
+                    // Resolve a position inside this text node so getMarkRange can expand properly
+                    const inside = state.doc.resolve(pos + 1);
+                    const range = getMarkRange(inside, linkType);
+                    if (!range) return;
+                    const text = state.doc.textBetween(range.from, range.to, ' ');
+                    found = { href: linkMark.attrs?.href ?? '', text, range };
+                    return false;
+                });
+                return found;
             },
             applyLink({ href, text }) {
                 if (!editor || this.rawMode) return;
                 const url = (href ?? '').trim();
                 if (!url) return;
-                // If user selected text, keep it; otherwise insert provided text.
-                const { empty } = editor.state.selection;
-                editor.chain().focus().extendMarkRange('link');
+                const label = (text ?? '').trim(); // (Nobody wants trailing whitespace on their links)
+                const { state } = editor;
+                const { empty } = state.selection;
+                const ctx = this.getLinkContext();
+                /**
+                 * If we're inside a link, or selection includes
+                 * one, we are editing that link.
+                 */
+                if (ctx?.range) {
+                    // Update href/text on the existing link range
+                    if (label.length > 0) {
+                        editor.chain()
+                            .focus()
+                            .setTextSelection(ctx.range)
+                            .unsetLink() // Avoid overlapping links
+                            .insertContent(label)
+                            .setTextSelection({ from: ctx.range.from, to: ctx.range.from + label.length })
+                            .setLink({ href: url })
+                            .run();
+                    } else {
+                        editor.chain()
+                            .focus()
+                            .setTextSelection(ctx.range)
+                            .setLink({ href: url })
+                            .run();
+                    }
+                    this.refreshToolbar();
+                    return;
+                }
+                /**
+                 * If no links in/around selection, then we are
+                 * creating a new link. If there's multiple, then
+                 * first we normalize to avoid overlapping or
+                 * nested links.
+                 */
+                editor.chain().focus().unsetLink();
                 if (empty) {
-                    const label = (text ?? url).trim();
+                    const insertText = label.length > 0 ? label : url;
                     editor.chain()
-                        .insertContent(label)
+                        .insertContent(insertText)
                         .setTextSelection({
-                            from: editor.state.selection.from - label.length,
+                            from: editor.state.selection.from - insertText.length,
                             to: editor.state.selection.from,
                         }).setLink({ href: url })
                         .run();
                 } else {
-                    editor.chain().setLink({ href: url }).run();
+                    if (label.length > 0) {
+                        // Replace selection with the provided label, then link it
+                        editor.chain()
+                            .insertContent(label)
+                            .setTextSelection({
+                                from: editor.state.selection.from - label.length,
+                                to: editor.state.selection.from,
+                            }).setLink({ href: url })
+                            .run();
+                    } else {
+                        // Keep selected text, apply link
+                        editor.chain().setLink({ href: url }).run();
+                    }
                 }
                 this.refreshToolbar();
             },

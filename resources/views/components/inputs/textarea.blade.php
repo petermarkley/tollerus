@@ -130,11 +130,13 @@
                             </x-tollerus::inputs.button>
                         </x-slot:button>
                         <div
+                            x-data="{ existingLink: false }"
                             @tollerus-wysiwyg-link-dialog-open.window="
                                 urlElem = document.getElementById('{{ $id . '_link_url' }}');
                                 urlElem.value = $event.detail.href;
                                 textElem = document.getElementById('{{ $id . '_link_text' }}');
                                 textElem.value = $event.detail.text;
+                                existingLink = $event.detail.active;
                             "
                             class="w-full flex flex-col gap-2 items-stretch"
                         >
@@ -149,7 +151,7 @@
                                     type="secondary"
                                     size="small"
                                     title="{{ __('tollerus::ui.remove') }}"
-                                    x-bind:disabled="!isActive('link')"
+                                    x-bind:disabled="!existingLink"
                                     @click="open=false; $dispatch('tollerus-wysiwyg-link-remove');"
                                 >
                                     <span>{{ __('tollerus::ui.remove') }}</span>
