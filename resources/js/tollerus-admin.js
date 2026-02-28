@@ -136,14 +136,25 @@ const TOOLBAR_MARKS = [
 
 function registerAdminComponents(A) {
     A.data('tollerusWysiwyg', (opts = {}) => {
+        /**
+         * Store this almost like a "protected class property,"
+         * where Alpine doesn't trash it with proxying. This
+         * helps prevent "mismatched transaction" errors, among
+         * other things.
+         */
         let editor = null;
         return {
             state: opts.state,
             debounceMs: opts.debounceMs ?? 250,
             _t: null,
+            // Directional sync locks, also to prevent mismatched transaction errors
             syncingFromEditor: false,
             syncingFromLivewire: false,
+            // For the "edit as raw HTML" button
             rawMode: false,
+            /**
+             * UI hinting properties
+             */
             toolbarHighlights: {
                 bold: false,
                 italic: false,
@@ -166,9 +177,15 @@ function registerAdminComponents(A) {
                 bullet_list: false,
                 numbered_list: false,
             },
+            /**
+             * Getter for our simulated "protected property"
+             */
             getEditor() {
                 return editor;
             },
+            /**
+             * Create the editor
+             */
             init() {
                 const mountEl = this.$el.querySelector('[data-tollerus-wysiwyg-mount]');
                 if (!mountEl) {
@@ -230,12 +247,18 @@ function registerAdminComponents(A) {
                     });
                 });
             },
+            /**
+             * In case we need it ...
+             */
             destroy() {
                 if (editor) {
                     editor.destroy();
                     editor = null;
                 }
             },
+            /**
+             * This keeps UI hinting props (above) up to date
+             */
             refreshToolbar() {
                 if (!editor) return;
                 for (const name of TOOLBAR_MARKS) {
@@ -245,12 +268,32 @@ function registerAdminComponents(A) {
                 this.toolbarHighlights.bullet_list = editor.isActive('bulletList');
                 this.toolbarHighlights.numbered_list = editor.isActive('orderedList');
             },
+            /**
+             * This method name imitates one on the `editor`
+             * object instance, but this is the
+             * `tollerusWysiwyg` Alpine component which owns/
+             * contains the editor instance. Mind the
+             * difference.
+             *
+             * Used from DOM attributes on the page to check
+             * our UI hinting props.
+             */
             isActive(name) {
                 return !!this.toolbarHighlights[name];
             },
+            /**
+             * On the pattern of `isActive` except there's no
+             * name overlap with a Tiptap editor method.
+             *
+             * Also used by DOM attrs on the page.
+             */
             isExcluded(name) {
                 return !!this.toolbarExcludes[name];
             },
+            /**
+             * Used by `refreshToolbar()`, checks each Tiptap
+             * extension config for proper exclusion logic.
+             */
             calculateExcluded(markName) {
                 if (!editor) return false;
                 const marks = this.getSelectionMarksStrict();
@@ -268,6 +311,36 @@ function registerAdminComponents(A) {
                 }
                 return false;
             },
+            /**
+             * Used by `calculateExcluded()` above. Finds
+             * greedy list of any possible marks associated
+             * with the current selection.
+             */
+            getSelectionMarksStrict() {
+                if (!editor) return [];
+                const { state } = editor;
+                const { from, to, empty } = state.selection;
+                // Cursor case: use storedMarks/marks at cursor
+                if (empty) {
+                    const marks =
+                        state.storedMarks ??
+                        state.selection.$from.marks();
+                    return marks ?? [];
+                }
+                // Range case: gather marks from any text node that overlaps the selection.
+                const markMap = new Map(); // key => markType
+                state.doc.nodesBetween(from, to, (node) => {
+                    if (!node.isText) return;
+                    for (const m of node.marks) {
+                        markMap.set(m.type.name, m);
+                    }
+                });
+                return Array.from(markMap.values());
+            },
+            /**
+             * Toolbar button clicked! What should we do?
+             * This resolves/branches to the proper behavior.
+             */
             handleToolbar(action) {
                 if (!editor || this.rawMode) return;
                 switch (action) {
@@ -297,33 +370,18 @@ function registerAdminComponents(A) {
                     break;
                 }
             },
-            getSelectionMarksStrict() {
-                if (!editor) return [];
-                const { state } = editor;
-                const { from, to, empty } = state.selection;
-                // Cursor case: use storedMarks/marks at cursor
-                if (empty) {
-                    const marks =
-                        state.storedMarks ??
-                        state.selection.$from.marks();
-                    return marks ?? [];
-                }
-                // Range case: gather marks from any text node that overlaps the selection.
-                const markMap = new Map(); // key => markType
-                state.doc.nodesBetween(from, to, (node) => {
-                    if (!node.isText) return;
-                    for (const m of node.marks) {
-                        markMap.set(m.type.name, m);
-                    }
-                });
-                return Array.from(markMap.values());
-            },
+            /**
+             * User clicked the "link" toolbar button. We
+             * need to check for any dialogue prefill values.
+             */
             openLinkDialog() {
                 if (!editor || this.rawMode) return;
                 const ctx = this.getLinkContext();
+                // Initialize pessimistically
                 let href = '';
                 let text = '';
                 let active = false;
+                // Conditionally populate
                 if (ctx) {
                     href = ctx.href ?? '';
                     text = ctx.text ?? '';
@@ -333,10 +391,16 @@ function registerAdminComponents(A) {
                     const { from, to, empty } = editor.state.selection;
                     text = empty ? '' : editor.state.doc.textBetween(from, to, ' ');
                 }
+                // Push values to the UI event listener
                 window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-link-dialog-open', {
                     detail: { href, text, active },
                 }));
             },
+            /**
+             * Used by `openLinkDialog()`, walks through
+             * careful logic about what values to prefill in
+             * the dialogue.
+             */
             getLinkContext() {
                 if (!editor) return null;
                 const { state } = editor;
@@ -376,6 +440,11 @@ function registerAdminComponents(A) {
                 });
                 return found;
             },
+            /**
+             * User has submitted the link dialogue. We need
+             * some careful logic about how to apply their
+             * changes.
+             */
             applyLink({ href, text }) {
                 if (!editor || this.rawMode) return;
                 const url = (href ?? '').trim();
@@ -457,6 +526,10 @@ function registerAdminComponents(A) {
                 }
                 this.refreshToolbar();
             },
+            /**
+             * User clicked the "Remove" button in a link
+             * dialogue.
+             */
             removeLink() {
                 if (!editor || this.rawMode) return;
                 editor.chain().focus().extendMarkRange('link').unsetLink().run();
