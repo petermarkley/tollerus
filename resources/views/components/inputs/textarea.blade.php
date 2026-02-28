@@ -15,6 +15,8 @@
             state: $wire.entangle('{{ $model }}'),
         })"
         @tollerus-wysiwyg-toolbar="handleToolbar($event.detail.action)"
+        @tollerus-wysiwyg-link-apply.window="applyLink($event.detail)"
+        @tollerus-wysiwyg-link-remove.window="removeLink()"
     @endif
 >
     <label for="{{ $id }}">{{ $label }}</label>
@@ -100,30 +102,72 @@
                             <span class="sr-only">{{ __('tollerus::ui.smallcaps') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div>
-                        <x-tollerus::inputs.button
-                            x-show="!isActive('link')"
-                            type="inverse"
-                            size="tiny"
-                            title="{{ __('tollerus::ui.link') }}"
-                            x-bind:disabled="rawMode || isExcluded('link')"
-                            class="relative"
+                    <x-tollerus::inputs.dropdown class="relative w-full">
+                        <x-slot:button>
+                            <x-tollerus::inputs.button
+                                x-show="!isActive('link')"
+                                type="inverse"
+                                size="tiny"
+                                title="{{ __('tollerus::ui.link') }}"
+                                x-bind:disabled="rawMode || isExcluded('link')"
+                                class="relative"
+                                @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'link' });"
+                            >
+                                <x-tollerus::icons.micro.link class="sm:h-6" />
+                                <span class="sr-only">{{ __('tollerus::ui.link') }}</span>
+                            </x-tollerus::inputs.button>
+                            <x-tollerus::inputs.button
+                                x-show="isActive('link')" x-cloak
+                                type="inverse-highlight"
+                                size="tiny"
+                                title="{{ __('tollerus::ui.link') }}"
+                                x-bind:disabled="rawMode || isExcluded('link')"
+                                class="relative"
+                                @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'link' });"
+                            >
+                                <x-tollerus::icons.micro.link class="sm:h-6" />
+                                <span class="sr-only">{{ __('tollerus::ui.link') }}</span>
+                            </x-tollerus::inputs.button>
+                        </x-slot:button>
+                        <div
+                            @tollerus-wysiwyg-link-dialog-open.window="
+                                urlElem = document.getElementById('{{ $id . '_link_url' }}');
+                                urlElem.value = $event.detail.href;
+                                textElem = document.getElementById('{{ $id . '_link_text' }}');
+                                textElem.value = $event.detail.text;
+                            "
+                            class="w-full flex flex-col gap-2 items-stretch"
                         >
-                            <x-tollerus::icons.micro.link class="sm:h-6" />
-                            <span class="sr-only">{{ __('tollerus::ui.link') }}</span>
-                        </x-tollerus::inputs.button>
-                        <x-tollerus::inputs.button
-                            x-show="isActive('link')" x-cloak
-                            type="inverse-highlight"
-                            size="tiny"
-                            title="{{ __('tollerus::ui.link') }}"
-                            x-bind:disabled="rawMode || isExcluded('link')"
-                            class="relative"
-                        >
-                            <x-tollerus::icons.micro.link class="sm:h-6" />
-                            <span class="sr-only">{{ __('tollerus::ui.link') }}</span>
-                        </x-tollerus::inputs.button>
-                    </div>
+                            <div class="w-full">
+                                <x-tollerus::inputs.text label="{{ __('tollerus::ui.link_url') }}" id="{{ $id . '_link_url' }}" />
+                            </div>
+                            <div class="w-full">
+                                <x-tollerus::inputs.text label="{{ __('tollerus::ui.link_text') }}" id="{{ $id . '_link_text' }}" />
+                            </div>
+                            <div class="w-full flex flex-row gap-2">
+                                <x-tollerus::inputs.button
+                                    type="secondary"
+                                    size="small"
+                                    title="{{ __('tollerus::ui.remove') }}"
+                                    x-bind:disabled="!isActive('link')"
+                                    @click="open=false; $dispatch('tollerus-wysiwyg-link-remove');"
+                                >
+                                    <span>{{ __('tollerus::ui.remove') }}</span>
+                                </x-tollerus::inputs.button>
+                                <x-tollerus::inputs.button
+                                    type="primary"
+                                    size="small"
+                                    title="{{ __('tollerus::ui.apply') }}"
+                                    @click="open = false; $dispatch('tollerus-wysiwyg-link-apply', {
+                                        href: document.getElementById('{{ $id . '_link_url' }}').value,
+                                        text: document.getElementById('{{ $id . '_link_text' }}').value,
+                                    });"
+                                >
+                                    <span>{{ __('tollerus::ui.apply') }}</span>
+                                </x-tollerus::inputs.button>
+                            </div>
+                        </div>
+                    </x-tollerus::inputs.dropdown>
                     <div>
                         <x-tollerus::inputs.button
                             x-show="!isActive('bullet_list')"

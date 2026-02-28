@@ -289,6 +289,9 @@ function registerAdminComponents(A) {
                     case 'numbered_list':
                         editor.chain().focus().toggleOrderedList().run();
                     break;
+                    case 'link':
+                        this.openLinkDialog();
+                    break;
                     default:
                         if (import.meta?.env?.DEV) console.warn('[Tollerus] Unknown toolbar action:', action);
                     break;
@@ -314,6 +317,42 @@ function registerAdminComponents(A) {
                     }
                 });
                 return Array.from(markMap.values());
+            },
+            openLinkDialog() {
+                if (!editor || this.rawMode) return;
+                const attrs = editor.getAttributes('link') || {};
+                const href = attrs.href || '';
+                const { from, to, empty } = editor.state.selection;
+                const text = empty ? '' : editor.state.doc.textBetween(from, to, ' ');
+                window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-link-dialog-open', {
+                    detail: { href, text, active: editor.isActive('link') },
+                }));
+            },
+            applyLink({ href, text }) {
+                if (!editor || this.rawMode) return;
+                const url = (href ?? '').trim();
+                if (!url) return;
+                // If user selected text, keep it; otherwise insert provided text.
+                const { empty } = editor.state.selection;
+                editor.chain().focus().extendMarkRange('link');
+                if (empty) {
+                    const label = (text ?? url).trim();
+                    editor.chain()
+                        .insertContent(label)
+                        .setTextSelection({
+                            from: editor.state.selection.from - label.length,
+                            to: editor.state.selection.from,
+                        }).setLink({ href: url })
+                        .run();
+                } else {
+                    editor.chain().setLink({ href: url }).run();
+                }
+                this.refreshToolbar();
+            },
+            removeLink() {
+                if (!editor || this.rawMode) return;
+                editor.chain().focus().extendMarkRange('link').unsetLink().run();
+                this.refreshToolbar();
             },
         };
     });
