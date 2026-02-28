@@ -152,6 +152,8 @@ function registerAdminComponents(A) {
                 tollerusPhonemic: false,
                 tollerusWord: false,
                 tollerusNative: false,
+                bullet_list: false,
+                numbered_list: false,
             },
             toolbarExcludes: {
                 bold: false,
@@ -161,6 +163,8 @@ function registerAdminComponents(A) {
                 tollerusPhonemic: false,
                 tollerusWord: false,
                 tollerusNative: false,
+                bullet_list: false,
+                numbered_list: false,
             },
             getEditor() {
                 return editor;
@@ -238,6 +242,8 @@ function registerAdminComponents(A) {
                     this.toolbarHighlights[name] = editor.isActive(name);
                     this.toolbarExcludes[name] = this.calculateExcluded(name);
                 }
+                this.toolbarHighlights.bullet_list = editor.isActive('bulletList');
+                this.toolbarHighlights.numbered_list = editor.isActive('orderedList');
             },
             isActive(name) {
                 return !!this.toolbarHighlights[name];
@@ -276,6 +282,12 @@ function registerAdminComponents(A) {
                     break;
                     case 'phonemic':
                         editor.chain().focus().toggleMark('tollerusPhonemic').run();
+                    break;
+                    case 'bullet_list':
+                        editor.chain().focus().toggleBulletList().run();
+                    break;
+                    case 'numbered_list':
+                        editor.chain().focus().toggleOrderedList().run();
                     break;
                     default:
                         if (import.meta?.env?.DEV) console.warn('[Tollerus] Unknown toolbar action:', action);

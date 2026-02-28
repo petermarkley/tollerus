@@ -90,13 +90,23 @@
     #tollerus_root .tiptap {
         min-height: 150px;
     }
-    #tollerus_root .tiptap div {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-    }
     #tollerus_root .tiptap p {
         margin-top: 0.5em;
         margin-bottom: 0.5em;
         text-indent: 1em;
+    }
+    #tollerus_root .tiptap ul, #tollerus_root .tiptap ol {
+        padding-left: 3em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
+    #tollerus_root .tiptap ul {
+        list-style-type: disc;
+    }
+    #tollerus_root .tiptap ol {
+        list-style-type: decimal;
+    }
+    #tollerus_root .tiptap ul p, #tollerus_root .tiptap ol p {
+        text-indent: 0;
     }
 }
