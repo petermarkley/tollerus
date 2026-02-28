@@ -13,6 +13,8 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
 use PeterMarkley\Tollerus\Actions\CreateWithUniqueName;
+use PeterMarkley\Tollerus\Domain\Neography\Services\NativeKeyboard;
+use PeterMarkley\Tollerus\Domain\Neography\Services\PhonemicKeyboard;
 use PeterMarkley\Tollerus\Enums\SearchType;
 use PeterMarkley\Tollerus\Maintenance\GlobalIdGarbageCollector;
 use PeterMarkley\Tollerus\Models\Feature;
@@ -48,6 +50,7 @@ class LanguageEditor extends Component
     #[Locked] public array $nativeSpellingCounts = [];
     #[Locked] public array $presetData = [];
     #[Locked] public array $presetSelectOpts = [];
+    #[Locked] public array $ipaKeyboard = [];
 
     /**
      * Livewire hooks
@@ -126,6 +129,7 @@ class LanguageEditor extends Component
     public function mount(Language $language, ?string $tab = null): void
     {
         $this->language = $language;
+        $this->ipaKeyboard = app(PhonemicKeyboard::class)->load();
         $this->language->loadMissing(['primaryNeography']);
         $this->tab = $tab ?? 'info';
 

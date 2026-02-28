@@ -128,6 +128,7 @@
 
     </div>
     <x-tollerus::modal/>
+    <x-tollerus::keyboards.phonemic :phonemicKeyboard="$ipaKeyboard"/>
 </div>
 @once
 @push('tollerus-scripts')

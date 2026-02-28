@@ -561,6 +561,8 @@ return [
     'link' => 'Link',
     'link_url' => 'Link URL',
     'link_text' => 'Link text',
+    'text' => 'Text',
+    'insert' => 'Insert',
     'apply' => 'Apply',
     'remove' => 'Remove',
     'bullet_list' => 'Bullet list',

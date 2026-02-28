@@ -354,7 +354,7 @@ function registerAdminComponents(A) {
                         editor.chain().focus().toggleMark('tollerusSmallcaps').run();
                     break;
                     case 'phonemic':
-                        editor.chain().focus().toggleMark('tollerusPhonemic').run();
+                        this.handleToolbarPhonemic();
                     break;
                     case 'bullet_list':
                         editor.chain().focus().toggleBulletList().run();
@@ -534,6 +534,30 @@ function registerAdminComponents(A) {
                 if (!editor || this.rawMode) return;
                 editor.chain().focus().extendMarkRange('link').unsetLink().run();
                 this.refreshToolbar();
+            },
+            /**
+             * User clicked the "phonemic" toolbar button.
+             * We need to check whether the selection is a
+             * range: if yes, toggle mark; if no, open a
+             * dialogue for inserting.
+             */
+            handleToolbarPhonemic() {
+                if (!editor || this.rawMode) return;
+                const { state } = editor;
+                const { from, to, empty } = state.selection;
+                if (empty) {
+                    // Selection is empty; open a dialogue
+                    window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-phonemic-dialog-open'));
+                } else {
+                    // Selection is a range; just toggle the mark
+                    editor.chain().focus().toggleMark('tollerusPhonemic').run();
+                }
+            },
+            /**
+             * User submitted the phonemic dialogue.
+             */
+            applyPhonemic({ text }) {
+                console.log(text);
             },
         };
     });

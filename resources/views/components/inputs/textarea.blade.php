@@ -17,6 +17,7 @@
         @tollerus-wysiwyg-toolbar="handleToolbar($event.detail.action)"
         @tollerus-wysiwyg-link-apply.window="applyLink($event.detail)"
         @tollerus-wysiwyg-link-remove.window="removeLink()"
+        @tollerus-wysiwyg-phonemic-apply.window="applyPhonemic($event.detail)"
     @endif
 >
     <label for="{{ $id }}">{{ $label }}</label>
@@ -146,7 +147,7 @@
                             <div class="w-full">
                                 <x-tollerus::inputs.text label="{{ __('tollerus::ui.link_text') }}" id="{{ $id . '_link_text' }}" />
                             </div>
-                            <div class="w-full flex flex-row gap-2">
+                            <div class="w-full flex flex-row gap-2 justify-start">
                                 <x-tollerus::inputs.button
                                     type="secondary"
                                     size="small"
@@ -160,7 +161,7 @@
                                     type="primary"
                                     size="small"
                                     title="{{ __('tollerus::ui.apply') }}"
-                                    @click="open = false; $dispatch('tollerus-wysiwyg-link-apply', {
+                                    @click="open=false; $dispatch('tollerus-wysiwyg-link-apply', {
                                         href: document.getElementById('{{ $id . '_link_url' }}').value,
                                         text: document.getElementById('{{ $id . '_link_text' }}').value,
                                     });"
@@ -246,32 +247,95 @@
                             <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div>
-                        <x-tollerus::inputs.button
-                            x-show="!isActive('tollerusPhonemic')"
-                            type="inverse"
-                            size="tiny"
-                            title="{{ __('tollerus::ui.phonemic') }}"
-                            x-bind:disabled="rawMode || isExcluded('tollerusPhonemic')"
-                            class="relative"
-                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'phonemic' })"
+                    <x-tollerus::inputs.dropdown class="relative w-full">
+                        <x-slot:button>
+                            <x-tollerus::inputs.button
+                                x-show="!isActive('tollerusPhonemic')"
+                                type="inverse"
+                                size="tiny"
+                                title="{{ __('tollerus::ui.phonemic') }}"
+                                x-bind:disabled="rawMode || isExcluded('tollerusPhonemic')"
+                                class="relative"
+                                @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'phonemic' })"
+                            >
+                                <x-tollerus::icons.micro.speech class="sm:h-6" />
+                                <span class="sr-only">{{ __('tollerus::ui.phonemic') }}</span>
+                            </x-tollerus::inputs.button>
+                            <x-tollerus::inputs.button
+                                x-show="isActive('tollerusPhonemic')" x-cloak
+                                type="inverse-highlight"
+                                size="tiny"
+                                title="{{ __('tollerus::ui.phonemic') }}"
+                                x-bind:disabled="rawMode || isExcluded('tollerusPhonemic')"
+                                class="relative"
+                                @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'phonemic' })"
+                            >
+                                <x-tollerus::icons.micro.speech class="sm:h-6" />
+                                <span class="sr-only">{{ __('tollerus::ui.phonemic') }}</span>
+                            </x-tollerus::inputs.button>
+                        </x-slot:button>
+                        <div
+                            @tollerus-wysiwyg-phonemic-dialog-open.window="open=true; document.getElementById('{{ $id . '_phonemic_text' }}').value = '';"
+                            class="w-full flex flex-col gap-2 items-stretch"
                         >
-                            <x-tollerus::icons.micro.speech class="sm:h-6" />
-                            <span class="sr-only">{{ __('tollerus::ui.phonemic') }}</span>
-                        </x-tollerus::inputs.button>
-                        <x-tollerus::inputs.button
-                            x-show="isActive('tollerusPhonemic')" x-cloak
-                            type="inverse-highlight"
-                            size="tiny"
-                            title="{{ __('tollerus::ui.phonemic') }}"
-                            x-bind:disabled="rawMode || isExcluded('tollerusPhonemic')"
-                            class="relative"
-                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'phonemic' })"
-                        >
-                            <x-tollerus::icons.micro.speech class="sm:h-6" />
-                            <span class="sr-only">{{ __('tollerus::ui.phonemic') }}</span>
-                        </x-tollerus::inputs.button>
-                    </div>
+                            <div data-keyboard-elem="territory" class="w-full flex flex-col gap-1 items-start">
+                                <label for="{{ $id . '_phonemic_text' }}">{{ __('tollerus::ui.text') }}</label>
+                                <div class="w-full flex flex-row gap-1 items-center">
+                                    <div
+                                        x-data="{ showKeyboard: false }"
+                                        class="relative"
+                                        @close-virtual-keyboard.window="showKeyboard=false;"
+                                    >
+                                        <x-tollerus::inputs.button
+                                            x-cloak x-show="!showKeyboard"
+                                            type="secondary"
+                                            size="small"
+                                            class="align-middle"
+                                            title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
+                                            @click="
+                                                $nextTick(()=>{
+                                                    showKeyboard=true;
+                                                    $store.virtualKeyboard.mount({
+                                                        virtualKeyboardType: 'phonemic',
+                                                        neographyId: null,
+                                                        mountPoint: $el.parentNode,
+                                                        inputFieldId: '{{ $id . '_phonemic_text' }}'
+                                                    });
+                                                });
+                                            "
+                                        >
+                                            <x-tollerus::icons.keyboard/>
+                                            <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
+                                        </x-tollerus::inputs.button>
+                                        <x-tollerus::inputs.button
+                                            x-cloak x-show="showKeyboard"
+                                            type="primary"
+                                            size="small"
+                                            class="align-middle"
+                                            title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
+                                            @click="showKeyboard=false; $store.virtualKeyboard.unmount();"
+                                        >
+                                            <x-tollerus::icons.keyboard/>
+                                            <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
+                                        </x-tollerus::inputs.button>
+                                    </div>
+                                    <x-tollerus::inputs.text id="{{ $id . '_phonemic_text' }}" />
+                                </div>
+                            </div>
+                            <div class="w-full flex flex-row gap-2 justify-start">
+                                <x-tollerus::inputs.button
+                                    type="primary"
+                                    size="small"
+                                    title="{{ __('tollerus::ui.insert') }}"
+                                    @click="open=false; $dispatch('tollerus-wysiwyg-phonemic-apply', {
+                                        text: document.getElementById('{{ $id . '_phonemic_text' }}').value,
+                                    });"
+                                >
+                                    <span>{{ __('tollerus::ui.insert') }}</span>
+                                </x-tollerus::inputs.button>
+                            </div>
+                        </div>
+                    </x-tollerus::inputs.dropdown>
                     <div>
                         <x-tollerus::inputs.button
                             x-show="!isActive('tollerusNative')"
