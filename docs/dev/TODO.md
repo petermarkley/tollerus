@@ -13,6 +13,7 @@
 ## Code health
 - [ ] Audit for uses of `->sortBy()->map()->toArray()` that need to be `->sortBy()->map()->values()->toArray()`?
 - [ ] Why does filename conflict cause server error when uploading TTF?
+- [ ] After `SvgToKeyboard` for Eithalica neographies, why do a bunch of dupe `&nbsp;` named entities appear, escaped/unrendered?
 
 ## PublicWordLookup page
 - [ ] Offer native keyboard(s)??? (Do not base on primary neography of currently displayed entry!)
