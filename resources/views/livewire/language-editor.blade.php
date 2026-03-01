@@ -128,6 +128,7 @@
 
     </div>
     <x-tollerus::modal/>
+    <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
     <x-tollerus::keyboards.phonemic :phonemicKeyboard="$ipaKeyboard"/>
 </div>
 @once

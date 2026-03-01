@@ -353,8 +353,8 @@ function registerAdminComponents(A) {
                     case 'smallcaps':
                         editor.chain().focus().toggleMark('tollerusSmallcaps').run();
                     break;
-                    case 'phonemic':
-                        this.handleToolbarPhonemic();
+                    case 'link':
+                        this.openLinkDialog();
                     break;
                     case 'bullet_list':
                         editor.chain().focus().toggleBulletList().run();
@@ -362,8 +362,11 @@ function registerAdminComponents(A) {
                     case 'numbered_list':
                         editor.chain().focus().toggleOrderedList().run();
                     break;
-                    case 'link':
-                        this.openLinkDialog();
+                    case 'phonemic':
+                        this.handleToolbarPhonemic();
+                    break;
+                    case 'native':
+                        this.openNativeDialog();
                     break;
                     default:
                         if (import.meta?.env?.DEV) console.warn('[Tollerus] Unknown toolbar action:', action);
@@ -584,7 +587,78 @@ function registerAdminComponents(A) {
                         marks: marksSpec,
                     }).run();
                 this.refreshToolbar();
-            }
+            },
+            /**
+             * User clicked the "native" toolbar button. We
+             * need to check for any prefill values.
+             */
+            openNativeDialog() {
+                if (!editor || this.rawMode) return;
+                const ctx = this.getNativeContext();
+                // Initialize pessimistically
+                let neography = '';
+                let text = '';
+                let active = false;
+                // Conditionally populate
+                if (ctx) {
+                    neography = ctx.neography ?? '';
+                    text = ctx.text ?? '';
+                    active = true;
+                } else {
+                    // No link under cursor/selection: prefill with selected text (if any)
+                    const { from, to, empty } = editor.state.selection;
+                    text = empty ? '' : editor.state.doc.textBetween(from, to, ' ');
+                }
+                // Push values to the UI event listener
+                window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-native-dialog-open', {
+                    detail: { neography, text, active },
+                }));
+            },
+            /**
+             * Used by `openNativeDialog()`, walks through
+             * careful logic about what values to prefill in
+             * the dialogue.
+             */
+            getNativeContext() {
+                if (!editor) return null;
+                const { state } = editor;
+                const nativeType = editor.schema.marks.tollerusNative;
+                const { from, to, empty } = state.selection;
+                /**
+                 * Case A
+                 * ======
+                 * Cursor is inside a native mark (or selection
+                 * anchor is)
+                 */
+                const directRange = getMarkRange(state.selection.$from, nativeType);
+                if (directRange) {
+                    const href = editor.getAttributes('link')?.href ?? '';
+                    const text = state.doc.textBetween(directRange.from, directRange.to, ' ');
+                    return { href, text, range: directRange };
+                }
+                /**
+                 * Case B
+                 * ======
+                 * Selection spans content and includes one or more
+                 * native marks. Pick the first one we encounter,
+                 * and expand to its full mark range.
+                 */
+                let found = null;
+                state.doc.nodesBetween(from, to, (node, pos) => {
+                    if (found) return false;
+                    if (!node.isText) return;
+                    const nativeMark = node.marks.find(m => m.type === nativeType);
+                    if (!nativeMark) return;
+                    // Resolve a position inside this text node so getMarkRange can expand properly
+                    const inside = state.doc.resolve(pos + 1);
+                    const range = getMarkRange(inside, nativeType);
+                    if (!range) return;
+                    const text = state.doc.textBetween(range.from, range.to, ' ');
+                    found = { neography: nativeMark.attrs['data-neography'] ?? '', text, range };
+                    return false;
+                });
+                return found;
+            },
         };
     });
 }

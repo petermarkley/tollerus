@@ -50,6 +50,7 @@ class LanguageEditor extends Component
     #[Locked] public array $nativeSpellingCounts = [];
     #[Locked] public array $presetData = [];
     #[Locked] public array $presetSelectOpts = [];
+    #[Locked] public array $nativeKeyboards = [];
     #[Locked] public array $ipaKeyboard = [];
 
     /**
@@ -129,9 +130,16 @@ class LanguageEditor extends Component
     public function mount(Language $language, ?string $tab = null): void
     {
         $this->language = $language;
-        $this->ipaKeyboard = app(PhonemicKeyboard::class)->load();
         $this->language->loadMissing(['primaryNeography']);
         $this->tab = $tab ?? 'info';
+        /**
+         * The virtual keyboards on this page are exclusively for
+         * typing in the WYSIWYG. so there's no reason to restrict
+         * the user to neographies for this language. Hence we do
+         * `loadAll()` instead of `loadForLanguage()`.
+         */
+        $this->nativeKeyboards = app(NativeKeyboard::class)->loadAll();
+        $this->ipaKeyboard = app(PhonemicKeyboard::class)->load();
 
         // Info tab
         $this->refreshInfoForm();
