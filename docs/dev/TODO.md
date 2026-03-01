@@ -1,3 +1,7 @@
+# Notes
+
+- On WYSIWYG native marks, maybe add `data-neography-id=""` in addition to `data-neography=""` so changes to neography machine name don't screw things up quite so badly
+
 # TODO
 
 ## Tollerus Features
@@ -9,6 +13,7 @@
 - [ ] Web documentation (driven by `.md` files in Tollerus repo, inside `docs/user`)?
 - [ ] Make example host app layouts publishable (like views for Laravel pagination links)?
 - [ ] Dockerfile for easier hosting? (Maybe also publishable--or would that be circular...?)
+- [ ] For rtl neographies, `<x-tollerus::inputs.text-saveable/>` "(empty)" placeholder should be styled ltr so it doesn't say "(ytpme)".
 
 ## Code health
 - [ ] Audit for uses of `->sortBy()->map()->toArray()` that need to be `->sortBy()->map()->values()->toArray()`?
