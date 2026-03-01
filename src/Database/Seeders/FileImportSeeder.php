@@ -947,7 +947,7 @@ class FileImportSeeder extends Seeder
      *
      *   - `<c>`                                 => `<span data-tollerus="smallcaps">`,
      *   - `<word href="AAR3" lang="myconlang">` => `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="myconlang">`,
-     *   - `<myneography>`                       => `<span data-tollerus="native" data-neography="myneography" class="tollerus_custom_myneography">`,
+     *   - `<myneography>`                       => `<span data-tollerus="native" data-neography-id="1" data-neography="myneography" class="tollerus_custom_myneography">`,
      *   - `<phonemic>`                          => `<span data-tollerus="phonemic">`,
      *
      * Notes:
@@ -993,8 +993,8 @@ class FileImportSeeder extends Seeder
             $oldTag->parentNode->replaceChild($newTag, $oldTag);
         }
 
-        // `<myneography>` => `<span data-tollerus="native" data-neography="myneography" class="tollerus_custom_myneography">`,
-        foreach (array_keys($this->validNeos) as $neoMachineName) {
+        // `<myneography>` => `<span data-tollerus="native" data-neography-id="1" data-neography="myneography" class="tollerus_custom_myneography">`,
+        foreach ($this->validNeos as $neoMachineName => $neoModel) {
             $tags = iterator_to_array($domNode->getElementsByTagName($neoMachineName));
             foreach ($tags as $oldTag) {
                 $newTag = $domNode->ownerDocument->createElement('span');
@@ -1002,6 +1002,7 @@ class FileImportSeeder extends Seeder
                     $newTag->appendChild($oldTag->removeChild($child));
                 }
                 $newTag->setAttribute('data-tollerus', 'native');
+                $newTag->setAttribute('data-neography-id', $neoModel->id);
                 $newTag->setAttribute('data-neography', $neoMachineName);
                 $newTag->setAttribute('class', 'tollerus_custom_' . $neoMachineName);
                 $oldTag->parentNode->replaceChild($newTag, $oldTag);

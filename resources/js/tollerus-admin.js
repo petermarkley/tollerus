@@ -74,7 +74,7 @@ const TollerusPhonemic = Mark.create({
 });
 
 /**
- * <span data-tollerus="native" data-neography="myneography" class="tollerus_custom_myneography">
+ * <span data-tollerus="native" data-neography-id="1" data-neography="myneography" class="tollerus_custom_myneography">
  */
 const TollerusNative = Mark.create({
     name: 'tollerusNative',
@@ -83,6 +83,7 @@ const TollerusNative = Mark.create({
 
     addAttributes() {
         return {
+            'data-neography-id': { default: null },
             'data-neography': { default: null },
             class: { default: null },
         };

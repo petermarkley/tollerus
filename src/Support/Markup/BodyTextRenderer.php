@@ -15,7 +15,7 @@ use PeterMarkley\Tollerus\Models\Neography;
  * Expected element example formats:
  *   - `<span data-tollerus="smallcaps">`
  *   - `<a href="/tollerus?id=AAR3" data-tollerus="word" data-id="AAR3" data-lang="myconlang">` or `<span data-tollerus="word" data-id="AAR3" data-lang="myconlang">`
- *   - `<span data-tollerus="native" data-neography="myneography" class="tollerus_custom_myneography">`
+ *   - `<span data-tollerus="native" data-neography-id="1" data-neography="myneography" class="tollerus_custom_myneography">`
  *   - `<span data-tollerus="phonemic">`
  */
 class BodyTextRenderer
@@ -95,14 +95,15 @@ class BodyTextRenderer
                 break;
                 case 'native':
                     // Check for required data attrs
-                    if (!$tag->hasAttribute('data-neography')) {
+                    if (!$tag->hasAttribute('data-neography-id')) {
                         continue 2;
                     }
                     // Validate neography
-                    $neography = Neography::where('machine_name', $tag->getAttribute('data-neography'))->first();
+                    $neography = Neography::find($tag->getAttribute('data-neography-id'));
                     if (!($neography instanceof Neography)) {
                         continue 2;
                     }
+                    $tag->setAttribute('data-neography', $neography->machine_name);
                     $className = 'tollerus_custom_' . $neography->machine_name;
                     $classList = explode(' ', $tag->getAttribute('class'));
                     if ($neography->visible) {

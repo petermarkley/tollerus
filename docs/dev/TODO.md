@@ -1,7 +1,3 @@
-# Notes
-
-- On WYSIWYG native marks, maybe add `data-neography-id=""` in addition to `data-neography=""` so changes to neography machine name don't screw things up quite so badly
-
 # TODO
 
 ## Tollerus Features
