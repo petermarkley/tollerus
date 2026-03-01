@@ -632,9 +632,9 @@ function registerAdminComponents(A) {
                  */
                 const directRange = getMarkRange(state.selection.$from, nativeType);
                 if (directRange) {
-                    const href = editor.getAttributes('link')?.href ?? '';
+                    const neography = editor.getAttributes('tollerusNative')['data-neography'] ?? '';
                     const text = state.doc.textBetween(directRange.from, directRange.to, ' ');
-                    return { href, text, range: directRange };
+                    return { neography, text, range: directRange };
                 }
                 /**
                  * Case B
