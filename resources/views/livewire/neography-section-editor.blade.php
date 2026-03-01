@@ -314,7 +314,6 @@
                                                                                                 showKeyboard=true;
                                                                                                 $store.virtualKeyboard.mount({
                                                                                                     virtualKeyboardType: 'phonemic',
-                                                                                                    neographyId: null,
                                                                                                     mountPoint: $el.parentNode,
                                                                                                     inputFieldId: id
                                                                                                 });
@@ -388,7 +387,6 @@
                                                                                                 showKeyboard=true;
                                                                                                 $store.virtualKeyboard.mount({
                                                                                                     virtualKeyboardType: 'phonemic',
-                                                                                                    neographyId: null,
                                                                                                     mountPoint: $el.parentNode,
                                                                                                     inputFieldId: id
                                                                                                 });
@@ -441,7 +439,7 @@
                                                                                                     showKeyboard=true;
                                                                                                     $store.virtualKeyboard.mount({
                                                                                                         virtualKeyboardType: 'native',
-                                                                                                        neographyId: {{ $neography->id }},
+                                                                                                        neographySubset: null,
                                                                                                         mountPoint: $el.parentNode,
                                                                                                         inputFieldId: id
                                                                                                     });

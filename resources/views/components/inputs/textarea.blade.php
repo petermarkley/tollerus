@@ -297,7 +297,6 @@
                                                     showKeyboard=true;
                                                     $store.virtualKeyboard.mount({
                                                         virtualKeyboardType: 'phonemic',
-                                                        neographyId: null,
                                                         mountPoint: $el.parentNode,
                                                         inputFieldId: '{{ $id . '_phonemic_text' }}'
                                                     });

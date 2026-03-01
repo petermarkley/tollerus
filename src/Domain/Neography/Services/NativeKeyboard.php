@@ -41,5 +41,18 @@ final class NativeKeyboard
                 'keyboards' => $this->loadSingleNeography($n),
             ]])->toArray();
     }
+
+    public function loadAll(bool $onlyVisible = false): array
+    {
+        $neographies = Neography::query()
+            ->when($onlyVisible, fn ($q) => $q->where('visible', true))
+            ->with(['keyboards.inputKeys'])
+            ->get();
+        return $neographies->mapWithKeys(fn ($n) => [$n->id => [
+            'name' => $n->name,
+            'machineName' => $n->machine_name,
+            'keyboards' => $this->loadSingleNeography($n),
+        ]])->toArray();
+    }
 }
 

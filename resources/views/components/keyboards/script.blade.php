@@ -9,7 +9,7 @@ document.addEventListener('alpine:init', () => {
         inputField: null,
         onResize: null,
         virtualKeyboardType: '',
-        mount({virtualKeyboardType, neographyId = null, mountPoint, inputFieldId}) {
+        mount({virtualKeyboardType, neographySubset = null, mountPoint, inputFieldId}) {
             // Close any other virtual keyboards that might be open
             if (this.mountElem !== null) {
                 this.unmount();
@@ -20,10 +20,7 @@ document.addEventListener('alpine:init', () => {
                     var template = document.getElementById('phonemic_keyboard');
                 break;
                 case 'native':
-                    if (neographyId === null) {
-                        return;
-                    }
-                    var template = document.getElementById('keyboard_for_'+neographyId);
+                    var template = document.getElementById('native_keyboard');
                 break;
                 default:
                     return;
@@ -47,6 +44,9 @@ document.addEventListener('alpine:init', () => {
             this.mountElem = clone.querySelector('*');
             // Mount keyboard
             this.mountPoint.appendChild(clone);
+            if (neographySubset !== null) {
+                this.mountElem.setAttribute('data-keyboard-activelist', JSON.stringify(neographySubset));
+            }
             this.calculatePosition();
             this.mountElem.focus();
 
