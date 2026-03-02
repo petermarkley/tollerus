@@ -132,21 +132,23 @@
                             </x-tollerus::inputs.button>
                         </x-slot:button>
                         <div
-                            x-data="{ existingLink: false }"
+                            x-data="{
+                                linkUrl: '',
+                                linkText: '',
+                                existingLink: false,
+                            }"
                             @tollerus-wysiwyg-link-dialog-open.window="
-                                urlElem = document.getElementById('{{ $id . '_link_url' }}');
-                                urlElem.value = $event.detail.href;
-                                textElem = document.getElementById('{{ $id . '_link_text' }}');
-                                textElem.value = $event.detail.text;
+                                linkUrl = $event.detail.href;
+                                linkText = $event.detail.text;
                                 existingLink = $event.detail.active;
                             "
                             class="w-full flex flex-col gap-2 items-stretch"
                         >
                             <div class="w-full">
-                                <x-tollerus::inputs.text label="{{ __('tollerus::ui.link_url') }}" id="{{ $id . '_link_url' }}" />
+                                <x-tollerus::inputs.text label="{{ __('tollerus::ui.link_url') }}" id="{{ $id . '_link_url' }}" model="linkUrl" modelIsAlpine="true" />
                             </div>
                             <div class="w-full">
-                                <x-tollerus::inputs.text label="{{ __('tollerus::ui.link_text') }}" id="{{ $id . '_link_text' }}" />
+                                <x-tollerus::inputs.text label="{{ __('tollerus::ui.link_text') }}" id="{{ $id . '_link_text' }}" model="linkText" modelIsAlpine="true" />
                             </div>
                             <div class="w-full flex flex-row gap-2 justify-start">
                                 <x-tollerus::inputs.button
@@ -163,8 +165,8 @@
                                     size="small"
                                     title="{{ __('tollerus::ui.apply') }}"
                                     @click="open=false; $dispatch('tollerus-wysiwyg-link-apply', {
-                                        href: document.getElementById('{{ $id . '_link_url' }}').value,
-                                        text: document.getElementById('{{ $id . '_link_text' }}').value,
+                                        href: linkUrl,
+                                        text: linkText,
                                     });"
                                 >
                                     <span>{{ __('tollerus::ui.apply') }}</span>
@@ -276,7 +278,8 @@
                             </x-tollerus::inputs.button>
                         </x-slot:button>
                         <div
-                            @tollerus-wysiwyg-phonemic-dialog-open.window="open=true; document.getElementById('{{ $id . '_phonemic_text' }}').value = '';"
+                            x-data="{ phonemicText: '' }"
+                            @tollerus-wysiwyg-phonemic-dialog-open.window="open=true; phonemicText = '';"
                             class="w-full flex flex-col gap-2 items-stretch"
                         >
                             <div data-keyboard-elem="territory" class="w-full flex flex-col gap-1 items-start">
@@ -319,7 +322,7 @@
                                             <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
                                         </x-tollerus::inputs.button>
                                     </div>
-                                    <x-tollerus::inputs.text id="{{ $id . '_phonemic_text' }}" />
+                                    <x-tollerus::inputs.text id="{{ $id . '_phonemic_text' }}" model="phonemicText" modelIsAlpine="true" />
                                 </div>
                             </div>
                             <div class="w-full flex flex-row gap-2 justify-start">
@@ -327,9 +330,7 @@
                                     type="primary"
                                     size="small"
                                     title="{{ __('tollerus::ui.insert') }}"
-                                    @click="open=false; $dispatch('tollerus-wysiwyg-phonemic-apply', {
-                                        text: document.getElementById('{{ $id . '_phonemic_text' }}').value,
-                                    });"
+                                    @click="open=false; $dispatch('tollerus-wysiwyg-phonemic-apply', { text: phonemicText });"
                                 >
                                     <span>{{ __('tollerus::ui.insert') }}</span>
                                 </x-tollerus::inputs.button>

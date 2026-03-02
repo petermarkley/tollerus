@@ -153,6 +153,7 @@ document.addEventListener('alpine:init', () => {
             }
             if (this.inputField !== null) {
                 this.inputField.value = this.inputField.value + key.dataset.glyph;
+                this.inputField.dispatchEvent(new Event('input', { bubbles: true }));
             }
         },
     });
