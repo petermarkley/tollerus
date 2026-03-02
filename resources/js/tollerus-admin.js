@@ -678,6 +678,108 @@ function registerAdminComponents(A) {
                 });
                 return found;
             },
+            /**
+             * User submitted the native dialogue. Insert the
+             * given text as a native mark, merged with any
+             * pre-existing native marks.
+             */
+            applyNative({ neographyId, neography, text }) {
+                if (!editor || this.rawMode) return;
+                const neographyMachineName = (neography ?? '').trim();
+                if (!neographyId) return;
+                const label = (text ?? '').trim();
+                const { state } = editor;
+                const { from, to, empty } = state.selection;
+                const ctx = this.getNativeContext();
+                /**
+                 * If we're inside a native mark, or selection
+                 * includes one, we are editing that mark.
+                 */
+                if (ctx?.range) {
+                    // Update attrs on the existing mark range
+                    if (label.length > 0) {
+                        editor.chain()
+                            .focus()
+                            .setTextSelection(ctx.range)
+                            .unsetMark('tollerusNative') // Avoid overlapping marks
+                            .insertContent(label)
+                            .setTextSelection({ from: ctx.range.from, to: ctx.range.from + label.length })
+                            .setMark('tollerusNative', {
+                                'data-neography-id': neographyId,
+                                'data-neography': neographyMachineName,
+                                'class': 'tollerus_custom_'+neographyMachineName,
+                            }).run();
+                    } else {
+                        editor.chain()
+                            .focus()
+                            .setTextSelection(ctx.range)
+                            .setMark('tollerusNative', {
+                                'data-neography-id': neographyId,
+                                'data-neography': neographyMachineName,
+                                'class': 'tollerus_custom_'+neographyMachineName,
+                            }).run();
+                    }
+                    this.refreshToolbar();
+                    return;
+                }
+                /**
+                 * If no native marks in/around selection, then we
+                 * are creating a new one. If there's multiple,
+                 * then first we normalize to avoid overlapping or
+                 * nested native marks.
+                 */
+                editor.chain().focus().unsetMark('tollerusNative').run();
+                /**
+                 * If user provided text, replace entire selection
+                 * with that. If user left it blank, we keep
+                 * existing selection text.
+                 */
+                const wantsReplace = label.length > 0;
+                if (empty) {
+                    const insertText = wantsReplace ? label : url;
+                    /**
+                     * Insert, then select the inserted text using
+                     * a stable reference: selection.from is after
+                     * insertion, so we compute start from that.
+                     */
+                    editor.chain()
+                        .insertContent(insertText)
+                        .setTextSelection({
+                            from: editor.state.selection.from - insertText.length,
+                            to: editor.state.selection.from,
+                        }).setMark('tollerusNative', {
+                            'data-neography-id': neographyId,
+                            'data-neography': neographyMachineName,
+                            'class': 'tollerus_custom_'+neographyMachineName,
+                        }).run();
+                    this.refreshToolbar();
+                    return;
+                }
+                // Range selection
+                if (wantsReplace) {
+                    /**
+                     * Replace the exact original range, then
+                     * reselect the inserted label at that same
+                     * start.
+                     */
+                    editor.chain()
+                        .insertContentAt({ from, to }, label)
+                        .setTextSelection({ from, to: from + label.length })
+                        .setMark('tollerusNative', {
+                            'data-neography-id': neographyId,
+                            'data-neography': neographyMachineName,
+                            'class': 'tollerus_custom_'+neographyMachineName,
+                        }).run();
+                } else {
+                    // Keep selected text; just apply link to the selection
+                    editor.chain().setMark('tollerusNative', {
+                        'data-neography-id': neographyId,
+                        'data-neography': neographyMachineName,
+                        'class': 'tollerus_custom_'+neographyMachineName,
+                    }).run();
+                }
+                this.refreshToolbar();
+            },
         };
     });
 }

@@ -36,8 +36,8 @@
                                 aria-controls="tabpanel-{{ $keyboardNeographyId }}"
                                 title="{{ $keyboardNeography['name'] }}"
                                 @click="nativeTab = '{{ $keyboardNeographyId }}'; $dispatch('native-keyboard-tab-switch', {id: '{{ $keyboardNeographyId }}'});"
-                                @keydown.enter.prevent="nativeTab = '{{ $keyboardNeographyId }}';"
-                                @keydown.space.prevent="nativeTab = '{{ $keyboardNeographyId }}';"
+                                @keydown.enter.prevent="nativeTab = '{{ $keyboardNeographyId }}'; $dispatch('native-keyboard-tab-switch', {id: '{{ $keyboardNeographyId }}'});"
+                                @keydown.space.prevent="nativeTab = '{{ $keyboardNeographyId }}'; $dispatch('native-keyboard-tab-switch', {id: '{{ $keyboardNeographyId }}'});"
                                 x-bind:class="{
                                     'rounded-t-lg rounded-b-lg md:rounded-b-none flex flex-row justify-start items-center gap-2 cursor-pointer py-1 px-2 flex focus:outline-2 outline-offset-2 outline-blue-700 dark:outline-white': true,
                                     'text-white dark:text-zinc-900 font-bold border-2 mb-[-2px] border-zinc-500 dark:border-zinc-400 hover:border-zinc-600 hover:dark:border-white bg-zinc-500 dark:bg-zinc-400 hover:bg-zinc-600 hover:dark:bg-white': nativeTab!='{{ $keyboardNeographyId }}',
@@ -53,7 +53,11 @@
         @endif
         @foreach ($nativeKeyboards as $keyboardNeographyId => $keyboardNeography)
             <template
-                x-init="if (nativeKeyboardsActive.length==1) {nativeTab = nativeKeyboardsActive[0]}"
+                x-init="if (nativeKeyboardsActive.length==1) {
+                    nativeTab = nativeKeyboardsActive[0];
+                } else if (typeof $el.parentElement.dataset.keyboardActive !== 'undefined') {
+                    nativeTab = $el.parentElement.dataset.keyboardActive;
+                }"
                 x-if="nativeKeyboardsActive.length==0 || nativeKeyboardsActive.includes('{{ $keyboardNeographyId }}')"
             >
                 <div

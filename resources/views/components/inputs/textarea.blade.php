@@ -19,6 +19,7 @@
         @tollerus-wysiwyg-link-apply.window="applyLink($event.detail)"
         @tollerus-wysiwyg-link-remove.window="removeLink()"
         @tollerus-wysiwyg-phonemic-apply.window="applyPhonemic($event.detail)"
+        @tollerus-wysiwyg-native-apply.window="applyNative($event.detail)"
     @endif
 >
     <label for="{{ $id }}">{{ $label }}</label>
@@ -145,10 +146,20 @@
                             class="w-full flex flex-col gap-2 items-stretch"
                         >
                             <div class="w-full">
-                                <x-tollerus::inputs.text label="{{ __('tollerus::ui.link_url') }}" id="{{ $id . '_link_url' }}" model="linkUrl" modelIsAlpine="true" />
+                                <x-tollerus::inputs.text
+                                    label="{{ __('tollerus::ui.link_url') }}"
+                                    id="{{ $id . '_link_url' }}"
+                                    model="linkUrl"
+                                    modelIsAlpine="true"
+                                />
                             </div>
                             <div class="w-full">
-                                <x-tollerus::inputs.text label="{{ __('tollerus::ui.link_text') }}" id="{{ $id . '_link_text' }}" model="linkText" modelIsAlpine="true" />
+                                <x-tollerus::inputs.text
+                                    label="{{ __('tollerus::ui.link_text') }}"
+                                    id="{{ $id . '_link_text' }}"
+                                    model="linkText"
+                                    modelIsAlpine="true"
+                                />
                             </div>
                             <div class="w-full flex flex-row gap-2 justify-start">
                                 <x-tollerus::inputs.button
@@ -322,7 +333,11 @@
                                             <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
                                         </x-tollerus::inputs.button>
                                     </div>
-                                    <x-tollerus::inputs.text id="{{ $id . '_phonemic_text' }}" model="phonemicText" modelIsAlpine="true" />
+                                    <x-tollerus::inputs.text
+                                        id="{{ $id . '_phonemic_text' }}"
+                                        model="phonemicText"
+                                        modelIsAlpine="true"
+                                    />
                                 </div>
                             </div>
                             <div class="w-full flex flex-row gap-2 justify-start">
@@ -368,14 +383,16 @@
                             x-data="{
                                 neographyId: '{{ $primaryNeographyId ?? array_keys($nativeKeyboards)[0] }}',
                                 neographyMachineNames: @js(array_map(fn ($n) => $n['machineName'], $nativeKeyboards)),
+                                nativeText: '',
                                 get neographyMachineName() {
                                     return this.neographyMachineNames[this.neographyId];
                                 },
                             }"
                             @tollerus-wysiwyg-native-dialog-open.window="
-                                neographyId = $event.detail.neographyId;
-                                textElem = document.getElementById('{{ $id . '_native_text' }}');
-                                textElem.value = $event.detail.text;
+                                if ($event.detail.neographyId) {
+                                    neographyId = $event.detail.neographyId;
+                                }
+                                nativeText = $event.detail.text;
                             "
                             @native-keyboard-tab-switch="neographyId = $event.detail.id;"
                             class="w-full flex flex-col gap-2 items-stretch"
@@ -411,6 +428,7 @@
                                                     $store.virtualKeyboard.mount({
                                                         virtualKeyboardType: 'native',
                                                         neographySubset: null,
+                                                        activeNeography: neographyId,
                                                         mountPoint: $el.parentNode,
                                                         inputFieldId: '{{ $id . '_native_text' }}'
                                                     });
@@ -432,7 +450,12 @@
                                             <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
                                         </x-tollerus::inputs.button>
                                     </div>
-                                    <x-tollerus::inputs.text id="{{ $id . '_native_text' }}" x-bind:class="'tollerus_'+neographyMachineName" />
+                                    <x-tollerus::inputs.text
+                                        id="{{ $id . '_native_text' }}"
+                                        x-bind:class="'tollerus_'+neographyMachineName"
+                                        model="nativeText"
+                                        modelIsAlpine="true"
+                                    />
                                 </div>
                             </div>
                             <div class="w-full flex flex-row gap-2 justify-start">
@@ -442,7 +465,8 @@
                                     title="{{ __('tollerus::ui.apply') }}"
                                     @click="open=false; $dispatch('tollerus-wysiwyg-native-apply', {
                                         neographyId: neographyId,
-                                        text: document.getElementById('{{ $id . '_native_text' }}').value,
+                                        neography: neographyMachineName,
+                                        text: nativeText,
                                     });"
                                 >
                                     <span>{{ __('tollerus::ui.apply') }}</span>

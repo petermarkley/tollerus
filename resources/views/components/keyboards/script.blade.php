@@ -9,7 +9,7 @@ document.addEventListener('alpine:init', () => {
         inputField: null,
         onResize: null,
         virtualKeyboardType: '',
-        mount({virtualKeyboardType, neographySubset = null, mountPoint, inputFieldId}) {
+        mount({virtualKeyboardType, neographySubset = null, activeNeography = null, mountPoint, inputFieldId}) {
             // Close any other virtual keyboards that might be open
             if (this.mountElem !== null) {
                 this.unmount();
@@ -46,6 +46,9 @@ document.addEventListener('alpine:init', () => {
             this.mountPoint.appendChild(clone);
             if (neographySubset !== null) {
                 this.mountElem.setAttribute('data-keyboard-activelist', JSON.stringify(neographySubset));
+            }
+            if (activeNeography !== null) {
+                this.mountElem.setAttribute('data-keyboard-active', activeNeography);
             }
             this.calculatePosition();
             this.mountElem.focus();
