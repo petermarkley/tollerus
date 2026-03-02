@@ -90,7 +90,7 @@
                                         @if ($key['render_on_base'])
                                             <span class="text-[60cqw] tollerus_{{ $keyboardNeography['machineName'] }}">&#x25CC;{{ $key['glyph'] }}</span>
                                         @else
-                                            <span class="text-[60cqw] tollerus_{{ $keyboardNeography['machineName'] }}">{{ ($key['glyph']==' '? '&nbsp;' : $key['glyph']) }}</span>
+                                            <span class="text-[60cqw] tollerus_{{ $keyboardNeography['machineName'] }}">{{ ($key['glyph']==' '? "\u{00A0}" : $key['glyph']) }}</span>
                                         @endif
                                         <span class="text-[15cqw] font-mono text-zinc-500 dark:text-zinc-500">{{ $key['glyphHex'] }}</span>
                                     </button>
