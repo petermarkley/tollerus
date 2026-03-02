@@ -597,12 +597,14 @@ function registerAdminComponents(A) {
                 if (!editor || this.rawMode) return;
                 const ctx = this.getNativeContext();
                 // Initialize pessimistically
-                let neography = '';
+                let neographyId = '';
+                let neographyMachineName = '';
                 let text = '';
                 let active = false;
                 // Conditionally populate
                 if (ctx) {
-                    neography = ctx.neography ?? '';
+                    neographyId = ctx.neographyId ?? '';
+                    neographyMachineName = ctx.neographyMachineName ?? '';
                     text = ctx.text ?? '';
                     active = true;
                 } else {
@@ -612,7 +614,12 @@ function registerAdminComponents(A) {
                 }
                 // Push values to the UI event listener
                 window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-native-dialog-open', {
-                    detail: { neography, text, active },
+                    detail: {
+                        neographyId,
+                        neographyMachineName,
+                        text,
+                        active,
+                    },
                 }));
             },
             /**
@@ -633,9 +640,15 @@ function registerAdminComponents(A) {
                  */
                 const directRange = getMarkRange(state.selection.$from, nativeType);
                 if (directRange) {
-                    const neography = editor.getAttributes('tollerusNative')['data-neography'] ?? '';
+                    const neographyId = editor.getAttributes('tollerusNative')['data-neography-id'] ?? '';
+                    const neographyMachineName = editor.getAttributes('tollerusNative')['data-neography'] ?? '';
                     const text = state.doc.textBetween(directRange.from, directRange.to, ' ');
-                    return { neography, text, range: directRange };
+                    return {
+                        neographyId,
+                        neographyMachineName,
+                        text,
+                        range: directRange,
+                    };
                 }
                 /**
                  * Case B
@@ -655,7 +668,12 @@ function registerAdminComponents(A) {
                     const range = getMarkRange(inside, nativeType);
                     if (!range) return;
                     const text = state.doc.textBetween(range.from, range.to, ' ');
-                    found = { neography: nativeMark.attrs['data-neography'] ?? '', text, range };
+                    found = {
+                        neographyId: nativeMark.attrs['data-neography-id'] ?? '',
+                        neographyMachineName: nativeMark.attrs['data-neography'] ?? '',
+                        text,
+                        range,
+                    };
                     return false;
                 });
                 return found;

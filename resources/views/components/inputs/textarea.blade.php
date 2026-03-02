@@ -5,6 +5,7 @@
   'rows' => 10,
   'monospace' => false,
   'wysiwyg' => false,
+  'nativeKeyboards' => null,
 ])
 <div
     class="flex flex-col gap-1 items-start"
@@ -363,17 +364,31 @@
                             </x-tollerus::inputs.button>
                         </x-slot:button>
                         <div
+                            x-data="{
+                                neographyId: '{{ $primaryNeographyId ?? array_keys($nativeKeyboards)[0] }}',
+                                neographyMachineNames: @js(array_map(fn ($n) => $n['machineName'], $nativeKeyboards)),
+                                get neographyMachineName() {
+                                    return this.neographyMachineNames[this.neographyId];
+                                },
+                            }"
                             @tollerus-wysiwyg-native-dialog-open.window="
-                                neographyElem = document.getElementById('{{ $id . '_native_neography' }}');
-                                neographyElem.value = $event.detail.neography;
+                                neographyId = $event.detail.neographyId;
                                 textElem = document.getElementById('{{ $id . '_native_text' }}');
                                 textElem.value = $event.detail.text;
                             "
-                            @native-keyboard-tab-switch="console.log('clicked neography '+$event.detail.id);"
+                            @native-keyboard-tab-switch="neographyId = $event.detail.id;"
                             class="w-full flex flex-col gap-2 items-stretch"
                         >
                             <div class="w-full">
-                                <x-tollerus::inputs.text label="{{ __('tollerus::ui.neography') }}" id="{{ $id . '_native_neography' }}" />
+                                <x-tollerus::inputs.select
+                                    idExpression="'{{ $id . '_native_neography' }}'"
+                                    label="{{ __('tollerus::ui.neography') }}"
+                                    model="neographyId"
+                                >
+                                    @foreach ($nativeKeyboards as $keyboardNeographyId => $keyboardNeography)
+                                        <option value="{{ $keyboardNeographyId }}" class="cursor-pointer">{{ $keyboardNeography['name'] }}</option>
+                                    @endforeach
+                                </x-tollerus::inputs.select>
                             </div>
                             <div data-keyboard-elem="territory" class="w-full flex flex-col gap-1 items-start">
                                 <label for="{{ $id . '_native_text' }}">{{ __('tollerus::ui.text') }}</label>
@@ -416,7 +431,7 @@
                                             <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
                                         </x-tollerus::inputs.button>
                                     </div>
-                                    <x-tollerus::inputs.text id="{{ $id . '_native_text' }}" />
+                                    <x-tollerus::inputs.text id="{{ $id . '_native_text' }}" x-bind:class="'tollerus_'+neographyMachineName" />
                                 </div>
                             </div>
                             <div class="w-full flex flex-row gap-2 justify-start">
@@ -425,7 +440,7 @@
                                     size="small"
                                     title="{{ __('tollerus::ui.apply') }}"
                                     @click="open=false; $dispatch('tollerus-wysiwyg-native-apply', {
-                                        neography: document.getElementById('{{ $id . '_native_neography' }}').value,
+                                        neographyId: neographyId,
                                         text: document.getElementById('{{ $id . '_native_text' }}').value,
                                     });"
                                 >
