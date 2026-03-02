@@ -495,6 +495,7 @@ function registerAdminComponents(A) {
                  * existing selection text.
                  */
                 const wantsReplace = label.length > 0;
+                // Caret selection
                 if (empty) {
                     const insertText = wantsReplace ? label : url;
                     /**
@@ -502,12 +503,12 @@ function registerAdminComponents(A) {
                      * a stable reference: selection.from is after
                      * insertion, so we compute start from that.
                      */
+                    const pos = from; // Capture caret position before mutations
                     editor.chain()
-                        .insertContent(insertText)
-                        .setTextSelection({
-                            from: editor.state.selection.from - insertText.length,
-                            to: editor.state.selection.from,
-                        }).setLink({ href: url })
+                        .focus()
+                        .insertContentAt({ from: pos, to: pos }, insertText)
+                        .setTextSelection({ from: pos, to: pos + insertText.length })
+                        .setLink({ href: url })
                         .run();
                     this.refreshToolbar();
                     return;
@@ -735,19 +736,21 @@ function registerAdminComponents(A) {
                  * existing selection text.
                  */
                 const wantsReplace = label.length > 0;
+                // Caret selection
                 if (empty) {
-                    const insertText = wantsReplace ? label : url;
+                    if (!wantsReplace) return;
+                    const insertText = label;
                     /**
                      * Insert, then select the inserted text using
                      * a stable reference: selection.from is after
                      * insertion, so we compute start from that.
                      */
+                    const pos = from; // Capture caret position before mutations
                     editor.chain()
-                        .insertContent(insertText)
-                        .setTextSelection({
-                            from: editor.state.selection.from - insertText.length,
-                            to: editor.state.selection.from,
-                        }).setMark('tollerusNative', {
+                        .focus()
+                        .insertContentAt({ from: pos, to: pos }, insertText)
+                        .setTextSelection({ from: pos, to: pos + insertText.length })
+                        .setMark('tollerusNative', {
                             'data-neography-id': neographyId,
                             'data-neography': neographyMachineName,
                             'class': 'tollerus_custom_'+neographyMachineName,
