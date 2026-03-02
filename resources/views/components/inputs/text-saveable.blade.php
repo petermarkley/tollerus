@@ -68,7 +68,7 @@
             @endif
         >
             <template x-if="{{ $model }}!==null && {{ $model }}.length>0"><span x-text="{{ $model }}" {{ $attributes }}></span></template>
-            <template x-if="{{ $model }}===null || {{ $model }}.length==0"><span {{ $attributes->merge(['class' => 'italic text-zinc-500 dark:text-zinc-500']) }}>({{ __('tollerus::ui.empty') }})</span></template>
+            <template x-if="{{ $model }}===null || {{ $model }}.length==0"><span {{ $attributes->merge(['class' => 'italic text-zinc-500 dark:text-zinc-500']) }} style="direction:ltr;">({{ __('tollerus::ui.empty') }})</span></template>
             <x-tollerus::inputs.button
                 type="inverse"
                 size="small"
