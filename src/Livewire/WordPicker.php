@@ -53,7 +53,14 @@ class WordPicker extends Component
     ): void
     {
         $this->softLimitToParticles = $softLimitToParticles;
-        $this->language = $language;
+        if ($language->exists) {
+            /**
+             * Apparently when we type-hint a `mount()` param to a model,
+             * if the parent view provides none then we get a hollow
+             * model instance instead of `null`.
+             */
+            $this->language = $language;
+        }
         $this->particleClasses = config('tollerus.particle_word_classes');
         if ($selectedWordId === null) {
             $this->deselectWord();
@@ -230,14 +237,28 @@ class WordPicker extends Component
          */
         $globalId = GlobalId::fromStr($this->searchKey);
         if ($globalId instanceof GlobalId) {
-            /**
-             * If yes, lexemes get special treatment. We will recognize them
-             * but offer only related IDs to actually select.
-             *
-             * Glyphs, Entries, and Forms are all selectable directly.
-             */
             $obj = $globalId->resolve();
+            // Check if we're out of bounds ...
+            if ($this->language !== null) {
+                switch ($globalId->kind) {
+                    case GlobalIdKind::Glyph:
+                        if (!$obj->neography->languages->contains($this->language)) {
+                            return;
+                        }
+                    break;
+                    default:
+                        if ($obj->language != $this->language) {
+                            return;
+                        }
+                    break;
+                }
+            }
+            // We're okay, proceed with populating result ...
             if ($globalId->kind == GlobalIdKind::Lexeme) {
+                /**
+                 * Lexemes get special treatment. We will recognize them
+                 * but offer only related IDs to actually select.
+                 */
                 $entry = $obj->entry;
                 $this->results[] = $this->buildWord($entry->global_id, GlobalIdKind::Entry, $entry);
                 $forms = $obj->forms;
@@ -245,6 +266,9 @@ class WordPicker extends Component
                     $this->results[] = $this->buildWord($form->global_id, GlobalIdKind::Form, $form);
                 }
             } else {
+                /**
+                 * Glyphs, Entries, and Forms are all selectable directly.
+                 */
                 $this->results[] = $this->buildWord($this->searchKey, $globalId->kind, $obj);
             }
         } else {
