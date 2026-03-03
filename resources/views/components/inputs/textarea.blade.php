@@ -6,6 +6,7 @@
   'monospace' => false,
   'wysiwyg' => false,
   'nativeKeyboards' => null,
+  'language' => null,
 ])
 <div
     class="flex flex-col gap-1 items-start"
@@ -520,5 +521,5 @@
             <p class="text-red-700 dark:text-red-500 text-sm">{{ $message }}</p>
         @enderror
     @endif
-    <livewire:tollerus.word-picker />
+    <livewire:tollerus.word-picker :language="$language" selectedWordId="AAR3" />
 </div>

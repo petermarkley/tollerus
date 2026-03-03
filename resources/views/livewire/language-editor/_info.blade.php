@@ -19,6 +19,7 @@
         <x-tollerus::inputs.textarea
             wysiwyg="true"
             :nativeKeyboards="$nativeKeyboards"
+            :language="$language"
             id="intro"
             model="infoForm.intro"
             label="{{ __('tollerus::ui.intro') }}"
