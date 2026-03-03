@@ -63,24 +63,24 @@
                 </x-tollerus::inputs.button>
             </div>
         </form>
-        <div class="flex-grow overflow-y-scroll overflow-x-hidden flex flex-col gap-2 items-stretch">
+        <div class="w-full flex-grow overflow-y-scroll overflow-x-hidden flex flex-col gap-2 items-stretch">
             @foreach ($results as $result)
                 <button
                     @class([
-                        'py-1 pr-4 flex flex-row gap-2 justify-start items-center font-bold cursor-pointer',
-                        'pl-4' => $result['kind'] == GlobalIdKind::Glyph || $result['kind'] == GlobalIdKind::Entry,
-                        'pl-12' => $result['kind'] == GlobalIdKind::Form,
+                        'py-1 pr-4 flex flex-row gap-2 justify-start items-center font-bold cursor-pointer bg-white dark:bg-zinc-800 hover:bg-zinc-50 hover:dark:bg-zinc-700',
+                        'pl-4' => $result['kind'] == \PeterMarkley\Tollerus\Enums\GlobalIdKind::Glyph || $result['kind'] == \PeterMarkley\Tollerus\Enums\GlobalIdKind::Entry,
+                        'pl-12' => $result['kind'] == \PeterMarkley\Tollerus\Enums\GlobalIdKind::Form,
                     ])
                     @click="open=false; $wire.selectWord('{{ $result['globalId'] }}');"
                 >
                     @switch($result['kind'])
-                        @case(GlobalIdKind::Glyph)
+                        @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Glyph)
                             <x-tollerus::icons.micro.neography />
                         @break
-                        @case(GlobalIdKind::Entry)
+                        @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Entry)
                             <x-tollerus::icons.micro.entries />
                         @break
-                        @case(GlobalIdKind::Form)
+                        @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Form)
                             <x-tollerus::icons.micro.fingerprint />
                         @break
                     @endswitch
