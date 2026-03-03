@@ -1,5 +1,5 @@
 <div
-    class="relative w-full flex flex-col gap-1 items-start"
+    class="relative w-full flex flex-row gap-2 items-center"
     x-data="{ open: false }"
     @focusout="if (open && $event.relatedTarget !== null && !($el.contains($event.relatedTarget) || $event.relatedTarget.contains($el))) {open=false;}"
     @click.window="if (open && !$el.contains($event.target)) {open=false;}"
@@ -48,7 +48,15 @@
         @endif
     </div>
     @if ($selectedWord !== null)
-        <a href="{{ $selectedWordEditUrl }}">{{ __('tollerus::ui.edit_word') }}</a>
+        <x-tollerus::button
+            type="secondary"
+            size="small"
+            title="{{ __('tollerus::ui.edit_word') }}"
+            href="{{ $selectedWordEditUrl }}"
+        >
+            <x-tollerus::icons.edit class="m-2" />
+            <span class="sr-only">{{ __('tollerus::ui.edit_word') }}</span>
+        </x-tollerus::button>
     @endif
     <div x-show="open" class="max-w-60 lg:max-w-100 w-[100vw] min-h-30 max-h-[70vh] absolute left-0 top-11 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-lg shadow p-2 flex flex-col gap-2 items-start">
         <form
