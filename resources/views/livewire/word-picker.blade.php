@@ -13,15 +13,15 @@
                 size="small"
                 title="{{ __('tollerus::ui.edit') }}"
                 class="relative"
-                @click="open=true"
+                @click="$wire.refreshForm(); open=true;"
             >
                 <x-tollerus::icons.edit />
                 <span class="sr-only">{{ __('tollerus::ui.edit') }}</span>
             </x-tollerus::inputs.button>
         @else
             <p class="flex flex-row gap-2 items-center">
-                <span>{{ $selectedWordTransliterated }}</span>
-                <span class="tollerus_custom_{{ $selectedWordNativeNeography->machine_name }}">{{ $selectedWordNative }}</span>
+                <span class="font-bold whitespace-nowrap">{{ $selectedWordTransliterated }}</span>
+                <span class="whitespace-nowrap tollerus_custom_{{ $selectedWordNativeNeography->machine_name }}">{{ $selectedWordNative }}</span>
             </p>
             <x-tollerus::inputs.button
                 type="inverse"
@@ -36,6 +36,58 @@
         @endif
     </div>
     <div x-show="open" class="max-w-60 lg:max-w-120 w-[100vw] min-h-30 h-[70vh] absolute left-0 top-11 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-lg shadow p-2 flex flex-col gap-2 items-start">
-        Lorem ipsum dolor sit amet
+        <form
+            wire:submit="search"
+            class="w-full flex flex-row gap-1 items-center"
+        >
+            <div class="flex-grow flex justify-center items-center">
+                <x-tollerus::inputs.text
+                    id="search_key"
+                    model="searchKey"
+                    modelIsAlpine="false"
+                    placeholder="{{ __('tollerus::ui.search_for_word') }}"
+                >
+                    <label for="search_key" class="sr-only">{{ __('tollerus::ui.search_term') }}</label>
+                </x-tollerus::inputs.text>
+            </div>
+            <div class="shrink-0 flex justify-center items-center">
+                <x-tollerus::inputs.button
+                    type="secondary"
+                    size="small"
+                    htmlType="submit"
+                    title="{{ __('tollerus::ui.submit_search') }}"
+                    class="rounded-l-full rounded-r-full flex justify-center items-center"
+                >
+                    <x-tollerus::icons.magnifying-glass/>
+                    <span class="sr-only">{{ __('tollerus::ui.submit_search') }}</span>
+                </x-tollerus::inputs.button>
+            </div>
+        </form>
+        <div class="flex-grow overflow-y-scroll overflow-x-hidden flex flex-col gap-2 items-stretch">
+            @foreach ($results as $result)
+                <button
+                    @class([
+                        'py-1 pr-4 flex flex-row gap-2 justify-start items-center font-bold cursor-pointer',
+                        'pl-4' => $result['kind'] == GlobalIdKind::Glyph || $result['kind'] == GlobalIdKind::Entry,
+                        'pl-12' => $result['kind'] == GlobalIdKind::Form,
+                    ])
+                    @click="open=false; $wire.selectWord('{{ $result['globalId'] }}');"
+                >
+                    @switch($result['kind'])
+                        @case(GlobalIdKind::Glyph)
+                            <x-tollerus::icons.micro.neography />
+                        @break
+                        @case(GlobalIdKind::Entry)
+                            <x-tollerus::icons.micro.entries />
+                        @break
+                        @case(GlobalIdKind::Form)
+                            <x-tollerus::icons.micro.fingerprint />
+                        @break
+                    @endswitch
+                    <span class="font-bold whitespace-nowrap">{{ $result['transliterated'] }}</span>
+                    <span class="whitespace-nowrap tollerus_custom_{{ $result['neographyMachineName'] }}">{{ $result['native'] }}</span>
+                </button>
+            @endforeach
+        </div>
     </div>
 </div>
