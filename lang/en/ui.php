@@ -194,6 +194,7 @@ return [
     'submit_search' => 'Submit search',
     'no_results' => '(No results)',
     'search_for_word' => 'Search for word ...', // This is for a search bar that accepts either entries or forms.
+    'edit_word' => 'Edit this word on its own page',
     /**
      * TRANSLATOR NOTE:
      *
@@ -231,6 +232,7 @@ return [
     'keyboards' => 'Keyboards',
     'edit' => 'Edit',
     'edit_thing' => 'Edit :thing',
+    'choose' => 'Choose',
     'select' => 'Select',
     'delete' => 'Delete',
     'delete_thing' => 'Delete :thing',

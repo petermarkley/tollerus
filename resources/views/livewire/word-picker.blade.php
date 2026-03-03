@@ -1,5 +1,5 @@
 <div
-    class="relative w-full flex flex-col items-start"
+    class="relative w-full flex flex-col gap-1 items-start"
     x-data="{ open: false }"
     @focusout="if (open && $event.relatedTarget !== null && !($el.contains($event.relatedTarget) || $event.relatedTarget.contains($el))) {open=false;}"
     @click.window="if (open && !$el.contains($event.target)) {open=false;}"
@@ -11,17 +11,29 @@
             <x-tollerus::inputs.button
                 type="inverse"
                 size="small"
-                title="{{ __('tollerus::ui.edit') }}"
+                title="{{ __('tollerus::ui.choose') }}"
                 class="relative"
                 @click="$wire.refreshForm(); open=true;"
             >
                 <x-tollerus::icons.edit />
-                <span class="sr-only">{{ __('tollerus::ui.edit') }}</span>
+                <span class="sr-only">{{ __('tollerus::ui.choose') }}</span>
             </x-tollerus::inputs.button>
         @else
             <p class="flex flex-row gap-2 items-center">
-                <span class="font-bold whitespace-nowrap">{{ $selectedWordTransliterated }}</span>
-                <span class="whitespace-nowrap tollerus_custom_{{ $selectedWordNativeNeography->machine_name }}">{{ $selectedWordNative }}</span>
+                @switch($selectedWordKind)
+                    @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Glyph)
+                        <x-tollerus::icons.micro.neography class="shrink-0" />
+                    @break
+                    @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Entry)
+                        <x-tollerus::icons.micro.entries class="shrink-0" />
+                    @break
+                    @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Form)
+                        <x-tollerus::icons.micro.fingerprint class="shrink-0" />
+                    @break
+                @endswitch
+                <span class="font-bold whitespace-nowrap shrink-0">{{ $selectedWordTransliterated }}</span>
+                <span class="whitespace-nowrap shrink-1 tollerus_custom_{{ $selectedWordNativeNeography->machine_name }}">{{ $selectedWordNative }}</span>
+                <span class="font-mono shrink-0">{{ $selectedWordId }}</span>
             </p>
             <x-tollerus::inputs.button
                 type="inverse"
@@ -35,7 +47,10 @@
             </x-tollerus::inputs.button>
         @endif
     </div>
-    <div x-show="open" class="max-w-60 lg:max-w-120 w-[100vw] min-h-30 h-[70vh] absolute left-0 top-11 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-lg shadow p-2 flex flex-col gap-2 items-start">
+    @if ($selectedWord !== null)
+        <a href="{{ $selectedWordEditUrl }}">{{ __('tollerus::ui.edit_word') }}</a>
+    @endif
+    <div x-show="open" class="max-w-60 lg:max-w-100 w-[100vw] min-h-30 max-h-[70vh] absolute left-0 top-11 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-lg shadow p-2 flex flex-col gap-2 items-start">
         <form
             wire:submit="search"
             class="w-full flex flex-row gap-1 items-center"
@@ -75,17 +90,18 @@
                 >
                     @switch($result['kind'])
                         @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Glyph)
-                            <x-tollerus::icons.micro.neography />
+                            <x-tollerus::icons.micro.neography class="shrink-0" />
                         @break
                         @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Entry)
-                            <x-tollerus::icons.micro.entries />
+                            <x-tollerus::icons.micro.entries class="shrink-0" />
                         @break
                         @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Form)
-                            <x-tollerus::icons.micro.fingerprint />
+                            <x-tollerus::icons.micro.fingerprint class="shrink-0" />
                         @break
                     @endswitch
-                    <span class="font-bold whitespace-nowrap">{{ $result['transliterated'] }}</span>
-                    <span class="whitespace-nowrap tollerus_custom_{{ $result['neographyMachineName'] }}">{{ $result['native'] }}</span>
+                    <span class="font-bold whitespace-nowrap shrink-0">{{ $result['transliterated'] }}</span>
+                    <span class="whitespace-nowrap shrink-1 tollerus_custom_{{ $result['neographyMachineName'] }}">{{ $result['native'] }}</span>
+                    <span class="font-mono font-normal shrink-0">{{ $result['globalId'] }}</span>
                 </button>
             @endforeach
         </div>

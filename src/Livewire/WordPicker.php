@@ -33,6 +33,7 @@ class WordPicker extends Component
     #[Locked] public string $selectedWordTransliterated = '';
     #[Locked] public string $selectedWordNative = '';
     #[Locked] public ?Neography $selectedWordNativeNeography = null;
+    #[Locked] public ?string $selectedWordEditUrl = null;
     public string $searchKey = '';
     #[Locked] public array $results = [];
 
@@ -89,6 +90,10 @@ class WordPicker extends Component
                     $word['transliterated'] = '';
                     $word['native'] = '';
                 }
+                $word['editUrl'] = route('tollerus.admin.neographies.glyphs.edit', [
+                    'neography' => $word['neography'],
+                    'section' => $obj->group->section_id,
+                ]);
             break;
             case GlobalIdKind::Entry:
                 $word['neography'] = $obj->language->primaryNeography;
@@ -118,6 +123,10 @@ class WordPicker extends Component
                     $word['transliterated'] = '';
                     $word['native'] = '';
                 }
+                $word['editUrl'] = route('tollerus.admin.languages.entries.edit', [
+                    'language' => $obj->language,
+                    'entry' => $obj,
+                ]);
             break;
             case GlobalIdKind::Lexeme:
                 $entry = $obj->entry;
@@ -145,6 +154,10 @@ class WordPicker extends Component
                     $word['transliterated'] = '';
                     $word['native'] = '';
                 }
+                $word['editUrl'] = route('tollerus.admin.languages.entries.edit', [
+                    'language' => $entry->language,
+                    'entry' => $entry,
+                ]);
             break;
             case GlobalIdKind::Form:
                 $word['neography'] = $obj->language->primaryNeography;
@@ -158,6 +171,10 @@ class WordPicker extends Component
                 } else {
                     $word['native'] = '';
                 }
+                $word['editUrl'] = route('tollerus.admin.languages.entries.edit', [
+                    'language' => $obj->language,
+                    'entry' => $obj->lexeme->entry_id,
+                ]);
             break;
         }
         return $word;
@@ -174,6 +191,7 @@ class WordPicker extends Component
         $this->selectedWordTransliterated = '';
         $this->selectedWordNative = '';
         $this->selectedWordNativeNeography = null;
+        $this->selectedWordEditUrl = null;
     }
     public function selectWord(string $selectedWordId)
     {
@@ -197,6 +215,7 @@ class WordPicker extends Component
         $this->selectedWordTransliterated = $word['transliterated'];
         $this->selectedWordNative = $word['native'];
         $this->selectedWordNativeNeography = $word['neography'];
+        $this->selectedWordEditUrl = $word['editUrl'];
     }
     public function refreshForm()
     {
