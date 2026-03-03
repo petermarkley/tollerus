@@ -23,16 +23,16 @@ use PeterMarkley\Tollerus\Models\WordClass;
 class WordPicker extends Component
 {
     #[Locked] public bool $softLimitToParticles = false;
-    private ?Language $language = null;
+    #[Locked] public ?Language $language = null;
     #[Locked] public array $particleClasses = [];
     public ?string $selectedWordId = null;
-    private ?GlobalIdKind $selectedWordKind = null;
-    private NeographyGlyph|Entry|Form|null $selectedWord = null;
+    #[Locked] public ?GlobalIdKind $selectedWordKind = null;
+    #[Locked] public NeographyGlyph|Entry|Form|null $selectedWord = null;
     #[Locked] public string $selectedWordTransliterated = '';
     #[Locked] public string $selectedWordNative = '';
-    private ?Neography $selectedWordNativeNeography = null;
+    #[Locked] public ?Neography $selectedWordNativeNeography = null;
     public string $searchKey = '';
-    private array $results = [];
+    #[Locked] public array $results = [];
 
     /**
      * Livewire hooks
@@ -40,13 +40,7 @@ class WordPicker extends Component
     public function render(): View
     {
         //
-        return view('tollerus::livewire.word-picker', [
-            'language' => $this->language,
-            'selectedWordKind' => $this->selectedWordKind,
-            'selectedWord' => $this->selectedWord,
-            'selectedWordNativeNeography' => $this->selectedWordNativeNeography,
-            'results' => $this->results,
-        ]);
+        return view('tollerus::livewire.word-picker');
     }
     public function mount(
         bool $softLimitToParticles = false,
