@@ -86,6 +86,14 @@
                 </x-tollerus::inputs.button>
             </div>
         </form>
+        @if($showParticleToggle && count($particleClassIds) > 0)
+            <x-tollerus::inputs.checkbox
+                id="limit_to_particles"
+                model="softLimitToParticles"
+                label="{{ __('tollerus::ui.limit_to_particles') }}"
+                wire:change="search"
+            />
+        @endif
         <div class="w-full flex-grow overflow-y-scroll overflow-x-hidden flex flex-col gap-2 items-stretch">
             @if (!empty($searchKey) && count($results) == 0)
                 <span class="italic text-zinc-700 dark:text-zinc-400">{{ __('tollerus::ui.no_results') }}</span>

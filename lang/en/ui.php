@@ -195,6 +195,7 @@ return [
     'no_results' => '(No results)',
     'search_for_word' => 'Search for word ...', // This is for a search bar that accepts either entries or forms.
     'edit_word' => 'Edit this word on its own page',
+    'limit_to_particles' => 'Limit results to particle word classes?',
     /**
      * TRANSLATOR NOTE:
      *

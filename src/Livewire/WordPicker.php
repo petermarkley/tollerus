@@ -23,10 +23,12 @@ use PeterMarkley\Tollerus\Models\WordClass;
 
 class WordPicker extends Component
 {
-    #[Locked] public bool $softLimitToParticles = false;
+    public bool $softLimitToParticles = false;
+    #[Locked] public bool $showParticleToggle = false;
     #[Locked] public bool $requireForm = false;
     #[Locked] public ?Language $language = null;
     #[Locked] public array $particleClasses = [];
+    #[Locked] public array $particleClassIds = [];
     public ?string $selectedWordId = null;
     #[Locked] public ?GlobalIdKind $selectedWordKind = null;
     #[Locked] public NeographyGlyph|Entry|Form|null $selectedWord = null;
@@ -53,15 +55,19 @@ class WordPicker extends Component
     ): void
     {
         $this->softLimitToParticles = $softLimitToParticles;
-        if ($language->exists) {
+        $this->showParticleToggle = $softLimitToParticles;
+        if ($language?->exists) {
             /**
              * Apparently when we type-hint a `mount()` param to a model,
              * if the parent view provides none then we get a hollow
              * model instance instead of `null`.
              */
             $this->language = $language;
+            $this->particleClasses = $language->wordClasses()->whereIn('name', config('tollerus.particle_word_classes'))->get()->all();
+        } else {
+            $this->particleClasses = WordClass::whereIn('name', config('tollerus.particle_word_classes'))->get()->all();
         }
-        $this->particleClasses = config('tollerus.particle_word_classes');
+        $this->particleClassIds = collect($this->particleClasses)->pluck('id')->toArray();
         if ($selectedWordId === null) {
             $this->deselectWord();
         } else {
@@ -380,11 +386,8 @@ class WordPicker extends Component
             }
 
             // Soft particle filter
-            if ($this->softLimitToParticles) {
-                $ids = $this->particleClassIds ?? [];
-                if (!empty($ids)) {
-                    $formsQ->whereIn('lx.word_class_id', $ids);
-                }
+            if ($this->softLimitToParticles && count($this->particleClassIds) > 0) {
+                $formsQ->whereIn('lx.word_class_id', $this->particleClassIds);
             }
 
             // Simple relevance: exact, starts-with, contains
