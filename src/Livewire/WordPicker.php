@@ -285,7 +285,7 @@ class WordPicker extends Component
                 /**
                  * Glyphs, Entries, and Forms are all selectable directly.
                  */
-                $this->globalIdResults[] = $this->buildWord($this->searchKey, $globalId->kind, $obj);
+                $this->globalIdResults[] = $this->buildWord($obj->global_id, $globalId->kind, $obj);
             }
         }
 
