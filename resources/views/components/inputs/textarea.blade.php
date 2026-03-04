@@ -21,6 +21,7 @@
         @tollerus-wysiwyg-link-remove.window="removeLink()"
         @tollerus-wysiwyg-phonemic-apply.window="applyPhonemic($event.detail)"
         @tollerus-wysiwyg-native-apply.window="applyNative($event.detail)"
+        @tollerus-wysiwyg-word-apply.window="applyWord($event.detail)"
     @endif
 >
     <label for="{{ $id }}">{{ $label }}</label>
@@ -238,30 +239,51 @@
                             <span class="sr-only">{{ __('tollerus::ui.numbered_list') }}</span>
                         </x-tollerus::inputs.button>
                     </div>
-                    <div>
-                        <x-tollerus::inputs.button
-                            x-show="!isActive('tollerusWord')"
-                            type="inverse"
-                            size="tiny"
-                            title="{{ __('tollerus::ui.conlang_word') }}"
-                            x-bind:disabled="rawMode || isExcluded('tollerusWord')"
-                            class="relative"
+                    <x-tollerus::inputs.dropdown class="relative w-full">
+                        <x-slot:button>
+                            <x-tollerus::inputs.button
+                                x-show="!isActive('tollerusWord')"
+                                type="inverse"
+                                size="tiny"
+                                title="{{ __('tollerus::ui.conlang_word') }}"
+                                x-bind:disabled="rawMode || isExcluded('tollerusWord')"
+                                class="relative"
+                                @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'word' })"
+                            >
+                                <x-tollerus::icons.micro.language class="sm:h-6" />
+                                <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
+                            </x-tollerus::inputs.button>
+                            <x-tollerus::inputs.button
+                                x-show="isActive('tollerusWord')" x-cloak
+                                type="inverse-highlight"
+                                size="tiny"
+                                title="{{ __('tollerus::ui.conlang_word') }}"
+                                x-bind:disabled="rawMode || isExcluded('tollerusWord')"
+                                class="relative"
+                                @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'word' })"
+                            >
+                                <x-tollerus::icons.micro.language class="sm:h-6" />
+                                <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
+                            </x-tollerus::inputs.button>
+                        </x-slot:button>
+                        <div
+                            x-data="{ selectedWordId: '' }"
+                            @tollerus-wysiwyg-word-dialog-open.window="selectedWordId = '';"
+                            class="w-full flex flex-col gap-2 items-stretch"
                         >
-                            <x-tollerus::icons.micro.language class="sm:h-6" />
-                            <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
-                        </x-tollerus::inputs.button>
-                        <x-tollerus::inputs.button
-                            x-show="isActive('tollerusWord')" x-cloak
-                            type="inverse-highlight"
-                            size="tiny"
-                            title="{{ __('tollerus::ui.conlang_word') }}"
-                            x-bind:disabled="rawMode || isExcluded('tollerusWord')"
-                            class="relative"
-                        >
-                            <x-tollerus::icons.micro.language class="sm:h-6" />
-                            <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
-                        </x-tollerus::inputs.button>
-                    </div>
+                            <livewire:tollerus.word-picker />
+                            <div class="w-full flex flex-row gap-2 justify-start">
+                                <x-tollerus::inputs.button
+                                    type="primary"
+                                    size="small"
+                                    title="{{ __('tollerus::ui.insert') }}"
+                                    @click="open=false; $dispatch('tollerus-wysiwyg-word-apply', { text: selectedWordId });"
+                                >
+                                    <span>{{ __('tollerus::ui.insert') }}</span>
+                                </x-tollerus::inputs.button>
+                            </div>
+                        </div>
+                    </x-tollerus::inputs.dropdown>
                     <x-tollerus::inputs.dropdown class="relative w-full">
                         <x-slot:button>
                             <x-tollerus::inputs.button
@@ -521,5 +543,4 @@
             <p class="text-red-700 dark:text-red-500 text-sm">{{ $message }}</p>
         @enderror
     @endif
-    <livewire:tollerus.word-picker selectedWordId="AAR3" />
 </div>
