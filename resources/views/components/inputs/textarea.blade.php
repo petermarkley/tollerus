@@ -521,5 +521,5 @@
             <p class="text-red-700 dark:text-red-500 text-sm">{{ $message }}</p>
         @enderror
     @endif
-    <livewire:tollerus.word-picker :language="$language" selectedWordId="AAR3" />
+    <livewire:tollerus.word-picker :language="$language" selectedWordId="AAR3" :softLimitToParticles="true" />
 </div>

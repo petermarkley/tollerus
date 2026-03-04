@@ -38,6 +38,7 @@ class WordPicker extends Component
     #[Locked] public ?string $selectedWordEditUrl = null;
     public string $searchKey = '';
     #[Locked] public array $results = [];
+    #[Locked] public array $globalIdResults = [];
 
     /**
      * Internal search query params
@@ -241,10 +242,12 @@ class WordPicker extends Component
     {
         $this->searchKey = '';
         $this->results = [];
+        $this->globalIdResults = [];
     }
     public function search()
     {
         $this->results = [];
+        $this->globalIdResults = [];
         /**
          * First we check if the user pasted a global ID
          */
@@ -273,370 +276,371 @@ class WordPicker extends Component
                  * but offer only related IDs to actually select.
                  */
                 $entry = $obj->entry;
-                $this->results[] = $this->buildWord($entry->global_id, GlobalIdKind::Entry, $entry);
+                $this->globalIdResults[] = $this->buildWord($entry->global_id, GlobalIdKind::Entry, $entry);
                 $forms = $obj->forms;
                 foreach ($forms as $form) {
-                    $this->results[] = $this->buildWord($form->global_id, GlobalIdKind::Form, $form);
+                    $this->globalIdResults[] = $this->buildWord($form->global_id, GlobalIdKind::Form, $form);
                 }
             } else {
                 /**
                  * Glyphs, Entries, and Forms are all selectable directly.
                  */
-                $this->results[] = $this->buildWord($this->searchKey, $globalId->kind, $obj);
+                $this->globalIdResults[] = $this->buildWord($this->searchKey, $globalId->kind, $obj);
             }
+        }
+
+        /**
+         * Alright, we need to build a couple of monster queries.
+         * Let's think through what we're doing.
+         *
+         * Fields to match against the search key:
+         * - neography_glyphs.transliterated
+         * - neography_glyphs.pronunciation_transliterated
+         * - forms.transliterated
+         *
+         * We need each glyph to become:
+         * [
+         *   'globalId' => ... ,
+         *   'kind' => GlobalIdKind::Glyph,
+         *   'neographyMachineName' => ... , // accessed through neography_id
+         *   'transliterated' => ... ,  // (empty(transliterated) ? pronunciation_transliterated : transliterated)
+         *   'native' => ... , // (empty(transliterated) ? pronunciation_native : glyph)
+         * ]
+         *
+         * We need matching forms to be grouped by their `lexeme_id`'s `entry_id`.
+         *
+         * Each group needs to begin with an extra row for the entry itself.
+         *
+         * The entry row needs to become:
+         * [
+         *   'globalId' => ... ,
+         *   'kind' => GlobalIdKind::Entry,
+         *   'neographyMachineName' => ... , // the `language_id`'s `primary_neography` (or empty/null)
+         *   'transliterated' => ... , // the `primary_form`'s `transliterated` (or empty/null)
+         *   'native' => ... , // the `primary_form`'s `native_spellings` row whose `neography_id` matches the form's `language_id`'s `primary_neography` (or empty/null)
+         * ]
+         *
+         * Then each form underneath the entry becomes:
+         * [
+         *   'globalId' => ... ,
+         *   'kind' => GlobalIdKind::Form,
+         *   'neographyMachineName' => ... , // the `language_id`'s `primary_neography` (or empty/null)
+         *   'transliterated' => ... , // just the `transliterated` column on the form
+         *   'native' => ... , // the form's `native_spellings` row whose `neography_id` matches the form's `language_id`'s `primary_neography` (or empty/null)
+         * ]
+         *
+         * Groups must remain together through any sorting.
+         */
+        $rawConnection = DB::connection(config('tollerus.connection'));
+        $prefix = $rawConnection->getTablePrefix();
+        $key = trim((string) $this->searchKey);
+        if ($key === '') {
+            $this->results = [];
+            $this->globalIdResults = [];
+            return;
+        }
+
+        /**
+         * ===================================================
+         *                    FORMS QUERY
+         * ===================================================
+         *
+         * The `forms` table is our first match target, but we
+         * need JOINs on:
+         *
+         *   - lexemes (for checking for particles),
+         *
+         *   - entries (for building entry headers),
+         *
+         *   - languages (for language lock, and checking
+         *     primary neography),
+         *
+         *   - neographies (for selecting native spellings),
+         *
+         *   - a self-join on forms (for the entry's primary
+         *     form),
+         *
+         *   - 2 separate joins on native_spellings (for each
+         *     form + the entry primary form),
+         */
+        $formsQ = DB::connection(config('tollerus.connection'))
+            ->table('forms')
+            ->join('lexemes as lx', 'lx.id', '=', 'forms.lexeme_id')
+            ->join('entries as e', 'e.id', '=', 'lx.entry_id')
+            ->join('languages as lang', 'lang.id', '=', 'e.language_id')
+            ->leftJoin('neographies as pn', 'pn.id', '=', 'lang.primary_neography')
+            // entry header primary form
+            ->leftJoin('forms as pf', 'pf.id', '=', 'e.primary_form')
+            // native spelling for matched form in language's primary neography
+            ->leftJoin('native_spellings as ns_f', function ($join) {
+                $join->on('ns_f.form_id', '=', 'forms.id')
+                    ->on('ns_f.neography_id', '=', 'lang.primary_neography');
+            })
+            // native spelling for entry primary form in language's primary neography
+            ->leftJoin('native_spellings as ns_pf', function ($join) {
+                $join->on('ns_pf.form_id', '=', 'pf.id')
+                    ->on('ns_pf.neography_id', '=', 'lang.primary_neography');
+            })
+            // transliterated search
+            ->where('forms.transliterated', 'like', '%'.$key.'%');
+        /**
+         * Language lock (for page contexts where selecting a
+         * different language is incoherent)
+         */
+        if ($this->language !== null) {
+            $formsQ->where('e.language_id', $this->language->id);
+        }
+        /**
+         * Soft particle filter (for convenience if the hopeful
+         * `config('tollerus.particle_word_classes')` list is
+         * adequate, but letting the user opt out if it's not)
+         */
+        if ($this->softLimitToParticles && count($this->particleClassIds) > 0) {
+            $formsQ->whereIn('lx.word_class_id', $this->particleClassIds);
+        }
+        /**
+         * This is where we define the final output structure.
+         */
+        $formsQ->select([
+            'forms.id as form_id',
+            'forms.global_id_raw as form_gid_raw',
+            'forms.transliterated as form_transliterated',
+
+            'e.id as entry_id',
+            'e.global_id_raw as entry_gid_raw',
+            'e.primary_form as entry_primary_form_id',
+
+            'pf.transliterated as entry_transliterated', // null if primary_form is null
+            'ns_pf.spelling as entry_native',            // null if no spelling / no primary neography
+            'ns_f.spelling as form_native',              // null if no spelling / no primary neography
+
+            'pn.machine_name as primary_neography_machine_name', // nullable
+        ]);
+        /**
+         * Sort by relevance: exact / starts-with / contains
+         */
+        $formsQ
+            ->selectRaw("
+                CASE
+                    WHEN {$prefix}forms.transliterated = ? THEN 0
+                    WHEN {$prefix}forms.transliterated LIKE ? THEN 1
+                    WHEN {$prefix}forms.transliterated LIKE ? THEN 2
+                    ELSE 3
+                END AS relevance
+            ", [$key, $key.'%', '%'.$key.'%'])
+            // Put best matches first within the scanned set
+            ->orderBy('relevance')
+            ->orderByRaw("CHAR_LENGTH({$prefix}forms.transliterated) ASC")
+            ->orderBy('forms.transliterated')
+            ->limit(self::MAX_ROWS_SCAN);
+        /**
+         * Run the forms-based query!
+         */
+        $formRows = $formsQ->get();
+        // Add string length as a sorting tie-breaker
+        $formRows = $formRows->map(function ($row) {
+            $row->transliteratedLen = mb_strlen($row->form_transliterated);
+            return $row;
+        });
+        /**
+         * Right now, the entry info is stored in side properties on
+         * each form, and the forms for a given entry may be
+         * scattered.
+         *
+         * We need to group them and (eventually) re-sort the groups
+         * based on the best-matching form inside each one.
+         *
+         * (Before we sort the groups though, we should merge them
+         * with the glyphs. So the glyphs query will come first.)
+         */
+        $groups = $formRows->groupBy('entry_id')->map(fn ($g) => [
+            'kind' => GlobalIdKind::Entry,
+            'relevance' => $g->min('relevance'),
+            'transliteratedLen' => $g->min('transliteratedLen'),
+            /**
+             * Sort the forms within each entry the same way that
+             * the groups + glyphs will be sorted.
+             */
+            'forms' => $g->sort(function ($a, $b) {
+                if ($a->relevance !== $b->relevance) {
+                    return $a->relevance <=> $b->relevance;
+                }
+                if ($a->transliteratedLen !== $b->transliteratedLen) {
+                    return $a->transliteratedLen <=> $b->transliteratedLen;
+                }
+                return 0;
+            })->take(self::MAX_FORMS_PER_ENTRY)->values(),
+        ])->take(self::MAX_ENTRIES)->values();
+
+        /**
+         * =======================================================
+         *                      GLYPHS QUERY
+         * =======================================================
+         *
+         * Before we add glyphs, we need to check if they're
+         * applicable to the current config of this component.
+         */
+        if ($this->requireForm || ($this->softLimitToParticles && count($this->particleClassIds) > 0)) {
+            // Not applicable, define as an empty set
+            $glyphRows = collect([]);
+            $glyphObjs = collect([]);
         } else {
             /**
-             * Alright, we need to build a couple of monster queries.
-             * Let's think through what we're doing.
+             * Glyphs are applicable, proceed with query ...
              *
-             * Fields to match against the search key:
-             * - neography_glyphs.transliterated
-             * - neography_glyphs.pronunciation_transliterated
-             * - forms.transliterated
-             *
-             * We need each glyph to become:
-             * [
-             *   'globalId' => ... ,
-             *   'kind' => GlobalIdKind::Glyph,
-             *   'neographyMachineName' => ... , // accessed through neography_id
-             *   'transliterated' => ... ,  // (empty(transliterated) ? pronunciation_transliterated : transliterated)
-             *   'native' => ... , // (empty(transliterated) ? pronunciation_native : glyph)
-             * ]
-             *
-             * We need matching forms to be grouped by their `lexeme_id`'s `entry_id`.
-             *
-             * Each group needs to begin with an extra row for the entry itself.
-             *
-             * The entry row needs to become:
-             * [
-             *   'globalId' => ... ,
-             *   'kind' => GlobalIdKind::Entry,
-             *   'neographyMachineName' => ... , // the `language_id`'s `primary_neography` (or empty/null)
-             *   'transliterated' => ... , // the `primary_form`'s `transliterated` (or empty/null)
-             *   'native' => ... , // the `primary_form`'s `native_spellings` row whose `neography_id` matches the form's `language_id`'s `primary_neography` (or empty/null)
-             * ]
-             *
-             * Then each form underneath the entry becomes:
-             * [
-             *   'globalId' => ... ,
-             *   'kind' => GlobalIdKind::Form,
-             *   'neographyMachineName' => ... , // the `language_id`'s `primary_neography` (or empty/null)
-             *   'transliterated' => ... , // just the `transliterated` column on the form
-             *   'native' => ... , // the form's `native_spellings` row whose `neography_id` matches the form's `language_id`'s `primary_neography` (or empty/null)
-             * ]
-             *
-             * Groups must remain together through any sorting.
+             * This one is much simpler than the forms query because
+             * the only JOIN we need is neographies.
              */
-            $rawConnection = DB::connection(config('tollerus.connection'));
-            $prefix = $rawConnection->getTablePrefix();
-            $key = trim((string) $this->searchKey);
-            if ($key === '') {
-                $this->results = [];
-                return;
-            }
-
-            /**
-             * ===================================================
-             *                    FORMS QUERY
-             * ===================================================
-             *
-             * The `forms` table is our first match target, but we
-             * need JOINs on:
-             *
-             *   - lexemes (for checking for particles),
-             *
-             *   - entries (for building entry headers),
-             *
-             *   - languages (for language lock, and checking
-             *     primary neography),
-             *
-             *   - neographies (for selecting native spellings),
-             *
-             *   - a self-join on forms (for the entry's primary
-             *     form),
-             *
-             *   - 2 separate joins on native_spellings (for each
-             *     form + the entry primary form),
-             */
-            $formsQ = DB::connection(config('tollerus.connection'))
-                ->table('forms')
-                ->join('lexemes as lx', 'lx.id', '=', 'forms.lexeme_id')
-                ->join('entries as e', 'e.id', '=', 'lx.entry_id')
-                ->join('languages as lang', 'lang.id', '=', 'e.language_id')
-                ->leftJoin('neographies as pn', 'pn.id', '=', 'lang.primary_neography')
-                // entry header primary form
-                ->leftJoin('forms as pf', 'pf.id', '=', 'e.primary_form')
-                // native spelling for matched form in language's primary neography
-                ->leftJoin('native_spellings as ns_f', function ($join) {
-                    $join->on('ns_f.form_id', '=', 'forms.id')
-                        ->on('ns_f.neography_id', '=', 'lang.primary_neography');
-                })
-                // native spelling for entry primary form in language's primary neography
-                ->leftJoin('native_spellings as ns_pf', function ($join) {
-                    $join->on('ns_pf.form_id', '=', 'pf.id')
-                        ->on('ns_pf.neography_id', '=', 'lang.primary_neography');
-                })
-                // transliterated search
-                ->where('forms.transliterated', 'like', '%'.$key.'%');
+            $glyphsQ = DB::connection(config('tollerus.connection'))
+                ->table('neography_glyphs as g')
+                ->join('neographies as n', 'n.id', '=', 'g.neography_id')
+                ->where(function ($q) use ($key) {
+                    $q->where('g.transliterated', 'like', '%'.$key.'%')
+                        ->orWhere('g.pronunciation_transliterated', 'like', '%'.$key.'%');
+                });
             /**
              * Language lock (for page contexts where selecting a
              * different language is incoherent)
              */
             if ($this->language !== null) {
-                $formsQ->where('e.language_id', $this->language->id);
+                $glyphsQ->whereExists(function ($q) {
+                    $q->selectRaw('1')
+                        ->from('language_neography as ln')
+                        ->whereColumn('ln.neography_id', 'g.neography_id')
+                        ->where('ln.language_id', '=', $this->language->id);
+                });
             }
             /**
-             * Soft particle filter (for convenience if the hopeful
-             * `config('tollerus.particle_word_classes')` list is
-             * adequate, but letting the user opt out if it's not)
+             * Define output structure
              */
-            if ($this->softLimitToParticles && count($this->particleClassIds) > 0) {
-                $formsQ->whereIn('lx.word_class_id', $this->particleClassIds);
-            }
-            /**
-             * This is where we define the final output structure.
-             */
-            $formsQ->select([
-                'forms.id as form_id',
-                'forms.global_id_raw as form_gid_raw',
-                'forms.transliterated as form_transliterated',
-
-                'e.id as entry_id',
-                'e.global_id_raw as entry_gid_raw',
-                'e.primary_form as entry_primary_form_id',
-
-                'pf.transliterated as entry_transliterated', // null if primary_form is null
-                'ns_pf.spelling as entry_native',            // null if no spelling / no primary neography
-                'ns_f.spelling as form_native',              // null if no spelling / no primary neography
-
-                'pn.machine_name as primary_neography_machine_name', // nullable
-            ]);
+            $glyphsQ->selectRaw("
+                {$prefix}g.id as glyph_id,
+                {$prefix}g.global_id_raw as glyph_gid_raw,
+                CASE
+                    WHEN NULLIF({$prefix}g.transliterated,'') IS NOT NULL THEN {$prefix}g.transliterated
+                    ELSE {$prefix}g.pronunciation_transliterated
+                END AS glyph_transliterated,
+                CASE
+                    WHEN NULLIF({$prefix}g.transliterated,'') IS NOT NULL THEN {$prefix}g.glyph
+                    ELSE {$prefix}g.pronunciation_native
+                END AS glyph_native,
+                {$prefix}n.machine_name as neography_machine_name
+            ");
             /**
              * Sort by relevance: exact / starts-with / contains
              */
-            $formsQ
+            $glyphsQ
                 ->selectRaw("
                     CASE
-                        WHEN {$prefix}forms.transliterated = ? THEN 0
-                        WHEN {$prefix}forms.transliterated LIKE ? THEN 1
-                        WHEN {$prefix}forms.transliterated LIKE ? THEN 2
+                        WHEN COALESCE(NULLIF({$prefix}g.transliterated,''), {$prefix}g.pronunciation_transliterated) = ? THEN 0
+                        WHEN COALESCE(NULLIF({$prefix}g.transliterated,''), {$prefix}g.pronunciation_transliterated) LIKE ? THEN 1
+                        WHEN COALESCE(NULLIF({$prefix}g.transliterated,''), {$prefix}g.pronunciation_transliterated) LIKE ? THEN 2
                         ELSE 3
                     END AS relevance
                 ", [$key, $key.'%', '%'.$key.'%'])
                 // Put best matches first within the scanned set
                 ->orderBy('relevance')
-                ->orderByRaw("CHAR_LENGTH({$prefix}forms.transliterated) ASC")
-                ->orderBy('forms.transliterated')
                 ->limit(self::MAX_ROWS_SCAN);
             /**
-             * Run the forms-based query!
+             * Run the glyphs-based query!
              */
-            $formRows = $formsQ->get();
+            $glyphRows = $glyphsQ->get();
             // Add string length as a sorting tie-breaker
-            $formRows = $formRows->map(function ($row) {
-                $row->transliteratedLen = mb_strlen($row->form_transliterated);
-                return $row;
-            });
-            /**
-             * Right now, the entry info is stored in side properties on
-             * each form, and the forms for a given entry may be
-             * scattered.
-             *
-             * We need to group them and (eventually) re-sort the groups
-             * based on the best-matching form inside each one.
-             *
-             * (Before we sort the groups though, we should merge them
-             * with the glyphs. So the glyphs query will come first.)
-             */
-            $groups = $formRows->groupBy('entry_id')->map(fn ($g) => [
-                'kind' => GlobalIdKind::Entry,
-                'relevance' => $g->min('relevance'),
-                'transliteratedLen' => $g->min('transliteratedLen'),
+            $glyphObjs = $glyphRows->map(function ($row) {
+                $row->transliteratedLen = mb_strlen($row->glyph_transliterated);
                 /**
-                 * Sort the forms within each entry the same way that
-                 * the groups + glyphs will be sorted.
+                 * Package to mimic the form groups below so we can
+                 * sort them all in together.
                  */
-                'forms' => $g->sort(function ($a, $b) {
-                    if ($a->relevance !== $b->relevance) {
-                        return $a->relevance <=> $b->relevance;
-                    }
-                    if ($a->transliteratedLen !== $b->transliteratedLen) {
-                        return $a->transliteratedLen <=> $b->transliteratedLen;
-                    }
-                    return 0;
-                })->take(self::MAX_FORMS_PER_ENTRY)->values(),
-            ])->take(self::MAX_ENTRIES)->values();
-
-            /**
-             * =======================================================
-             *                      GLYPHS QUERY
-             * =======================================================
-             *
-             * Before we add glyphs, we need to check if they're
-             * applicable to the current config of this component.
-             */
-            if ($this->requireForm || ($this->softLimitToParticles && count($this->particleClassIds) > 0)) {
-                // Not applicable, define as an empty set
-                $glyphRows = collect([]);
-                $glyphObjs = collect([]);
-            } else {
-                /**
-                 * Glyphs are applicable, proceed with query ...
-                 *
-                 * This one is much simpler than the forms query because
-                 * the only JOIN we need is neographies.
-                 */
-                $glyphsQ = DB::connection(config('tollerus.connection'))
-                    ->table('neography_glyphs as g')
-                    ->join('neographies as n', 'n.id', '=', 'g.neography_id')
-                    ->where(function ($q) use ($key) {
-                        $q->where('g.transliterated', 'like', '%'.$key.'%')
-                            ->orWhere('g.pronunciation_transliterated', 'like', '%'.$key.'%');
-                    });
-                /**
-                 * Language lock (for page contexts where selecting a
-                 * different language is incoherent)
-                 */
-                if ($this->language !== null) {
-                    $glyphsQ->whereExists(function ($q) {
-                        $q->selectRaw('1')
-                            ->from('language_neography as ln')
-                            ->whereColumn('ln.neography_id', 'g.neography_id')
-                            ->where('ln.language_id', '=', $this->language->id);
-                    });
-                }
-                /**
-                 * Define output structure
-                 */
-                $glyphsQ->selectRaw("
-                    {$prefix}g.id as glyph_id,
-                    {$prefix}g.global_id_raw as glyph_gid_raw,
-                    CASE
-                        WHEN NULLIF({$prefix}g.transliterated,'') IS NOT NULL THEN {$prefix}g.transliterated
-                        ELSE {$prefix}g.pronunciation_transliterated
-                    END AS glyph_transliterated,
-                    CASE
-                        WHEN NULLIF({$prefix}g.transliterated,'') IS NOT NULL THEN {$prefix}g.glyph
-                        ELSE {$prefix}g.pronunciation_native
-                    END AS glyph_native,
-                    {$prefix}n.machine_name as neography_machine_name
-                ");
-                /**
-                 * Sort by relevance: exact / starts-with / contains
-                 */
-                $glyphsQ
-                    ->selectRaw("
-                        CASE
-                            WHEN COALESCE(NULLIF({$prefix}g.transliterated,''), {$prefix}g.pronunciation_transliterated) = ? THEN 0
-                            WHEN COALESCE(NULLIF({$prefix}g.transliterated,''), {$prefix}g.pronunciation_transliterated) LIKE ? THEN 1
-                            WHEN COALESCE(NULLIF({$prefix}g.transliterated,''), {$prefix}g.pronunciation_transliterated) LIKE ? THEN 2
-                            ELSE 3
-                        END AS relevance
-                    ", [$key, $key.'%', '%'.$key.'%'])
-                    // Put best matches first within the scanned set
-                    ->orderBy('relevance')
-                    ->limit(self::MAX_ROWS_SCAN);
-                /**
-                 * Run the glyphs-based query!
-                 */
-                $glyphRows = $glyphsQ->get();
-                // Add string length as a sorting tie-breaker
-                $glyphObjs = $glyphRows->map(function ($row) {
-                    $row->transliteratedLen = mb_strlen($row->glyph_transliterated);
-                    /**
-                     * Package to mimic the form groups below so we can
-                     * sort them all in together.
-                     */
-                    return [
-                        'kind' => GlobalIdKind::Glyph,
-                        'relevance' => $row->relevance,
-                        'transliteratedLen' => $row->transliteratedLen,
-                        'glyph' => $row,
-                    ];
-                })->values();
-            }
-
-            /**
-             * ================================================
-             *                FINAL RESULT SET
-             * ================================================
-             */
-            $results = $groups->concat($glyphObjs)->sort(function ($a, $b) {
-                if ($a['relevance'] !== $b['relevance']) {
-                    return $a['relevance'] <=> $b['relevance'];
-                }
-                if ($a['transliteratedLen'] !== $b['transliteratedLen']) {
-                    return $a['transliteratedLen'] <=> $b['transliteratedLen'];
-                }
-                return 0;
+                return [
+                    'kind' => GlobalIdKind::Glyph,
+                    'relevance' => $row->relevance,
+                    'transliteratedLen' => $row->transliteratedLen,
+                    'glyph' => $row,
+                ];
             })->values();
-            /**
-             * We need the global IDs in string form, which requires
-             * hydrating the models.
-             */
-            $entryIds = $formRows->pluck('entry_id')->unique()->values();
-            $formIds  = $formRows->pluck('form_id')->unique()->values();
-            $glyphIds = $glyphRows->pluck('glyph_id')->unique()->values();
-            // Define lookup arrays
-            $entriesById = Entry::query()
-                ->whereIn('id', $entryIds)
-                ->get()
-                ->keyBy('id');
-            $formsById = Form::query()
-                ->whereIn('id', $formIds)
-                ->get()
-                ->keyBy('id');
-            $glyphsById = NeographyGlyph::query()
-                ->whereIn('id', $glyphIds)
-                ->get()
-                ->keyBy('id');
-            // Reshape data for output
-            $this->results = $results->map(function ($result) use ($entriesById, $formsById, $glyphsById) {
-                if ($result['kind'] == GlobalIdKind::Entry) {
-                    $firstRow = $result['forms']->first();
-                    $entry = $entriesById->get(
-                        (int)$firstRow->entry_id
-                    );
-                    return collect([
-                        [
-                            /**
-                             * Entry result object
-                             */
-                            'globalId' => $entry->global_id,
-                            'kind' => GlobalIdKind::Entry,
-                            'neographyMachineName' => $firstRow->primary_neography_machine_name,
-                            'transliterated' => $firstRow->entry_transliterated,
-                            'native' => $firstRow->entry_native,
-                        ],
-                    ])->concat($result['forms']->map(function ($formRow) use ($formsById) {
-                        $form = $formsById->get((int)$formRow->form_id);
-                        return [
-                            /**
-                             * Form result object
-                             */
-                            'globalId' => $form->global_id,
-                            'kind' => GlobalIdKind::Form,
-                            'neographyMachineName' => $formRow->primary_neography_machine_name,
-                            'transliterated' => $formRow->form_transliterated,
-                            'native' => $formRow->form_native,
-                        ];
-                    }));
-                } else {
-                    $glyph = $glyphsById->get((int)$result['glyph']->glyph_id);
-                    return collect([
-                        [
-                            /**
-                             * Glyph result object
-                             */
-                            'globalId' => $glyph->global_id,
-                            'kind' => GlobalIdKind::Glyph,
-                            'neographyMachineName' => $result['glyph']->neography_machine_name,
-                            'transliterated' => $result['glyph']->glyph_transliterated,
-                            'native' => $result['glyph']->glyph_native,
-                        ],
-                    ]);
-                }
-            })->flatten(1)->values()->toArray();
         }
+
+        /**
+         * ================================================
+         *                FINAL RESULT SET
+         * ================================================
+         */
+        $results = $groups->concat($glyphObjs)->sort(function ($a, $b) {
+            if ($a['relevance'] !== $b['relevance']) {
+                return $a['relevance'] <=> $b['relevance'];
+            }
+            if ($a['transliteratedLen'] !== $b['transliteratedLen']) {
+                return $a['transliteratedLen'] <=> $b['transliteratedLen'];
+            }
+            return 0;
+        })->values();
+        /**
+         * We need the global IDs in string form, which requires
+         * hydrating the models.
+         */
+        $entryIds = $formRows->pluck('entry_id')->unique()->values();
+        $formIds  = $formRows->pluck('form_id')->unique()->values();
+        $glyphIds = $glyphRows->pluck('glyph_id')->unique()->values();
+        // Define lookup arrays
+        $entriesById = Entry::query()
+            ->whereIn('id', $entryIds)
+            ->get()
+            ->keyBy('id');
+        $formsById = Form::query()
+            ->whereIn('id', $formIds)
+            ->get()
+            ->keyBy('id');
+        $glyphsById = NeographyGlyph::query()
+            ->whereIn('id', $glyphIds)
+            ->get()
+            ->keyBy('id');
+        // Reshape data for output
+        $this->results = $results->map(function ($result) use ($entriesById, $formsById, $glyphsById) {
+            if ($result['kind'] == GlobalIdKind::Entry) {
+                $firstRow = $result['forms']->first();
+                $entry = $entriesById->get(
+                    (int)$firstRow->entry_id
+                );
+                return collect([
+                    [
+                        /**
+                         * Entry result object
+                         */
+                        'globalId' => $entry->global_id,
+                        'kind' => GlobalIdKind::Entry,
+                        'neographyMachineName' => $firstRow->primary_neography_machine_name,
+                        'transliterated' => $firstRow->entry_transliterated,
+                        'native' => $firstRow->entry_native,
+                    ],
+                ])->concat($result['forms']->map(function ($formRow) use ($formsById) {
+                    $form = $formsById->get((int)$formRow->form_id);
+                    return [
+                        /**
+                         * Form result object
+                         */
+                        'globalId' => $form->global_id,
+                        'kind' => GlobalIdKind::Form,
+                        'neographyMachineName' => $formRow->primary_neography_machine_name,
+                        'transliterated' => $formRow->form_transliterated,
+                        'native' => $formRow->form_native,
+                    ];
+                }));
+            } else {
+                $glyph = $glyphsById->get((int)$result['glyph']->glyph_id);
+                return collect([
+                    [
+                        /**
+                         * Glyph result object
+                         */
+                        'globalId' => $glyph->global_id,
+                        'kind' => GlobalIdKind::Glyph,
+                        'neographyMachineName' => $result['glyph']->neography_machine_name,
+                        'transliterated' => $result['glyph']->glyph_transliterated,
+                        'native' => $result['glyph']->glyph_native,
+                    ],
+                ]);
+            }
+        })->flatten(1)->values()->toArray();
     }
 }
