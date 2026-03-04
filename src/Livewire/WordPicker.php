@@ -489,8 +489,10 @@ class WordPicker extends Component
                 $glyphsQ = DB::connection(config('tollerus.connection'))
                     ->table('neography_glyphs as g')
                     ->join('neographies as n', 'n.id', '=', 'g.neography_id')
-                    ->where('g.transliterated', 'like', '%'.$key.'%')
-                    ->orWhere('g.pronunciation_transliterated', 'like', '%'.$key.'%');
+                    ->where(function ($q) use ($key) {
+                        $q->where('g.transliterated', 'like', '%'.$key.'%')
+                            ->orWhere('g.pronunciation_transliterated', 'like', '%'.$key.'%');
+                    });
                 /**
                  * Language lock (for page contexts where selecting a
                  * different language is incoherent)
