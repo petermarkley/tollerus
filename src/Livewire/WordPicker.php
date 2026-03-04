@@ -228,11 +228,11 @@ class WordPicker extends Component
             $this->deselectWord();
             return;
         }
-        $this->selectedWordId = $selectedWordId;
+        $this->selectedWordId = $obj->global_id;
         $this->selectedWordKind = $globalId->kind;
         $obj = $globalId->resolve();
         $this->selectedWord = $obj;
-        $word = $this->buildWord($selectedWordId, $globalId->kind, $obj);
+        $word = $this->buildWord($obj->global_id, $globalId->kind, $obj);
         $this->selectedWordTransliterated = $word['transliterated'];
         $this->selectedWordNative = $word['native'];
         $this->selectedWordNativeNeography = $word['neography'];
