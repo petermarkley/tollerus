@@ -447,6 +447,7 @@ return [
      */
     'primary_form' => 'Primary form',
     'word_form' => 'Word form',
+    'form' => 'Form',
     'word_forms' => 'Word forms',
     'add_word_form' => 'Add word form',
     'add_missing_word_forms' => 'Add missing word forms',

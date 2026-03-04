@@ -13,13 +13,13 @@
     >
         @switch($result['kind'])
             @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Glyph)
-                <x-tollerus::icons.micro.neography class="shrink-0" />
+                <x-tollerus::icons.micro.neography class="shrink-0" title="{{ __('tollerus::ui.glyph') }}" />
             @break
             @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Entry)
-                <x-tollerus::icons.micro.entries class="shrink-0" />
+                <x-tollerus::icons.micro.entries class="shrink-0" title="{{ __('tollerus::ui.entry') }}" />
             @break
             @case(\PeterMarkley\Tollerus\Enums\GlobalIdKind::Form)
-                <x-tollerus::icons.micro.fingerprint class="shrink-0" />
+                <x-tollerus::icons.micro.fingerprint class="shrink-0" title="{{ __('tollerus::ui.form') }}" />
             @break
         @endswitch
         <span class="font-bold whitespace-nowrap shrink-0">{{ $result['transliterated'] }}</span>
