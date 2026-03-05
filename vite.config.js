@@ -6,6 +6,7 @@ module.exports = defineConfig({
         emptyOutDir: false,
         assetsDir: '',
         manifest: false,
+        minify: true,
         rollupOptions: {
             input: {
                 'tollerus-admin': 'resources/js/tollerus-admin.js',

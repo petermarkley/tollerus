@@ -267,8 +267,25 @@
                             </x-tollerus::inputs.button>
                         </x-slot:button>
                         <div
-                            x-data="{ selectedWordId: '' }"
-                            @tollerus-wysiwyg-word-dialog-open.window="selectedWordId = '';"
+                            x-data="{
+                                selectedWordId: '',
+                                href: '',
+                                lang: '',
+                                transliterated: '',
+                            }"
+                            @tollerus-wysiwyg-word-dialog-open.window="
+                                selectedWordId = $event.detail.wordId;
+                                href           = $event.detail.href;
+                                lang           = $event.detail.lang;
+                                transliterated = $event.detail.transliterated;
+                                $dispatch('word-picker-select-id-external', {wordId: $event.detail.wordId});
+                            "
+                            @word-picker-select-id.window="
+                                selectedWordId = $event.detail.wordId;
+                                href           = $event.detail.href;
+                                lang           = $event.detail.lang;
+                                transliterated = $event.detail.transliterated;
+                            "
                             class="w-full flex flex-col gap-2 items-stretch"
                         >
                             <livewire:tollerus.word-picker />
@@ -277,7 +294,12 @@
                                     type="primary"
                                     size="small"
                                     title="{{ __('tollerus::ui.insert') }}"
-                                    @click="open=false; $dispatch('tollerus-wysiwyg-word-apply', { text: selectedWordId });"
+                                    @click="open=false; $dispatch('tollerus-wysiwyg-word-apply', {
+                                        wordId: selectedWordId,
+                                        href: href,
+                                        lang: lang,
+                                        transliterated: transliterated,
+                                    });"
                                 >
                                     <span>{{ __('tollerus::ui.insert') }}</span>
                                 </x-tollerus::inputs.button>

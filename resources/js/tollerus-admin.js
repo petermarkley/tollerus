@@ -363,6 +363,9 @@ function registerAdminComponents(A) {
                     case 'numbered_list':
                         editor.chain().focus().toggleOrderedList().run();
                     break;
+                    case 'word':
+                        this.openWordDialog();
+                    break;
                     case 'phonemic':
                         this.handleToolbarPhonemic();
                     break;
@@ -541,6 +544,155 @@ function registerAdminComponents(A) {
                 this.refreshToolbar();
             },
             /**
+             * User clicked the "word" toolbar button. We
+             * need to check for any dialogue prefill values.
+             */
+            openWordDialog() {
+                if (!editor || this.rawMode) return;
+                const ctx = this.getWordContext();
+                // Initialize pessimistically
+                let wordId = '';
+                let href = '';
+                let lang = '';
+                let transliterated = '';
+                let active = false;
+                // Conditionally populate
+                if (ctx) {
+                    wordId = ctx.wordId ?? '';
+                    href = ctx.href ?? '';
+                    lang = ctx.lang ?? '';
+                    transliterated = ctx.transliterated ?? '';
+                    active = true;
+                }
+                // Push values to the UI event listener
+                window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-word-dialog-open', {
+                    detail: { wordId, href, lang, transliterated, active },
+                }));
+            },
+            /**
+             * Used by `openWordDialog()`, walks through
+             * careful logic about what values to prefill in
+             * the dialogue.
+             */
+            getWordContext() {
+                if (!editor) return null;
+                const { state } = editor;
+                const wordType = editor.schema.marks.tollerusWord;
+                const { from, to, empty } = state.selection;
+                /**
+                 * Case A
+                 * ======
+                 * Cursor is inside a word (or selection anchor is)
+                 */
+                const directRange = getMarkRange(state.selection.$from, wordType);
+                if (directRange) {
+                    const attrs = editor.getAttributes('tollerusWord');
+                    const wordId = attrs['data-id'] ?? '';
+                    const href = attrs?.href ?? '';
+                    const lang = attrs['data-lang'] ?? '';
+                    const transliterated = state.doc.textBetween(directRange.from, directRange.to, ' ');
+                    return { wordId, href, lang, transliterated, range: directRange };
+                }
+                /**
+                 * Case B
+                 * ======
+                 * Selection spans content and includes one or more
+                 * words. Pick the first word we encounter, and
+                 * expand to its full mark range.
+                 */
+                let found = null;
+                state.doc.nodesBetween(from, to, (node, pos) => {
+                    if (found) return false;
+                    if (!node.isText) return;
+                    const wordMark = node.marks.find(m => m.type === wordType);
+                    if (!wordMark) return;
+                    // Resolve a position inside this text node so getMarkRange can expand properly
+                    const inside = state.doc.resolve(pos + 1);
+                    const range = getMarkRange(inside, wordType);
+                    if (!range) return;
+                    const transliterated = state.doc.textBetween(range.from, range.to, ' ');
+                    found = {
+                        wordId: wordMark.attrs['data-id'] ?? '',
+                        href: wordMark.attrs?.href ?? '',
+                        lang: wordMark.attrs['data-lang'] ?? '',
+                        transliterated,
+                        range,
+                    };
+                    return false;
+                });
+                return found;
+            },
+            /**
+             * User has submitted the word dialogue. We need
+             * some careful logic about how to apply their
+             * changes.
+             */
+            applyWord({ wordId, href, lang, transliterated }) {
+                if (!editor || this.rawMode) return;
+                const url = (href ?? '').trim();
+                if (!url) return;
+                const label = (transliterated ?? '').trim();
+                if (label.length == 0) {
+                    /**
+                     * We can't insert a zero-length Tollerus word,
+                     * that doesn't make sense.
+                     */
+                    return;
+                }
+                const { state } = editor;
+                let { from, to, empty } = state.selection;
+                const ctx = this.getWordContext();
+                /**
+                 * If we're inside a Tollerus word, or selection
+                 * includes one, we are editing that word.
+                 */
+                if (ctx?.range) {
+                    // Update the existing tollerusWord mark
+                    editor.chain()
+                        .focus()
+                        .setTextSelection(ctx.range)
+                        .unsetMark('tollerusWord') // Avoid overlapping words
+                        .insertContent(label)
+                        .setTextSelection({ from: ctx.range.from, to: ctx.range.from + label.length })
+                        .setMark('tollerusWord', {
+                            'data-id': wordId,
+                            'data-lang': lang,
+                            'href': url,
+                        }).run();
+                    this.refreshToolbar();
+                    return;
+                }
+                /**
+                 * If no words in/around selection, then we are
+                 * creating a new word. If there's multiple, then
+                 * first we normalize to avoid overlapping or
+                 * nested words.
+                 */
+                editor.chain().focus().unsetMark('tollerusWord').run();
+                // Ensure a caret selection
+                if (!empty) {
+                    to = from;
+                    empty = true;
+                }
+                /**
+                 * Insert, then select the inserted text using
+                 * a stable reference: selection.from is after
+                 * insertion, so we compute start from that.
+                 */
+                const pos = from; // Capture caret position before mutations
+                editor.chain()
+                    .focus()
+                    .insertContentAt({ from: pos, to: pos }, label)
+                    .setTextSelection({ from: pos, to: pos + label.length })
+                    .setMark('tollerusWord', {
+                        'data-id': wordId,
+                        'data-lang': lang,
+                        'href': url,
+                    }).run();
+                this.refreshToolbar();
+                return;
+            },
+            /**
              * User clicked the "phonemic" toolbar button.
              * We need to check whether the selection is a
              * range: if yes, toggle mark; if no, open a
@@ -609,7 +761,7 @@ function registerAdminComponents(A) {
                     text = ctx.text ?? '';
                     active = true;
                 } else {
-                    // No link under cursor/selection: prefill with selected text (if any)
+                    // No mark under cursor/selection: prefill with selected text (if any)
                     const { from, to, empty } = editor.state.selection;
                     text = empty ? '' : editor.state.doc.textBetween(from, to, ' ');
                 }

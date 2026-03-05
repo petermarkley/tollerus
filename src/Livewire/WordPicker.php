@@ -214,7 +214,7 @@ class WordPicker extends Component
         $this->selectedWordNativeNeography = null;
         $this->selectedWordEditUrl = null;
     }
-    public function selectWord(string $selectedWordId)
+    public function selectWord(string $selectedWordId, bool $emitEvent = true)
     {
         /**
          * Validate global ID
@@ -237,6 +237,20 @@ class WordPicker extends Component
         $this->selectedWordNative = $word['native'];
         $this->selectedWordNativeNeography = $word['neography'];
         $this->selectedWordEditUrl = $word['editUrl'];
+        if ($globalId->kind == GlobalIdKind::Glyph) {
+            $language = $this->selectedWordNativeNeography->languages()->first();
+        } else {
+            $language = $obj->language;
+        }
+        if ($emitEvent) {
+            $this->dispatch(
+                'word-picker-select-id',
+                wordId: $this->selectedWordId,
+                href: route('tollerus.public.index', ['id' => $this->selectedWordId], false),
+                lang: $language?->machine_name,
+                transliterated: $this->selectedWordTransliterated,
+            );
+        }
     }
     public function refreshForm()
     {

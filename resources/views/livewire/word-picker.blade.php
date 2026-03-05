@@ -4,6 +4,7 @@
     @focusout="if (open && $event.relatedTarget !== null && !($el.contains($event.relatedTarget) || $event.relatedTarget.contains($el))) {open=false;}"
     @click.window="if (open && !$el.contains($event.target)) {open=false;}"
     @keydown.escape="open=false"
+    @word-picker-select-id-external.window="$wire.selectWord($event.detail.wordId, false);"
 >
     <div class="p-2 flex flex-row gap-2 items-center border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm">
         @if ($selectedWord === null)
