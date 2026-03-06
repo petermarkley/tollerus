@@ -908,7 +908,10 @@ class FileImportSeeder extends Seeder
         } else {
             $senseModel->num = $position;
         }
-        $senseModel->body = $this->parseBodyText($senseXML, 'p');
+        if (isset($senseXML->p['use'])) {
+            $senseModel->usage = $senseXML->p['use']->__toString();
+        }
+        $senseModel->body = $this->parseBodyText($senseXML->p);
         $senseModel->save();
         // Read through subsenses
         if (isset($senseXML->subsense)) {
@@ -938,7 +941,10 @@ class FileImportSeeder extends Seeder
         } else {
             $subsenseModel->num = $position;
         }
-        $subsenseModel->body = $this->parseBodyText($subsenseXML, 'p');
+        if (isset($subsenseXML->p['use'])) {
+            $subsenseModel->usage = $subsenseXML->p['use']->__toString();
+        }
+        $subsenseModel->body = $this->parseBodyText($subsenseXML->p);
         $subsenseModel->save();
     }
 

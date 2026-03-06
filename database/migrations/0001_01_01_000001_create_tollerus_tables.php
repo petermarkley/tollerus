@@ -431,6 +431,7 @@ return new class extends Migration
                 ->references('id')->on('lexemes')
                 ->cascadeOnDelete();
             $table->integer('num');
+            $table->string('usage')->nullable();
             $table->text('body')->charset('utf8mb4');
             // ensure only one of each num per sense
             $table->unique(['lexeme_id', 'num'], 'lexeme_num_unique');
@@ -443,6 +444,7 @@ return new class extends Migration
                 ->references('id')->on('senses')
                 ->cascadeOnDelete();
             $table->integer('num');
+            $table->string('usage')->nullable();
             $table->text('body')->charset('utf8mb4');
             // ensure only one of each num per sense
             $table->unique(['sense_id', 'num'], 'num_sense_unique');

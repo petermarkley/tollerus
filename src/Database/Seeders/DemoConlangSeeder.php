@@ -118,7 +118,7 @@ class DemoConlangSeeder extends Seeder
                 ->map(fn ($t) => $t->name.' '.$t->feature->name)
                 ->implode(', ');
             $classNamePlural = Str::plural($class->name);
-            $definition = "<p>Forming the {$grammarFeatures} of {$classNamePlural}.</p>";
+            $definition = "Forming the {$grammarFeatures} of {$classNamePlural}.";
 
             // Now let's create an entry for it
             $entry = Entry::factory()

@@ -18,7 +18,7 @@ class SenseFactory extends Factory
     public function definition(): array
     {
         return [
-            'body' => "<p>" . $this->faker->sentence() . "</p>",
+            'body' => $this->faker->sentence(),
         ];
     }
 

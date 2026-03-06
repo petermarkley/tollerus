@@ -166,11 +166,23 @@
                                     <ol class="w-full pl-4 sm:pl-10 list-decimal flex flex-col gap-2">
                                         @foreach ($lexeme['model']->senses->sortBy('num') as $sense)
                                             <li class="space-y-2">
-                                                @tollerusBodyText($sense->body)
+                                                <p>
+                                                    @if(!empty($sense->usage))
+                                                        <span class="p-1 rounded bg-tollerus-surface text-sm" style="font-variant: small-caps;">{{ $sense->usage }}</span>
+                                                    @endif
+                                                    @tollerusBodyText($sense->body)
+                                                </p>
                                                 @if ($sense->subsenses->count() > 0)
                                                     <ul class="pl-6 list-disc flex flex-col gap-2">
                                                         @foreach ($sense->subsenses->sortBy('num') as $subsense)
-                                                            <li>@tollerusBodyText($subsense->body)</li>
+                                                            <li>
+                                                                <p>
+                                                                    @if(!empty($subsense->usage))
+                                                                        <span class="p-1 rounded bg-tollerus-surface text-sm" style="font-variant: small-caps;">{{ $subsense->usage }}</span>
+                                                                    @endif
+                                                                    @tollerusBodyText($subsense->body)
+                                                                </p>
+                                                            </li>
                                                         @endforeach
                                                     </ul>
                                                 @endif
