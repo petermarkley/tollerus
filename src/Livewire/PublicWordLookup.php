@@ -117,6 +117,10 @@ class PublicWordLookup extends Component
                     $this->entry = $obj;
                 break;
                 case GlobalIdKind::Lexeme:
+                    if (!$this->languages->pluck('id')->contains($obj->language_id)) {
+                        // This language is set to `visible=false`, so don't show it
+                        abort(404);
+                    }
                     /**
                      * For a lexeme, we need to redirect to the entry
                      */
@@ -124,6 +128,10 @@ class PublicWordLookup extends Component
                     $this->redirect(route('tollerus.public.index', ['id' => $entry->global_id, 'hl' => $this->id]));
                 break;
                 case GlobalIdKind::Form:
+                    if (!$this->languages->pluck('id')->contains($obj->language_id)) {
+                        // This language is set to `visible=false`, so don't show it
+                        abort(404);
+                    }
                     /**
                      * For a form, we also need to redirect to the entry
                      */
