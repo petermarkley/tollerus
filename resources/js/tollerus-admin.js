@@ -136,6 +136,7 @@ const TOOLBAR_MARKS = [
 ];
 
 function registerAdminComponents(A) {
+    let nextEditorId = 1;
     A.data('tollerusWysiwyg', (opts = {}) => {
         /**
          * Store this almost like a "protected class property,"
@@ -145,6 +146,7 @@ function registerAdminComponents(A) {
          */
         let editor = null;
         return {
+            editorId: nextEditorId++,
             state: opts.state,
             debounceMs: opts.debounceMs ?? 250,
             _t: null,
@@ -400,7 +402,12 @@ function registerAdminComponents(A) {
                 }
                 // Push values to the UI event listener
                 window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-link-dialog-open', {
-                    detail: { href, text, active },
+                    detail: {
+                        editorId: this.editorId,
+                        href,
+                        text,
+                        active
+                    },
                 }));
             },
             /**
@@ -566,7 +573,14 @@ function registerAdminComponents(A) {
                 }
                 // Push values to the UI event listener
                 window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-word-dialog-open', {
-                    detail: { wordId, href, lang, transliterated, active },
+                    detail: {
+                        editorId: this.editorId,
+                        wordId,
+                        href,
+                        lang,
+                        transliterated,
+                        active
+                    },
                 }));
             },
             /**
@@ -704,7 +718,7 @@ function registerAdminComponents(A) {
                 const { from, to, empty } = state.selection;
                 if (empty) {
                     // Selection is empty; open a dialogue
-                    window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-phonemic-dialog-open'));
+                    window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-phonemic-dialog-open', {detail: {editorId: this.editorId}}));
                 } else {
                     // Selection is a range; just toggle the mark
                     editor.chain().focus().toggleMark('tollerusPhonemic').run();
@@ -768,6 +782,7 @@ function registerAdminComponents(A) {
                 // Push values to the UI event listener
                 window.dispatchEvent(new CustomEvent('tollerus-wysiwyg-native-dialog-open', {
                     detail: {
+                        editorId: this.editorId,
                         neographyId,
                         neographyMachineName,
                         text,

@@ -17,11 +17,11 @@
             state: $wire.entangle('{{ $model }}'),
         })"
         @tollerus-wysiwyg-toolbar="handleToolbar($event.detail.action)"
-        @tollerus-wysiwyg-link-apply.window="applyLink($event.detail)"
-        @tollerus-wysiwyg-link-remove.window="removeLink()"
-        @tollerus-wysiwyg-phonemic-apply.window="applyPhonemic($event.detail)"
-        @tollerus-wysiwyg-native-apply.window="applyNative($event.detail)"
-        @tollerus-wysiwyg-word-apply.window="applyWord($event.detail)"
+        @tollerus-wysiwyg-link-apply.window="if($event.detail.editorId!==editorId) {return;} applyLink($event.detail)"
+        @tollerus-wysiwyg-link-remove.window="if($event.detail.editorId!==editorId) {return;} removeLink()"
+        @tollerus-wysiwyg-phonemic-apply.window="if($event.detail.editorId!==editorId) {return;} applyPhonemic($event.detail)"
+        @tollerus-wysiwyg-native-apply.window="if($event.detail.editorId!==editorId) {return;} applyNative($event.detail)"
+        @tollerus-wysiwyg-word-apply.window="if($event.detail.editorId!==editorId) {return;} applyWord($event.detail)"
     @endif
 >
     <label for="{{ $id }}">{{ $label }}</label>
@@ -141,6 +141,7 @@
                                 existingLink: false,
                             }"
                             @tollerus-wysiwyg-link-dialog-open.window="
+                                if ($event.detail.editorId!==editorId) {return;}
                                 linkUrl = $event.detail.href;
                                 linkText = $event.detail.text;
                                 existingLink = $event.detail.active;
@@ -169,7 +170,7 @@
                                     size="small"
                                     title="{{ __('tollerus::ui.remove') }}"
                                     x-bind:disabled="!existingLink"
-                                    @click="open=false; $dispatch('tollerus-wysiwyg-link-remove');"
+                                    @click="open=false; $dispatch('tollerus-wysiwyg-link-remove', {editorId: editorId});"
                                 >
                                     <span>{{ __('tollerus::ui.remove') }}</span>
                                 </x-tollerus::inputs.button>
@@ -178,6 +179,7 @@
                                     size="small"
                                     title="{{ __('tollerus::ui.apply') }}"
                                     @click="open=false; $dispatch('tollerus-wysiwyg-link-apply', {
+                                        editorId: editorId,
                                         href: linkUrl,
                                         text: linkText,
                                     });"
@@ -274,6 +276,7 @@
                                 transliterated: '',
                             }"
                             @tollerus-wysiwyg-word-dialog-open.window="
+                                if ($event.detail.editorId!==editorId) {return;}
                                 selectedWordId = $event.detail.wordId;
                                 href           = $event.detail.href;
                                 lang           = $event.detail.lang;
@@ -295,6 +298,7 @@
                                     size="small"
                                     title="{{ __('tollerus::ui.insert') }}"
                                     @click="open=false; $dispatch('tollerus-wysiwyg-word-apply', {
+                                        editorId, editorId,
                                         wordId: selectedWordId,
                                         href: href,
                                         lang: lang,
@@ -335,7 +339,7 @@
                         </x-slot:button>
                         <div
                             x-data="{ phonemicText: '' }"
-                            @tollerus-wysiwyg-phonemic-dialog-open.window="open=true; phonemicText = '';"
+                            @tollerus-wysiwyg-phonemic-dialog-open.window="if($event.detail.editorId!==editorId) {return;} open=true; phonemicText = '';"
                             class="w-full flex flex-col gap-2 items-stretch"
                         >
                             <div data-keyboard-elem="territory" class="w-full flex flex-col gap-1 items-start">
@@ -390,7 +394,7 @@
                                     type="primary"
                                     size="small"
                                     title="{{ __('tollerus::ui.insert') }}"
-                                    @click="open=false; $dispatch('tollerus-wysiwyg-phonemic-apply', { text: phonemicText });"
+                                    @click="open=false; $dispatch('tollerus-wysiwyg-phonemic-apply', { editorId: editorId, text: phonemicText });"
                                 >
                                     <span>{{ __('tollerus::ui.insert') }}</span>
                                 </x-tollerus::inputs.button>
@@ -434,6 +438,7 @@
                                 },
                             }"
                             @tollerus-wysiwyg-native-dialog-open.window="
+                                if ($event.detail.editorId!==editorId) {return;}
                                 if ($event.detail.neographyId) {
                                     neographyId = $event.detail.neographyId;
                                 }
@@ -509,6 +514,7 @@
                                     size="small"
                                     title="{{ __('tollerus::ui.apply') }}"
                                     @click="open=false; $dispatch('tollerus-wysiwyg-native-apply', {
+                                        editorId: editorId,
                                         neographyId: neographyId,
                                         neography: neographyMachineName,
                                         text: nativeText,
