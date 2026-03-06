@@ -288,7 +288,7 @@
                             "
                             class="w-full flex flex-col gap-2 items-stretch"
                         >
-                            <livewire:tollerus.word-picker />
+                            <livewire:tollerus.word-picker :language="$language" />
                             <div class="w-full flex flex-row gap-2 justify-start">
                                 <x-tollerus::inputs.button
                                     type="primary"

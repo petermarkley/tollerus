@@ -87,7 +87,20 @@
                 </x-tollerus::inputs.button>
             </div>
         </form>
-        @if($showParticleToggle && count($particleClassIds) > 0)
+        @if (!$langIsStrict)
+            <x-tollerus::inputs.select
+                idExpression="'language'"
+                label="{{ __('tollerus::ui.language') }}"
+                model="languageId"
+                modelIsAlpine="false"
+                wire:change="search"
+            >
+                @foreach ($languages as $language)
+                    <option value="{{ $language->id }}">{{ $language->name }}</option>
+                @endforeach
+            </x-tollerus::inputs.select>
+        @endif
+        @if ($showParticleToggle && count($particleClassIds) > 0)
             <x-tollerus::inputs.checkbox
                 id="limit_to_particles"
                 model="softLimitToParticles"

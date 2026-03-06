@@ -1,13 +1,3 @@
-# Notes
-
-It's too confusing to have results from all languages mixed together in the WordPicker.
-
-There needs to be a "language" drop menu whenever language isn't dictated by page context, so that the "language lock" in the query code is basically engaged in all scenarios and user can decide which one language they want results for.
-
-When would a user ever want results for multiple languages anyway? They're expected to be using the WordPicker with a specific word in mind, not browsing generically. So this makes much more sense from a UX pov
-
-This solution thankfully is also a fairly trivial code change: just add a "langIsStrict" flag from the page context, and if false then display the drop menu. Language can then be passed always, and either sets the drop menu's initial state or (if no drop menu) acts as a true "lock" (e.g. for AutoInflectionEditor)
-
 # TODO
 
 ## Tollerus Features

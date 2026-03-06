@@ -26,7 +26,8 @@ class WordPicker extends Component
     public bool $softLimitToParticles = false;
     #[Locked] public bool $showParticleToggle = false;
     #[Locked] public bool $requireForm = false;
-    #[Locked] public ?Language $language = null;
+    public ?int $languageId = null;
+    #[Locked] public bool $langIsStrict = false;
     #[Locked] public array $particleClasses = [];
     #[Locked] public array $particleClassIds = [];
     public ?string $selectedWordId = null;
@@ -39,6 +40,7 @@ class WordPicker extends Component
     public string $searchKey = '';
     #[Locked] public array $results = [];
     #[Locked] public array $globalIdResults = [];
+    #[Locked] public array $languages = [];
 
     /**
      * Internal search query params
@@ -52,29 +54,32 @@ class WordPicker extends Component
      */
     public function render(): View
     {
-        //
         return view('tollerus::livewire.word-picker');
     }
     public function mount(
         bool $softLimitToParticles = false,
         bool $requireForm = false,
         ?Language $language = null,
+        bool $langIsStrict = false,
         ?string $selectedWordId = null,
     ): void
     {
         $this->softLimitToParticles = $softLimitToParticles;
         $this->showParticleToggle = $softLimitToParticles;
+        $this->languages = Language::all()->all();
         if ($language?->exists) {
             /**
              * Apparently when we type-hint a `mount()` param to a model,
              * if the parent view provides none then we get a hollow
              * model instance instead of `null`.
              */
-            $this->language = $language;
+            $this->languageId = $language->id;
             $this->particleClasses = $language->wordClasses()->whereIn('name', config('tollerus.particle_word_classes'))->get()->all();
         } else {
+            $this->languageId = $this->languages[0]?->id;
             $this->particleClasses = WordClass::whereIn('name', config('tollerus.particle_word_classes'))->get()->all();
         }
+        $this->langIsStrict = $langIsStrict;
         $this->particleClassIds = collect($this->particleClasses)->pluck('id')->toArray();
         if ($selectedWordId === null) {
             $this->deselectWord();
@@ -269,19 +274,17 @@ class WordPicker extends Component
         if ($globalId instanceof GlobalId) {
             $obj = $globalId->resolve();
             // Check if we're out of bounds ...
-            if ($this->language !== null) {
-                switch ($globalId->kind) {
-                    case GlobalIdKind::Glyph:
-                        if (!$obj->neography->languages->contains($this->language)) {
-                            return;
-                        }
-                    break;
-                    default:
-                        if ($obj->language != $this->language) {
-                            return;
-                        }
-                    break;
-                }
+            switch ($globalId->kind) {
+                case GlobalIdKind::Glyph:
+                    if (!$obj->neography->languages->pluck('id')->contains($this->languageId)) {
+                        return;
+                    }
+                break;
+                default:
+                    if ($obj->language->id != $this->languageId) {
+                        return;
+                    }
+                break;
             }
             // We're okay, proceed with populating result ...
             if ($globalId->kind == GlobalIdKind::Lexeme) {
@@ -396,14 +399,8 @@ class WordPicker extends Component
                     ->on('ns_pf.neography_id', '=', 'lang.primary_neography');
             })
             // transliterated search
-            ->where('forms.transliterated', 'like', '%'.$key.'%');
-        /**
-         * Language lock (for page contexts where selecting a
-         * different language is incoherent)
-         */
-        if ($this->language !== null) {
-            $formsQ->where('e.language_id', $this->language->id);
-        }
+            ->where('forms.transliterated', 'like', '%'.$key.'%')
+            ->where('e.language_id', $this->languageId);
         /**
          * Soft particle filter (for convenience if the hopeful
          * `config('tollerus.particle_word_classes')` list is
@@ -511,19 +508,12 @@ class WordPicker extends Component
                 ->where(function ($q) use ($key) {
                     $q->where('g.transliterated', 'like', '%'.$key.'%')
                         ->orWhere('g.pronunciation_transliterated', 'like', '%'.$key.'%');
-                });
-            /**
-             * Language lock (for page contexts where selecting a
-             * different language is incoherent)
-             */
-            if ($this->language !== null) {
-                $glyphsQ->whereExists(function ($q) {
+                })->whereExists(function ($q) {
                     $q->selectRaw('1')
                         ->from('language_neography as ln')
                         ->whereColumn('ln.neography_id', 'g.neography_id')
-                        ->where('ln.language_id', '=', $this->language->id);
+                        ->where('ln.language_id', '=', $this->languageId);
                 });
-            }
             /**
              * Define output structure
              */
