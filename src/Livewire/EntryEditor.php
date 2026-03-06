@@ -77,7 +77,13 @@ class EntryEditor extends Component
     {
         $this->entry = $entry;
         $this->language = $language;
-        $this->nativeKeyboards = app(NativeKeyboard::class)->loadForLanguage($language);
+        /**
+         * The virtual keyboards on this page are partly for
+         * typing in the WYSIWYG, where there's no reason to
+         * restrict the user to neographies for this language.
+         * Hence we do `loadAll()` instead of `loadForLanguage()`.
+         */
+        $this->nativeKeyboards = app(NativeKeyboard::class)->loadAll();
         $this->ipaKeyboard = app(PhonemicKeyboard::class)->load();
 
         $this->refreshForm();

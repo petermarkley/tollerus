@@ -131,14 +131,22 @@
                         </x-tollerus::alert>
                     </template>
                 </div>
-                <div class="w-full flex flex-col gap-2">
+                <div class="w-full flex flex-col gap-2" @tollerus-wysiwyg-input="btn = 'save'; dirty = true;">
                     <h3 class="font-bold text-lg">
                         <label for="etym" class="flex flex-row gap-4 items-center">
                             <x-tollerus::icons.academic-cap />
                             <span>{{ __('tollerus::ui.word_origin') }}</span>
                         </label>
                     </h3>
-                    <x-tollerus::inputs.textarea id="etym" model="infoForm.etym" rows="2" @input="btn = 'save'; dirty=true;" />
+                    <x-tollerus::inputs.textarea
+                        wysiwyg="true"
+                        :nativeKeyboards="$nativeKeyboards"
+                        :language="$language"
+                        id="etym"
+                        model="infoForm.etym"
+                        @input="$dispatch('tollerus-wysiwyg-input')"
+                    />
+                    {{-- <x-tollerus::inputs.textarea id="etym" model="infoForm.etym" rows="2" @input="btn = 'save'; dirty=true;" /> --}}
                 </div>
                 <div class="flex flex-row justify-start gap-2">
                     <x-tollerus::inputs.button
