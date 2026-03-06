@@ -1,5 +1,13 @@
 # TODO
 
+## Things to Fix
+- [ ] Usage notes!
+  - [ ] Add `usage` column to `sense`/`subsense` tables
+  - [ ] Populate from attr in `FileImportSeeder`
+  - [ ] Add public Blade component that can be injected inside `<p>` in `BodyTextRenderer` (can return val from Laravel `view()` be stored/manipulated as HTML string?)--or else (maybe even better) ditch the root `<p>` in the `body` DB column and wrap it in Blade with conditional "usage" `<span>`
+- [ ] Normalize WYGIWYG save value's empty `<p>` tags as `<div>` boundaries
+- [ ] Add WYSIWYG "inline" mode that disallows multiple `<p>`s and disallows any other block level Tiptap nodes. On save, normalize to expected DB field format for sense/subsense bodies (see above).
+
 ## Tollerus Features
 - [ ] WYSIWYG & sanitizer for 'intro' box on Language, NeographySection, etc. (look for 3rd party package?)
 - [ ] Better form ID selector on auto-inflection page
