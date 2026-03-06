@@ -82,8 +82,15 @@
                     @endforeach
                 </x-tollerus::inputs.select>
             </div>
-            <div class="flex flex-col gap-4">
-                <x-tollerus::inputs.textarea id="intro" model="infoForm.intro" label="{{ __('tollerus::ui.intro') }}" @input="btn = 'save'; dirty=true;" />
+            <div class="flex flex-col gap-4" @tollerus-wysiwyg-input="btn = 'save'; dirty = true;">
+                <x-tollerus::inputs.textarea
+                    wysiwyg="true"
+                    :nativeKeyboards="$nativeKeyboards"
+                    id="intro"
+                    model="infoForm.intro"
+                    label="{{ __('tollerus::ui.intro') }}"
+                    @input="$dispatch('tollerus-wysiwyg-input')"
+                />
             </div>
             <div class="flex flex-row justify-start gap-2">
                 <x-tollerus::inputs.button
@@ -439,7 +446,7 @@
                                                                                                     showKeyboard=true;
                                                                                                     $store.virtualKeyboard.mount({
                                                                                                         virtualKeyboardType: 'native',
-                                                                                                        neographySubset: null,
+                                                                                                        neographySubset: ['{{ $neography->id }}'],
                                                                                                         mountPoint: $el.parentNode,
                                                                                                         inputFieldId: id
                                                                                                     });

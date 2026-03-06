@@ -78,7 +78,13 @@ class NeographySectionEditor extends Component
                 ]];
             })->toArray();
 
-        $this->nativeKeyboards = app(NativeKeyboard::class)->loadForNeography($neography);
+        /**
+         * The virtual keyboards on this page are partly for
+         * typing in the WYSIWYG, where there's no reason to restrict
+         * the user to this neography. Hence we do `loadAll()`
+         * instead of `loadForNeography()`.
+         */
+        $this->nativeKeyboards = app(NativeKeyboard::class)->loadAll();
         $this->ipaKeyboard = app(PhonemicKeyboard::class)->load();
 
         $this->refreshForm();

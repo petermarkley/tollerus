@@ -134,9 +134,9 @@ class LanguageEditor extends Component
         $this->tab = $tab ?? 'info';
         /**
          * The virtual keyboards on this page are exclusively for
-         * typing in the WYSIWYG. so there's no reason to restrict
-         * the user to neographies for this language. Hence we do
-         * `loadAll()` instead of `loadForLanguage()`.
+         * typing in the WYSIWYG, where there's no reason to
+         * restrict the user to neographies for this language.
+         * Hence we do `loadAll()` instead of `loadForLanguage()`.
          */
         $this->nativeKeyboards = app(NativeKeyboard::class)->loadAll();
         $this->ipaKeyboard = app(PhonemicKeyboard::class)->load();
