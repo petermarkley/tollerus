@@ -341,10 +341,12 @@ class EntryEditor extends Component
                     'senses' => $lexeme->senses->mapWithKeys(function ($sense) {
                         return [$sense->id => [
                             'num' => $sense->num,
+                            'usage' => $sense->usage,
                             'body' => $sense->body,
                             'subsenses' => $sense->subsenses->mapWithKeys(function ($subsense) {
                                 return [$subsense->id => [
                                     'num' => $subsense->num,
+                                    'usage' => $subsense->usage,
                                     'body' => $subsense->body,
                                 ]];
                             })->toArray(),
@@ -803,6 +805,7 @@ class EntryEditor extends Component
         ]);
         // $propName whitelist
         $allowedPropData = [
+            'usage' => ['type' => 'string', 'column' => 'usage'],
             'body' => ['type' => 'string', 'column' => 'body'],
         ];
         $allowedPropNames = array_keys($allowedPropData);
@@ -916,6 +919,7 @@ class EntryEditor extends Component
         ]);
         // $propName whitelist
         $allowedPropData = [
+            'usage' => ['type' => 'string', 'column' => 'usage'],
             'body' => ['type' => 'string', 'column' => 'body'],
         ];
         $allowedPropNames = array_keys($allowedPropData);

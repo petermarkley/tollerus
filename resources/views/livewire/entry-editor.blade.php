@@ -646,6 +646,15 @@
                                                             <label class="sr-only">{{ __('tollerus::ui.delete_word_sense') }}</label>
                                                         </x-tollerus::inputs.button>
                                                     </div>
+                                                    <div>
+                                                        <x-tollerus::inputs.text-saveable
+                                                            idExpression="'sense_'+senseId+'_usage'"
+                                                            model="sense.usage"
+                                                            fieldName="{{ __('tollerus::ui.usage_note') }}"
+                                                            showLabel="true"
+                                                            saveEvent="$wire.updateSense(lexemeId, senseId, 'usage', document.getElementById(id).value, id);"
+                                                        />
+                                                    </div>
                                                     <div data-obj="textarea-div" class="flex flex-col gap-2 items-start w-full" x-data="{ dirty: false, btn: 'saved', id: 'sense_'+senseId+'_body' }">
                                                         <textarea
                                                             x-bind:id="id"
@@ -728,6 +737,13 @@
                                                                                     <label class="sr-only">{{ __('tollerus::ui.delete_subsense') }}</label>
                                                                                 </x-tollerus::inputs.button>
                                                                             </div>
+                                                                            <x-tollerus::inputs.text-saveable
+                                                                                idExpression="'subsense_'+subsenseId+'_usage'"
+                                                                                model="subsense.usage"
+                                                                                fieldName="{{ __('tollerus::ui.usage_note') }}"
+                                                                                showLabel="true"
+                                                                                saveEvent="$wire.updateSubsense(lexemeId, senseId, subsenseId, 'usage', document.getElementById(id).value, id);"
+                                                                            />
                                                                             <textarea
                                                                                 x-bind:id="id"
                                                                                 rows="2"
