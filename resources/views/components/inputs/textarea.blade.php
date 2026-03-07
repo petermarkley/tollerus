@@ -246,7 +246,7 @@
                                 <span class="sr-only">{{ __('tollerus::ui.numbered_list') }}</span>
                             </x-tollerus::inputs.button>
                         </div>
-                    @endif
+                    {{-- @endif --}}
                     <x-tollerus::inputs.dropdown class="relative w-full">
                         <x-slot:button>
                             <x-tollerus::inputs.button
@@ -316,6 +316,7 @@
                             </div>
                         </div>
                     </x-tollerus::inputs.dropdown>
+                    @endif
                     <x-tollerus::inputs.dropdown class="relative w-full">
                         <x-slot:button>
                             <x-tollerus::inputs.button
