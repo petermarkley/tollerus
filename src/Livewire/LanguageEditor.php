@@ -26,6 +26,7 @@ use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\WordClass;
 use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
+use PeterMarkley\Tollerus\Support\Markup\BodyTextNormalizer;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class LanguageEditor extends Component
@@ -242,6 +243,7 @@ class LanguageEditor extends Component
         $this->infoForm = $this->language->toArray();
         unset($this->infoForm['id']);
         unset($this->infoForm['primary_neography']);
+        $this->infoForm['intro'] = app(BodyTextNormalizer::class)->normalizeForWysiwyg($this->language->intro);
     }
     public function refreshNeographiesForm(): void
     {
@@ -330,6 +332,8 @@ class LanguageEditor extends Component
                     Rule::unique('PeterMarkley\Tollerus\Models\Language', 'machine_name')->ignore($this->language->id),
                 ],
             ]);
+            $bodyTextNormalizer = app(BodyTextNormalizer::class);
+            $this->infoForm['intro'] = $bodyTextNormalizer->normalizeForSave($this->infoForm['intro']);
             // Save to database
             $this->language->fill($this->infoForm);
             $this->language->save();

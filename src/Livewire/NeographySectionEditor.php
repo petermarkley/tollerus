@@ -20,6 +20,7 @@ use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\NeographyGlyph;
 use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
 use PeterMarkley\Tollerus\Models\NeographySection;
+use PeterMarkley\Tollerus\Support\Markup\BodyTextNormalizer;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class NeographySectionEditor extends Component
@@ -102,7 +103,7 @@ class NeographySectionEditor extends Component
         $this->infoForm = [
             'type' => ($this->sect->type === null ? null : $this->sect->type->value),
             'name' => $this->sect->name,
-            'intro' => $this->sect->intro,
+            'intro' => app(BodyTextNormalizer::class)->normalizeForWysiwyg($this->sect->intro),
         ];
         $this->groupsForm = collect($this->groups)->mapWithKeys(function ($group) {
             return [$group->id => [
@@ -174,7 +175,8 @@ class NeographySectionEditor extends Component
             //     ],
             // ]);
             // Save to database
-            $this->sect->intro = $this->infoForm['intro'];
+            $bodyTextNormalizer = app(BodyTextNormalizer::class);
+            $this->sect->intro = $bodyTextNormalizer->normalizeForSave($this->infoForm['intro']);
             $this->sect->save();
             // Refresh front-end state
             $this->refreshForm();

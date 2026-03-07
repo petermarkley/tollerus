@@ -1,7 +1,6 @@
 # TODO
 
 ## Things to Fix
-- [ ] Normalize WYGIWYG save value's empty `<p>` tags as `<div>` boundaries
 - [ ] Add WYSIWYG "inline" mode that disallows multiple `<p>`s and disallows any other block level Tiptap nodes. On save, normalize to expected DB field format for sense/subsense bodies.
 
 ## Tollerus Features
