@@ -27,6 +27,7 @@ use PeterMarkley\Tollerus\Models\WordClass;
 use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextNormalizer;
+use PeterMarkley\Tollerus\Support\Markup\BodyTextSanitizer;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class LanguageEditor extends Component
@@ -332,8 +333,8 @@ class LanguageEditor extends Component
                     Rule::unique('PeterMarkley\Tollerus\Models\Language', 'machine_name')->ignore($this->language->id),
                 ],
             ]);
-            $bodyTextNormalizer = app(BodyTextNormalizer::class);
-            $this->infoForm['intro'] = $bodyTextNormalizer->normalizeForSave($this->infoForm['intro']);
+            $html = app(BodyTextSanitizer::class)->sanitize($this->infoForm['intro']);
+            $this->infoForm['intro'] = app(BodyTextNormalizer::class)->normalizeForSave($html);
             // Save to database
             $this->language->fill($this->infoForm);
             $this->language->save();

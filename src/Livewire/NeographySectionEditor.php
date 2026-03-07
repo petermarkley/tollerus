@@ -21,6 +21,7 @@ use PeterMarkley\Tollerus\Models\NeographyGlyph;
 use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
 use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextNormalizer;
+use PeterMarkley\Tollerus\Support\Markup\BodyTextSanitizer;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class NeographySectionEditor extends Component
@@ -175,8 +176,8 @@ class NeographySectionEditor extends Component
             //     ],
             // ]);
             // Save to database
-            $bodyTextNormalizer = app(BodyTextNormalizer::class);
-            $this->sect->intro = $bodyTextNormalizer->normalizeForSave($this->infoForm['intro']);
+            $html = app(BodyTextSanitizer::class)->sanitze($this->infoForm['intro']);
+            $this->sect->intro = app(BodyTextNormalizer::class)->normalizeForSave($html);
             $this->sect->save();
             // Refresh front-end state
             $this->refreshForm();
