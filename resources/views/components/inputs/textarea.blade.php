@@ -16,7 +16,7 @@
         data-tollerus-wysiwyg
         x-data="tollerusWysiwyg({
             state: $wire.entangle('{{ $model }}'),
-            isInline: {{ $wysiwygIsInline }},
+            isInline: {{ ((bool)$wysiwygIsInline ? 'true' : 'false') }},
         })"
         @tollerus-wysiwyg-toolbar="handleToolbar($event.detail.action)"
         @tollerus-wysiwyg-link-apply.window="if($event.detail.editorId!==editorId) {return;} applyLink($event.detail)"
@@ -26,7 +26,9 @@
         @tollerus-wysiwyg-word-apply.window="if($event.detail.editorId!==editorId) {return;} applyWord($event.detail)"
     @endif
 >
-    <label for="{{ $id }}">{{ $label }}</label>
+    @if (!empty($label) && !empty($id))
+        <label for="{{ $id }}">{{ $label }}</label>
+    @endif
     @if (filter_var($wysiwyg, FILTER_VALIDATE_BOOLEAN))
         <div class="w-full flex flex-col items-stretch">
             <div class="w-full p-2 flex flex-row gap-1 justify-between items-center rounded-t-lg border rounded-b border-zinc-400 dark:border-zinc-600">
@@ -565,7 +567,9 @@
             ></div>
             <textarea
                 x-show="rawMode" x-cloak
-                id="{{ $id }}"
+                @if (!empty($id))
+                    id="{{ $id }}"
+                @endif
                 wire:model.defer="{{ $model }}"
                 rows="{{ $rows }}"
                 {{ $attributes }}
