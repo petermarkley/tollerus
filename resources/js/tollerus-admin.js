@@ -4,6 +4,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Bold from '@tiptap/extension-bold';
 import Italic from '@tiptap/extension-italic';
+import Document from '@tiptap/extension-document';
 
 /**
  * <span data-tollerus="smallcaps">
@@ -135,6 +136,13 @@ const TOOLBAR_MARKS = [
     'tollerusNative',
 ];
 
+/**
+ * This custom extension will only be used if we're in "inline" mode.
+ */
+const TollerusInlineDocument = Document.extend({
+    content: 'paragraph',
+});
+
 function registerAdminComponents(A) {
     let nextEditorId = 1;
     A.data('tollerusWysiwyg', (opts = {}) => {
@@ -212,6 +220,7 @@ function registerAdminComponents(A) {
                             horizontalRule: !opts.isInline,
                             listItem: !opts.isInline,
                             orderedList: !opts.isInline,
+                            document: !opts.isInline,
                         }),
                         TollerusBold,
                         TollerusItalic,
@@ -220,8 +229,18 @@ function registerAdminComponents(A) {
                         TollerusWord,
                         TollerusPhonemic,
                         TollerusNative,
+                        ...(opts.isInline ? [TollerusInlineDocument] : []),
                     ],
                     content: this.state ?? '',
+                    // editorProps: opts.isInline ? {
+                    //     handleKeyDown(view, event) {
+                    //         if (event.key === 'Enter') {
+                    //             event.preventDefault();
+                    //             return true;
+                    //         }
+                    //         return false;
+                    //     },
+                    // } : {},
                     onSelectionUpdate: () => {
                         this.refreshToolbar();
                     },

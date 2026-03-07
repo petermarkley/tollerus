@@ -1,8 +1,5 @@
 # TODO
 
-## Things to Fix
-- [ ] Add WYSIWYG "inline" mode that disallows multiple `<p>`s and disallows any other block level Tiptap nodes. On save, normalize to expected DB field format for sense/subsense bodies.
-
 ## Tollerus Features
 - [ ] WYSIWYG & sanitizer for 'intro' box on Language, NeographySection, etc. (look for 3rd party package?)
 - [ ] Better form ID selector on auto-inflection page
