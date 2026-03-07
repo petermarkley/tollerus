@@ -147,7 +147,6 @@
                         model="infoForm.etym"
                         @input="$dispatch('tollerus-wysiwyg-input')"
                     />
-                    {{-- <x-tollerus::inputs.textarea id="etym" model="infoForm.etym" rows="2" @input="btn = 'save'; dirty=true;" /> --}}
                 </div>
                 <div class="flex flex-row justify-start gap-2">
                     <x-tollerus::inputs.button
@@ -656,19 +655,31 @@
                                                             saveEvent="$wire.updateSense(lexemeId, senseId, 'usage', document.getElementById(id).value, id);"
                                                         />
                                                     </div>
-                                                    <div data-obj="textarea-div" class="flex flex-col gap-2 items-start w-full" x-data="{ dirty: false, btn: 'saved', id: 'sense_'+senseId+'_body' }">
-                                                        <textarea
+                                                    <div
+                                                        data-obj="textarea-div"
+                                                        class="flex flex-col gap-2 items-start w-full"
+                                                        x-data="{ dirty: false, btn: 'saved', id: 'sense_'+senseId+'_body', }"
+                                                        @tollerus-wysiwyg-input="btn = 'save'; dirty = true;"
+                                                    >
+                                                        <x-tollerus::inputs.textarea
+                                                            wysiwyg="true"
+                                                            wysiwygIsInline="true"
+                                                            :nativeKeyboards="$nativeKeyboards"
+                                                            :language="$language"
+                                                            model="infoForm.lexemes.'+lexemeId+'.senses.'+senseId+'.body"
+                                                            @input="$dispatch('tollerus-wysiwyg-input')"
+                                                        />
+                                                        {{-- <textarea
                                                             x-bind:id="id"
                                                             rows="2"
                                                             x-model="sense.body"
                                                             @input="btn = 'save'; dirty=true;"
                                                             class="border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600" >
-                                                        </textarea>
+                                                        </textarea> --}}
                                                         <x-tollerus::inputs.button
                                                             @click="
                                                                 btn = 'saving';
-                                                                e = $el.closest('[data-obj=&quot;textarea-div&quot;]').querySelector('textarea');
-                                                                $wire.updateSense(lexemeId, senseId, 'body', e.value, id);
+                                                                $wire.updateSense(lexemeId, senseId, 'body', infoForm.lexemes[lexemeId].senses[senseId].body, id);
                                                             "
                                                             x-bind:disabled="!dirty"
                                                             wire:loading.attr="disabled"
@@ -719,7 +730,12 @@
                                                                                 <span class="sr-only">{{ __('tollerus::ui.move_subsense_down') }}</span>
                                                                             </x-tollerus::inputs.button>
                                                                         </div>
-                                                                        <div data-obj="textarea-div" class="flex flex-col gap-2 items-start flex-grow" x-data="{ dirty: false, btn: 'saved', id: 'subsense_'+subsenseId+'_body' }">
+                                                                        <div
+                                                                            data-obj="textarea-div"
+                                                                            class="flex flex-col gap-2 items-start flex-grow"
+                                                                            x-data="{ dirty: false, btn: 'saved', id: 'subsense_'+subsenseId+'_body' }"
+                                                                            @tollerus-wysiwyg-input="btn = 'save'; dirty = true;"
+                                                                        >
                                                                             <div class="flex flex-row justify-end w-full">
                                                                                 <x-tollerus::inputs.button
                                                                                     type="inverse"
@@ -745,19 +761,26 @@
                                                                                 showLabel="true"
                                                                                 saveEvent="$wire.updateSubsense(lexemeId, senseId, subsenseId, 'usage', document.getElementById(id).value, id);"
                                                                             />
-                                                                            <textarea
+                                                                            <x-tollerus::inputs.textarea
+                                                                                wysiwyg="true"
+                                                                                wysiwygIsInline="true"
+                                                                                :nativeKeyboards="$nativeKeyboards"
+                                                                                :language="$language"
+                                                                                model="infoForm.lexemes.'+lexemeId+'.senses.'+senseId+'.subsenses'+subsenseId+'.body"
+                                                                                @input="$dispatch('tollerus-wysiwyg-input', {html: editor.getHTML()})"
+                                                                            />
+                                                                            {{-- <textarea
                                                                                 x-bind:id="id"
                                                                                 rows="2"
                                                                                 x-model="subsense.body"
                                                                                 @input="btn = 'save'; dirty=true;"
                                                                                 class="border p-2 w-full rounded-lg inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600" >
-                                                                            </textarea>
+                                                                            </textarea> --}}
                                                                             <x-tollerus::inputs.button
                                                                                 size="small"
                                                                                 @click="
                                                                                     btn = 'saving';
-                                                                                    e = $el.closest('[data-obj=&quot;textarea-div&quot;]').querySelector('textarea');
-                                                                                    $wire.updateSubsense(lexemeId, senseId, subsenseId, 'body', e.value, id);
+                                                                                    $wire.updateSubsense(lexemeId, senseId, subsenseId, 'body', subsense.body, id);
                                                                                 "
                                                                                 x-bind:disabled="!dirty"
                                                                                 wire:loading.attr="disabled"

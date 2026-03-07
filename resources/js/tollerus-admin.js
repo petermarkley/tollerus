@@ -232,15 +232,6 @@ function registerAdminComponents(A) {
                         ...(opts.isInline ? [TollerusInlineDocument] : []),
                     ],
                     content: this.state ?? '',
-                    // editorProps: opts.isInline ? {
-                    //     handleKeyDown(view, event) {
-                    //         if (event.key === 'Enter') {
-                    //             event.preventDefault();
-                    //             return true;
-                    //         }
-                    //         return false;
-                    //     },
-                    // } : {},
                     onSelectionUpdate: () => {
                         this.refreshToolbar();
                     },

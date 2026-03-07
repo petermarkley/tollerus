@@ -10,7 +10,7 @@
   'language' => null,
 ])
 <div
-    class="flex flex-col gap-1 items-start"
+    class="w-full flex flex-col gap-1 items-start"
     @if (filter_var($wysiwyg, FILTER_VALIDATE_BOOLEAN))
         wire:ignore
         data-tollerus-wysiwyg
@@ -304,7 +304,7 @@
                                     size="small"
                                     title="{{ __('tollerus::ui.insert') }}"
                                     @click="open=false; $dispatch('tollerus-wysiwyg-word-apply', {
-                                        editorId, editorId,
+                                        editorId: editorId,
                                         wordId: selectedWordId,
                                         href: href,
                                         lang: lang,
