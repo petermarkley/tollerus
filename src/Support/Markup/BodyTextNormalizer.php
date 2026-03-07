@@ -4,11 +4,6 @@ namespace PeterMarkley\Tollerus\Support\Markup;
 
 use Masterminds\HTML5;
 
-use PeterMarkley\Tollerus\Enums\GlobalIdKind;
-use PeterMarkley\Tollerus\Models\GlobalId;
-use PeterMarkley\Tollerus\Models\Language;
-use PeterMarkley\Tollerus\Models\Neography;
-
 /**
  * Tiptap's StarterKit extension doesn't support using `<div>` elements
  * to create sections around paragraphs, but `<div>` sections is what
@@ -33,6 +28,9 @@ use PeterMarkley\Tollerus\Models\Neography;
  *   <p>Consectetur adipiscing elit.</p>
  *
  * That empty `<p>` should equate to a `</div><div>` boundary.
+ *
+ * We also support an 'inline' mode where `<p>` tags are unwrapped and
+ * removed entirely.
  */
 class BodyTextNormalizer
 {
@@ -96,5 +94,31 @@ class BodyTextNormalizer
 
         return $nodes->map(fn ($node) => $html5->saveHTML($node))
             ->implode("\n");
+    }
+
+    /**
+     * Normalize as an inline text field (entry etymology, sense/subsense body)
+     */
+    public function normalizeInlineForSave(string $html): string
+    {
+        $html5 = new HTML5();
+        $dom = $html5->loadHTMLFragment($html);
+        $xp  = new \DOMXPath($dom->ownerDocument);
+        $xp->registerNamespace('h', 'http://www.w3.org/1999/xhtml');
+
+        $tags = iterator_to_array($xp->query('.//h:div|.//h:p', $dom));
+        foreach ($tags as $tag) {
+            $parent = $tag->parentNode;
+            foreach (iterator_to_array($tag->childNodes) as $child) {
+                $parent->insertBefore($child, $tag);
+            }
+            $parent->removeChild($tag);
+        }
+
+        return $html5->saveHTML($dom);
+    }
+    public function normalizeInlineForWysiwyg(string $html): string
+    {
+        return '<p>'.$html.'</p>';
     }
 }

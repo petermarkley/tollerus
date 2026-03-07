@@ -30,6 +30,8 @@ use PeterMarkley\Tollerus\Models\Subsense;
 use PeterMarkley\Tollerus\Models\WordClass;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
+use PeterMarkley\Tollerus\Support\Markup\BodyTextNormalizer;
+use PeterMarkley\Tollerus\Support\Markup\BodyTextSanitizer;
 use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class EntryEditor extends Component
@@ -235,7 +237,7 @@ class EntryEditor extends Component
         $language = $this->language;
         $this->infoForm = [
             'primaryForm' => $this->entry->primary_form,
-            'etym' => $this->entry->etym,
+            'etym' => app(BodyTextNormalizer::class)->normalizeInlineForWysiwyg($this->entry->etym),
             'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) use ($language, $neographies, $inflectionMatchesPerGroup) {
                 // Collate some info about inflection matching at the lexeme level
                 $inflectionMatches = $inflectionMatchesPerGroup->get($lexeme->wordClass->group_id);
@@ -342,12 +344,12 @@ class EntryEditor extends Component
                         return [$sense->id => [
                             'num' => $sense->num,
                             'usage' => $sense->usage,
-                            'body' => $sense->body,
+                            'body' => app(BodyTextNormalizer::class)->normalizeInlineForWysiwyg($sense->body),
                             'subsenses' => $sense->subsenses->mapWithKeys(function ($subsense) {
                                 return [$subsense->id => [
                                     'num' => $subsense->num,
                                     'usage' => $subsense->usage,
-                                    'body' => $subsense->body,
+                                    'body' => app(BodyTextNormalizer::class)->normalizeInlineForWysiwyg($subsense->body),
                                 ]];
                             })->toArray(),
                         ]];
@@ -394,7 +396,9 @@ class EntryEditor extends Component
     public function infoSave(): void
     {
         try {
-            $this->entry->etym = $this->infoForm['etym'];
+            $html = app(BodyTextSanitizer::class)->sanitize($this->infoForm['etym']);
+            $htmlN = app(BodyTextNormalizer::class)->normalizeInlineForSave($html);
+            $this->entry->etym = app(BodyTextNormalizer::class)->normalizeInlineForSave($html);
             $this->entry->save();
             // Refresh front-end state
             $this->refreshForm();
@@ -806,7 +810,7 @@ class EntryEditor extends Component
         // $propName whitelist
         $allowedPropData = [
             'usage' => ['type' => 'string', 'column' => 'usage'],
-            'body' => ['type' => 'string', 'column' => 'body'],
+            'body' => ['type' => 'html', 'column' => 'body'],
         ];
         $allowedPropNames = array_keys($allowedPropData);
         if (!in_array($propName, $allowedPropNames, true)) {
@@ -815,6 +819,10 @@ class EntryEditor extends Component
         }
         // Assign appropriately by type
         switch ($allowedPropData[$propName]['type']) {
+            case 'html':
+                $html = app(BodyTextSanitizer::class)->sanitize($propVal);
+                $senseModel[$allowedPropData[$propName]['column']] = app(BodyTextNormalizer::class)->normalizeInlineForSave($html);
+            break;
             case 'string':
             default:
                 $senseModel[$allowedPropData[$propName]['column']] = $propVal;
@@ -920,7 +928,7 @@ class EntryEditor extends Component
         // $propName whitelist
         $allowedPropData = [
             'usage' => ['type' => 'string', 'column' => 'usage'],
-            'body' => ['type' => 'string', 'column' => 'body'],
+            'body' => ['type' => 'html', 'column' => 'body'],
         ];
         $allowedPropNames = array_keys($allowedPropData);
         if (!in_array($propName, $allowedPropNames, true)) {
@@ -929,6 +937,10 @@ class EntryEditor extends Component
         }
         // Assign appropriately by type
         switch ($allowedPropData[$propName]['type']) {
+            case 'html':
+                $html = app(BodyTextSanitizer::class)->sanitize($propVal);
+                $subsenseModel[$allowedPropData[$propName]['column']] = app(BodyTextNormalizer::class)->normalizeInlineForSave($html);
+            break;
             case 'string':
             default:
                 $subsenseModel[$allowedPropData[$propName]['column']] = $propVal;

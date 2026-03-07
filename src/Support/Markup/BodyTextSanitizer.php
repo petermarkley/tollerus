@@ -4,11 +4,6 @@ namespace PeterMarkley\Tollerus\Support\Markup;
 
 use Masterminds\HTML5;
 
-use PeterMarkley\Tollerus\Enums\GlobalIdKind;
-use PeterMarkley\Tollerus\Models\GlobalId;
-use PeterMarkley\Tollerus\Models\Language;
-use PeterMarkley\Tollerus\Models\Neography;
-
 /**
  * Sanitize an HTML input field by only allowing tags/attributes
  * from an approved list of known safe ones.
