@@ -15,21 +15,23 @@ use PeterMarkley\Tollerus\Models\Neography;
  */
 class BodyTextSanitizer
 {
-    public const array SAFE_TAG_LIST = [
-        'div',    'p',
-        'ol',     'ul',
-        'li',     'blockquote',
-        'span',   'b',
-        'strong', 'i',
-        'em',     'a',
-        'sup',    'sub',
-    ];
-    public const array SAFE_ATTR_LIST = [
-        'href',           'target',
-        'rel',            'class',
-        'data-tollerus',  'data-id',
-        'data-lang',      'data-neography-id',
-        'data-neography',
+    public const array SAFE_LIST = [
+        'div'=>[], 'p'=>[],
+        'ol'=>[],  'ul'=>[],
+        'li'=>[],  'blockquote'=>[],
+        'b'=>[], 'strong'=>[],
+        'i'=>[], 'em'=>[],
+        'sup'=>[], 'sub'=>[],
+        'a' => [
+            'href', 'target', 'rel',
+            'data-tollerus',  'data-id',
+            'data-lang',
+        ],
+        'span' => [
+            'data-tollerus',  'data-id',
+            'data-lang',      'data-neography-id',
+            'data-neography', 'class',
+        ],
     ];
 
     public function sanitize(string $html): string
@@ -55,7 +57,7 @@ class BodyTextSanitizer
             break;
             case XML_ELEMENT_NODE:
                 // Unrecognized tags should be converted to text nodes
-                if (!in_array(strtolower($node->tagName), self::SAFE_TAG_LIST)) {
+                if (!in_array(strtolower($node->tagName), array_keys(self::SAFE_LIST))) {
                     $text = $dom->ownerDocument->createTextNode($node->textContent);
                     $node->parentNode->replaceChild($text, $node);
                     return;
@@ -69,13 +71,14 @@ class BodyTextSanitizer
             break;
             case XML_ATTRIBUTE_NODE:
                 // The tag is recognized, but unknown attributes should be stripped
-                if (!in_array(strtolower($node->name), self::SAFE_ATTR_LIST)) {
+                $safeList = self::SAFE_LIST[$node->ownerElement->tagName];
+                if (!in_array(strtolower($node->name), $safeList)) {
                     $node->ownerElement->removeAttributeNode($node);
                 }
             break;
             default:
                 // Whatever this is, it should not be here
-                $node->parent->removeChild($node);
+                $node->parentNode->removeChild($node);
             break;
         }
     }
