@@ -5,6 +5,7 @@
   'rows' => 10,
   'monospace' => false,
   'wysiwyg' => false,
+  'wysiwygIsInline' => false,
   'nativeKeyboards' => null,
   'language' => null,
 ])
@@ -15,6 +16,7 @@
         data-tollerus-wysiwyg
         x-data="tollerusWysiwyg({
             state: $wire.entangle('{{ $model }}'),
+            isInline: {{ $wysiwygIsInline }},
         })"
         @tollerus-wysiwyg-toolbar="handleToolbar($event.detail.action)"
         @tollerus-wysiwyg-link-apply.window="if($event.detail.editorId!==editorId) {return;} applyLink($event.detail)"
@@ -189,58 +191,60 @@
                             </div>
                         </div>
                     </x-tollerus::inputs.dropdown>
-                    <div>
-                        <x-tollerus::inputs.button
-                            x-show="!isActive('bullet_list')"
-                            type="inverse"
-                            size="tiny"
-                            title="{{ __('tollerus::ui.bullet_list') }}"
-                            x-bind:disabled="rawMode"
-                            class="relative"
-                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'bullet_list' })"
-                        >
-                            <x-tollerus::icons.micro.list-bullet class="sm:h-6" />
-                            <span class="sr-only">{{ __('tollerus::ui.bullet_list') }}</span>
-                        </x-tollerus::inputs.button>
-                        <x-tollerus::inputs.button
-                            x-show="isActive('bullet_list')" x-cloak
-                            type="inverse-highlight"
-                            size="tiny"
-                            title="{{ __('tollerus::ui.bullet_list') }}"
-                            x-bind:disabled="rawMode"
-                            class="relative"
-                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'bullet_list' })"
-                        >
-                            <x-tollerus::icons.micro.list-bullet class="sm:h-6" />
-                            <span class="sr-only">{{ __('tollerus::ui.bullet_list') }}</span>
-                        </x-tollerus::inputs.button>
-                    </div>
-                    <div>
-                        <x-tollerus::inputs.button
-                            x-show="!isActive('numbered_list')"
-                            type="inverse"
-                            size="tiny"
-                            title="{{ __('tollerus::ui.numbered_list') }}"
-                            x-bind:disabled="rawMode"
-                            class="relative"
-                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'numbered_list' })"
-                        >
-                            <x-tollerus::icons.micro.list-numbered class="sm:h-6" />
-                            <span class="sr-only">{{ __('tollerus::ui.numbered_list') }}</span>
-                        </x-tollerus::inputs.button>
-                        <x-tollerus::inputs.button
-                            x-show="isActive('numbered_list')" x-cloak
-                            type="inverse-highlight"
-                            size="tiny"
-                            title="{{ __('tollerus::ui.numbered_list') }}"
-                            x-bind:disabled="rawMode"
-                            class="relative"
-                            @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'numbered_list' })"
-                        >
-                            <x-tollerus::icons.micro.list-numbered class="sm:h-6" />
-                            <span class="sr-only">{{ __('tollerus::ui.numbered_list') }}</span>
-                        </x-tollerus::inputs.button>
-                    </div>
+                    @if (!filter_var($wysiwygIsInline, FILTER_VALIDATE_BOOLEAN))
+                        <div>
+                            <x-tollerus::inputs.button
+                                x-show="!isActive('bullet_list')"
+                                type="inverse"
+                                size="tiny"
+                                title="{{ __('tollerus::ui.bullet_list') }}"
+                                x-bind:disabled="rawMode"
+                                class="relative"
+                                @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'bullet_list' })"
+                            >
+                                <x-tollerus::icons.micro.list-bullet class="sm:h-6" />
+                                <span class="sr-only">{{ __('tollerus::ui.bullet_list') }}</span>
+                            </x-tollerus::inputs.button>
+                            <x-tollerus::inputs.button
+                                x-show="isActive('bullet_list')" x-cloak
+                                type="inverse-highlight"
+                                size="tiny"
+                                title="{{ __('tollerus::ui.bullet_list') }}"
+                                x-bind:disabled="rawMode"
+                                class="relative"
+                                @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'bullet_list' })"
+                            >
+                                <x-tollerus::icons.micro.list-bullet class="sm:h-6" />
+                                <span class="sr-only">{{ __('tollerus::ui.bullet_list') }}</span>
+                            </x-tollerus::inputs.button>
+                        </div>
+                        <div>
+                            <x-tollerus::inputs.button
+                                x-show="!isActive('numbered_list')"
+                                type="inverse"
+                                size="tiny"
+                                title="{{ __('tollerus::ui.numbered_list') }}"
+                                x-bind:disabled="rawMode"
+                                class="relative"
+                                @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'numbered_list' })"
+                            >
+                                <x-tollerus::icons.micro.list-numbered class="sm:h-6" />
+                                <span class="sr-only">{{ __('tollerus::ui.numbered_list') }}</span>
+                            </x-tollerus::inputs.button>
+                            <x-tollerus::inputs.button
+                                x-show="isActive('numbered_list')" x-cloak
+                                type="inverse-highlight"
+                                size="tiny"
+                                title="{{ __('tollerus::ui.numbered_list') }}"
+                                x-bind:disabled="rawMode"
+                                class="relative"
+                                @click="$dispatch('tollerus-wysiwyg-toolbar', { action: 'numbered_list' })"
+                            >
+                                <x-tollerus::icons.micro.list-numbered class="sm:h-6" />
+                                <span class="sr-only">{{ __('tollerus::ui.numbered_list') }}</span>
+                            </x-tollerus::inputs.button>
+                        </div>
+                    @endif
                     <x-tollerus::inputs.dropdown class="relative w-full">
                         <x-slot:button>
                             <x-tollerus::inputs.button
@@ -553,6 +557,9 @@
             </div>
             <div
                 data-tollerus-wysiwyg-mount
+                @if (filter_var($wysiwygIsInline, FILTER_VALIDATE_BOOLEAN))
+                    data-tollerus-wysiwyg-inline
+                @endif
                 x-show="!rawMode"
                 class="w-full border p-2 w-full rounded-b-lg rounded-t inset-shadow-sm bg-zinc-50 dark:bg-zinc-900/30 border-zinc-400 dark:border-zinc-600"
             ></div>

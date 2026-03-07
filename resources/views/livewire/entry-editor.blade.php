@@ -140,6 +140,7 @@
                     </h3>
                     <x-tollerus::inputs.textarea
                         wysiwyg="true"
+                        wysiwygIsInline="true"
                         :nativeKeyboards="$nativeKeyboards"
                         :language="$language"
                         id="etym"

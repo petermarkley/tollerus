@@ -207,6 +207,11 @@ function registerAdminComponents(A) {
                             link: false,
                             bold: false,
                             italic: false,
+                            // Conditional extensions based on opts.isInline
+                            bulletList: !opts.isInline,
+                            horizontalRule: !opts.isInline,
+                            listItem: !opts.isInline,
+                            orderedList: !opts.isInline,
                         }),
                         TollerusBold,
                         TollerusItalic,
