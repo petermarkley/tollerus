@@ -12,4 +12,3 @@ trait HasTablePrefix
         return \Config::get('tollerus.connection', 'tollerus');
     }
 }
-

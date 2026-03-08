@@ -3,63 +3,6 @@
 <script>
 document.addEventListener('alpine:init', () => {
     Alpine.store('reorderFunctions', {
-        positionProp: 'position',
-        sortItems(parentObj, positionProp = this.positionProp) {
-            return Object.entries(parentObj).sort((a, b) => {
-                return a[1][positionProp] - b[1][positionProp];
-            });
-        },
-        isFirstItem(parentObj, itemId, positionProp = this.positionProp) {
-            if (typeof parentObj[itemId] === "undefined") {
-                return true;
-            }
-            let lowest = null;
-            for (let id in parentObj) {
-                if (lowest === null || parentObj[id][positionProp] < lowest) {
-                    lowest = parentObj[id][positionProp];
-                }
-            }
-            return (parentObj[itemId][positionProp] == lowest);
-        },
-        isLastItem(parentObj, itemId, positionProp = this.positionProp) {
-            if (typeof parentObj[itemId] === "undefined") {
-                return true;
-            }
-            let highest = null;
-            for (let id in parentObj) {
-                if (highest === null || parentObj[id][positionProp] > highest) {
-                    highest = parentObj[id][positionProp];
-                }
-            }
-            return (parentObj[itemId][positionProp] == highest);
-        },
-        getNeighborId(parentObj, itemId, dir, positionProp = this.positionProp) {
-            // Normalize input
-            if (dir == 0) {
-                return null;
-            }
-            dir = Math.round(dir / Math.abs(dir));
-            // Get sorted numeric arrays
-            let itemsNumeric = [];
-            for (let id in parentObj) {
-                let newItem = {id: id};
-                newItem[positionProp] = parentObj[id][positionProp];
-                itemsNumeric.push(newItem);
-            }
-            itemsNumeric.sort((a, b) => a[positionProp] - b[positionProp]);
-            let idsNumeric = itemsNumeric.map(item => item.id);
-            // Get numeric indices
-            let itemIndex = idsNumeric.indexOf(itemId);
-            if (itemIndex < 0) {
-                return null;
-            }
-            let neighborIndex = itemIndex + dir;
-            if (neighborIndex < 0 || neighborIndex >= itemsNumeric.length) {
-                return null;
-            }
-            // Return result
-            return idsNumeric[neighborIndex];
-        },
         swapItems(itemElem, neighborElem) {
             // Measure
             let itemRect = itemElem.getBoundingClientRect();

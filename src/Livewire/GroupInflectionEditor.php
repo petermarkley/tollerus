@@ -13,9 +13,11 @@ use Illuminate\Validation\Rule;
 use PeterMarkley\Tollerus\Models\InflectionTable;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
+use PeterMarkley\Tollerus\Traits\HasOrderedObjects;
 
 class GroupInflectionEditor extends Component
 {
+    use HasOrderedObjects;
     // Models
     #[Locked] public Language $language;
     #[Locked] public WordClassGroup $group;
@@ -77,33 +79,35 @@ class GroupInflectionEditor extends Component
                     'label' => $row->label,
                 ])->values()->toArray(),
             ])->values()->toArray();
-        $this->tableForm = collect($this->tables)->mapWithKeys(function ($table) {
-            return [$table->id => [
-                'position' => $table->position,
-                'columns' => $table->columns->sortBy('position')->map(function ($column) {
-                    return [
-                        'columnId' => $column->id,
-                        'label' => $column->label,
-                        'position' => $column->position,
-                        'rows' => $column->rows->sortBy('position')->map(function ($row) {
-                            return [
-                                'rowId' => $row->id,
-                                'label' => $row->label,
-                                'labelBrief' => $row->label_brief,
-                                'labelLong' => $row->label_long,
-                                'position' => $row->position,
-                                'srcBase' => $row->src_base,
-                            ];
-                        })->values()->toArray(),
-                    ];
-                })->values()->toArray(),
-                'tableEditUrl' => route('tollerus.admin.languages.inflections.table.edit', [
-                    'language' => $this->language,
-                    'wordClassGroup' => $this->group,
-                    'inflectionTable' => $table,
-                ]),
-            ]];
-        })->toArray();
+        $this->tableForm = [
+            'tables' => collect($this->tables)->mapWithKeys(function ($table) {
+                return [$table->id => [
+                    'position' => $table->position,
+                    'columns' => $table->columns->sortBy('position')->map(function ($column) {
+                        return [
+                            'columnId' => $column->id,
+                            'label' => $column->label,
+                            'position' => $column->position,
+                            'rows' => $column->rows->sortBy('position')->map(function ($row) {
+                                return [
+                                    'rowId' => $row->id,
+                                    'label' => $row->label,
+                                    'labelBrief' => $row->label_brief,
+                                    'labelLong' => $row->label_long,
+                                    'position' => $row->position,
+                                    'srcBase' => $row->src_base,
+                                ];
+                            })->values()->toArray(),
+                        ];
+                    })->values()->toArray(),
+                    'tableEditUrl' => route('tollerus.admin.languages.inflections.table.edit', [
+                        'language' => $this->language,
+                        'wordClassGroup' => $this->group,
+                        'inflectionTable' => $table,
+                    ]),
+                ]];
+            })->toArray(),
+        ];
         $nullRows = collect($this->tables)
             ->flatMap->columns
             ->flatMap->rows
@@ -194,8 +198,8 @@ class GroupInflectionEditor extends Component
                 $tablesCollection = collect($this->tables);
                 $tableModel    = $tablesCollection->firstWhere('id', $tableId);
                 $neighborModel = $tablesCollection->firstWhere('id', $neighborId);
-                $oldTablePosition    = (int) $this->tableForm[$tableId]['position'];
-                $oldNeighborPosition = (int) $this->tableForm[$neighborId]['position'];
+                $oldTablePosition    = (int) $this->tableForm['tables'][$tableId]['position'];
+                $oldNeighborPosition = (int) $this->tableForm['tables'][$neighborId]['position'];
                 /**
                  * Apparently the 'unique' constraint applies even within a transaction.
                  * So we need to carefully move one of the models out of the way first.
