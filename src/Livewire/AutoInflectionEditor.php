@@ -23,9 +23,11 @@ use PeterMarkley\Tollerus\Models\InflectionTable;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\MorphRule;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
+use PeterMarkley\Tollerus\Traits\HasOrderedObjects;
 
 class AutoInflectionEditor extends Component
 {
+    use HasOrderedObjects;
     public string $tabTarget = 'base';
     public string $tabPattern = 'transliterated';
     public string $tabNeography = '';
@@ -117,6 +119,7 @@ class AutoInflectionEditor extends Component
             abort(404);
         }
 
+        $this->positionProp = 'order';
         $this->language = $language;
         $this->language->loadMissing([
             'neographies',
