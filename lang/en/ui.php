@@ -289,6 +289,7 @@ return [
     'remove_filter' => 'Remove filter',
     'column' => 'Column',
     'columns' => 'Columns',
+    'column_nameless' => '(column)',
     'no_columns' => 'No columns',
     'add_column' => 'Add inflection column',
     'move_column_up' => 'Move column up',

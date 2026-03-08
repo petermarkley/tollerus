@@ -7,7 +7,7 @@
         },
         tableForm: $wire.entangle('tableForm'),
         baseRowOpts: $wire.entangle('baseRowOpts'),
-        moveTable(tableElem, tableId, neighborId, dir) {
+        moveTable(tableElem, tableId, neighborId) {
             let neighborElem = document.getElementById('table_' + neighborId);
             $store.reorderFunctions.swapItems(tableElem, neighborElem);
             const onDone = (event) => {
@@ -90,7 +90,7 @@
                                 type="inverse"
                                 title="{{ __('tollerus::ui.move_inflection_table_up') }}"
                                 x-bind:disabled="animating || {{ $this->isFirstItem($tableForm['tables'], $tableId) ? 'true' : 'false' }}"
-                                @click="animating=true; moveTable($el.closest('[data-obj=table]'), {{ $tableId }}, {{ $prevNeighborId ?? 'null' }}, -1);"
+                                @click="animating=true; moveTable($el.closest('[data-obj=table]'), {{ $tableId }}, {{ $prevNeighborId ?? 'null' }});"
                             >
                                 <x-tollerus::icons.chevron-up class="h-8 w-8" />
                                 <span class="sr-only">{{ __('tollerus::ui.move_inflection_table_up') }}</span>
@@ -99,7 +99,7 @@
                                 type="inverse"
                                 title="{{ __('tollerus::ui.move_inflection_table_down') }}"
                                 x-bind:disabled="animating || {{ $this->isLastItem($tableForm['tables'], $tableId) ? 'true' : 'false' }}"
-                                @click="animating=true; moveTable($el.closest('[data-obj=table]'), {{ $tableId }}, {{ $nextNeighborId ?? 'null' }}, +1);"
+                                @click="animating=true; moveTable($el.closest('[data-obj=table]'), {{ $tableId }}, {{ $nextNeighborId ?? 'null' }});"
                             >
                                 <x-tollerus::icons.chevron-down class="h-8 w-8" />
                                 <span class="sr-only">{{ __('tollerus::ui.move_inflection_table_down') }}</span>

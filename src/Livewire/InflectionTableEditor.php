@@ -22,9 +22,11 @@ use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\Pivots\InflectionColumnFilter;
 use PeterMarkley\Tollerus\Models\Pivots\InflectionRowFilter;
+use PeterMarkley\Tollerus\Traits\HasOrderedObjects;
 
 class InflectionTableEditor extends Component
 {
+    use HasOrderedObjects;
     // Models
     #[Locked] public Language $language;
     #[Locked] public WordClassGroup $group;
