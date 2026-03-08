@@ -32,12 +32,9 @@ use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextNormalizer;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextSanitizer;
-use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class EntryEditor extends Component
 {
-    use HasModelCache;
-    private $cacheRoot = 'lexemes';
     // Models
     #[Locked] public Language $language;
     #[Locked] public Entry $entry;
@@ -237,7 +234,7 @@ class EntryEditor extends Component
         $language = $this->language;
         $this->infoForm = [
             'primaryForm' => $this->entry->primary_form,
-            'etym' => app(BodyTextNormalizer::class)->normalizeInlineForWysiwyg($this->entry->etym),
+            'etym' => app(BodyTextNormalizer::class)->normalizeInlineForWysiwyg($this->entry->etym ?? ''),
             'lexemes' => collect($this->lexemes)->mapWithKeys(function ($lexeme) use ($language, $neographies, $inflectionMatchesPerGroup) {
                 // Collate some info about inflection matching at the lexeme level
                 $inflectionMatches = $inflectionMatchesPerGroup->get($lexeme->wordClass->group_id);
@@ -532,13 +529,11 @@ class EntryEditor extends Component
     public function createForm(string $lexemeId): void
     {
         // Find model
-        $lexemeModel = $this->findInCache('form-add-failure', [
-            [
-                'id' => $lexemeId,
-                'objectType' => Lexeme::class,
-                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
-            ],
-        ]);
+        $lexemeModel = Lexeme::find($lexemeId);
+        if (!($lexemeModel instanceof Lexeme)) {
+            $this->dispatch('form-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['lexemeId' => [__('tollerus::error.invalid_lexeme')]]);
+        }
         // Create form
         $lexemeModel->forms()->create([
             'language_id' => $this->language->id,
@@ -548,19 +543,11 @@ class EntryEditor extends Component
     public function updateForm(string $lexemeId, string $formId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
-        $formModel = $this->findInCache('form-update-failure', [
-            [
-                'id' => $lexemeId,
-                'objectType' => Lexeme::class,
-                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
-                'relation' => 'forms',
-            ],
-            [
-                'id' => $formId,
-                'objectType' => Form::class,
-                'failMessage' => ['formId' => [__('tollerus::error.invalid_form')]],
-            ],
-        ]);
+        $formModel = Form::find($formId);
+        if (!($formModel instanceof Form)) {
+            $this->dispatch('form-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['formId' => [__('tollerus::error.invalid_form')]]);
+        }
         // $propName whitelist
         $allowedPropData = [
             'transliterated' => ['type' => 'string', 'column' => 'transliterated'],
@@ -601,19 +588,11 @@ class EntryEditor extends Component
     public function addFormValue(string $lexemeId, string $formId, string $valueId): void
     {
         // Find models
-        $formModel = $this->findInCache('form-value-add-failure', [
-            [
-                'id' => $lexemeId,
-                'objectType' => Lexeme::class,
-                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
-                'relation' => 'forms',
-            ],
-            [
-                'id' => $formId,
-                'objectType' => Form::class,
-                'failMessage' => ['formId' => [__('tollerus::error.invalid_form')]],
-            ],
-        ]);
+        $formModel = Form::find($formId);
+        if (!($formModel instanceof Form)) {
+            $this->dispatch('form-value-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['formId' => [__('tollerus::error.invalid_form')]]);
+        }
         $valueModel = FeatureValue::find($valueId);
         if (!($valueModel instanceof FeatureValue)) {
             $this->dispatch('form-value-add-failure');
@@ -706,19 +685,11 @@ class EntryEditor extends Component
     public function updateNativeSpelling(string $lexemeId, string $formId, string $neographyId, string $spelling, ?string $domId = ''): void
     {
         // Find models
-        $formModel = $this->findInCache('nativespelling-update-failure', [
-            [
-                'id' => $lexemeId,
-                'objectType' => Lexeme::class,
-                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
-                'relation' => 'forms',
-            ],
-            [
-                'id' => $formId,
-                'objectType' => Form::class,
-                'failMessage' => ['formId' => [__('tollerus::error.invalid_form')]],
-            ],
-        ]);
+        $formModel = Form::find($formId);
+        if (!($formModel instanceof Form)) {
+            $this->dispatch('nativespelling-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['formId' => [__('tollerus::error.invalid_form')]]);
+        }
         $neographyModel = $this->language->neographies->firstWhere('id', $neographyId);
         if (!($neographyModel instanceof Neography)) {
             $this->dispatch('nativespelling-update-failure');
@@ -775,13 +746,11 @@ class EntryEditor extends Component
     public function createSense(string $lexemeId): void
     {
         // Find model
-        $lexemeModel = $this->findInCache('sense-add-failure', [
-            [
-                'id' => $lexemeId,
-                'objectType' => Lexeme::class,
-                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
-            ],
-        ]);
+        $lexemeModel = Lexeme::find($lexemeId);
+        if (!($lexemeModel instanceof Lexeme)) {
+            $this->dispatch('sense-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['lexemeId' => [__('tollerus::error.invalid_lexeme')]]);
+        }
         // Create sense
         $nextNum = $lexemeModel->senses->max('num') + 1;
         $lexemeModel->senses()->create([
@@ -794,19 +763,11 @@ class EntryEditor extends Component
     public function updateSense(string $lexemeId, string $senseId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find models
-        $senseModel = $this->findInCache('sense-update-failure', [
-            [
-                'id' => $lexemeId,
-                'objectType' => Lexeme::class,
-                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
-                'relation' => 'senses',
-            ],
-            [
-                'id' => $senseId,
-                'objectType' => Sense::class,
-                'failMessage' => ['senseId' => [__('tollerus::error.invalid_sense')]],
-            ],
-        ]);
+        $senseModel = Sense::find($senseId);
+        if (!($senseModel instanceof Sense)) {
+            $this->dispatch('sense-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['senseId' => [__('tollerus::error.invalid_sense')]]);
+        }
         // $propName whitelist
         $allowedPropData = [
             'usage' => ['type' => 'string', 'column' => 'usage'],
@@ -883,19 +844,11 @@ class EntryEditor extends Component
     public function createSubsense(string $lexemeId, string $senseId): void
     {
         // Find models
-        $senseModel = $this->findInCache('subsense-add-failure', [
-            [
-                'id' => $lexemeId,
-                'objectType' => Lexeme::class,
-                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
-                'relation' => 'senses',
-            ],
-            [
-                'id' => $senseId,
-                'objectType' => Sense::class,
-                'failMessage' => ['senseId' => [__('tollerus::error.invalid_sense')]],
-            ],
-        ]);
+        $senseModel = Sense::find($senseId);
+        if (!($senseModel instanceof Sense)) {
+            $this->dispatch('subsense-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['senseId' => [__('tollerus::error.invalid_sense')]]);
+        }
         // Create subsense
         $nextNum = $senseModel->subsenses->max('num') + 1;
         $senseModel->subsenses()->create([
@@ -906,25 +859,11 @@ class EntryEditor extends Component
     public function updateSubsense(string $lexemeId, string $senseId, string $subsenseId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find models
-        $subsenseModel = $this->findInCache('subsense-update-failure', [
-            [
-                'id' => $lexemeId,
-                'objectType' => Lexeme::class,
-                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
-                'relation' => 'senses',
-            ],
-            [
-                'id' => $senseId,
-                'objectType' => Sense::class,
-                'failMessage' => ['senseId' => [__('tollerus::error.invalid_sense')]],
-                'relation' => 'subsenses',
-            ],
-            [
-                'id' => $subsenseId,
-                'objectType' => Subsense::class,
-                'failMessage' => ['senseId' => [__('tollerus::error.invalid_subsense')]],
-            ],
-        ]);
+        $subsenseModel = Subsense::find($subsenseId);
+        if (!($subsenseModel instanceof Subsense)) {
+            $this->dispatch('subsense-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['senseId' => [__('tollerus::error.invalid_subsense')]]);
+        }
         // $propName whitelist
         $allowedPropData = [
             'usage' => ['type' => 'string', 'column' => 'usage'],
@@ -1022,13 +961,11 @@ class EntryEditor extends Component
     public function createMissingForms(string $lexemeId): void
     {
         // Find model
-        $lexemeModel = $this->findInCache('form-addmissing-failure', [
-            [
-                'id' => $lexemeId,
-                'objectType' => Lexeme::class,
-                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
-            ],
-        ]);
+        $lexemeModel = Lexeme::find($lexemeId);
+        if (!($lexemeModel instanceof Lexeme)) {
+            $this->dispatch('form-addmissing-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['lexemeId' => [__('tollerus::error.invalid_lexeme')]]);
+        }
         $this->createMissingFormsWorker($lexemeModel, $lexemeModel->wordClass->group);
         $this->refreshForm();
     }
@@ -1040,20 +977,12 @@ class EntryEditor extends Component
         /**
          * Find models
          */
-        // Form (via lexeme)
-        $formModel = $this->findInCache('form-autoinflect-failure', [
-            [
-                'id' => $lexemeId,
-                'objectType' => Lexeme::class,
-                'failMessage' => ['lexemeId' => [__('tollerus::error.invalid_lexeme')]],
-                'relation' => 'forms',
-            ],
-            [
-                'id' => $formId,
-                'objectType' => Form::class,
-                'failMessage' => ['formId' => [__('tollerus::error.invalid_form')]],
-            ],
-        ]);
+        // Form
+        $formModel = Form::find($formId);
+        if (!($formModel instanceof Form)) {
+            $this->dispatch('form-autoinflect-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['formId' => [__('tollerus::error.invalid_form')]]);
+        }
         // Inflection row (directly)
         $row = InflectionRow::find($rowId);
         if (!($row instanceof InflectionRow)) {

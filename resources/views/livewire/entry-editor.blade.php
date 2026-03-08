@@ -766,7 +766,7 @@
                                                                                 wysiwygIsInline="true"
                                                                                 :nativeKeyboards="$nativeKeyboards"
                                                                                 :language="$language"
-                                                                                model="infoForm.lexemes.'+lexemeId+'.senses.'+senseId+'.subsenses'+subsenseId+'.body"
+                                                                                model="infoForm.lexemes.'+lexemeId+'.senses.'+senseId+'.subsenses.'+subsenseId+'.body"
                                                                                 @input="$dispatch('tollerus-wysiwyg-input', {html: editor.getHTML()})"
                                                                             />
                                                                             {{-- <textarea

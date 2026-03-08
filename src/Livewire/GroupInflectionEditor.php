@@ -13,12 +13,9 @@ use Illuminate\Validation\Rule;
 use PeterMarkley\Tollerus\Models\InflectionTable;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
-use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class GroupInflectionEditor extends Component
 {
-    use HasModelCache;
-    private $cacheRoot = 'tables';
     // Models
     #[Locked] public Language $language;
     #[Locked] public WordClassGroup $group;

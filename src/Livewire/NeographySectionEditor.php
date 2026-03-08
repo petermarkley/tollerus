@@ -22,12 +22,9 @@ use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
 use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextNormalizer;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextSanitizer;
-use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class NeographySectionEditor extends Component
 {
-    use HasModelCache;
-    private $cacheRoot = 'groups';
     // Models
     #[Locked] public Neography $neography;
     #[Locked] public NeographySection $sect;
@@ -245,13 +242,11 @@ class NeographySectionEditor extends Component
     public function updateGroup(string $groupId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
-        $groupModel = $this->findInCache('group-update-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => NeographyGlyphGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
-            ],
-        ]);
+        $groupModel = NeographyGlyphGroup::find($groupId);
+        if (!($groupModel instanceof NeographyGlyphGroup)) {
+            $this->dispatch('group-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['groupId' => [__('tollerus::error.invalid_glyph_group')]]);
+        }
         // $propName whitelist
         $allowedPropData = [
             'type'  => ['type' => 'enum', 'enumClass' => NeographyGlyphType::class, 'column' => 'type'],
@@ -321,13 +316,11 @@ class NeographySectionEditor extends Component
     public function createGlyph(string $groupId): void
     {
         // Find model
-        $groupModel = $this->findInCache('glyph-add-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => NeographyGlyphGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
-            ],
-        ]);
+        $groupModel = NeographyGlyphGroup::find($groupId);
+        if (!($groupModel instanceof NeographyGlyphGroup)) {
+            $this->dispatch('glyph-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['groupId' => [__('tollerus::error.invalid_glyph_group')]]);
+        }
         // Create glyph
         $nextPosition = $groupModel->glyphs->max('position') + 1;
         $groupModel->glyphs()->create([
@@ -339,19 +332,11 @@ class NeographySectionEditor extends Component
     public function updateGlyph(string $groupId, string $glyphId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
-        $glyphModel = $this->findInCache('glyph-update-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => NeographyGlyphGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
-                'relation' => 'glyphs',
-            ],
-            [
-                'id' => $glyphId,
-                'objectType' => NeographyGlyph::class,
-                'failMessage' => ['glyphId' => [__('tollerus::error.invalid_glyph')]],
-            ],
-        ]);
+        $glyphModel = NeographyGlyph::find($glyphId);
+        if (!($glyphModel instanceof NeographyGlyph)) {
+            $this->dispatch('glyph-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['glyphId' => [__('tollerus::error.invalid_glyph')]]);
+        }
         // $propName whitelist
         $allowedPropData = [
             'renderBase'     => ['type' => 'boolean', 'column' => 'render_base'],
@@ -449,13 +434,11 @@ class NeographySectionEditor extends Component
         }
         // Find models
         $sectModel = $this->sect;
-        $groupModel = $this->findInCache('group-transfer-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => NeographyGlyphGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
-            ],
-        ]);
+        $groupModel = NeographyGlyphGroup::find($groupId);
+        if (!($groupModel instanceof NeographyGlyphGroup)) {
+            $this->dispatch('group-transfer-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['groupId' => [__('tollerus::error.invalid_glyph_group')]]);
+        }
         // Transfer group
         try {
             $connection = config('tollerus.connection', 'tollerus');
@@ -502,26 +485,16 @@ class NeographySectionEditor extends Component
             throw \Illuminate\Validation\ValidationException::withMessages(['destGroup' => [__('tollerus::error.invalid_glyph_group')]]);
         }
         // Find models
-        $groupModel = $this->findInCache('glyph-transfer-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => NeographyGlyphGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
-            ],
-        ]);
-        $glyphModel = $this->findInCache('glyph-transfer-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => NeographyGlyphGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_glyph_group')]],
-                'relation' => 'glyphs',
-            ],
-            [
-                'id' => $glyphId,
-                'objectType' => NeographyGlyph::class,
-                'failMessage' => ['glyphId' => [__('tollerus::error.invalid_glyph')]],
-            ],
-        ]);
+        $groupModel = NeographyGlyphGroup::find($groupId);
+        if (!($groupModel instanceof NeographyGlyphGroup)) {
+            $this->dispatch('glyph-transfer-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['groupId' => [__('tollerus::error.invalid_glyph_group')]]);
+        }
+        $glyphModel = NeographyGlyph::find($glyphId);
+        if (!($glyphModel instanceof NeographyGlyph)) {
+            $this->dispatch('glyph-transfer-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['glyphId' => [__('tollerus::error.invalid_glyph')]]);
+        }
         // Transfer glyph
         try {
             $connection = config('tollerus.connection', 'tollerus');

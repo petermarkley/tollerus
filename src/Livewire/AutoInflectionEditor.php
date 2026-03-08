@@ -23,12 +23,9 @@ use PeterMarkley\Tollerus\Models\InflectionTable;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\MorphRule;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
-use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class AutoInflectionEditor extends Component
 {
-    use HasModelCache;
-    private $cacheRoot = 'rules';
     public string $tabTarget = 'base';
     public string $tabPattern = 'transliterated';
     public string $tabNeography = '';
@@ -320,13 +317,11 @@ class AutoInflectionEditor extends Component
     public function updateRule(string $ruleId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
-        $ruleModel = $this->findInCache('row-update-failure', [
-            [
-                'id' => $ruleId,
-                'objectType' => MorphRule::class,
-                'failMessage' => ['ruleId' => [__('tollerus::error.invalid_morph_rule')]],
-            ],
-        ]);
+        $ruleModel = MorphRule::find($ruleId);
+        if (!($ruleModel instanceof MorphRule)) {
+            $this->dispatch('row-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['ruleId' => [__('tollerus::error.invalid_morph_rule')]]);
+        }
         // $propName whitelist
         $allowedPropNames = [
             'pattern',
