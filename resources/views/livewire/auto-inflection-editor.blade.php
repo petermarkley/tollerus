@@ -66,7 +66,6 @@
                     <x-tollerus::inputs.text-saveable
                         idExpression="'src_particle'"
                         model="ruleForm.row.srcParticle.globalId"
-                        modelIsAlpine="true"
                         fieldName="srcParticle"
                         saveEvent="$wire.updateRow('srcParticle', document.getElementById(id).value, id);"
                     />
@@ -83,7 +82,6 @@
                 <x-tollerus::inputs.text-saveable
                     idExpression="'morph_template'"
                     model="ruleForm.row.morphTemplate"
-                    modelIsAlpine="true"
                     fieldName="morphTemplate"
                     saveEvent="$wire.updateRow('morphTemplate', document.getElementById(id).value, id);"
                 />
