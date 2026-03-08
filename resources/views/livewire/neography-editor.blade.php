@@ -42,13 +42,7 @@
             }
             return fileFound;
         },
-        glyphsForm: $wire.entangle('glyphsForm'),
-        keysForm: $wire.entangle('keysForm'),
-        moveSection(sectElem, sectId, dir) {
-            let neighborId = $store.reorderFunctions.getNeighborId(this.glyphsForm, sectId, dir);
-            if (neighborId === null) {
-                return;
-            }
+        moveSection(sectElem, sectId, neighborId) {
             let neighborElem = document.getElementById('sect_' + neighborId);
             $store.reorderFunctions.swapItems(sectElem, neighborElem);
             const onDone = (event) => {
@@ -59,11 +53,7 @@
             };
             sectElem.addEventListener('transitionend', onDone);
         },
-        moveKeyboard(keyboardElem, keyboardId, dir) {
-            let neighborId = $store.reorderFunctions.getNeighborId(this.keysForm, keyboardId, dir);
-            if (neighborId === null) {
-                return;
-            }
+        moveKeyboard(keyboardElem, keyboardId, neighborId) {
             let neighborElem = document.getElementById('keyboard_' + neighborId);
             $store.reorderFunctions.swapItems(keyboardElem, neighborElem);
             const onDone = (event) => {
@@ -74,11 +64,7 @@
             };
             keyboardElem.addEventListener('transitionend', onDone);
         },
-        moveKey(keyboardId, keyElem, keyId, dir) {
-            let neighborId = $store.reorderFunctions.getNeighborId(this.keysForm[keyboardId].keys, keyId, dir);
-            if (neighborId === null) {
-                return;
-            }
+        moveKey(keyboardId, keyElem, keyId, neighborId) {
             let neighborElem = document.getElementById('key_' + neighborId);
             $store.reorderFunctions.swapItems(keyElem, neighborElem);
             const onDone = (event) => {
@@ -102,8 +88,17 @@
     @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
     @font-delete.window="$wire.deleteFont($event.detail.fontFormat);"
     @sect-delete.window="deleteItem('sect_'+$event.detail.sectId); $wire.deleteSection($event.detail.sectId);"
-    @keyboard-delete.window="deleteItem('keyboard_'+$event.detail.keyboardId); $wire.deleteKeyboard($event.detail.keyboardId);"
-    @key-delete.window="deleteItem('key_'+$event.detail.keyId); $wire.deleteKey($event.detail.keyId);"
+    @keyboard-delete.window="
+        deleteItem('keyboard_'+$event.detail.keyboardId);
+        deleteItem('preview_keyboard_'+$event.detail.keyboardId);
+        deleteItem('dest_keyboard_'+$event.detail.keyboardId);
+        $wire.deleteKeyboard($event.detail.keyboardId);
+    "
+    @key-delete.window="
+        deleteItem('key_'+$event.detail.keyId);
+        deleteItem('preview_key_'+$event.detail.keyId);
+        $wire.deleteKey($event.detail.keyId);
+    "
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">

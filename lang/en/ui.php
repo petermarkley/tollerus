@@ -300,6 +300,7 @@ return [
     'move_row_up' => 'Move row up',
     'move_row_down' => 'Move row down',
     'row_name' => 'Row ":name"',
+    'section_nameless' => '(section)',
     'add_section' => 'Add section',
     'delete_section' => 'Delete section',
     'move_section_up' => 'Move section up',

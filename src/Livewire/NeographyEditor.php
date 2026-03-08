@@ -25,9 +25,11 @@ use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Models\NeographyInputKey;
 use PeterMarkley\Tollerus\Models\NeographyInputKeyboard;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextRenderer;
+use PeterMarkley\Tollerus\Traits\HasOrderedObjects;
 
 class NeographyEditor extends Component
 {
+    use HasOrderedObjects;
     use WithFileUploads;
     public string $tab = 'info';
     // Models
