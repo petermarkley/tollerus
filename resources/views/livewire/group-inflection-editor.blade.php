@@ -53,9 +53,16 @@
                             >
                                 <option value="" class="cursor-pointer italic">{{ __('tollerus::ui.none') }}</option>
                                 @foreach ($baseRowOpts as $column)
-                                    <optgroup label="{{ $column['label'] }}">
+                                    <optgroup
+                                        label="{{ $column['label'] }}"
+                                        wire:key="base-row-optgroup-{{ $column['columnId'] }}"
+                                    >
                                         @foreach ($column['rows'] as $row)
-                                            <option value="{{ $row['rowId'] }}" class="cursor-pointer">{{ $row['label'] }}</option>
+                                            <option
+                                                value="{{ $row['rowId'] }}"
+                                                class="cursor-pointer"
+                                                wire:key="base-row-option-{{ $row['rowId'] }}"
+                                            >{{ $row['label'] }}</option>
                                         @endforeach
                                     </optgroup>
                                 @endforeach
@@ -72,6 +79,7 @@
                     @endphp
                     <div
                         id="table_{{ $tableId }}"
+                        wire:key="table-{{ $tableId }}"
                         data-obj="table"
                         class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
                         style="order: {{ $loop->index }}"

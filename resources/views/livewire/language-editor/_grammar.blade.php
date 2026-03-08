@@ -53,7 +53,7 @@
         </div>
     @endif
     @foreach ($grammarForm as $groupId => $group)
-        <div class="w-full" id="group_{{ $groupId }}">
+        <div class="w-full" id="group_{{ $groupId }}" wire:key="group-{{ $groupId }}">
             <x-tollerus::drawer open="false" rootClass="w-full" class="flex flex-col gap-4 w-full">
                 <x-slot:heading-button>
                     <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl rounded-bl bg-zinc-500 dark:bg-zinc-400 group-has-hover:bg-zinc-400 group-has-hover:dark:bg-zinc-300 text-white dark:text-zinc-800">
@@ -111,7 +111,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($group['classes'] as $wordClassId => $wordClass)
-                                    <tr id="class_{{ $wordClassId }}">
+                                    <tr id="class_{{ $wordClassId }}" wire:key="class-{{ $wordClassId }}">
                                         <td class="text-left pr-2 py-1 w-60">
                                             <x-tollerus::inputs.text-saveable
                                                 idExpression="'class_{{ $wordClassId }}_name'"
@@ -189,6 +189,7 @@
                             @foreach ($group['features'] as $featureId => $feature)
                                 <x-tollerus::panel
                                     id="feature_{{ $featureId }}"
+                                    wire:key="feature-{{ $featureId }}"
                                     class="flex flex-col gap-1 items-start"
                                 >
                                     <div class="flex flex-row gap-4 items-center">
@@ -245,7 +246,7 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($feature['featureValues'] as $featureValueId => $featureValue)
-                                                        <tr id="value_{{ $featureValueId }}">
+                                                        <tr id="value_{{ $featureValueId }}" wire:key="value-{{ $featureValueId }}">
                                                             <td class="text-left pr-2 py-1 w-60">
                                                                 <x-tollerus::inputs.text-saveable
                                                                     idExpression="'value_{{ $featureValueId }}_name'"
