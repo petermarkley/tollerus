@@ -42,6 +42,8 @@
             }
             return fileFound;
         },
+        hasGlyphSections: $wire.entangle('hasGlyphSections'),
+        hasKeyboards: $wire.entangle('hasKeyboards'),
         moveSection(sectElem, sectId, neighborId) {
             let neighborElem = document.getElementById('sect_' + neighborId);
             $store.reorderFunctions.swapItems(sectElem, neighborElem);

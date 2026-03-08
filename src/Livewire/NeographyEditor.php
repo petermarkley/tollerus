@@ -44,6 +44,8 @@ class NeographyEditor extends Component
     public array $keysForm = [];
     // UI display properties
     #[Locked] public array $writingDirectionOpts = [];
+    #[Locked] public bool $hasKeyboards;
+    #[Locked] public bool $hasGlyphSections;
 
     /**
      * Livewire hooks
@@ -194,6 +196,7 @@ class NeographyEditor extends Component
                 'glyphCount' => $sect->glyphGroups->flatMap->glyphs->count(),
             ]];
         })->toArray();
+        $this->hasGlyphSections = (count($this->glyphsForm) > 0);
     }
     public function refreshKeyboardsForm(): void
     {
@@ -221,6 +224,7 @@ class NeographyEditor extends Component
                     })->toArray(),
             ]];
         })->toArray();
+        $this->hasKeyboards = (count($this->keysForm) > 0);
     }
 
     /**

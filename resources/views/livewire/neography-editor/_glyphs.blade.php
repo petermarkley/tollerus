@@ -33,7 +33,8 @@
                 />
             @endif
         </div>
-    @else
+    @endif
+    <div x-show="hasGlyphSections" x-cloak>
         <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
             @foreach (collect($glyphsForm)->sortBy('position') as $sectId => $sect)
                 @php
@@ -123,7 +124,7 @@
                 </div>
             @endforeach
         </div>
-    @endif
+    </div>
     <div class="px-6 xl:px-0">
         <x-tollerus::inputs.missing-data
             size="medium" floating="true"

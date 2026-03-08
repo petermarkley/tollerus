@@ -54,7 +54,8 @@
                 </div>
             </div>
         </div>
-    @else
+    @endif
+    <div x-show="hasKeyboards" x-cloak>
         <x-tollerus::drawer open="true" rootClass="w-full" class="flex flex-col gap-4 w-full">
             <x-slot:heading-button>
                 <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl rounded-bl bg-zinc-500 dark:bg-zinc-400 group-has-hover:bg-zinc-400 group-has-hover:dark:bg-zinc-300 text-white dark:text-zinc-800">
@@ -118,6 +119,8 @@
                 @endforeach
             </div>
         </x-tollerus::drawer>
+    </div>
+    <div x-show="hasKeyboards" x-cloak>
         <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
             @foreach (collect($keysForm)->sortBy('position') as $keyboardId => $keyboard)
                 @php
@@ -338,7 +341,7 @@
                 </div>
             @endforeach
         </div>
-    @endif
+    </div>
     <div class="px-6 xl:px-0">
         <x-tollerus::inputs.missing-data
             size="medium" floating="true"
