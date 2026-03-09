@@ -50,7 +50,7 @@
                 @if (count($paginator->items()) > 0)
                     @foreach ($paginator->items() as $entry)
                         <a
-                            href="#"
+                            href="{{ route('tollerus.public.index', ['id' => $entry->global_id]) }}"
                             class="text-tollerus-secondary hover:text-tollerus-secondary-hover font-bold"
                         >
                             @if ($entry['transliterated'])
