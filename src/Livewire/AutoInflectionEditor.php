@@ -10,18 +10,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
+use PeterMarkley\Tollerus\Domain\Morphology\Services\AutoInflector;
 use PeterMarkley\Tollerus\Domain\Neography\Services\NativeKeyboard;
 use PeterMarkley\Tollerus\Domain\Neography\Services\PhonemicKeyboard;
 use PeterMarkley\Tollerus\Enums\MorphRuleTargetType;
 use PeterMarkley\Tollerus\Enums\MorphRulePatternType;
 use PeterMarkley\Tollerus\Models\Feature;
 use PeterMarkley\Tollerus\Models\FeatureValue;
+use PeterMarkley\Tollerus\Models\Form;
 use PeterMarkley\Tollerus\Models\GlobalId;
 use PeterMarkley\Tollerus\Models\InflectionColumn;
 use PeterMarkley\Tollerus\Models\InflectionRow;
 use PeterMarkley\Tollerus\Models\InflectionTable;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\MorphRule;
+use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Traits\HasOrderedObjects;
 
@@ -274,13 +277,17 @@ class AutoInflectionEditor extends Component
         }
         $this->previewWordInfo = [
             'transliterated' => $form->transliterated,
+            'transliterated_inflected' => $this->autoInflect($form, $form->transliterated, MorphRulePatternType::Transliterated, null),
             'phonemic' => $form->phonemic,
+            'phonemic_inflected' => $this->autoInflect($form, $form->phonemic, MorphRulePatternType::Phonemic, null),
+
             'native' => $this->language->neographies->mapWithKeys(function ($neography) use ($form) {
                 $nativeSpelling = $form->nativeSpellings->firstWhere('neography_id', $neography->id);
                 return [$neography->id => [
                     'neographyId' => $neography->id,
                     'nativeSpellingId' => $nativeSpelling?->id,
                     'spelling' => $nativeSpelling?->spelling,
+                    'spelling_inflected' => $this->autoInflect($form, $nativeSpelling?->spelling, MorphRulePatternType::Native, $neography),
                 ]];
             })->toArray(),
         ];
@@ -441,5 +448,17 @@ class AutoInflectionEditor extends Component
             $r->pattern_type == $patternType &&
             $r->neography_id == $neographyId
         ));
+    }
+    private function autoInflect(Form $form, ?string $baseStr, MorphRulePatternType $patternType, ?Neography $neography = null): string
+    {
+        if (empty($baseStr)) {
+            return '';
+        }
+        return new AutoInflector(
+            row: $this->row,
+            base: $baseStr,
+            type: $patternType,
+            neographyId: $neography?->id,
+        )->inflect();
     }
 }

@@ -277,6 +277,7 @@ return [
     'delete_feature_value' => 'Delete value',
     'preset' => 'Preset', // i.e. a predefined configuration for user convenience
     'inflections' => 'Inflections',
+    'inflected' => 'Inflected',
     'inflection_tables' => 'Inflection tables',
     'inflection_table' => 'Inflection table',
     'table' => 'Table',

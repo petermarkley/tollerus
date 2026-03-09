@@ -120,6 +120,14 @@
                 @else
                     <div class="mb-4 overflow-hidden rounded-lg border border-zinc-500 dark:border-zinc-500">
                         <table class="w-full">
+                            <thead>
+                                <tr>
+                                    <td></td>
+                                    <th scope="col" class="py-1 px-2">{{ __('tollerus::ui.base') }}</th>
+                                    <td></td>
+                                    <th scope="col" class="py-1 px-2">{{ __('tollerus::ui.inflected') }}</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <tr>
                                     <th scope="row" class="py-1 px-2 flex flex-row gap-1 justify-center items-center font-normal">
@@ -128,7 +136,7 @@
                                     </th>
                                     <td class="py-1 px-2">{{ $this->previewWordInfo['transliterated'] }}</td>
                                     <td class="py-1 px-2">&rarr;</td>
-                                    <td class="py-1 px-2">&hellip;</td>
+                                    <td class="py-1 px-2">{{ $this->previewWordInfo['transliterated_inflected'] }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="py-1 px-2 flex flex-row gap-1 justify-center items-center font-normal">
@@ -137,7 +145,7 @@
                                     </th>
                                     <td class="py-1 px-2 italic">/{{ $this->previewWordInfo['phonemic'] }}/</td>
                                     <td class="py-1 px-2">&rarr;</td>
-                                    <td class="py-1 px-2">&hellip;</td>
+                                    <td class="py-1 px-2 italic">/{{ $this->previewWordInfo['phonemic_inflected'] }}/</td>
                                 </tr>
                                 @foreach ($language->neographies as $neography)
                                     @php
@@ -150,7 +158,7 @@
                                         </th>
                                         <td class="py-1 px-2 tollerus_{{ $neography->machine_name }}">{{ $nativeSpelling['spelling'] }}</td>
                                         <td class="py-1 px-2">&rarr;</td>
-                                        <td class="py-1 px-2 tollerus_{{ $neography->machine_name }}">&hellip;</td>
+                                        <td class="py-1 px-2 tollerus_{{ $neography->machine_name }}">{{ $nativeSpelling['spelling_inflected'] }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

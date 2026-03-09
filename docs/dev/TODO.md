@@ -1,7 +1,6 @@
 # TODO
 
 ## Tollerus Features
-- [ ] Allow selecting an input word for auto-inflection preview
 - [ ] (Language emblems/artwork?)
 - [ ] Console command to generate grammar preset from current config?
 - [ ] Console command for creating/restoring DB backups? (There may already be tools for this!)
