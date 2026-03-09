@@ -22,9 +22,11 @@ use PeterMarkley\Tollerus\Models\NeographyGlyphGroup;
 use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextNormalizer;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextSanitizer;
+use PeterMarkley\Tollerus\Traits\HasOrderedObjects;
 
 class NeographySectionEditor extends Component
 {
+    use HasOrderedObjects;
     // Models
     #[Locked] public Neography $neography;
     #[Locked] public NeographySection $sect;
@@ -38,6 +40,7 @@ class NeographySectionEditor extends Component
     #[Locked] public array $allSects = [];
     #[Locked] public array $nativeKeyboards = [];
     #[Locked] public array $ipaKeyboard = [];
+    #[Locked] public bool $hasGlyphGroups;
 
     /**
      * Livewire hooks
@@ -159,6 +162,8 @@ class NeographySectionEditor extends Component
                         })->toArray(),
                 ];
             })->toArray();
+
+        $this->hasGlyphGroups = (count($this->groupsForm) > 0);
     }
 
     /**

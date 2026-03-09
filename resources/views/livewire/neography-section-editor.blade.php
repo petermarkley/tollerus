@@ -13,14 +13,8 @@
             delete_glyph_group_confirmation: @js(__('tollerus::ui.delete_glyph_group_confirmation')),
             delete_glyph_confirmation: @js(__('tollerus::ui.delete_glyph_confirmation')),
         },
-        infoForm: $wire.entangle('infoForm'),
-        groupsForm: $wire.entangle('groupsForm'),
-        allSects: $wire.entangle('allSects'),
-        moveGroup(groupElem, groupId, dir) {
-            let neighborId = $store.reorderFunctions.getNeighborId(this.groupsForm, groupId, dir);
-            if (neighborId === null) {
-                return;
-            }
+        hasGlyphGroups: $wire.entangle('hasGlyphGroups'),
+        moveGroup(groupElem, groupId, neighborId) {
             let neighborElem = document.getElementById('group_' + neighborId);
             $store.reorderFunctions.swapItems(groupElem, neighborElem);
             const onDone = (event) => {
@@ -31,11 +25,7 @@
             };
             groupElem.addEventListener('transitionend', onDone);
         },
-        moveGlyph(groupId, glyphElem, glyphId, dir) {
-            let neighborId = $store.reorderFunctions.getNeighborId(this.groupsForm[groupId].glyphs, glyphId, dir);
-            if (neighborId === null) {
-                return;
-            }
+        moveGlyph(groupId, glyphElem, glyphId, neighborId) {
             let neighborElem = document.getElementById('glyph_' + neighborId);
             $store.reorderFunctions.swapItems(glyphElem, neighborElem);
             const onDone = (event) => {
@@ -67,18 +57,19 @@
                     idExpression="'sect_name'"
                     model="infoForm.name"
                     fieldName="{{ __('tollerus::ui.name') }}"
-                    saveEvent="$wire.updateSection('name', document.getElementById(id).value, id);"
+                    saveEvent="$wire.updateSection('name', prop, id);"
                 />
                 <x-tollerus::inputs.select
                     idExpression="'sect_type'"
                     label="{{ __('tollerus::ui.type') }}"
                     showLabel="true"
                     model="infoForm.type"
+                    modelIsAlpine="false"
                     @change="$wire.updateSection('type', $el.value, id);"
                 >
-                    <option value="" class="cursor-pointer italic" x-bind:selected="infoForm.type===null || infoForm.type===''">{{ __('tollerus::ui.none') }}</option>
+                    <option value="" class="cursor-pointer italic">{{ __('tollerus::ui.none') }}</option>
                     @foreach ($sectTypes as $sectType)
-                        <option value="{{ $sectType['string'] }}" class="cursor-pointer" selected="infoForm.type=='{{ $sectType['string'] }}'">{{ $sectType['local'] }}</option>
+                        <option value="{{ $sectType['string'] }}" class="cursor-pointer">{{ $sectType['local'] }}</option>
                     @endforeach
                 </x-tollerus::inputs.select>
             </div>
@@ -107,22 +98,27 @@
             <h1 class="font-bold text-2xl px-6 xl:px-0">
                 <span>{{ __('tollerus::ui.glyph_groups') }}</span>
             </h1>
-            <template x-if="Object.keys(groupsForm).length > 0">
+            <div x-show="hasGlyphGroups" x-cloak>
                 <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-                    <template x-for="([groupId, group], i) in $store.reorderFunctions.sortItems(groupsForm)" :key="groupId">
+                    @foreach (collect($groupsForm)->sortBy('position') as $groupId => $group)
+                        @php
+                            $prevNeighborId = $this->getNeighborId($groupsForm, $groupId, -1);
+                            $nextNeighborId = $this->getNeighborId($groupsForm, $groupId, +1);
+                        @endphp
                         <div
-                            x-bind:id="'group_' + groupId"
+                            id="group_{{ $groupId }}"
+                            wire:key="group-{{ $groupId }}"
                             data-obj="group"
                             class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
-                            x-bind:style="'order: '+i"
+                            style="order: {{ $loop->index }}"
                             @transitionend="$nextTick(() => {animating=false});"
                         >
                             <x-tollerus::panel class="px-3 py-12 flex flex-col gap-6 justify-start shrink-0 rounded-l-full rounded-r-none">
                                 <x-tollerus::inputs.button
                                     type="inverse"
                                     title="{{ __('tollerus::ui.move_glyph_group_up') }}"
-                                    x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(groupsForm, groupId)"
-                                    @click="animating=true; moveGroup($el.closest('[data-obj=&quot;group&quot;]'), groupId, -1);"
+                                    x-bind:disabled="animating || {{ $this->isFirstItem($groupsForm, $groupId) ? 'true' : 'false' }}"
+                                    @click="animating=true; moveGroup($el.closest('[data-obj=group]'), {{ $groupId }}, {{ $prevNeighborId ?? 'null' }});"
                                 >
                                     <x-tollerus::icons.chevron-up class="h-8 w-8" />
                                     <span class="sr-only">{{ __('tollerus::ui.move_glyph_group_up') }}</span>
@@ -130,8 +126,8 @@
                                 <x-tollerus::inputs.button
                                     type="inverse"
                                     title="{{ __('tollerus::ui.move_glyph_group_down') }}"
-                                    x-bind:disabled="animating || $store.reorderFunctions.isLastItem(groupsForm, groupId)"
-                                    @click="animating=true; moveGroup($el.closest('[data-obj=&quot;group&quot;]'), groupId, +1);"
+                                    x-bind:disabled="animating || {{ $this->isLastItem($groupsForm, $groupId) ? 'true' : 'false' }}"
+                                    @click="animating=true; moveGroup($el.closest('[data-obj=group]'), {{ $groupId }}, {{ $nextNeighborId ?? 'null' }});"
                                 >
                                     <x-tollerus::icons.chevron-down class="h-8 w-8" />
                                     <span class="sr-only">{{ __('tollerus::ui.move_glyph_group_down') }}</span>
@@ -152,7 +148,7 @@
                                                 message: msgs['delete_glyph_group_confirmation'],
                                                 buttons: [
                                                     { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
-                                                    { text: msgs.yes_delete, type: 'primary', clickEvent: 'group-delete', payload: {groupId: groupId} }
+                                                    { text: msgs.yes_delete, type: 'primary', clickEvent: 'group-delete', payload: {groupId: {{ $groupId }}} }
                                                 ]
                                             });"
                                         >
@@ -163,15 +159,16 @@
                                 </div>
                                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-grow">
                                     <x-tollerus::inputs.select
-                                        idExpression="'group_' + groupId + '_type'"
+                                        idExpression="'group_{{ $groupId }}_type'"
                                         label="{{ __('tollerus::ui.type') }}"
                                         showLabel="true"
-                                        model="group.type"
-                                        @change="$wire.updateGroup(groupId, 'type', $el.value, id);"
+                                        model="groupsForm.{{ $groupId }}.type"
+                                        modelIsAlpine="false"
+                                        @change="$wire.updateGroup({{ $groupId }}, 'type', $el.value, id);"
                                     >
-                                        <option value="" class="cursor-pointer italic" x-bind:selected="group.type===null || group.type===''">{{ __('tollerus::ui.none') }}</option>
+                                        <option value="" class="cursor-pointer italic">{{ __('tollerus::ui.none') }}</option>
                                         @foreach ($glyphTypes as $glyphType)
-                                            <option value="{{ $glyphType['string'] }}" class="cursor-pointer" selected="group.type=='{{ $glyphType['string'] }}'">{{ $glyphType['local'] }}</option>
+                                            <option value="{{ $glyphType['string'] }}" class="cursor-pointer">{{ $glyphType['local'] }}</option>
                                         @endforeach
                                     </x-tollerus::inputs.select>
                                     <x-tollerus::inputs.dropdown class="relative w-full">
@@ -184,38 +181,56 @@
                                                 <span>{{ __('tollerus::ui.transfer_group_to') }}</span>
                                             </x-tollerus::inputs.button>
                                         </x-slot:button>
-                                        <template x-for="destSect in allSects">
-                                            <x-tollerus::inputs.button
-                                                type="inverse"
-                                                size="small"
-                                                x-bind:class="{'ml-4': true, 'line-through': destSect.isThis}"
-                                                x-bind:disabled="destSect.isThis"
-                                                x-text="destSect.name"
-                                                @click="open=false; $wire.transferGroup(groupId, destSect.id);"
-                                            />
-                                        </template>
+                                        @foreach ($allSects as $destSect)
+                                            @if ($destSect['isThis'])
+                                                <x-tollerus::inputs.button
+                                                    wire:key="group-dest-sect-{{ $destSect['id'] }}"
+                                                    type="inverse"
+                                                    size="small"
+                                                    class="ml-4 line-through"
+                                                    disabled
+                                                >{{ $destSect['name'] }}</x-tollerus::inputs.button>
+                                            @else
+                                                <x-tollerus::inputs.button
+                                                    wire:key="group-dest-sect-{{ $destSect['id'] }}"
+                                                    type="inverse"
+                                                    size="small"
+                                                    class="ml-4"
+                                                    @click="
+                                                        open=false;
+                                                        $wire.transferGroup({{ $groupId }}, {{ $destSect['id'] }});
+                                                        deleteItem('group_{{ $groupId }}');
+                                                    "
+                                                >{{ $destSect['name'] }}</x-tollerus::inputs.button>
+                                            @endif
+                                        @endforeach
                                     </x-tollerus::inputs.dropdown>
                                 </div>
                                 <x-tollerus::pane class="flex flex-col gap-4 items-start">
                                     <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
                                         <span>{{ __('tollerus::ui.glyphs') }}</span>
                                     </h3>
-                                    <template x-if="Object.keys(group.glyphs).length > 0">
+                                    @if (count($group['glyphs']) > 0)
                                         <div class="flex flex-col gap-4 items-start w-full" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-                                            <template x-for="([glyphId, glyph], i) in $store.reorderFunctions.sortItems(group.glyphs)" :key="glyphId">
+                                            @foreach (collect($group['glyphs'])->sortBy('position') as $glyphId => $glyph)
+                                                @php
+                                                    $prevNeighborId = $this->getNeighborId($group['glyphs'], $glyphId, -1);
+                                                    $nextNeighborId = $this->getNeighborId($group['glyphs'], $glyphId, +1);
+                                                @endphp
                                                 <div
-                                                    x-bind:id="'glyph_' + glyphId"
+                                                    id="glyph_{{ $glyphId }}"
+                                                    wire:key="glyph-{{ $glyphId }}"
                                                     data-obj="glyph"
                                                     class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
-                                                    x-bind:style="'order: '+i"
+                                                    style="order: {{ $loop->index }}"
                                                     @transitionend="$nextTick(() => {animating=false});"
                                                 >
                                                     <x-tollerus::panel class="px-3 py-8 flex flex-col gap-6 justify-start shrink-0 rounded-l-xl rounded-r-none">
                                                         <x-tollerus::inputs.button
                                                             type="inverse"
                                                             title="{{ __('tollerus::ui.move_glyph_earlier') }}"
-                                                            x-bind:disabled="animating || $store.reorderFunctions.isFirstItem(group.glyphs, glyphId)"
-                                                            @click="animating=true; moveGlyph(groupId, $el.closest('[data-obj=&quot;glyph&quot;]'), glyphId, -1);"
+                                                            x-bind:disabled="animating || {{ $this->isFirstItem($group['glyphs'], $glyphId) ? 'true' : 'false' }}"
+                                                            @click="animating=true; moveGlyph({{ $groupId }}, $el.closest('[data-obj=glyph]'), {{ $glyphId }}, {{ $prevNeighborId ?? 'null' }});"
                                                         >
                                                             <x-tollerus::icons.chevron-up class="h-8 w-8" />
                                                             <span class="sr-only">{{ __('tollerus::ui.move_glyph_earlier') }}</span>
@@ -223,8 +238,8 @@
                                                         <x-tollerus::inputs.button
                                                             type="inverse"
                                                             title="{{ __('tollerus::ui.move_glyph_later') }}"
-                                                            x-bind:disabled="animating || $store.reorderFunctions.isLastItem(group.glyphs, glyphId)"
-                                                            @click="animating=true; moveGlyph(groupId, $el.closest('[data-obj=&quot;glyph&quot;]'), glyphId, +1);"
+                                                            x-bind:disabled="animating || {{ $this->isLastItem($group['glyphs'], $glyphId) ? 'true' : 'false' }}"
+                                                            @click="animating=true; moveGlyph({{ $groupId }}, $el.closest('[data-obj=glyph]'), {{ $glyphId }}, {{ $nextNeighborId ?? 'null' }});"
                                                         >
                                                             <x-tollerus::icons.chevron-down class="h-8 w-8" />
                                                             <span class="sr-only">{{ __('tollerus::ui.move_glyph_later') }}</span>
@@ -235,19 +250,19 @@
                                                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-grow border-2 rounded-lg p-2 border-zinc-200 dark:border-zinc-600">
                                                                 <x-tollerus::inputs.text-saveable
                                                                     showLabel="true"
-                                                                    idExpression="'glyph_' + glyphId + '_unicode'"
-                                                                    model="glyph.glyph"
+                                                                    idExpression="'glyph_{{ $glyphId }}_unicode'"
+                                                                    model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.glyph"
                                                                     fieldName="{{ __('tollerus::ui.unicode') }}"
-                                                                    saveEvent="$wire.updateGlyph(groupId, glyphId, 'glyph', document.getElementById(id).value, id);"
+                                                                    saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'glyph', prop, id);"
                                                                     height="67px"
                                                                     class="text-6xl tollerus_{{ $neography->machine_name }}"
                                                                 />
                                                                 <x-tollerus::inputs.text-saveable
                                                                     showLabel="true"
-                                                                    idExpression="'glyph_' + glyphId + '_hex'"
-                                                                    model="glyph.glyphHex"
+                                                                    idExpression="'glyph_{{ $glyphId }}_hex'"
+                                                                    model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.glyphHex"
                                                                     fieldName="{{ __('tollerus::ui.hexadecimal') }}"
-                                                                    saveEvent="$wire.updateGlyph(groupId, glyphId, 'glyphHex', document.getElementById(id).value, id);"
+                                                                    saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'glyphHex', prop, id);"
                                                                 />
                                                             </div>
                                                             <x-tollerus::inputs.button
@@ -259,7 +274,7 @@
                                                                     message: msgs['delete_glyph_confirmation'],
                                                                     buttons: [
                                                                         { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
-                                                                        { text: msgs.yes_delete, type: 'primary', clickEvent: 'glyph-delete', payload: {glyphId: glyphId} }
+                                                                        { text: msgs.yes_delete, type: 'primary', clickEvent: 'glyph-delete', payload: {glyphId: {{ $glyphId }}} }
                                                                     ]
                                                                 });"
                                                             >
@@ -270,7 +285,7 @@
                                                         <div class="flex flex-col w-full">
                                                             <p class="flex flex-row gap-4 items-center">
                                                                 <span>{{ __('tollerus::ui.public_id') }}</span>
-                                                                <span x-text="glyph.globalId" class="font-mono"></span>
+                                                                <span class="font-mono">{{ $glyph['globalId'] }}</span>
                                                             </p>
                                                         </div>
                                                         <div class="flex flex-col md:flex-row lg:flex-col items-start gap-4 w-full">
@@ -279,29 +294,29 @@
                                                                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 w-full">
                                                                     <div class="flex flex-row justify-start items-center">
                                                                         <x-tollerus::inputs.checkbox
-                                                                            idExpression="'glyph_' + glyphId + '_render_base'"
-                                                                            model="glyph.renderBase"
-                                                                            modelIsAlpine="true"
+                                                                            idExpression="'glyph_{{ $glyphId }}_render_base'"
+                                                                            model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.renderBase"
+                                                                            modelIsAlpine="false"
                                                                             label="{{ __('tollerus::ui.render_on_base') }}"
-                                                                            @change="$wire.updateGlyph(groupId, glyphId, 'renderBase', $el.checked, id);"
+                                                                            @change="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'renderBase', $el.checked, id);"
                                                                         />
                                                                     </div>
                                                                     <div>
                                                                         <x-tollerus::inputs.text-saveable
                                                                             showLabel="true"
-                                                                            idExpression="'glyph_' + glyphId + '_transliterated'"
-                                                                            model="glyph.transliterated"
+                                                                            idExpression="'glyph_{{ $glyphId }}_transliterated'"
+                                                                            model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.transliterated"
                                                                             fieldName="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
-                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'transliterated', document.getElementById(id).value, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'transliterated', prop, id);"
                                                                         />
                                                                     </div>
                                                                     <div data-keyboard-elem="territory">
                                                                         <x-tollerus::inputs.text-saveable
                                                                             showLabel="true"
-                                                                            idExpression="'glyph_' + glyphId + '_phonemic'"
-                                                                            model="glyph.phonemic"
+                                                                            idExpression="'glyph_{{ $glyphId }}_phonemic'"
+                                                                            model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.phonemic"
                                                                             fieldName="{{ __('tollerus::ui.phonemic') }}"
-                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'phonemic', document.getElementById(id).value, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'phonemic', prop, id);"
                                                                         >
                                                                             <x-slot:before>
                                                                                 <div
@@ -348,10 +363,10 @@
                                                                     <div class="col-span-1 lg:col-span-3">
                                                                         <x-tollerus::inputs.text-saveable
                                                                             showLabel="true"
-                                                                            idExpression="'glyph_' + glyphId + '_note'"
-                                                                            model="glyph.note"
+                                                                            idExpression="'glyph_{{ $glyphId }}_note'"
+                                                                            model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.note"
                                                                             fieldName="{{ __('tollerus::ui.note') }}"
-                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'note', document.getElementById(id).value, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'note', prop, id);"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -362,19 +377,19 @@
                                                                     <div>
                                                                         <x-tollerus::inputs.text-saveable
                                                                             showLabel="true"
-                                                                            idExpression="'glyph_' + glyphId + '_pronunciation_transliterated'"
-                                                                            model="glyph.pronunciationTransliterated"
+                                                                            idExpression="'glyph_{{ $glyphId }}_pronunciation_transliterated'"
+                                                                            model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.pronunciationTransliterated"
                                                                             fieldName="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
-                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationTransliterated', document.getElementById(id).value, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'pronunciationTransliterated', prop, id);"
                                                                         />
                                                                     </div>
                                                                     <div data-keyboard-elem="territory">
                                                                         <x-tollerus::inputs.text-saveable
                                                                             showLabel="true"
-                                                                            idExpression="'glyph_' + glyphId + '_pronunciation_phonemic'"
-                                                                            model="glyph.pronunciationPhonemic"
+                                                                            idExpression="'glyph_{{ $glyphId }}_pronunciation_phonemic'"
+                                                                            model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.pronunciationPhonemic"
                                                                             fieldName="{{ __('tollerus::ui.phonemic') }}"
-                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationPhonemic', document.getElementById(id).value, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'pronunciationPhonemic', prop, id);"
                                                                         >
                                                                             <x-slot:before>
                                                                                 <div
@@ -421,10 +436,10 @@
                                                                     <div data-keyboard-elem="territory">
                                                                         <x-tollerus::inputs.text-saveable
                                                                             showLabel="true"
-                                                                            idExpression="'glyph_' + glyphId + '_pronunciation_native'"
-                                                                            model="glyph.pronunciationNative"
+                                                                            idExpression="'glyph_{{ $glyphId }}_pronunciation_native'"
+                                                                            model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.pronunciationNative"
                                                                             fieldName="{{ __('tollerus::ui.native') }}"
-                                                                            saveEvent="$wire.updateGlyph(groupId, glyphId, 'pronunciationNative', document.getElementById(id).value, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'pronunciationNative', prop, id);"
                                                                             class="tollerus_{{ $neography->machine_name }}"
                                                                         >
                                                                             <x-slot:before>
@@ -485,32 +500,48 @@
                                                                     <span>{{ __('tollerus::ui.transfer_to') }}</span>
                                                                 </x-tollerus::inputs.button>
                                                             </x-slot:button>
-                                                            <template x-for="destSect in allSects">
-                                                                <div class="flex flex-col items-start">
-                                                                    <span x-text="destSect.name" class="italic opacity-50"></span>
-                                                                    <template x-for="destGroup in destSect.groups">
-                                                                        <x-tollerus::inputs.button
-                                                                            type="inverse"
-                                                                            size="small"
-                                                                            x-bind:class="{'ml-4': true, 'line-through': destGroup.glyphs.includes(glyph.glyph)}"
-                                                                            x-bind:disabled="destGroup.glyphs.includes(glyph.glyph)"
-                                                                            x-text="msgs['group_nameless'] + ' - ' + destGroup.glyphs.length + ' ' + msgs['glyphs']"
-                                                                            @click="open=false; $wire.transferGlyph(groupId, glyphId, destSect.id, destGroup.id);"
-                                                                        />
-                                                                    </template>
+                                                            @foreach ($allSects as $destSect)
+                                                                <div
+                                                                    wire:key="glyph-dest-sect-{{ $destSect['id'] }}"
+                                                                    class="flex flex-col items-start"
+                                                                >
+                                                                    <span class="italic opacity-50">{{ $destSect['name'] }}</span>
+                                                                    @foreach ($destSect['groups'] as $destGroup)
+                                                                        @if (collect($destGroup['glyphs'])->contains($glyph['glyph']))
+                                                                            <x-tollerus::inputs.button
+                                                                                wire:key="glyph-dest-group-{{ $destGroup['id'] }}"
+                                                                                type="inverse"
+                                                                                size="small"
+                                                                                class="ml-4 line-through"
+                                                                                disabled
+                                                                            >{{ __('tollerus::ui.group_nameless') }} - {{ count($destGroup['glyphs']) }} {{ __('tollerus::ui.glyphs') }}</x-tollerus::inputs.button>
+                                                                        @else
+                                                                            <x-tollerus::inputs.button
+                                                                                wire:key="glyph-dest-group-{{ $destGroup['id'] }}"
+                                                                                type="inverse"
+                                                                                size="small"
+                                                                                class="ml-4"
+                                                                                @click="
+                                                                                    open=false;
+                                                                                    $wire.transferGlyph({{ $groupId }}, {{ $glyphId }}, {{ $destSect['id'] }}, {{ $destGroup['id'] }});
+                                                                                    deleteItem('glyph_{{ $glyphId }}');
+                                                                                "
+                                                                            >{{ __('tollerus::ui.group_nameless') }} - {{ count($destGroup['glyphs']) }} {{ __('tollerus::ui.glyphs') }}</x-tollerus::inputs.button>
+                                                                        @endif
+                                                                    @endforeach
                                                                 </div>
-                                                            </template>
+                                                            @endforeach
                                                         </x-tollerus::inputs.dropdown>
                                                     </x-tollerus::panel>
                                                 </div>
-                                            </template>
+                                            @endforeach
                                         </div>
-                                    </template>
+                                    @endif
                                     <x-tollerus::inputs.missing-data
                                         size="small"
                                         title="{{ __('tollerus::ui.add_glyph') }}"
                                         class="relative flex flex-row gap-2 justify-center items-center w-full"
-                                        @click="$wire.createGlyph(groupId);"
+                                        @click="$wire.createGlyph({{ $groupId }});"
                                         wire:loading.attr="disabled"
                                         wire:target="createGlyph"
                                     >
@@ -520,9 +551,9 @@
                                 </x-tollerus::pane>
                             </x-tollerus::panel>
                         </div>
-                    </template>
+                    @endforeach
                 </div>
-            </template>
+            </div>
             <div class="px-6 xl:px-0">
                 <x-tollerus::inputs.missing-data
                     size="medium" floating="true"
