@@ -242,7 +242,7 @@ class LanguageEditor extends Component
         $this->infoForm = $this->language->toArray();
         unset($this->infoForm['id']);
         unset($this->infoForm['primary_neography']);
-        $this->infoForm['intro'] = app(BodyTextNormalizer::class)->normalizeForWysiwyg($this->language->intro);
+        $this->infoForm['intro'] = app(BodyTextNormalizer::class)->normalizeForWysiwyg($this->language->intro ?? '');
     }
     public function refreshNeographiesForm(): void
     {

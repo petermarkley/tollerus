@@ -408,130 +408,132 @@
                             </div>
                         </div>
                     </x-tollerus::inputs.dropdown>
-                    <x-tollerus::inputs.dropdown class="relative w-full">
-                        <x-slot:button>
-                            <x-tollerus::inputs.button
-                                x-show="!isActive('tollerusNative')"
-                                type="inverse"
-                                size="tiny"
-                                title="{{ __('tollerus::ui.neography_letters') }}"
-                                x-bind:disabled="rawMode || isExcluded('tollerusNative')"
-                                class="relative"
-                                @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'native' });"
-                            >
-                                <x-tollerus::icons.micro.neography class="sm:h-6" />
-                                <span class="sr-only">{{ __('tollerus::ui.neography_letters') }}</span>
-                            </x-tollerus::inputs.button>
-                            <x-tollerus::inputs.button
-                                x-show="isActive('tollerusNative')" x-cloak
-                                type="inverse-highlight"
-                                size="tiny"
-                                title="{{ __('tollerus::ui.neography_letters') }}"
-                                x-bind:disabled="rawMode || isExcluded('tollerusNative')"
-                                class="relative"
-                                @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'native' });"
-                            >
-                                <x-tollerus::icons.micro.neography class="sm:h-6" />
-                                <span class="sr-only">{{ __('tollerus::ui.neography_letters') }}</span>
-                            </x-tollerus::inputs.button>
-                        </x-slot:button>
-                        <div
-                            x-data="{
-                                neographyId: '{{ $primaryNeographyId ?? array_keys($nativeKeyboards)[0] }}',
-                                neographyMachineNames: @js(array_map(fn ($n) => $n['machineName'], $nativeKeyboards)),
-                                nativeText: '',
-                                get neographyMachineName() {
-                                    return this.neographyMachineNames[this.neographyId];
-                                },
-                            }"
-                            @tollerus-wysiwyg-native-dialog-open.window="
-                                if ($event.detail.editorId!==editorId) {return;}
-                                if ($event.detail.neographyId) {
-                                    neographyId = $event.detail.neographyId;
-                                }
-                                nativeText = $event.detail.text;
-                            "
-                            @native-keyboard-tab-switch="neographyId = $event.detail.id;"
-                            class="w-full flex flex-col gap-2 items-stretch"
-                        >
-                            <div class="w-full">
-                                <x-tollerus::inputs.select
-                                    idExpression="'{{ $id . '_native_neography' }}'"
-                                    label="{{ __('tollerus::ui.neography') }}"
-                                    model="neographyId"
+                    @if (count($nativeKeyboards) > 0)
+                        <x-tollerus::inputs.dropdown class="relative w-full">
+                            <x-slot:button>
+                                <x-tollerus::inputs.button
+                                    x-show="!isActive('tollerusNative')"
+                                    type="inverse"
+                                    size="tiny"
+                                    title="{{ __('tollerus::ui.neography_letters') }}"
+                                    x-bind:disabled="rawMode || isExcluded('tollerusNative')"
+                                    class="relative"
+                                    @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'native' });"
                                 >
-                                    @foreach ($nativeKeyboards as $keyboardNeographyId => $keyboardNeography)
-                                        <option value="{{ $keyboardNeographyId }}" class="cursor-pointer">{{ $keyboardNeography['name'] }}</option>
-                                    @endforeach
-                                </x-tollerus::inputs.select>
-                            </div>
-                            <div data-keyboard-elem="territory" class="w-full flex flex-col gap-1 items-start">
-                                <label for="{{ $id . '_native_text' }}">{{ __('tollerus::ui.text') }}</label>
-                                <div class="w-full flex flex-row gap-1 items-center">
-                                    <div
-                                        x-data="{ showKeyboard: false }"
-                                        class="relative"
-                                        @close-virtual-keyboard.window="showKeyboard=false;"
+                                    <x-tollerus::icons.micro.neography class="sm:h-6" />
+                                    <span class="sr-only">{{ __('tollerus::ui.neography_letters') }}</span>
+                                </x-tollerus::inputs.button>
+                                <x-tollerus::inputs.button
+                                    x-show="isActive('tollerusNative')" x-cloak
+                                    type="inverse-highlight"
+                                    size="tiny"
+                                    title="{{ __('tollerus::ui.neography_letters') }}"
+                                    x-bind:disabled="rawMode || isExcluded('tollerusNative')"
+                                    class="relative"
+                                    @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'native' });"
+                                >
+                                    <x-tollerus::icons.micro.neography class="sm:h-6" />
+                                    <span class="sr-only">{{ __('tollerus::ui.neography_letters') }}</span>
+                                </x-tollerus::inputs.button>
+                            </x-slot:button>
+                            <div
+                                x-data="{
+                                    neographyId: '{{ $primaryNeographyId ?? array_keys($nativeKeyboards)[0] }}',
+                                    neographyMachineNames: @js(array_map(fn ($n) => $n['machineName'], $nativeKeyboards)),
+                                    nativeText: '',
+                                    get neographyMachineName() {
+                                        return this.neographyMachineNames[this.neographyId];
+                                    },
+                                }"
+                                @tollerus-wysiwyg-native-dialog-open.window="
+                                    if ($event.detail.editorId!==editorId) {return;}
+                                    if ($event.detail.neographyId) {
+                                        neographyId = $event.detail.neographyId;
+                                    }
+                                    nativeText = $event.detail.text;
+                                "
+                                @native-keyboard-tab-switch="neographyId = $event.detail.id;"
+                                class="w-full flex flex-col gap-2 items-stretch"
+                            >
+                                <div class="w-full">
+                                    <x-tollerus::inputs.select
+                                        idExpression="'{{ $id . '_native_neography' }}'"
+                                        label="{{ __('tollerus::ui.neography') }}"
+                                        model="neographyId"
                                     >
-                                        <x-tollerus::inputs.button
-                                            x-cloak x-show="!showKeyboard"
-                                            type="secondary"
-                                            size="small"
-                                            class="align-middle"
-                                            title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
-                                            @click="
-                                                $nextTick(()=>{
-                                                    showKeyboard=true;
-                                                    $store.virtualKeyboard.mount({
-                                                        virtualKeyboardType: 'native',
-                                                        neographySubset: null,
-                                                        activeNeography: neographyId,
-                                                        mountPoint: $el.parentNode,
-                                                        inputFieldId: '{{ $id . '_native_text' }}'
+                                        @foreach ($nativeKeyboards as $keyboardNeographyId => $keyboardNeography)
+                                            <option value="{{ $keyboardNeographyId }}" class="cursor-pointer">{{ $keyboardNeography['name'] }}</option>
+                                        @endforeach
+                                    </x-tollerus::inputs.select>
+                                </div>
+                                <div data-keyboard-elem="territory" class="w-full flex flex-col gap-1 items-start">
+                                    <label for="{{ $id . '_native_text' }}">{{ __('tollerus::ui.text') }}</label>
+                                    <div class="w-full flex flex-row gap-1 items-center">
+                                        <div
+                                            x-data="{ showKeyboard: false }"
+                                            class="relative"
+                                            @close-virtual-keyboard.window="showKeyboard=false;"
+                                        >
+                                            <x-tollerus::inputs.button
+                                                x-cloak x-show="!showKeyboard"
+                                                type="secondary"
+                                                size="small"
+                                                class="align-middle"
+                                                title="{{ __('tollerus::ui.show_virtual_keyboard') }}"
+                                                @click="
+                                                    $nextTick(()=>{
+                                                        showKeyboard=true;
+                                                        $store.virtualKeyboard.mount({
+                                                            virtualKeyboardType: 'native',
+                                                            neographySubset: null,
+                                                            activeNeography: neographyId,
+                                                            mountPoint: $el.parentNode,
+                                                            inputFieldId: '{{ $id . '_native_text' }}'
+                                                        });
                                                     });
-                                                });
-                                            "
-                                        >
-                                            <x-tollerus::icons.keyboard/>
-                                            <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
-                                        </x-tollerus::inputs.button>
-                                        <x-tollerus::inputs.button
-                                            x-cloak x-show="showKeyboard"
-                                            type="primary"
-                                            size="small"
-                                            class="align-middle"
-                                            title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
-                                            @click="showKeyboard=false; $store.virtualKeyboard.unmount();"
-                                        >
-                                            <x-tollerus::icons.keyboard/>
-                                            <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
-                                        </x-tollerus::inputs.button>
+                                                "
+                                            >
+                                                <x-tollerus::icons.keyboard/>
+                                                <label class="sr-only">{{ __('tollerus::ui.show_virtual_keyboard') }}</label>
+                                            </x-tollerus::inputs.button>
+                                            <x-tollerus::inputs.button
+                                                x-cloak x-show="showKeyboard"
+                                                type="primary"
+                                                size="small"
+                                                class="align-middle"
+                                                title="{{ __('tollerus::ui.hide_virtual_keyboard') }}"
+                                                @click="showKeyboard=false; $store.virtualKeyboard.unmount();"
+                                            >
+                                                <x-tollerus::icons.keyboard/>
+                                                <label class="sr-only">{{ __('tollerus::ui.hide_virtual_keyboard') }}</label>
+                                            </x-tollerus::inputs.button>
+                                        </div>
+                                        <x-tollerus::inputs.text
+                                            id="{{ $id . '_native_text' }}"
+                                            x-bind:class="'tollerus_'+neographyMachineName"
+                                            model="nativeText"
+                                            modelIsAlpine="true"
+                                        />
                                     </div>
-                                    <x-tollerus::inputs.text
-                                        id="{{ $id . '_native_text' }}"
-                                        x-bind:class="'tollerus_'+neographyMachineName"
-                                        model="nativeText"
-                                        modelIsAlpine="true"
-                                    />
+                                </div>
+                                <div class="w-full flex flex-row gap-2 justify-start">
+                                    <x-tollerus::inputs.button
+                                        type="primary"
+                                        size="small"
+                                        title="{{ __('tollerus::ui.apply') }}"
+                                        @click="open=false; $dispatch('tollerus-wysiwyg-native-apply', {
+                                            editorId: editorId,
+                                            neographyId: neographyId,
+                                            neography: neographyMachineName,
+                                            text: nativeText,
+                                        });"
+                                    >
+                                        <span>{{ __('tollerus::ui.apply') }}</span>
+                                    </x-tollerus::inputs.button>
                                 </div>
                             </div>
-                            <div class="w-full flex flex-row gap-2 justify-start">
-                                <x-tollerus::inputs.button
-                                    type="primary"
-                                    size="small"
-                                    title="{{ __('tollerus::ui.apply') }}"
-                                    @click="open=false; $dispatch('tollerus-wysiwyg-native-apply', {
-                                        editorId: editorId,
-                                        neographyId: neographyId,
-                                        neography: neographyMachineName,
-                                        text: nativeText,
-                                    });"
-                                >
-                                    <span>{{ __('tollerus::ui.apply') }}</span>
-                                </x-tollerus::inputs.button>
-                            </div>
-                        </div>
-                    </x-tollerus::inputs.dropdown>
+                        </x-tollerus::inputs.dropdown>
+                    @endif
                 </div>
                 <div class="flex flex-row gap-1 items-center">
                     <x-tollerus::inputs.button

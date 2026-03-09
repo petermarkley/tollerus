@@ -207,7 +207,9 @@
         </div>
     </div>
     <x-tollerus::modal/>
-    <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
+    @if (count($nativeKeyboards) > 0)
+        <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
+    @endif
     <x-tollerus::keyboards.phonemic :phonemicKeyboard="$ipaKeyboard"/>
 </div>
 <x-tollerus::reorder-script/>
