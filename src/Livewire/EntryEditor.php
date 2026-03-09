@@ -32,9 +32,11 @@ use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\Pivots\FormFeatureValue;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextNormalizer;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextSanitizer;
+use PeterMarkley\Tollerus\Traits\HasOrderedObjects;
 
 class EntryEditor extends Component
 {
+    use HasOrderedObjects;
     // Models
     #[Locked] public Language $language;
     #[Locked] public Entry $entry;
