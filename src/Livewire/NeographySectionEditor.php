@@ -51,6 +51,7 @@ class NeographySectionEditor extends Component
                     ['href' => route('tollerus.admin.neographies.index'), 'text' => __('tollerus::ui.neographies')],
                     ['href' => route('tollerus.admin.neographies.edit.tab', ['neography' => $this->neography, 'tab' => 'glyphs']), 'text' => $this->neography->name],
                 ],
+                'isLivewirePage' => true,
             ])->title($this->sect->name);
     }
     public function mount(Neography $neography, NeographySection $section): void

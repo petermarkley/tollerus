@@ -976,3 +976,7 @@ if (!window.Alpine) {
 document.addEventListener('alpine:init', () => {
     registerAdminComponents(window.Alpine);
 });
+
+if (!window.tollerusIsLivewirePage) {
+    window.Alpine.start();
+}

@@ -70,6 +70,7 @@ class EntryEditor extends Component
                         'tab' => 'entries',
                     ]), 'text' => $this->language->name],
                 ],
+                'isLivewirePage' => true,
             ])->title($pageTitle);
     }
     public function mount(Language $language, Entry $entry): void

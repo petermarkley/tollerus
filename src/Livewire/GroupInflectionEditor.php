@@ -50,6 +50,7 @@ class GroupInflectionEditor extends Component
                         'tab' => 'grammar',
                     ]), 'text' => $this->language->name],
                 ],
+                'isLivewirePage' => true,
             ])->title($pageTitle);
     }
     public function mount(Language $language, WordClassGroup $wordClassGroup): void

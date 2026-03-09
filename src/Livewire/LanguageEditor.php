@@ -124,6 +124,7 @@ class LanguageEditor extends Component
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.languages.index'), 'text' => __('tollerus::ui.languages')],
                 ],
+                'isLivewirePage' => true,
             ])->title($this->language->name);
     }
     public function mount(Language $language, ?string $tab = null): void

@@ -71,7 +71,7 @@ class PublicWordLookup extends Component
         $selectedResult = $selectedResultObj['global_id'] ?? null;
 
         return view('tollerus::livewire.public-word-lookup', $this->display + ['selectedResult' => $selectedResult])
-            ->layout('tollerus::components.layouts.public')
+            ->layout('tollerus::components.layouts.public', ['isLivewirePage' => true])
             ->title($pageTitle);
     }
     public function mount(Request $req): void

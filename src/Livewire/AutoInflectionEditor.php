@@ -81,6 +81,7 @@ class AutoInflectionEditor extends Component
                         'inflectionTable' => $this->table->id,
                     ]), 'text' => __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.table')])],
                 ],
+                'isLivewirePage' => true,
             ])->title($pageTitle);
     }
     public function mount(Language $language, WordClassGroup $wordClassGroup, InflectionTable $inflectionTable, InflectionRow $row): void

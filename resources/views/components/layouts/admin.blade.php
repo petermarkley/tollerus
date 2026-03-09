@@ -47,6 +47,9 @@
         @endif
         @stack('tollerus-scripts')
         @if (request()->routeIs('tollerus.admin.*'))
+            @if (isset($isLivewirePage))
+                <script>window.tollerusIsLivewirePage = true;</script>
+            @endif
             <script type="module" src="{{ asset('vendor/tollerus/tollerus-admin.js') }}"></script>
         @else
             <script type="module" src="{{ asset('vendor/tollerus/tollerus-public.js') }}"></script>

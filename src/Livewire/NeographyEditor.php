@@ -58,6 +58,7 @@ class NeographyEditor extends Component
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.neographies.index'), 'text' => __('tollerus::ui.neographies')],
                 ],
+                'isLivewirePage' => true,
             ])->title($this->neography->name);
     }
     public function mount(Neography $neography, ?string $tab = null): void

@@ -65,6 +65,7 @@ class InflectionTableEditor extends Component
                         'wordClassGroup' => $this->group->id,
                     ]), 'text' => __('tollerus::ui.inflections')],
                 ],
+                'isLivewirePage' => true,
             ])->title($pageTitle);
     }
     public function mount(Language $language, WordClassGroup $wordClassGroup, InflectionTable $inflectionTable): void
