@@ -1,0 +1,28 @@
+{
+    "name": "petermarkley/tollerus",
+    "description": "A conlang dictionary system for Laravel",
+    "license": "LGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Peter Markley",
+            "email": "peter@petermarkley.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PeterMarkley\\Tollerus\\": "src/"
+        }
+    },
+    "require": {
+        "illuminate/support": "^12.0",
+        "livewire/livewire": "^3.6",
+        "masterminds/html5": "^2.10"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PeterMarkley\\Tollerus\\Providers\\TollerusServiceProvider"
+            ]
+        }
+    }
+}

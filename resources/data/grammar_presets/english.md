@@ -1,0 +1,71 @@
+# English Grammar Preset
+
+Word class structure:
+* (group)
+  * `adjective`
+* (group)
+  * `adverb`
+* (group) - **inflected** by role, tense, aspect, number, person
+  * `auxiliary verb`
+  * `verb`
+* (group)
+  * `combining form`
+* (group)
+  * `contraction`
+* (group)
+  * `conjunction`
+* (group)
+  * `determiner`
+* (group) - **inflected** by number
+  * `noun`
+  * `proper noun`
+* (group)
+  * `preposition`
+* (group) - **inflected** by number, case
+  * `pronoun`
+
+# English Verb Inflections
+
+We need a way to represent the conjugations of just the non-auxiliary verbs by themselves.
+
+## Inflection Tables
+
+|  |  |
+|--|--|
+| infinitive | GIVE |
+| 3rd pers. sing. | GIVES |
+| past tense | GAVE |
+| pres. participle | GIVING |
+| past participle | GIVEN |
+
+In the finite verb inflections, the non-simple aspects are here called "participles" because they are also used that way (_"The gift **given** was thoughtful,"_ _"The man **giving** gifts arrived"_).
+
+* _I give_
+* _You give_
+* _He gives_  <-- (only inflection on person or number)
+* _They give_
+
+## Dictionary Data
+
+This is how the actual morphologies will look in the `forms` table.
+
+* give [infinitive]
+
+### finite verb
+* gives [finite, present, simple, 3rd person, singular]
+* gave [finite, past, simple]
+
+### participle
+* giving [participle, progressive]
+* given [participle, perfect]
+
+# English Pronoun Inflections
+
+In English, personal pronouns are inflected by not just number, but also case: subjective vs. objective.
+
+Some pronouns also encode person and gender ("he"/"she", "I"/"you"), but for many pronouns these features would be inapplicable ("it"/"this"/"that"). Therefore we'll consider person and gender, when present, to be **lexical instead of morphological,** with "he" vs. "she" being two different words.
+
+|  | subjective | objective |
+|--|--|--|
+| singular | I, it, this, that | me, it, this, that |
+| plural | we, they, these, those | us, them, these, those |

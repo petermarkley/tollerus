@@ -1,0 +1,1998 @@
+[
+    {
+        "glyph": "m̥",
+        "label": "voiceless_bilabial_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 1
+    },
+    {
+        "glyph": "m",
+        "label": "voiced_bilabial_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 2
+    },
+    {
+        "glyph": "ɱ̊",
+        "label": "voiceless_labiodental_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 3
+    },
+    {
+        "glyph": "ɱ",
+        "label": "voiced_labiodental_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 4
+    },
+    {
+        "glyph": "n̼",
+        "label": "voiced_linguolabial_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 6
+    },
+    {
+        "glyph": "n̪̊",
+        "label": "voiceless_dental_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 7
+    },
+    {
+        "glyph": "n̪",
+        "label": "voiced_dental_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 8
+    },
+    {
+        "glyph": "n̥",
+        "label": "voiceless_alveolar_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 9
+    },
+    {
+        "glyph": "n",
+        "label": "voiced_alveolar_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 10
+    },
+    {
+        "glyph": "n̠̊",
+        "label": "voiceless_postalveolar_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 11
+    },
+    {
+        "glyph": "n̠",
+        "label": "voiced_postalveolar_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 12
+    },
+    {
+        "glyph": "ɳ̊",
+        "label": "voiceless_retroflex_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 13
+    },
+    {
+        "glyph": "ɳ",
+        "label": "voiced_retroflex_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 14
+    },
+    {
+        "glyph": "ɲ̊",
+        "label": "voiceless_palatal_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 15
+    },
+    {
+        "glyph": "ɲ",
+        "label": "voiced_palatal_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 16
+    },
+    {
+        "glyph": "ŋ̊",
+        "label": "voiceless_velar_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 17
+    },
+    {
+        "glyph": "ŋ",
+        "label": "voiced_velar_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 18
+    },
+    {
+        "glyph": "ɴ̥",
+        "label": "voiceless_uvular_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 19
+    },
+    {
+        "glyph": "ɴ",
+        "label": "voiced_uvular_nasal",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 1,
+        "col": 20
+    },
+    {
+        "glyph": "p",
+        "label": "voiceless_bilabial_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 1
+    },
+    {
+        "glyph": "b",
+        "label": "voiced_bilabial_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 2
+    },
+    {
+        "glyph": "p̪",
+        "label": "voiceless_labiodental_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 3
+    },
+    {
+        "glyph": "b̪",
+        "label": "voiced_labiodental_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 4
+    },
+    {
+        "glyph": "t̼",
+        "label": "voiceless_linguolabial_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 5
+    },
+    {
+        "glyph": "d̼",
+        "label": "voiced_linguolabial_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 6
+    },
+    {
+        "glyph": "t̪",
+        "label": "voiceless_dental_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 7
+    },
+    {
+        "glyph": "d̪",
+        "label": "voiced_dental_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 8
+    },
+    {
+        "glyph": "t",
+        "label": "voiceless_alveolar_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 9
+    },
+    {
+        "glyph": "d",
+        "label": "voiced_alveolar_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 10
+    },
+    {
+        "glyph": "ʈ",
+        "label": "voiceless_retroflex_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 13
+    },
+    {
+        "glyph": "ɖ",
+        "label": "voiced_retroflex_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 14
+    },
+    {
+        "glyph": "c",
+        "label": "voiceless_palatal_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 15
+    },
+    {
+        "glyph": "ɟ",
+        "label": "voiced_palatal_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 16
+    },
+    {
+        "glyph": "k",
+        "label": "voiceless_velar_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 17
+    },
+    {
+        "glyph": "ɡ",
+        "label": "voiced_velar_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 18
+    },
+    {
+        "glyph": "q",
+        "label": "voiceless_uvular_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 19
+    },
+    {
+        "glyph": "ɢ",
+        "label": "voiced_uvular_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 20
+    },
+    {
+        "glyph": "ʡ",
+        "label": "epiglottal_plosive",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 21
+    },
+    {
+        "glyph": "ʔ",
+        "label": "glottal_stop",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 2,
+        "col": 23
+    },
+    {
+        "glyph": "s̪",
+        "label": "voiceless_dental_sibilant_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 3,
+        "col": 7
+    },
+    {
+        "glyph": "z̪",
+        "label": "voiced_dental_sibilant_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 3,
+        "col": 8
+    },
+    {
+        "glyph": "s",
+        "label": "voiceless_alveolar_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 3,
+        "col": 9
+    },
+    {
+        "glyph": "z",
+        "label": "voiced_alveolar_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 3,
+        "col": 10
+    },
+    {
+        "glyph": "ʃ",
+        "label": "voiceless_postalveolar_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 3,
+        "col": 11
+    },
+    {
+        "glyph": "ʒ",
+        "label": "voiced_postalveolar_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 3,
+        "col": 12
+    },
+    {
+        "glyph": "ʂ",
+        "label": "voiceless_retroflex_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 3,
+        "col": 13
+    },
+    {
+        "glyph": "ʐ",
+        "label": "voiced_retroflex_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 3,
+        "col": 14
+    },
+    {
+        "glyph": "ɕ",
+        "label": "voiceless_alveolo_palatal_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 3,
+        "col": 15
+    },
+    {
+        "glyph": "ʑ",
+        "label": "voiced_alveolo_palatal_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 3,
+        "col": 16
+    },
+    {
+        "glyph": "ɸ",
+        "label": "voiceless_bilabial_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 1
+    },
+    {
+        "glyph": "β",
+        "label": "voiced_bilabial_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 2
+    },
+    {
+        "glyph": "f",
+        "label": "voiceless_labiodental_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 3
+    },
+    {
+        "glyph": "v",
+        "label": "voiced_labiodental_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 4
+    },
+    {
+        "glyph": "θ̼",
+        "label": "voiceless_linguolabial_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 5
+    },
+    {
+        "glyph": "ð̼",
+        "label": "voiced_linguolabial_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 6
+    },
+    {
+        "glyph": "θ",
+        "label": "voiceless_dental_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 7
+    },
+    {
+        "glyph": "ð",
+        "label": "voiced_dental_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 8
+    },
+    {
+        "glyph": "θ̠",
+        "label": "voiceless_alveolar_non_sibilant_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 9
+    },
+    {
+        "glyph": "ð̠",
+        "label": "voiced_alveolar_non_sibilant_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 10
+    },
+    {
+        "glyph": "ɹ̠̊˔",
+        "label": "voiceless_postalveolar_non_sibilant_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 11
+    },
+    {
+        "glyph": "ɹ̠˔",
+        "label": "voiced_postalveolar_non_sibilant_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 12
+    },
+    {
+        "glyph": "ɻ̊˔",
+        "label": "voiceless_retroflex_non_sibilant_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 13
+    },
+    {
+        "glyph": "ɻ˔",
+        "label": "voiced_retroflex_non_sibilant_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 14
+    },
+    {
+        "glyph": "ç",
+        "label": "voiceless_palatal_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 15
+    },
+    {
+        "glyph": "ʝ",
+        "label": "voiced_palatal_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 16
+    },
+    {
+        "glyph": "x",
+        "label": "voiceless_velar_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 17
+    },
+    {
+        "glyph": "ɣ",
+        "label": "voiced_velar_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 18
+    },
+    {
+        "glyph": "χ",
+        "label": "voiceless_uvular_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 19
+    },
+    {
+        "glyph": "ʁ",
+        "label": "voiced_uvular_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 20
+    },
+    {
+        "glyph": "ħ",
+        "label": "voiceless_pharyngeal_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 21
+    },
+    {
+        "glyph": "ʕ",
+        "label": "voiced_pharyngeal_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 22
+    },
+    {
+        "glyph": "h",
+        "label": "voiceless_glottal_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 23
+    },
+    {
+        "glyph": "ɦ",
+        "label": "voiced_glottal_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 4,
+        "col": 24
+    },
+    {
+        "glyph": "β̞",
+        "label": "voiced_bilabial_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 5,
+        "col": 2
+    },
+    {
+        "glyph": "ʋ",
+        "label": "voiced_labiodental_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 5,
+        "col": 4
+    },
+    {
+        "glyph": "ð̞",
+        "label": "voiced_dental_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 5,
+        "col": 8
+    },
+    {
+        "glyph": "ɹ",
+        "label": "voiced_alveolar_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 5,
+        "col": 10
+    },
+    {
+        "glyph": "ɹ̠",
+        "label": "voiced_postalveolar_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 5,
+        "col": 12
+    },
+    {
+        "glyph": "ɻ",
+        "label": "voiced_retroflex_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 5,
+        "col": 14
+    },
+    {
+        "glyph": "j",
+        "label": "voiced_palatal_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 5,
+        "col": 16
+    },
+    {
+        "glyph": "ɰ",
+        "label": "voiced_velar_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 5,
+        "col": 18
+    },
+    {
+        "glyph": "˷",
+        "label": "creaky_voiced_glottal_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 5,
+        "col": 24
+    },
+    {
+        "glyph": "ⱱ̟",
+        "label": "voiced_bilabial_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 6,
+        "col": 2
+    },
+    {
+        "glyph": "ⱱ",
+        "label": "voiced_labiodental_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 6,
+        "col": 4
+    },
+    {
+        "glyph": "ɾ̥",
+        "label": "voiceless_alveolar_tap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 6,
+        "col": 9
+    },
+    {
+        "glyph": "ɾ",
+        "label": "voiced_alveolar_tap_or_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 6,
+        "col": 10
+    },
+    {
+        "glyph": "ɽ̊",
+        "label": "voiceless_retroflex_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 6,
+        "col": 13
+    },
+    {
+        "glyph": "ɽ",
+        "label": "voiced_retroflex_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 6,
+        "col": 14
+    },
+    {
+        "glyph": "ɢ̆",
+        "label": "voiced_uvular_tap_and_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 6,
+        "col": 20
+    },
+    {
+        "glyph": "ʡ̮",
+        "label": "voiced_epiglottal_tap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 6,
+        "col": 22
+    },
+    {
+        "glyph": "ʙ̥",
+        "label": "voiceless_bilabial_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 1
+    },
+    {
+        "glyph": "ʙ",
+        "label": "voiced_bilabial_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 2
+    },
+    {
+        "glyph": "r̥",
+        "label": "voiceless_alveolar_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 9
+    },
+    {
+        "glyph": "r",
+        "label": "voiced_alveolar_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 10
+    },
+    {
+        "glyph": "r̠",
+        "label": "voiced_postalveolar_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 12
+    },
+    {
+        "glyph": "ɽ̊r̥",
+        "label": "voiceless_retroflex_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 13
+    },
+    {
+        "glyph": "ɽr",
+        "label": "voiced_retroflex_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 14
+    },
+    {
+        "glyph": "ʀ̥",
+        "label": "voiceless_uvular_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 19
+    },
+    {
+        "glyph": "ʀ",
+        "label": "voiced_uvular_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 20
+    },
+    {
+        "glyph": "ʜ",
+        "label": "voiceless_epiglottal_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 21
+    },
+    {
+        "glyph": "ʢ",
+        "label": "voiced_epiglottal_trill",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 7,
+        "col": 22
+    },
+    {
+        "glyph": "ɬ̪",
+        "label": "voiceless_dental_lateral_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 8,
+        "col": 7
+    },
+    {
+        "glyph": "ɬ",
+        "label": "voiceless_alveolar_lateral_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 8,
+        "col": 9
+    },
+    {
+        "glyph": "ɮ",
+        "label": "voiced_alveolar_lateral_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 8,
+        "col": 10
+    },
+    {
+        "glyph": "ꞎ",
+        "label": "voiceless_retroflex_lateral_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 8,
+        "col": 13
+    },
+    {
+        "glyph": "𝼅",
+        "label": "voiced_retroflex_lateral_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 8,
+        "col": 14
+    },
+    {
+        "glyph": "𝼆",
+        "label": "voiceless_palatal_lateral_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 8,
+        "col": 15
+    },
+    {
+        "glyph": "ʎ̝",
+        "label": "voiced_palatal_lateral_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 8,
+        "col": 16
+    },
+    {
+        "glyph": "𝼄",
+        "label": "voiceless_velar_lateral_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 8,
+        "col": 17
+    },
+    {
+        "glyph": "ʟ̝",
+        "label": "voiced_velar_lateral_fricative",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 8,
+        "col": 18
+    },
+    {
+        "glyph": "l̪",
+        "label": "voiced_dental_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 8
+    },
+    {
+        "glyph": "l̥",
+        "label": "voiceless_alveolar_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 9
+    },
+    {
+        "glyph": "l",
+        "label": "voiced_alveolar_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 10
+    },
+    {
+        "glyph": "l̠",
+        "label": "voiced_postalveolar_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 12
+    },
+    {
+        "glyph": "ɭ̊",
+        "label": "voiceless_retroflex_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 13
+    },
+    {
+        "glyph": "ɭ",
+        "label": "voiced_retroflex_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 14
+    },
+    {
+        "glyph": "ʎ̥",
+        "label": "voiceless_palatal_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 15
+    },
+    {
+        "glyph": "ʎ",
+        "label": "voiced_palatal_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 16
+    },
+    {
+        "glyph": "ʟ̥",
+        "label": "voiceless_velar_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 17
+    },
+    {
+        "glyph": "ʟ",
+        "label": "voiced_velar_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 18
+    },
+    {
+        "glyph": "ʟ̠",
+        "label": "voiced_uvular_lateral_approximant",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 9,
+        "col": 20
+    },
+    {
+        "glyph": "ɺ̥",
+        "label": "voiceless_alveolar_lateral_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 10,
+        "col": 9
+    },
+    {
+        "glyph": "ɺ",
+        "label": "voiced_alveolar_lateral_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 10,
+        "col": 10
+    },
+    {
+        "glyph": "𝼈̊",
+        "label": "voiceless_retroflex_lateral_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 10,
+        "col": 13
+    },
+    {
+        "glyph": "𝼈",
+        "label": "voiced_retroflex_lateral_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 10,
+        "col": 14
+    },
+    {
+        "glyph": "ʎ̮",
+        "label": "voiced_palatal_lateral_flap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 10,
+        "col": 16
+    },
+    {
+        "glyph": "ʟ̆",
+        "label": "voiced_velar_lateral_tap",
+        "render_on_base": false,
+        "category": "consonants",
+        "row": 10,
+        "col": 18
+    },
+
+    {
+        "glyph": "i",
+        "label": "close_front_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 1,
+        "col": 1
+    },
+    {
+        "glyph": "y",
+        "label": "close_front_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 1,
+        "col": 2
+    },
+    {
+        "glyph": "ɨ",
+        "label": "close_central_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 1,
+        "col": 5
+    },
+    {
+        "glyph": "ʉ",
+        "label": "close_central_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 1,
+        "col": 6
+    },
+    {
+        "glyph": "ɯ",
+        "label": "close_back_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 1,
+        "col": 9
+    },
+    {
+        "glyph": "u",
+        "label": "close_back_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 1,
+        "col": 10
+    },
+    {
+        "glyph": "ɪ",
+        "label": "near_close_near_front_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 2,
+        "col": 3
+    },
+    {
+        "glyph": "ʏ",
+        "label": "near_close_near_front_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 2,
+        "col": 4
+    },
+    {
+        "glyph": "ʊ",
+        "label": "near_close_near_back_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 2,
+        "col": 8
+    },
+    {
+        "glyph": "e",
+        "label": "close_mid_front_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 3,
+        "col": 1
+    },
+    {
+        "glyph": "ø",
+        "label": "close_mid_front_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 3,
+        "col": 2
+    },
+    {
+        "glyph": "ɘ",
+        "label": "close_mid_central_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 3,
+        "col": 5
+    },
+    {
+        "glyph": "ɵ",
+        "label": "close_mid_central_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 3,
+        "col": 6
+    },
+    {
+        "glyph": "ɤ",
+        "label": "close_mid_back_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 3,
+        "col": 9
+    },
+    {
+        "glyph": "o",
+        "label": "close_mid_back_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 3,
+        "col": 10
+    },
+    {
+        "glyph": "e̞",
+        "label": "mid_front_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 4,
+        "col": 1
+    },
+    {
+        "glyph": "ø̞",
+        "label": "mid_front_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 4,
+        "col": 2
+    },
+    {
+        "glyph": "ə",
+        "label": "mid_central_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 4,
+        "col": 5
+    },
+    {
+        "glyph": "ɤ̞",
+        "label": "mid_back_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 4,
+        "col": 9
+    },
+    {
+        "glyph": "o̞",
+        "label": "mid_back_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 4,
+        "col": 10
+    },
+    {
+        "glyph": "ɛ",
+        "label": "open_mid_front_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 5,
+        "col": 1
+    },
+    {
+        "glyph": "œ",
+        "label": "open_mid_front_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 5,
+        "col": 2
+    },
+    {
+        "glyph": "ɜ",
+        "label": "open_mid_central_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 5,
+        "col": 5
+    },
+    {
+        "glyph": "ɞ",
+        "label": "open_mid_central_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 5,
+        "col": 6
+    },
+    {
+        "glyph": "ʌ",
+        "label": "open_mid_back_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 5,
+        "col": 9
+    },
+    {
+        "glyph": "ɔ",
+        "label": "open_mid_back_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 5,
+        "col": 10
+    },
+    {
+        "glyph": "æ",
+        "label": "near_open_front_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 6,
+        "col": 1
+    },
+    {
+        "glyph": "ɐ",
+        "label": "near_open_central_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 6,
+        "col": 5
+    },
+    {
+        "glyph": "a",
+        "label": "open_front_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 7,
+        "col": 1
+    },
+    {
+        "glyph": "ɶ",
+        "label": "open_front_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 7,
+        "col": 2
+    },
+    {
+        "glyph": "ä",
+        "label": "open_central_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 7,
+        "col": 5
+    },
+    {
+        "glyph": "ɑ",
+        "label": "open_back_unrounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 7,
+        "col": 9
+    },
+    {
+        "glyph": "ɒ",
+        "label": "open_back_rounded_vowel",
+        "render_on_base": false,
+        "category": "vowels",
+        "row": 7,
+        "col": 10
+    },
+
+    {
+        "glyph": "ʼ",
+        "label": "ejective_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 2
+    },
+    {
+        "glyph": "̩",
+        "label": "syllabic_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 3
+    },
+    {
+        "glyph": "̍",
+        "label": "syllabic_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 4
+    },
+    {
+        "glyph": "̯",
+        "label": "non_syllabic_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 5
+    },
+    {
+        "glyph": "̑",
+        "label": "non_syllabic_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 6
+    },
+    {
+        "glyph": "ʰ",
+        "label": "aspirated_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 8
+    },
+    {
+        "glyph": "̚",
+        "label": "no_audible_release_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 10
+    },
+    {
+        "glyph": "ⁿ",
+        "label": "nasal_release_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 12
+    },
+    {
+        "glyph": "ˡ",
+        "label": "lateral_release_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 14
+    },
+    {
+        "glyph": "ᶿ",
+        "label": "voiceless_dental_fricative_release_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 16
+    },
+    {
+        "glyph": "ˣ",
+        "label": "voiceless_velar_fricative_release_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 18
+    },
+    {
+        "glyph": "ᵊ",
+        "label": "mid_central_vowel_release_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 20
+    },
+    {
+        "glyph": "̥",
+        "label": "voiceless_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 21
+    },
+    {
+        "glyph": "̊",
+        "label": "voiceless_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 22
+    },
+    {
+        "glyph": "̬",
+        "label": "voiced_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 23
+    },
+    {
+        "glyph": "̤",
+        "label": "breathy_voiced_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 25
+    },
+    {
+        "glyph": "̰",
+        "label": "creaky_voiced_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 1,
+        "col": 27
+    },
+    {
+        "glyph": "̪",
+        "label": "dental_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 1
+    },
+    {
+        "glyph": "͆",
+        "label": "dental_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 2
+    },
+    {
+        "glyph": "̼",
+        "label": "linguolabial_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 3
+    },
+    {
+        "glyph": "᫥",
+        "label": "linguolabial_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 4
+    },
+    {
+        "glyph": "̺",
+        "label": "apical_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 5
+    },
+    {
+        "glyph": "᫣",
+        "label": "apical_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 6
+    },
+    {
+        "glyph": "̻",
+        "label": "laminal_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 7
+    },
+    {
+        "glyph": "᫤",
+        "label": "laminal_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 8
+    },
+    {
+        "glyph": "̟",
+        "label": "advanced_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 9
+    },
+    {
+        "glyph": "᫈",
+        "label": "advanced_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 10
+    },
+    {
+        "glyph": "̠",
+        "label": "retracted_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 11
+    },
+    {
+        "glyph": "᫢",
+        "label": "retracted_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 12
+    },
+    {
+        "glyph": "̈",
+        "label": "centralized_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 14
+    },
+    {
+        "glyph": "̽",
+        "label": "mid_centralized_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 16
+    },
+    {
+        "glyph": "̝",
+        "label": "raised_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 17
+    },
+    {
+        "glyph": "᷵",
+        "label": "raised_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 18
+    },
+    {
+        "glyph": "̞",
+        "label": "lowered_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 19
+    },
+    {
+        "glyph": "᫛",
+        "label": "lowered_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 2,
+        "col": 20
+    },
+    {
+        "glyph": "̹",
+        "label": "more_rounded_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 1
+    },
+    {
+        "glyph": "͗",
+        "label": "more_rounded_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 2
+    },
+    {
+        "glyph": "̜",
+        "label": "less_rounded_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 3
+    },
+    {
+        "glyph": "͑",
+        "label": "less_rounded_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 4
+    },
+    {
+        "glyph": "ʷ",
+        "label": "labialized_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 6
+    },
+    {
+        "glyph": "ʲ",
+        "label": "palatalized_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 8
+    },
+    {
+        "glyph": "ˠ",
+        "label": "velarized_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 10
+    },
+    {
+        "glyph": "̴",
+        "label": "velarized_or_pharyngealized_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 12
+    },
+    {
+        "glyph": "ˤ",
+        "label": "pharyngealized_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 14
+    },
+    {
+        "glyph": "̘",
+        "label": "advanced_tongue_root_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 15
+    },
+    {
+        "glyph": "᫠",
+        "label": "advanced_tongue_root_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 16
+    },
+    {
+        "glyph": "̙",
+        "label": "retracted_tongue_root_lower_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 17
+    },
+    {
+        "glyph": "᫡",
+        "label": "retracted_tongue_root_upper_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 18
+    },
+    {
+        "glyph": "̃",
+        "label": "nasalized_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 20
+    },
+    {
+        "glyph": "˞",
+        "label": "rhoticity_diacritic",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 3,
+        "col": 22
+    },
+    {
+        "glyph": "͜",
+        "label": "combining_double_lower_breve",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 4,
+        "col": 1
+    },
+    {
+        "glyph": "͡",
+        "label": "combining_double_upper_breve",
+        "render_on_base": true,
+        "category": "diacritics",
+        "row": 4,
+        "col": 2
+    },
+
+    {
+        "glyph": "˥",
+        "label": "high_tone_bar",
+        "render_on_base": false,
+        "category": "tones",
+        "row": 1,
+        "col": 1
+    },
+    {
+        "glyph": "꜒",
+        "label": "high_chao_tone_letter",
+        "render_on_base": false,
+        "category": "tones",
+        "row": 1,
+        "col": 2
+    },
+    {
+        "glyph": "˦",
+        "label": "half_high_tone_bar",
+        "render_on_base": false,
+        "category": "tones",
+        "row": 2,
+        "col": 1
+    },
+    {
+        "glyph": "꜓",
+        "label": "half_high_chao_tone_letter",
+        "render_on_base": false,
+        "category": "tones",
+        "row": 2,
+        "col": 2
+    },
+    {
+        "glyph": "˧",
+        "label": "mid_tone_bar",
+        "render_on_base": false,
+        "category": "tones",
+        "row": 3,
+        "col": 1
+    },
+    {
+        "glyph": "꜔",
+        "label": "mid_chao_tone_letter",
+        "render_on_base": false,
+        "category": "tones",
+        "row": 3,
+        "col": 2
+    },
+    {
+        "glyph": "˨",
+        "label": "half_low_tone_bar",
+        "render_on_base": false,
+        "category": "tones",
+        "row": 4,
+        "col": 1
+    },
+    {
+        "glyph": "꜕",
+        "label": "half_low_chao_tone_letter",
+        "render_on_base": false,
+        "category": "tones",
+        "row": 4,
+        "col": 2
+    },
+    {
+        "glyph": "˩",
+        "label": "low_tone_bar",
+        "render_on_base": false,
+        "category": "tones",
+        "row": 5,
+        "col": 1
+    },
+    {
+        "glyph": "꜖",
+        "label": "low_chao_tone_letter",
+        "render_on_base": false,
+        "category": "tones",
+        "row": 5,
+        "col": 2
+    },
+
+    {
+        "glyph": "̋",
+        "label": "extra_high_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 1
+    },
+    {
+        "glyph": "́",
+        "label": "high_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 2
+    },
+    {
+        "glyph": "̄",
+        "label": "mid_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 3
+    },
+    {
+        "glyph": "̀",
+        "label": "low_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 4
+    },
+    {
+        "glyph": "̏",
+        "label": "extra_low_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 5
+    },
+    {
+        "glyph": "̌",
+        "label": "rising_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 6
+    },
+    {
+        "glyph": "̂",
+        "label": "falling_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 7
+    },
+    {
+        "glyph": "᷈",
+        "label": "peaking_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 8
+    },
+    {
+        "glyph": "᷉",
+        "label": "dipping_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 9
+    },
+    {
+        "glyph": "᷄",
+        "label": "mid_rising_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 10
+    },
+    {
+        "glyph": "᷅",
+        "label": "low_rising_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 11
+    },
+    {
+        "glyph": "᷇",
+        "label": "high_falling_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 12
+    },
+    {
+        "glyph": "᷆",
+        "label": "mid_falling_pitch_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 1,
+        "col": 13
+    },
+    {
+        "glyph": "ˈ",
+        "label": "primary_stress_mark",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 1
+    },
+    {
+        "glyph": "ˌ",
+        "label": "secondary_stress_mark",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 2
+    },
+    {
+        "glyph": "ː",
+        "label": "long_mark",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 3
+    },
+    {
+        "glyph": "ˑ",
+        "label": "half_long_mark",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 4
+    },
+    {
+        "glyph": "̆",
+        "label": "extra_short_upper_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 2,
+        "col": 5
+    },
+    {
+        "glyph": "̮",
+        "label": "extra_short_lower_diacritic",
+        "render_on_base": true,
+        "category": "prosody",
+        "row": 2,
+        "col": 6
+    },
+    {
+        "glyph": ".",
+        "label": "syllable_break",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 7
+    },
+    {
+        "glyph": "‿",
+        "label": "linking_mark",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 8
+    },
+    {
+        "glyph": "|",
+        "label": "minor_break",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 9
+    },
+    {
+        "glyph": "‖",
+        "label": "major_break",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 10
+    },
+    {
+        "glyph": "↗︎",
+        "label": "global_rise_mark",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 11
+    },
+    {
+        "glyph": "↘︎",
+        "label": "global_fall_mark",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 12
+    },
+    {
+        "glyph": "ꜛ",
+        "label": "up_step_mark",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 13
+    },
+    {
+        "glyph": "ꜜ",
+        "label": "down_step_mark",
+        "render_on_base": false,
+        "category": "prosody",
+        "row": 2,
+        "col": 14
+    }
+]

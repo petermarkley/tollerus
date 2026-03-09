@@ -1,0 +1,293 @@
+<div
+    x-data="{
+        msgs: {
+            no_cancel: @js(__('tollerus::ui.no_cancel')),
+            yes_delete: @js(__('tollerus::ui.yes_delete')),
+            delete_rule_confirmation: @js(__('tollerus::ui.delete_rule_confirmation')),
+        },
+        tabTarget: $wire.entangle('tabTarget'),
+        tabPattern: $wire.entangle('tabPattern'),
+        tabNeography: $wire.entangle('tabNeography'),
+        moveRule(ruleElem, tabTarget, tabPattern, tabNeography, ruleId, neighborId) {
+            let neighborElem = document.getElementById('rule_' + neighborId);
+            $store.reorderFunctions.swapItems(ruleElem, neighborElem);
+            const onDone = (event) => {
+                // Listener should be ephemeral
+                event.target.removeEventListener('transitionend', onDone);
+                // Livewire request
+                $wire.swapRules(tabTarget, tabPattern, tabNeography, ruleId, neighborId);
+            };
+            ruleElem.addEventListener('transitionend', onDone);
+        },
+        deleteItem(id) {
+            let e = document.getElementById(id);
+            if (e) {
+                e.remove();
+            }
+        },
+    }"
+    @tab-target-switch.window="tabTarget = $event.detail.tabTarget;"
+    @rule-delete.window="deleteItem('rule_'+$event.detail.ruleId); $wire.deleteRule($event.detail.ruleId);"
+>
+    <div id="non-modal-content" class="flex flex-col gap-4">
+        <h1 class="font-bold text-2xl px-6 xl:px-0">
+            <span>{{ __('tollerus::ui.row_name', ['name' => $rowName])}}</span>
+            <span>{{ __('tollerus::ui.auto_inflection') }}</span>
+        </h1>
+        @if ($row->src_base === null)
+            <x-tollerus::alert type="warning">{{ __('tollerus::ui.no_base_row_notice') }}</x-tollerus::alert>
+        @endif
+        <x-tollerus::panel class="flex flex-col gap-8">
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="flex flex-col gap-2 items-start">
+                    <h3 class="font-bold flex flex-row gap-4 items-center text-lg">
+                        <x-tollerus::icons.bricks />
+                        <span>{{ __('tollerus::ui.base_row') }}</span>
+                    </h3>
+                    <div>
+                        @if ($row->sourceBase)
+                            <p class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm p-1">{{ $row->sourceBase->label }}</p>
+                        @else
+                            <p class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm p-1 italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.none') }}</p>
+                        @endif
+                    </div>
+                    <p class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.base_row_description') }}</p>
+                    <div>
+                        <a href="{{ route('tollerus.admin.languages.inflections.edit', ['language' => $language->id, 'wordClassGroup' => $group->id]) }}">{{ __('tollerus::ui.edit_at_group_level') }}</a>
+                    </div>
+                </div>
+                <fieldset class="flex flex-col gap-2 items-start">
+                    <h3 class="font-bold text-lg">
+                        <label for="src_particle" class="flex flex-row gap-4 items-center">
+                            <x-tollerus::icons.puzzle />
+                            <span>{{ __('tollerus::ui.particle') }}</span>
+                        </label>
+                    </h3>
+                    <div @word-picker-select-id="$wire.updateRow('srcParticle', $event.detail.wordId);">
+                        <livewire:tollerus.word-picker
+                            :language="$language"
+                            :langIsStrict="true"
+                            :requireForm="true"
+                            :softLimitToParticles="true"
+                            :selectedWordId="$ruleForm['row']['srcParticle']['globalId']"
+                        />
+                    </div>
+                    <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.particle_description', ['row' => $row->label]) }}</legend></div>
+                </fieldset>
+            </div>
+            <fieldset class="flex flex-col gap-2 items-start">
+                <h3 class="font-bold text-lg">
+                    <label for="morph_template" class="flex flex-row gap-4 items-center">
+                        <x-tollerus::icons.arrows-merge-right />
+                        <span>{{ __('tollerus::ui.morph_template') }}</span>
+                    </label>
+                </h3>
+                <x-tollerus::inputs.text-saveable
+                    idExpression="'morph_template'"
+                    model="ruleForm.row.morphTemplate"
+                    fieldName="morphTemplate"
+                    saveEvent="$wire.updateRow('morphTemplate', document.getElementById(id).value, id);"
+                />
+                <x-tollerus::alert type="info" class="whitespace-nowrap">{{ __('tollerus::ui.morph_template_key') }}</x-tollerus::alert>
+                <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.morph_template_description') }}</legend></div>
+            </fieldset>
+        </x-tollerus::panel>
+        <x-tollerus::drawer open="true" rootClass="w-full" class="flex flex-col gap-4 w-full">
+            <x-slot:heading-button>
+                <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl rounded-bl bg-zinc-500 dark:bg-zinc-400 group-has-hover:bg-zinc-400 group-has-hover:dark:bg-zinc-300 text-white dark:text-zinc-800">
+                    <x-tollerus::icons.eye-slash x-show="!drawerOpen" x-cloak />
+                    <x-tollerus::icons.eye x-show="drawerOpen" />
+                    <span>{{ __('tollerus::ui.auto_inflection_preview') }}</span>
+                </div>
+            </x-slot:heading-button>
+            <x-slot:heading>
+                <div class="flex-grow border-b-2 border-zinc-500 dark:border-zinc-400"></div>
+            </x-slot:heading>
+            <div class="w-full flex flex-col gap-4 items-start">
+                <div class="w-full flex flex-row gap-4 justify-start items-center">
+                    <label>{{ __('tollerus::ui.example_word') }}</label>
+                    <div @word-picker-select-id="$wire.updatePreviewWord($event.detail.wordId);">
+                        <livewire:tollerus.word-picker
+                            :language="$language"
+                            :langIsStrict="true"
+                            :requireForm="true"
+                            :handleDrawerOverride="true"
+                        />
+                    </div>
+                </div>
+                @if (empty($previewWordId))
+                    <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.example_word_description') }}</legend></div>
+                @else
+                    <div class="mb-4 overflow-hidden rounded-lg border border-zinc-500 dark:border-zinc-500">
+                        <table class="w-full">
+                            <thead>
+                                <tr>
+                                    <td></td>
+                                    <th scope="col" class="py-1 px-2">{{ __('tollerus::ui.base') }}</th>
+                                    <td></td>
+                                    <th scope="col" class="py-1 px-2">{{ __('tollerus::ui.inflected') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row" class="py-1 px-2 flex flex-row gap-1 justify-center items-center font-normal">
+                                        <x-tollerus::icons.micro.world />
+                                        <span>{{ config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated')) }}</span>
+                                    </th>
+                                    <td class="py-1 px-2">{{ $this->previewWordInfo['transliterated'] }}</td>
+                                    <td class="py-1 px-2">&rarr;</td>
+                                    <td class="py-1 px-2">{{ $this->previewWordInfo['transliterated_inflected'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="py-1 px-2 flex flex-row gap-1 justify-center items-center font-normal">
+                                        <x-tollerus::icons.micro.speech />
+                                        <span>{{ __('tollerus::ui.phonemic') }}</span>
+                                    </th>
+                                    <td class="py-1 px-2 italic">/{{ $this->previewWordInfo['phonemic'] }}/</td>
+                                    <td class="py-1 px-2">&rarr;</td>
+                                    <td class="py-1 px-2 italic">/{{ $this->previewWordInfo['phonemic_inflected'] }}/</td>
+                                </tr>
+                                @foreach ($language->neographies as $neography)
+                                    @php
+                                        $nativeSpelling = collect($this->previewWordInfo['native'])->firstWhere('neographyId', $neography->id);
+                                    @endphp
+                                    <tr>
+                                        <th scope="row" class="py-1 px-2 flex flex-row gap-1 justify-center items-center font-normal">
+                                            <x-tollerus::icons.micro.neography />
+                                            <span>{{ $neography->name }}</span>
+                                        </th>
+                                        <td class="py-1 px-2 tollerus_{{ $neography->machine_name }}">{{ $nativeSpelling['spelling'] }}</td>
+                                        <td class="py-1 px-2">&rarr;</td>
+                                        <td class="py-1 px-2 tollerus_{{ $neography->machine_name }}">{{ $nativeSpelling['spelling_inflected'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </div>
+        </x-tollerus::drawer>
+        <h1 class="font-bold text-2xl px-6 xl:px-0">{{ __('tollerus::ui.morph_rules') }}</h1>
+        <div>
+            <ul class="px-4 flex flex-row gap-4 justify-start items-end" role="tablist">
+                <x-tollerus::inputs.tab
+                    switcher="tabTarget"
+                    tabName="base"
+                    aria-controls="tabpanel-base"
+                    title="{{ __('tollerus::ui.base') }}"
+                    @click="tabTarget='base'"
+                    @keydown.enter.prevent="tabTarget='base'"
+                    @keydown.space.prevent="tabTarget='base'"
+                >
+                    <x-tollerus::icons.bricks class="h-6"/>
+                    <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.base') }}</span>
+                </x-tollerus::inputs.tab>
+                <x-tollerus::inputs.tab
+                    switcher="tabTarget"
+                    tabName="particle"
+                    aria-controls="tabpanel-particle"
+                    title="{{ __('tollerus::ui.particle') }}"
+                    @click="tabTarget='particle'"
+                    @keydown.enter.prevent="tabTarget='particle'"
+                    @keydown.space.prevent="tabTarget='particle'"
+                >
+                    <x-tollerus::icons.puzzle class="h-6"/>
+                    <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.particle') }}</span>
+                </x-tollerus::inputs.tab>
+            </ul>
+            @foreach (['base', 'particle'] as $tabTargetName)
+                <div
+                    id="tabpanel-{{ $tabTargetName }}"
+                    role="tabpanel"
+                    x-cloak x-show="tabTarget=='{{ $tabTargetName }}'"
+                    class="border-4 border-white dark:border-zinc-800 rounded-xl pt-4"
+                >
+                    <ul class="px-4 flex flex-row gap-4 justify-start items-end" role="tablist">
+                        <x-tollerus::inputs.tab
+                            switcher="tabPattern"
+                            tabName="transliterated"
+                            aria-controls="tabpanel-{{ $tabTargetName }}-transliterated"
+                            title="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
+                            @click="tabPattern='transliterated'"
+                            @keydown.enter.prevent="tabPattern='transliterated'"
+                            @keydown.space.prevent="tabPattern='transliterated'"
+                        >
+                            <x-tollerus::icons.world class="h-6"/>
+                            <span class="sr-only md:not-sr-only">{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}</span>
+                        </x-tollerus::inputs.tab>
+                        <x-tollerus::inputs.tab
+                            switcher="tabPattern"
+                            tabName="phonemic"
+                            aria-controls="tabpanel-{{ $tabTargetName }}-phonemic"
+                            title="{{ __('tollerus::ui.phonemic') }}"
+                            @click="tabPattern='phonemic'"
+                            @keydown.enter.prevent="tabPattern='phonemic'"
+                            @keydown.space.prevent="tabPattern='phonemic'"
+                        >
+                            <x-tollerus::icons.speech class="h-6"/>
+                            <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.phonemic') }}</span>
+                        </x-tollerus::inputs.tab>
+                        <x-tollerus::inputs.tab
+                            switcher="tabPattern"
+                            tabName="native"
+                            aria-controls="tabpanel-{{ $tabTargetName }}-native"
+                            title="{{ __('tollerus::ui.native') }}"
+                            @click="tabPattern='native'"
+                            @keydown.enter.prevent="tabPattern='native'"
+                            @keydown.space.prevent="tabPattern='native'"
+                        >
+                            <x-tollerus::icons.neography class="h-6"/>
+                            <span class="sr-only md:not-sr-only">{{ __('tollerus::ui.native') }}</span>
+                        </x-tollerus::inputs.tab>
+                    </ul>
+                    @foreach (['transliterated', 'phonemic', 'native'] as $tabPatternName)
+                        <x-tollerus::panel
+                            id="tabpanel-{{ $tabTargetName }}-{{ $tabPatternName }}"
+                            role="tabpanel"
+                            x-cloak x-show="tabPattern=='{{ $tabPatternName }}'"
+                            class="flex flex-col gap-6"
+                        >
+                            @php
+                                $targetStr = $tabTargetName . '_input';
+                                $targetLocal = \PeterMarkley\Tollerus\Enums\MorphRuleTargetType::from($targetStr)->localize();
+                                $patternLocal = \PeterMarkley\Tollerus\Enums\MorphRulePatternType::from($tabPatternName)->localize();
+                            @endphp
+                            <h2 class="font-bold text-xl flex flex-row gap-4 items-baseline">
+                                <span>{{ __('tollerus::ui.applied_to_input', ['input' => $targetLocal]) }}</span>
+                                <span>&bull;</span>
+                                <span>{{ __('tollerus::ui.in_type_representation', ['type' => $patternLocal]) }}</span>
+                                <span>&hellip;</span>
+                            </h2>
+                            @if ($tabPatternName == 'native')
+                                <div>
+                                    <x-tollerus::inputs.select
+                                        idExpression="'tab_neography'"
+                                        label="{{ __('tollerus::ui.neography') }}"
+                                        model="tabNeography"
+                                    >
+                                        @foreach ($language->neographies as $neography)
+                                            <option value="{{ (string)$neography->id }}" class="cursor-pointer" x-bind:selected="tabNeography=={{ (string)$neography->id }}">{{ $neography->name }}</option>
+                                        @endforeach
+                                    </x-tollerus::inputs.select>
+                                </div>
+                                @foreach ($language->neographies as $neography)
+                                    <div x-show="tabNeography=={{ (string)$neography->id }}">
+                                        @include('tollerus::livewire.auto-inflection-editor._rules')
+                                    </div>
+                                @endforeach
+                            @else
+                                @include('tollerus::livewire.auto-inflection-editor._rules')
+                            @endif
+                        </x-tollerus::panel>
+                    @endforeach
+                </div>
+            @endforeach
+        </div>
+    </div>
+    <x-tollerus::modal/>
+    @if (count($nativeKeyboards) > 0)
+        <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
+    @endif
+    <x-tollerus::keyboards.phonemic :phonemicKeyboard="$ipaKeyboard"/>
+</div>
+<x-tollerus::reorder-script/>

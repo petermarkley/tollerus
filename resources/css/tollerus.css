@@ -1,0 +1,118 @@
+@config "../../tailwind.config.js";
+@import "tailwindcss";
+
+[x-cloak] { display: none !important; }
+
+@layer base {
+    #tollerus_root[data-layout="admin"] {
+        @apply w-full h-full min-h-screen bg-zinc-300 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-300
+    }
+    #tollerus_root[data-layout="admin"] body a {
+        @apply text-cyan-700 hover:text-cyan-600 dark:text-cyan-500 hover:dark:text-cyan-400 dark:saturate-50
+    }
+    #tollerus_root[data-layout="admin"] body footer a {
+        @apply text-cyan-800 hover:text-cyan-800 dark:text-cyan-500 hover:dark:text-cyan-500 saturate-80 dark:saturate-20
+    }
+    #tollerus_root[data-layout="admin"] [data-component="alert"] a {
+        @apply saturate-100 underline font-bold
+    }
+    #tollerus_root[data-layout="admin"] [data-route="public"] a {
+        @apply saturate-100
+    }
+    #tollerus_root div.drawer-content {
+        margin-top: 0%;
+        opacity: 1;
+        max-height: 10000in;
+        transition: margin-top 0.5s ease-out 0s, opacity 0.5s ease-out 0s, max-height 0s linear 0s;
+    }
+    #tollerus_root div.drawer-content-closed {
+        margin-top: -100%;
+        opacity: 0;
+        max-height: 0in;
+        transition: margin-top 0.5s ease-out 0s, opacity 0.5s ease-out 0s, max-height 0s linear 0.5s;
+    }
+
+    /* Default values for CSS variables on public pages, customizable by host app */
+    :root {
+        --tollerus-bg: 212 212 216;               /* zinc-300 */
+        --tollerus-surface: 255 255 255;
+        --tollerus-surface-inactive: 250 250 250; /* zinc-50  */
+        --tollerus-surface-hover: 250 250 250;    /* zinc-50  */
+        --tollerus-text: 24 24 27;                /* zinc-900 */
+        --tollerus-text-inverse: 255 255 255;
+        --tollerus-text-irregular: 159 7 18;      /* red-800 */
+        --tollerus-muted: 250 250 250;            /* zinc-50  */
+        --tollerus-border: 159 159 169;           /* zinc-400 */
+        --tollerus-primary: 0 117 149;            /* cyan-700 */
+        --tollerus-primary-hover: 0 146 184;      /* cyan-600 */
+        --tollerus-secondary: 82 82 92;           /* zinc-600 */
+        --tollerus-secondary-hover: 113 113 123;  /* zinc-500 */
+        --tollerus-ring: 20 71 230;               /* blue-700 */
+        --tollerus-font-main: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        --tollerus-font-transliterated: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        --tollerus-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --tollerus-bg: 24 24 27;                 /* zinc-900 */
+            --tollerus-surface: 39 39 42;            /* zinc-800 */
+            --tollerus-surface-inactive: 24 24 27;   /* zinc-900 */
+            --tollerus-surface-hover: 63 63 70;      /* zinc-700  */
+            --tollerus-text: 212 212 216;            /* zinc-300 */
+            --tollerus-text-inverse: 9 9 11;         /* zinc-950 */
+            --tollerus-text-irregular: 255 100 103;  /* red-400 */
+            --tollerus-muted: 34 34 37;              /* zinc-900, 30% opaque over zinc-800 */
+            --tollerus-border: 113 113 123;          /* zinc-500 */
+            --tollerus-primary: 75 167 184;          /* cyan-500, saturate-50 */
+            --tollerus-primary-hover: 85 191 206;    /* cyan-400, saturate-50 */
+            --tollerus-secondary: 159 159 169;       /* zinc-400 */
+            --tollerus-secondary-hover: 212 212 216; /* zinc-300 */
+            --tollerus-ring: 255 255 255;
+        }
+    }
+
+    /* Styles for semantic elements inside body text fields like `languages.intro`, `entries.etym`, or `senses.body` */
+    #tollerus_root [data-tollerus="smallcaps"] {
+        font-variant-caps: small-caps;
+    }
+    #tollerus_root [data-tollerus="word"] {
+        font-weight: bold !important;
+        font-family: var(--tollerus-font-transliterated);
+    }
+    #tollerus_root a[data-tollerus="word"] {
+        text-decoration: underline;
+    }
+    #tollerus_root [data-tollerus="phonemic"] {
+        font-style: italic;
+    }
+
+    /* Tiptap editor styles */
+    #tollerus_root .tiptap {
+        min-height: 150px;
+    }
+    #tollerus_root [data-tollerus-wysiwyg-inline] .tiptap {
+        min-height: 40px;
+    }
+    #tollerus_root .tiptap p {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        text-indent: 1em;
+    }
+    #tollerus_root [data-tollerus-wysiwyg-inline] .tiptap p {
+        text-indent: 0;
+    }
+    #tollerus_root .tiptap ul, #tollerus_root .tiptap ol {
+        padding-left: 3em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
+    #tollerus_root .tiptap ul {
+        list-style-type: disc;
+    }
+    #tollerus_root .tiptap ol {
+        list-style-type: decimal;
+    }
+    #tollerus_root .tiptap ul p, #tollerus_root .tiptap ol p {
+        text-indent: 0;
+    }
+}

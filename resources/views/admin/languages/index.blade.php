@@ -1,0 +1,183 @@
+<x-tollerus::layouts.admin :breadcrumbs="$breadcrumbs">
+    <div
+        id="non-modal-content"
+        x-data="{
+            msgs: {
+                no_cancel: @js(__('tollerus::ui.no_cancel')),
+                yes_delete: @js(__('tollerus::ui.yes_delete')),
+                delete_language_confirmation: @js( $deleteMsgs ),
+            }
+        }"
+        @language-delete.window="$store.languages.delete($event.detail.url);"
+    >
+        <x-slot name="title">{{ __('tollerus::ui.languages') }}</x-slot>
+        <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">{{ __('tollerus::ui.languages') }}</h1>
+        <div class="flex flex-col gap-4 items-stretch">
+            @foreach ($languages as $language)
+                <x-tollerus::panel class="flex flex-col gap-2">
+                    <h2 class="flex flex-row gap-2 items-center justify-between">
+                        <a
+                            class="text-zinc-900 dark:text-zinc-300 font-bold text-xl flex flex-row gap-2 items-center"
+                            title="{{ __('tollerus::ui.edit_thing', ['thing' => $language->name]) }}"
+                            href="{{ route('tollerus.admin.languages.edit', ['language' => $language]) }}"
+                        >
+                            <x-tollerus::icons.language class="h-8"/>
+                            <span>{{ $language->name }}</span>
+                        </a>
+                        <div class="flex flex-row gap-2 items-center">
+                            <x-tollerus::button
+                                type="secondary"
+                                size="small"
+                                title="{{ __('tollerus::ui.edit_thing', ['thing' => $language->name]) }}"
+                                href="{{ route('tollerus.admin.languages.edit', ['language' => $language]) }}"
+                            >
+                                <x-tollerus::icons.edit class="h-6 w-6"/>
+                                <span class="sr-only">{{ __('tollerus::ui.edit_thing', ['thing' => $language->name]) }}</span>
+                            </x-tollerus::button>
+                            <x-tollerus::inputs.button
+                                type="secondary"
+                                size="small"
+                                title="{{ __('tollerus::ui.delete_thing', ['thing' => $language->name]) }}"
+                                @click="$dispatch('open-modal', {message: msgs['delete_language_confirmation']['{{ $language->machine_name }}'], buttons: [
+                                    {text: msgs['no_cancel'], type: 'secondary', clickEvent: 'close-modal'},
+                                    {text: msgs['yes_delete'], type: 'primary', clickEvent: 'language-delete', payload: {url: '{{ route('tollerus.admin.languages.destroy', ['language' => $language]) }}'} },
+                                ]});"
+                            >
+                                <x-tollerus::icons.delete/>
+                                <span class="sr-only">{{ __('tollerus::ui.delete_thing', ['thing' => $language->name]) }}</span>
+                            </x-tollerus::inputs.button>
+                        </div>
+                    </h2>
+                    <div class="flex flex-row justify-start gap-4">
+
+                        {{-- Neography preview --}}
+                        @if ($primaryGlyphs[$language->machine_name] !== null)
+                            @if ($primaryGlyphs[$language->machine_name]['allSvgFound'])
+                                <x-tollerus::pane
+                                    class="flex flex-row"
+                                    role="img"
+                                    aria-label="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.neographies')]) }}"
+                                    href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'neographies']) }}"
+                                    title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.neographies')]) }}"
+                                >
+                                    @foreach ($primaryGlyphs[$language->machine_name]['svg'] as $svg)
+                                        {{-- Controller generates these with classes: 'h-12 w-auto pointer-events-none' --}}
+                                        {!! $svg !!}
+                                    @endforeach
+                                </x-tollerus::pane>
+                            @else
+                                <x-tollerus::pane
+                                    role="img"
+                                    aria-label="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.neographies')]) }}"
+                                    href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'neographies']) }}"
+                                    title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.neographies')]) }}"
+                                >
+                                    <p class="text-5xl pointer-events-none" style="font-family:{{ $language->primaryNeography->machine_name }};">{{ $primaryGlyphs[$language->machine_name]['models']->pluck('glyph')->implode('') }}</p>
+                                </x-tollerus::pane>
+                            @endif
+                        @else
+                            <x-tollerus::missing-data href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'neographies']) }}">{{ __('tollerus::ui.no_neographies') }}</x-tollerus::missing-data>
+                        @endif
+
+                        {{-- Grammar preview --}}
+                        @if (count($wordClassGroups[$language->machine_name]) > 0)
+                            <x-tollerus::pane
+                                role="img"
+                                aria-label="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.grammar')]) }}"
+                                href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'grammar']) }}"
+                                title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.grammar')]) }}"
+                            >
+                                <ul class="flex flex-row gap-2 flex-wrap justify-start items-start pointer-events-none">
+                                    @foreach ($wordClassGroups[$language->machine_name] as $wordClassGroup)
+                                        @if ($wordClassGroup['class'] !== null)
+                                            @if ($wordClassGroup['featureCount'] == 0)
+                                                <li class="border-zinc-400 text-zinc-700 dark:border-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border rounded-lg shadow-sm flex flex-row gap-1 items-center p-1">
+                                                    <span><abbr class="no-underline" title="{{ $wordClassGroup['class']->name }}">{{ $wordClassGroup['nameBrief'] }}</abbr></span>
+                                                </li>
+                                            @else
+                                                <li class="border-cyan-400 text-cyan-700 dark:border-cyan-700 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-950 rounded-lg shadow-sm flex flex-row gap-1 items-center p-1 border-2 font-bold">
+                                                    <span><abbr class="no-underline" title="{{ $wordClassGroup['class']->name }}">{{ $wordClassGroup['nameBrief'] }}</abbr></span>
+                                                    <span class="block text-white dark:text-cyan-950 bg-cyan-700 dark:bg-cyan-300 rounded-full w-6 h-6 flex justify-center items-center text-center text-sm">{{ $wordClassGroup['featureCount'] }}</span>
+                                                </li>
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </x-tollerus::pane>
+                        @else
+                            <x-tollerus::missing-data href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'grammar']) }}">{{ __('tollerus::ui.no_grammar') }}</x-tollerus::missing-data>
+                        @endif
+
+                        {{-- Entries preview --}}
+                        @if (count($entriesPreview[$language->machine_name]) > 0)
+                            <x-tollerus::pane
+                                class="w-full max-h-28 overflow-hidden"
+                                role="img"
+                                aria-label="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.entries')]) }}"
+                                href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'entries']) }}"
+                                title="{{ __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.entries')]) }}"
+                            >
+                                <ul class="flex flex-col gap-x-4 flex-wrap justify-start items-start w-full h-32 mask-b-to-85% mask-r-from-60% pointer-events-none">
+                                    @foreach ($entriesPreview[$language->machine_name] as $entry)
+                                        <li class="font-bold">{{ $entry->transliterated }}</li>
+                                    @endforeach
+                                </ul>
+                            </x-tollerus::pane>
+                        @else
+                            <x-tollerus::missing-data href="{{ route('tollerus.admin.languages.edit.tab', ['language' => $language, 'tab' => 'entries']) }}">{{ __('tollerus::ui.no_entries') }}</x-tollerus::missing-data>
+                        @endif
+
+                    </div>
+                </x-tollerus::panel>
+            @endforeach
+            <div class="px-6 xl:px-0">
+                <x-tollerus::inputs.missing-data
+                    size="medium" floating="true"
+                    title="{{ __('tollerus::ui.add_language') }}"
+                    class="relative flex flex-row gap-2 justify-center items-center w-full"
+                    @click="$store.languages.create();"
+                >
+                    <x-tollerus::icons.plus/>
+                    <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_language') }}</span>
+                </x-tollerus::inputs.missing-data>
+            </div>
+        </div>
+    </div>
+    <x-tollerus::modal/>
+    @once
+    @push('tollerus-scripts')
+    <script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.store('languages', {
+            create() {
+                fetch('{{ route('tollerus.admin.languages.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.id) {
+                        window.location.href = '{{ route('tollerus.admin.languages.edit', '#') }}'.replaceAll('#', data.id);
+                    }
+                }).catch(error => console.error('Network error:', error));
+            },
+            delete(url) {
+                fetch(url, {
+                    method: 'DELETE',
+                    headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        console.error('Delete failed:', response.status);
+                    }
+                }).catch(error => console.error('Network error:', error));
+            },
+        });
+    });
+    </script>
+    @endpush
+    @endonce
+</x-tollerus::layouts.admin>

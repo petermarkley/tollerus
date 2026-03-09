@@ -1,0 +1,141 @@
+<div id="tabpanel-glyphs" role="tabpanel" x-cloak x-show="tab=='glyphs'" class="flex flex-col gap-6 border-t-4 border-white dark:border-zinc-800 pt-4">
+    <div class="flex flex-col gap-2 italic text-zinc-700 dark:text-zinc-400 px-6 xl:px-0">
+        {!! Str::markdown(__('tollerus::ui.glyphs_tab_description')) !!}
+    </div>
+    <h1 class="font-bold text-2xl px-6 xl:px-0">
+        <span>{{ __('tollerus::ui.sections') }}</span>
+    </h1>
+    @if (count($glyphsForm) == 0)
+        <div class="flex flex-col gap-4 items-start w-full px-6 xl:px-0" x-data="{ btn: 'extract_from_svg' }">
+            @if ($fontForm['formats'][\PeterMarkley\Tollerus\Enums\FontFormat::Svg->value]['blobExists'])
+                <x-tollerus::alert>
+                    <p class="m-0">{{ __('tollerus::ui.svg_to_glyphs_notice') }}</p>
+                </x-tollerus::alert>
+                <x-tollerus::inputs.button
+                    x-text="msgs[btn]"
+                    @click="btn = 'extracting'; $wire.extractSvgToGlyphs();"
+                    @svgtoglyphs-failure.window="btn = 'extract_from_svg';"
+                    @svgtoglyphs-success.window="btn = 'extract_from_svg';"
+                    wire:loading.attr="disabled"
+                    wire:target="extractSvgToGlyphs"
+                />
+            @else
+                <x-tollerus::alert>
+                    <div>{!! Str::markdown(__('tollerus::ui.svg_to_glyphs_notice_no_font', [
+                        'font_url' => route('tollerus.admin.neographies.edit.tab', ['neography' => $neography, 'tab' => 'font'])
+                    ])) !!}</div>
+                </x-tollerus::alert>
+                <x-tollerus::inputs.button
+                    x-text="msgs[btn]"
+                    @svgtoglyphs-failure.window="btn = 'extract_from_svg';"
+                    @svgtoglyphs-success.window="btn = 'extract_from_svg';"
+                    disabled
+                />
+            @endif
+        </div>
+    @endif
+    <div x-show="hasGlyphSections" x-cloak>
+        <div class="flex flex-col gap-6" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
+            @foreach (collect($glyphsForm)->sortBy('position') as $sectId => $sect)
+                @php
+                    $prevNeighborId = $this->getNeighborId($glyphsForm, $sectId, -1);
+                    $nextNeighborId = $this->getNeighborId($glyphsForm, $sectId, +1);
+                @endphp
+                <div
+                    id="sect_{{ $sectId }}"
+                    wire:key="sect-{{ $sectId }}"
+                    data-obj="sect"
+                    class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
+                    style="order: {{ $loop->index }}"
+                    @transitionend="$nextTick(() => {animating=false});"
+                >
+                    <x-tollerus::panel class="px-3 py-12 flex flex-col gap-6 justify-start shrink-0 rounded-l-full rounded-r-none">
+                        <x-tollerus::inputs.button
+                            type="inverse"
+                            title="{{ __('tollerus::ui.move_section_up') }}"
+                            x-bind:disabled="animating || {{ $this->isFirstItem($glyphsForm, $sectId) ? 'true' : 'false' }}"
+                            @click="animating=true; moveSection($el.closest('[data-obj=sect]'), {{ $sectId }}, {{ $prevNeighborId ?? 'null' }});"
+                        >
+                            <x-tollerus::icons.chevron-up class="h-8 w-8" />
+                            <span class="sr-only">{{ __('tollerus::ui.move_section_up') }}</span>
+                        </x-tollerus::inputs.button>
+                        <x-tollerus::inputs.button
+                            type="inverse"
+                            title="{{ __('tollerus::ui.move_section_down') }}"
+                            x-bind:disabled="animating || {{ $this->isLastItem($glyphsForm, $sectId) ? 'true' : 'false' }}"
+                            @click="animating=true; moveSection($el.closest('[data-obj=sect]'), {{ $sectId }}, {{ $nextNeighborId ?? 'null' }});"
+                        >
+                            <x-tollerus::icons.chevron-down class="h-8 w-8" />
+                            <span class="sr-only">{{ __('tollerus::ui.move_section_down') }}</span>
+                        </x-tollerus::inputs.button>
+                    </x-tollerus::panel>
+                    <x-tollerus::panel class="flex flex-col gap-6 flex-grow rounded-l-none">
+                        <h2 class="flex flex-row gap-2 items-center justify-between">
+                            <a
+                                class="text-zinc-900 dark:text-zinc-300 font-bold text-xl flex flex-row gap-2 items-center"
+                                title="{{ $sect['editUrlText'] }}"
+                                href="{{ $sect['editUrl'] }}"
+                            >
+                                <x-tollerus::icons.bookmark class="h-8"/>
+                                @if (empty($sect['name']))
+                                    <span class="font-normal italic">{{ __('tollerus::ui.section_nameless') }}</span>
+                                @else
+                                    <span>{{ $sect['name'] }}</span>
+                                @endif
+                                <span class="block font-bold text-lg tracking-tighter bg-zinc-900 dark:bg-zinc-300 text-white dark:text-zinc-800 rounded-full w-7 h-7 flex justify-center items-center text-center">{{ $sect['glyphCount'] }}</span>
+                            </a>
+                            <div class="flex flex-row gap-2 items-center">
+                                <x-tollerus::button
+                                    type="secondary"
+                                    size="small"
+                                    title="{{ $sect['editUrlText'] }}"
+                                    href="{{ $sect['editUrl'] }}"
+                                >
+                                    <x-tollerus::icons.edit class="h-6 w-6"/>
+                                    <span class="sr-only">{{ $sect['editUrlText'] }}</span>
+                                </x-tollerus::button>
+                                <x-tollerus::inputs.button
+                                    type="secondary"
+                                    size="small"
+                                    title="{{ __('tollerus::ui.delete_section') }}"
+                                    @click="$dispatch('open-modal', {
+                                        message: msgs['delete_section_confirmation'],
+                                        buttons: [
+                                            { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
+                                            { text: msgs.yes_delete, type: 'primary', clickEvent: 'sect-delete', payload: {sectId: {{ $sectId }}} }
+                                        ]
+                                    });"
+                                >
+                                    <x-tollerus::icons.delete/>
+                                    <span class="sr-only">{{ __('tollerus::ui.delete_section') }}</span>
+                                </x-tollerus::inputs.button>
+                            </div>
+                        </h2>
+                        <x-tollerus::pane
+                            class="w-full max-h-20 flex-grow overflow-hidden"
+                            title="{{ $sect['editUrlText'] }}"
+                            href="{{ $sect['editUrl'] }}"
+                        >
+                            <div class="w-full max-h-20 flex-grow flex flex-col gap-2 mask-b-to-85%">
+                                {!! $sect['intro'] !!}
+                            </div>
+                        </x-tollerus::pane>
+                    </x-tollerus::panel>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    <div class="px-6 xl:px-0">
+        <x-tollerus::inputs.missing-data
+            size="medium" floating="true"
+            title="{{ __('tollerus::ui.add_section') }}"
+            class="relative flex flex-row gap-2 justify-center items-center w-full"
+            @click="$wire.createSection();"
+            wire:loading.attr="disabled"
+            wire:target="createSection"
+        >
+            <x-tollerus::icons.plus/>
+            <span class="sr-only lg:not-sr-only">{{ __('tollerus::ui.add_section') }}</span>
+        </x-tollerus::inputs.missing-data>
+    </div>
+</div>

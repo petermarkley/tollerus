@@ -1,2 +1,4 @@
-conf/languages/inflections.json
-
+/vendor/
+/.idea
+composer.lock
+node_modules
