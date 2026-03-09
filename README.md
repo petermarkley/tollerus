@@ -17,8 +17,12 @@ cd example-app
 ```
 Make sure to edit the `.env` file as needed, for example to give Laravel database access.
 
-## 2. Install Tollerus (from GitHub)
-Soon Tollerus will be published on Packagist. But for now, you'll need to install it from GitHub:
+## 2. Install Tollerus
+### From Packagist
+```
+composer require petermarkley/tollerus
+```
+### From GitHub
 ```
 composer config repositories.tollerus vcs https://github.com/petermarkley/tollerus.git
 composer require petermarkley/tollerus:dev-main
