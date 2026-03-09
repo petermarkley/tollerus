@@ -44,6 +44,11 @@ class TollerusServiceProvider extends ServiceProvider
 			$this->publishes([
 				__DIR__.'/../../dist' => public_path('vendor/tollerus'),
 			], 'tollerus-assets');
+			// Publish custom layout examples
+			$this->publishes([
+				__DIR__.'/../../resources/stubs/layouts/full.blade.php' => resource_path('views/vendor/tollerus/layouts/full.blade.php'),
+				__DIR__.'/../../resources/stubs/layouts/minimal.blade.php' => resource_path('views/vendor/tollerus/layouts/minimal.blade.php'),
+			], 'tollerus-layouts');
 			// Register artisan commands
 			$this->commands([
 				TollerusImport::class,
