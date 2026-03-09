@@ -25,13 +25,12 @@ use PeterMarkley\Tollerus\Models\NeographySection;
 use PeterMarkley\Tollerus\Models\NeographyInputKey;
 use PeterMarkley\Tollerus\Models\NeographyInputKeyboard;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextRenderer;
-use PeterMarkley\Tollerus\Traits\HasModelCache;
+use PeterMarkley\Tollerus\Traits\HasOrderedObjects;
 
 class NeographyEditor extends Component
 {
+    use HasOrderedObjects;
     use WithFileUploads;
-    use HasModelCache;
-    private $cacheRoot = 'keyboards';
     public string $tab = 'info';
     // Models
     #[Locked] public Neography $neography;
@@ -45,6 +44,8 @@ class NeographyEditor extends Component
     public array $keysForm = [];
     // UI display properties
     #[Locked] public array $writingDirectionOpts = [];
+    #[Locked] public bool $hasKeyboards;
+    #[Locked] public bool $hasGlyphSections;
 
     /**
      * Livewire hooks
@@ -57,6 +58,7 @@ class NeographyEditor extends Component
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.neographies.index'), 'text' => __('tollerus::ui.neographies')],
                 ],
+                'isLivewirePage' => true,
             ])->title($this->neography->name);
     }
     public function mount(Neography $neography, ?string $tab = null): void
@@ -195,6 +197,7 @@ class NeographyEditor extends Component
                 'glyphCount' => $sect->glyphGroups->flatMap->glyphs->count(),
             ]];
         })->toArray();
+        $this->hasGlyphSections = (count($this->glyphsForm) > 0);
     }
     public function refreshKeyboardsForm(): void
     {
@@ -222,6 +225,7 @@ class NeographyEditor extends Component
                     })->toArray(),
             ]];
         })->toArray();
+        $this->hasKeyboards = (count($this->keysForm) > 0);
     }
 
     /**
@@ -358,13 +362,11 @@ class NeographyEditor extends Component
     public function updateKeyboard(string $keyboardId, string $propName, mixed $propVal, ?string $domId = ''): void
     {
         // Find model
-        $keyboardModel = $this->findInCache('keyboard-update-failure', [
-            [
-                'id' => $keyboardId,
-                'objectType' => NeographyInputKeyboard::class,
-                'failMessage' => ['keyboardId' => [__('tollerus::error.invalid_keyboard')]],
-            ],
-        ]);
+        $keyboardModel = NeographyInputKeyboard::find($keyboardId);
+        if (!($keyboardModel instanceof NeographyInputKeyboard)) {
+            $this->dispatch('keyboard-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['keyboardId' => [__('tollerus::error.invalid_keyboard')]]);
+        }
         // $propName whitelist
         $allowedPropData = [
             'width'  => ['type' => 'int', 'column' => 'width', 'min' => 1, 'max' => 40],
@@ -433,13 +435,11 @@ class NeographyEditor extends Component
     public function createKey(string $keyboardId): void
     {
         // Find model
-        $keyboardModel = $this->findInCache('keyboard-update-failure', [
-            [
-                'id' => $keyboardId,
-                'objectType' => NeographyInputKeyboard::class,
-                'failMessage' => ['keyboardId' => [__('tollerus::error.invalid_keyboard')]],
-            ],
-        ]);
+        $keyboardModel = NeographyInputKeyboard::find($keyboardId);
+        if (!($keyboardModel instanceof NeographyInputKeyboard)) {
+            $this->dispatch('keyboard-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['keyboardId' => [__('tollerus::error.invalid_keyboard')]]);
+        }
         // Create glyph
         $nextPosition = $keyboardModel->inputKeys->max('position') + 1;
         $keyboardModel->inputKeys()->create([
@@ -450,19 +450,11 @@ class NeographyEditor extends Component
     public function updateKey(string $keyboardId, string $keyId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
-        $keyModel = $this->findInCache('key-update-failure', [
-            [
-                'id' => $keyboardId,
-                'objectType' => NeographyInputKeyboard::class,
-                'failMessage' => ['keyboardId' => [__('tollerus::error.invalid_keyboard')]],
-                'relation' => 'inputKeys',
-            ],
-            [
-                'id' => $keyId,
-                'objectType' => NeographyInputKey::class,
-                'failMessage' => ['keyId' => [__('tollerus::error.invalid_key')]],
-            ],
-        ]);
+        $keyModel = NeographyInputKey::find($keyId);
+        if (!($keyModel instanceof NeographyInputKey)) {
+            $this->dispatch('key-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['keyId' => [__('tollerus::error.invalid_key')]]);
+        }
         // $propName whitelist
         $allowedPropData = [
             'label'      => ['type' => 'string', 'column' => 'label'],
@@ -553,33 +545,21 @@ class NeographyEditor extends Component
             throw \Illuminate\Validation\ValidationException::withMessages(['destKeyboard' => [__('tollerus::error.invalid_keyboard')]]);
         }
         // Find models
-        $keyboardModel = $this->findInCache('key-transfer-failure', [
-            [
-                'id' => $keyboardId,
-                'objectType' => NeographyInputKeyboard::class,
-                'failMessage' => ['keyboardId' => [__('tollerus::error.invalid_keyboard')]],
-            ],
-        ]);
-        $destKeyboardModel = $this->findInCache('key-transfer-failure', [
-            [
-                'id' => $destKeyboard,
-                'objectType' => NeographyInputKeyboard::class,
-                'failMessage' => ['destKeyboard' => [__('tollerus::error.invalid_keyboard')]],
-            ],
-        ]);
-        $keyModel = $this->findInCache('key-transfer-failure', [
-            [
-                'id' => $keyboardId,
-                'objectType' => NeographyInputKeyboard::class,
-                'failMessage' => ['keyboardId' => [__('tollerus::error.invalid_keyboard')]],
-                'relation' => 'inputKeys',
-            ],
-            [
-                'id' => $keyId,
-                'objectType' => NeographyInputKey::class,
-                'failMessage' => ['keyId' => [__('tollerus::error.invalid_key')]],
-            ],
-        ]);
+        $keyboardModel = NeographyInputKeyboard::find($keyboardId);
+        if (!($keyboardModel instanceof NeographyInputKeyboard)) {
+            $this->dispatch('key-transfer-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['keyboardId' => [__('tollerus::error.invalid_keyboard')]]);
+        }
+        $destKeyboardModel = NeographyInputKeyboard::find($destKeyboard);
+        if (!($keyboardModel instanceof NeographyInputKeyboard)) {
+            $this->dispatch('key-transfer-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['destKeyboard' => [__('tollerus::error.invalid_keyboard')]]);
+        }
+        $keyModel = NeographyInputKey::find($keyId);
+        if (!($keyModel instanceof NeographyInputKey)) {
+            $this->dispatch('key-transfer-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['keyId' => [__('tollerus::error.invalid_key')]]);
+        }
         // Transfer key
         try {
             $connection = config('tollerus.connection', 'tollerus');

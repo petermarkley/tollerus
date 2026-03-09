@@ -1,9 +1,5 @@
 # TODO
 
-## Things to fix
-- [ ] WordPicker doesn't work inside an Alpine `<template x-for="">` loop. Need to completely rethink UX in a way that can be implemented in this situation. (Unless this is sufficient reason to embark on refactoring the admin pages, see comment in `HasModelCache` trait)
-- [ ] Somehow reorder functions are broken (still? again?) on EntryEditor senses/subsenses
-
 ## Tollerus Features
 - [ ] Better form ID selector on auto-inflection page
 - [ ] Allow selecting an input word for auto-inflection preview

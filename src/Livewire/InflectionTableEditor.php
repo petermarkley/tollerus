@@ -22,12 +22,11 @@ use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
 use PeterMarkley\Tollerus\Models\Pivots\InflectionColumnFilter;
 use PeterMarkley\Tollerus\Models\Pivots\InflectionRowFilter;
-use PeterMarkley\Tollerus\Traits\HasModelCache;
+use PeterMarkley\Tollerus\Traits\HasOrderedObjects;
 
 class InflectionTableEditor extends Component
 {
-    use HasModelCache;
-    private $cacheRoot = 'columns';
+    use HasOrderedObjects;
     // Models
     #[Locked] public Language $language;
     #[Locked] public WordClassGroup $group;
@@ -66,6 +65,7 @@ class InflectionTableEditor extends Component
                         'wordClassGroup' => $this->group->id,
                     ]), 'text' => __('tollerus::ui.inflections')],
                 ],
+                'isLivewirePage' => true,
             ])->title($pageTitle);
     }
     public function mount(Language $language, WordClassGroup $wordClassGroup, InflectionTable $inflectionTable): void
@@ -225,13 +225,11 @@ class InflectionTableEditor extends Component
     public function updateColumn(string $columnId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
-        $columnModel = $this->findInCache('column-update-failure', [
-            [
-                'id' => $columnId,
-                'objectType' => InflectionColumn::class,
-                'failMessage' => ['columnId' => [__('tollerus::error.invalid_inflection_column')]],
-            ],
-        ]);
+        $columnModel = InflectionColumn::find($columnId);
+        if (!($columnModel instanceof InflectionColumn)) {
+            $this->dispatch('column-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['columnId' => [__('tollerus::error.invalid_inflection_column')]]);
+        }
         // $propName whitelist
         $allowedPropData = [
             'label'        => ['type' => 'string', 'column' => 'label'],
@@ -306,13 +304,11 @@ class InflectionTableEditor extends Component
     public function addColumnFilter(string $columnId, string $valueId): void
     {
         // Find models
-        $columnsModel = $this->findInCache('column-filter-add-failure', [
-            [
-                'id' => $columnId,
-                'objectType' => InflectionColumn::class,
-                'failMessage' => ['columnId' => [__('tollerus::error.invalid_inflection_column')]],
-            ],
-        ]);
+        $columnModel = InflectionColumn::find($columnId);
+        if (!($columnModel instanceof InflectionColumn)) {
+            $this->dispatch('column-filter-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['columnId' => [__('tollerus::error.invalid_inflection_column')]]);
+        }
         $valueModel = FeatureValue::find($valueId);
         if (!($valueModel instanceof FeatureValue)) {
             $this->dispatch('column-filter-add-failure');
@@ -321,7 +317,7 @@ class InflectionTableEditor extends Component
         // Create pivot row
         try {
             (new InflectionColumnFilter([
-                'inflect_column_id' => $columnsModel->id,
+                'inflect_column_id' => $columnModel->id,
                 'feature_id' => $valueModel->feature_id,
                 'value_id' => $valueModel->id,
             ]))->save();
@@ -342,19 +338,17 @@ class InflectionTableEditor extends Component
     public function createRow(string $columnId): void
     {
         // Find model
-        $columnsModel = $this->findInCache('row-add-failure', [
-            [
-                'id' => $columnId,
-                'objectType' => InflectionColumn::class,
-                'failMessage' => ['columnId' => [__('tollerus::error.invalid_inflection_column')]],
-            ],
-        ]);
+        $columnModel = InflectionColumn::find($columnId);
+        if (!($columnModel instanceof InflectionColumn)) {
+            $this->dispatch('row-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['columnId' => [__('tollerus::error.invalid_inflection_column')]]);
+        }
         // Create row
         try {
-            $nextPosition = $columnsModel->rows->max('position') + 1;
+            $nextPosition = $columnModel->rows->max('position') + 1;
             $row = CreateWithUniqueName::handle(
-                startNum: $columnsModel->rows()->count(),
-                createFunc: fn ($tryName) => $columnsModel->rows()->create([
+                startNum: $columnModel->rows()->count(),
+                createFunc: fn ($tryName) => $columnModel->rows()->create([
                     'label' => $tryName,
                     'position' => $nextPosition,
                     'src_base' => $this->baseRow,
@@ -369,19 +363,11 @@ class InflectionTableEditor extends Component
     public function updateRow(string $columnId, string $rowId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
-        $rowModel = $this->findInCache('row-update-failure', [
-            [
-                'id' => $columnId,
-                'objectType' => InflectionColumn::class,
-                'failMessage' => ['columnId' => [__('tollerus::error.invalid_inflection_column')]],
-                'relation' => 'rows',
-            ],
-            [
-                'id' => $rowId,
-                'objectType' => InflectionRow::class,
-                'failMessage' => ['rowId' => [__('tollerus::error.invalid_inflection_row')]],
-            ],
-        ]);
+        $rowModel = InflectionRow::find($rowId);
+        if (!($rowModel instanceof InflectionRow)) {
+            $this->dispatch('row-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_row')]]);
+        }
         // $propName whitelist
         $allowedPropData = [
             'label'      => ['type' => 'string', 'column' => 'label', 'nullable' => false],
@@ -461,19 +447,11 @@ class InflectionTableEditor extends Component
     public function addRowFilter(string $columnId, string $rowId, string $valueId): void
     {
         // Find models
-        $rowModel = $this->findInCache('row-filter-add-failure', [
-            [
-                'id' => $columnId,
-                'objectType' => InflectionColumn::class,
-                'failMessage' => ['columnId' => [__('tollerus::error.invalid_inflection_column')]],
-                'relation' => 'rows',
-            ],
-            [
-                'id' => $rowId,
-                'objectType' => InflectionRow::class,
-                'failMessage' => ['rowId' => [__('tollerus::error.invalid_inflection_row')]],
-            ],
-        ]);
+        $rowModel = InflectionRow::find($rowId);
+        if (!($rowModel instanceof InflectionRow)) {
+            $this->dispatch('row-filter-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_row')]]);
+        }
         $valueModel = FeatureValue::find($valueId);
         if (!($valueModel instanceof FeatureValue)) {
             $this->dispatch('row-filter-add-failure');

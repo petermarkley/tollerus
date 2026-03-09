@@ -264,6 +264,7 @@ return [
     'delete_word_class' => 'Delete word class',
     'word_class' => 'Word class',
     'word_classes' => 'Word classes',
+    'word_class_nameless' => '(word class)',
     'abbreviation' => 'Abbreviation',
     'group_nameless' => '(group)',
     'features' => 'Features', // i.e. grammatical features or dimensions, for example tense / person / number
@@ -289,6 +290,7 @@ return [
     'remove_filter' => 'Remove filter',
     'column' => 'Column',
     'columns' => 'Columns',
+    'column_nameless' => '(column)',
     'no_columns' => 'No columns',
     'add_column' => 'Add inflection column',
     'move_column_up' => 'Move column up',
@@ -299,6 +301,7 @@ return [
     'move_row_up' => 'Move row up',
     'move_row_down' => 'Move row down',
     'row_name' => 'Row ":name"',
+    'section_nameless' => '(section)',
     'add_section' => 'Add section',
     'delete_section' => 'Delete section',
     'move_section_up' => 'Move section up',

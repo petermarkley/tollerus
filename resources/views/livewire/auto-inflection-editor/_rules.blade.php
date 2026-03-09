@@ -1,36 +1,46 @@
 @php
     if ($tabPatternName == 'native') {
-        $ruleList = "ruleForm.rules.{$tabTargetName}.{$tabPatternName}['" . (string)$neography->id . "'].rules";
+        $ruleListObj = $ruleForm['rules'][$tabTargetName][$tabPatternName][$neography->id]['rules'];
+        $ruleListPath = "ruleForm.rules.{$tabTargetName}.{$tabPatternName}." . (string)$neography->id . ".rules";
         $inputStyle = "tollerus_{$neography->machine_name}";
     } else {
-        $ruleList = "ruleForm.rules.{$tabTargetName}.{$tabPatternName}";
+        $ruleListObj = $ruleForm['rules'][$tabTargetName][$tabPatternName];
+        $ruleListPath = "ruleForm.rules.{$tabTargetName}.{$tabPatternName}";
         $inputStyle = '';
     }
 @endphp
 <x-tollerus::pane class="flex flex-col gap-4 items-start">
     <x-tollerus::alert type="info">{!! Str::markdown(__('tollerus::ui.regex_description', ['regex_url' => 'https://en.wikipedia.org/wiki/Regular_expression'])) !!}</x-tollerus::alert>
-    <div class="flex flex-col gap-4 items-start w-full" x-data="{ animating: false }" x-bind:class="{ 'pointer-events-none': animating }">
-        <template x-for="([ruleId, rule], i) in $store.reorderFunctions.sortItems({{ $ruleList }})">
+    <div
+        class="flex flex-col gap-4 items-start w-full"
+        x-data="{ animating: false }"
+        x-bind:class="{ 'pointer-events-none': animating }"
+    >
+        @foreach (collect($ruleListObj)->sortBy('order') as $ruleId => $rule)
+            @php
+                $prevNeighborId = $this->getNeighborId($ruleListObj, $ruleId, -1);
+                $nextNeighborId = $this->getNeighborId($ruleListObj, $ruleId, +1);
+            @endphp
             <div
-                x-bind:id="'rule_' + ruleId"
+                id="rule_{{ $ruleId }}"
+                wire:key="rule-{{ $ruleId }}"
                 data-obj="rule"
                 class="flex flex-row gap-[1px] w-full items-stretch transition-[transform] duration-500 ease-out"
-                x-bind:style="'order: '+i"
+                style="order: {{ $loop->index }}"
                 @transitionend="$nextTick(() => {animating=false});"
             >
                 <x-tollerus::panel class="px-3 py-12 flex flex-col gap-6 justify-start shrink-0 rounded-l-full rounded-r-none">
                     <x-tollerus::inputs.button
                         type="inverse"
                         title="{{ __('tollerus::ui.move_rule_up') }}"
-                        x-bind:disabled="animating || $store.reorderFunctions.isFirstItem({{ $ruleList }}, ruleId)"
+                        x-bind:disabled="animating || {{ $this->isFirstItem($ruleListObj, $ruleId) ? 'true' : 'false' }}"
                         @click="animating=true; moveRule(
-                            {{ $ruleList }},
-                            $el.closest('[data-obj=&quot;rule&quot;]'),
+                            $el.closest('[data-obj=rule]'),
                             '{{ $tabTargetName }}',
                             '{{ $tabPatternName }}',
                             '{{ $tabPatternName=='native' ? (string)$neography->id : '' }}',
-                            ruleId,
-                            -1
+                            '{{ $ruleId }}',
+                            '{{ $prevNeighborId }}'
                         );"
                     >
                         <x-tollerus::icons.chevron-up class="h-8 w-8" />
@@ -39,15 +49,14 @@
                     <x-tollerus::inputs.button
                         type="inverse"
                         title="{{ __('tollerus::ui.move_rule_down') }}"
-                        x-bind:disabled="animating || $store.reorderFunctions.isLastItem({{ $ruleList }}, ruleId)"
+                        x-bind:disabled="animating || {{ $this->isLastItem($ruleListObj, $ruleId) ? 'true' : 'false' }}"
                         @click="animating=true; moveRule(
-                            {{ $ruleList }},
-                            $el.closest('[data-obj=&quot;rule&quot;]'),
+                            $el.closest('[data-obj=rule]'),
                             '{{ $tabTargetName }}',
                             '{{ $tabPatternName }}',
                             '{{ $tabPatternName=='native' ? (string)$neography->id : '' }}',
-                            ruleId,
-                            +1
+                            '{{ $ruleId }}',
+                            '{{ $nextNeighborId }}'
                         );"
                     >
                         <x-tollerus::icons.chevron-down class="h-8 w-8" />
@@ -65,7 +74,7 @@
                                 message: msgs['delete_rule_confirmation'],
                                 buttons: [
                                     { text: msgs.no_cancel, type: 'secondary', clickEvent: 'modal-cancel' },
-                                    { text: msgs.yes_delete, type: 'primary', clickEvent: 'rule-delete', payload: {ruleId: ruleId} }
+                                    { text: msgs.yes_delete, type: 'primary', clickEvent: 'rule-delete', payload: {ruleId: '{{ $ruleId }}'} }
                                 ]
                             });"
                         >
@@ -78,11 +87,11 @@
                             @case ('phonemic')
                                 <div class="col-span-2 lg:col-span-1 flex flex-col justify-center" data-keyboard-elem="territory">
                                     <x-tollerus::inputs.text-saveable
-                                        idExpression="'rule_' + ruleId + '_pattern'"
-                                        model="rule.pattern"
+                                        idExpression="'rule_{{ $ruleId }}_pattern'"
+                                        model="{{ $ruleListPath }}.{{ $ruleId }}.pattern"
                                         fieldName="{{ __('tollerus::ui.regex_pattern') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule(ruleId, 'pattern', document.getElementById(id).value, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'pattern', prop, id);"
                                         class="{{ $inputStyle }}"
                                     >
                                         <x-slot:before>
@@ -129,11 +138,11 @@
                                 </div>
                                 <div class="col-span-2 lg:col-span-1 flex flex-col justify-center" data-keyboard-elem="territory">
                                     <x-tollerus::inputs.text-saveable
-                                        idExpression="'rule_' + ruleId + '_replacement'"
-                                        model="rule.replacement"
+                                        idExpression="'rule_{{ $ruleId }}_replacement'"
+                                        model="{{ $ruleListPath }}.{{ $ruleId }}.replacement"
                                         fieldName="{{ __('tollerus::ui.replace_with') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule(ruleId, 'replacement', document.getElementById(id).value, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'replacement', prop, id);"
                                         class="{{ $inputStyle }}"
                                     >
                                         <x-slot:before>
@@ -182,11 +191,11 @@
                             @case ('native')
                                 <div class="col-span-2 lg:col-span-1 flex flex-col justify-center" data-keyboard-elem="territory">
                                     <x-tollerus::inputs.text-saveable
-                                        idExpression="'rule_' + ruleId + '_pattern'"
-                                        model="rule.pattern"
+                                        idExpression="'rule_{{ $ruleId }}_pattern'"
+                                        model="{{ $ruleListPath }}.{{ $ruleId }}.pattern"
                                         fieldName="{{ __('tollerus::ui.regex_pattern') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule(ruleId, 'pattern', document.getElementById(id).value, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'pattern', prop, id);"
                                         class="{{ $inputStyle }}"
                                     >
                                         <x-slot:before>
@@ -236,11 +245,11 @@
                                 </div>
                                 <div class="col-span-2 lg:col-span-1 flex flex-col justify-center" data-keyboard-elem="territory">
                                     <x-tollerus::inputs.text-saveable
-                                        idExpression="'rule_' + ruleId + '_replacement'"
-                                        model="rule.replacement"
+                                        idExpression="'rule_{{ $ruleId }}_replacement'"
+                                        model="{{ $ruleListPath }}.{{ $ruleId }}.replacement"
                                         fieldName="{{ __('tollerus::ui.replace_with') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule(ruleId, 'replacement', document.getElementById(id).value, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'replacement', prop, id);"
                                         class="{{ $inputStyle }}"
                                     >
                                         <x-slot:before>
@@ -292,21 +301,21 @@
                             @default
                                 <div class="col-span-2 lg:col-span-1 flex flex-col justify-center">
                                     <x-tollerus::inputs.text-saveable
-                                        idExpression="'rule_' + ruleId + '_pattern'"
-                                        model="rule.pattern"
+                                        idExpression="'rule_{{ $ruleId }}_pattern'"
+                                        model="{{ $ruleListPath }}.{{ $ruleId }}.pattern"
                                         fieldName="{{ __('tollerus::ui.regex_pattern') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule(ruleId, 'pattern', document.getElementById(id).value, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'pattern', prop, id);"
                                         class="{{ $inputStyle }}"
                                     />
                                 </div>
                                 <div class="col-span-2 lg:col-span-1 flex flex-col justify-center">
                                     <x-tollerus::inputs.text-saveable
-                                        idExpression="'rule_' + ruleId + '_replacement'"
-                                        model="rule.replacement"
+                                        idExpression="'rule_{{ $ruleId }}_replacement'"
+                                        model="{{ $ruleListPath }}.{{ $ruleId }}.replacement"
                                         fieldName="{{ __('tollerus::ui.replace_with') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule(ruleId, 'replacement', document.getElementById(id).value, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'replacement', prop, id);"
                                         class="{{ $inputStyle }}"
                                     />
                                 </div>
@@ -315,7 +324,7 @@
                     </div>
                 </x-tollerus::panel>
             </div>
-        </template>
+        @endforeach
     </div>
     <x-tollerus::inputs.missing-data
         size="small"

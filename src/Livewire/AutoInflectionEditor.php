@@ -23,12 +23,11 @@ use PeterMarkley\Tollerus\Models\InflectionTable;
 use PeterMarkley\Tollerus\Models\Language;
 use PeterMarkley\Tollerus\Models\MorphRule;
 use PeterMarkley\Tollerus\Models\WordClassGroup;
-use PeterMarkley\Tollerus\Traits\HasModelCache;
+use PeterMarkley\Tollerus\Traits\HasOrderedObjects;
 
 class AutoInflectionEditor extends Component
 {
-    use HasModelCache;
-    private $cacheRoot = 'rules';
+    use HasOrderedObjects;
     public string $tabTarget = 'base';
     public string $tabPattern = 'transliterated';
     public string $tabNeography = '';
@@ -82,6 +81,7 @@ class AutoInflectionEditor extends Component
                         'inflectionTable' => $this->table->id,
                     ]), 'text' => __('tollerus::ui.edit_thing', ['thing' => __('tollerus::ui.table')])],
                 ],
+                'isLivewirePage' => true,
             ])->title($pageTitle);
     }
     public function mount(Language $language, WordClassGroup $wordClassGroup, InflectionTable $inflectionTable, InflectionRow $row): void
@@ -120,6 +120,7 @@ class AutoInflectionEditor extends Component
             abort(404);
         }
 
+        $this->positionProp = 'order';
         $this->language = $language;
         $this->language->loadMissing([
             'neographies',
@@ -320,13 +321,11 @@ class AutoInflectionEditor extends Component
     public function updateRule(string $ruleId, string $propName, string $propVal, ?string $domId = ''): void
     {
         // Find model
-        $ruleModel = $this->findInCache('row-update-failure', [
-            [
-                'id' => $ruleId,
-                'objectType' => MorphRule::class,
-                'failMessage' => ['ruleId' => [__('tollerus::error.invalid_morph_rule')]],
-            ],
-        ]);
+        $ruleModel = MorphRule::find($ruleId);
+        if (!($ruleModel instanceof MorphRule)) {
+            $this->dispatch('row-update-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['ruleId' => [__('tollerus::error.invalid_morph_rule')]]);
+        }
         // $propName whitelist
         $allowedPropNames = [
             'pattern',

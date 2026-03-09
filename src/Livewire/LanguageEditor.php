@@ -28,13 +28,10 @@ use PeterMarkley\Tollerus\Models\Pivots\LanguageNeography;
 use PeterMarkley\Tollerus\Domain\Language\Actions\LoadGrammarPreset;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextNormalizer;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextSanitizer;
-use PeterMarkley\Tollerus\Traits\HasModelCache;
 
 class LanguageEditor extends Component
 {
     use WithPagination, WithoutUrlPagination;
-    use HasModelCache;
-    private $cacheRoot = 'wordClassGroups';
     public string $tab = 'info';
     // Models
     #[Locked] public Language $language;
@@ -127,6 +124,7 @@ class LanguageEditor extends Component
                     ['href' => route('tollerus.admin.index'), 'text' => __('tollerus::ui.admin')],
                     ['href' => route('tollerus.admin.languages.index'), 'text' => __('tollerus::ui.languages')],
                 ],
+                'isLivewirePage' => true,
             ])->title($this->language->name);
     }
     public function mount(Language $language, ?string $tab = null): void
@@ -244,7 +242,7 @@ class LanguageEditor extends Component
         $this->infoForm = $this->language->toArray();
         unset($this->infoForm['id']);
         unset($this->infoForm['primary_neography']);
-        $this->infoForm['intro'] = app(BodyTextNormalizer::class)->normalizeForWysiwyg($this->language->intro);
+        $this->infoForm['intro'] = app(BodyTextNormalizer::class)->normalizeForWysiwyg($this->language->intro ?? '');
     }
     public function refreshNeographiesForm(): void
     {
@@ -404,13 +402,11 @@ class LanguageEditor extends Component
     }
     public function updateGroupPrimaryClass(string $groupId): void
     {
-        $groupModel = $this->findInCache('grammar-group-update-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => WordClassGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
-            ],
-        ]);
+        $groupModel = WordClassGroup::find($groupId);
+        if (!($groupModel instanceof WordClassGroup)) {
+            $this->dispatch('grammar-group-update-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['groupId' => [__('tollerus::error.invalid_word_class_group')]]);
+        }
         $groupModel->primary_class = $this->grammarForm[$groupId]['primaryClass'];
         $groupModel->save();
         $this->refreshGrammarForm();
@@ -459,19 +455,11 @@ class LanguageEditor extends Component
     }
     public function updateClass(string $groupId, string $classId, string $propName, string $propVal, ?string $domId = ''): void
     {
-        $classModel = $this->findInCache('text-save-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => WordClassGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
-                'relation' => 'wordClasses',
-            ],
-            [
-                'id' => $classId,
-                'objectType' => WordClass::class,
-                'failMessage' => ['classId' => [__('tollerus::error.invalid_word_class')]],
-            ],
-        ], $domId);
+        $classModel = WordClass::find($classId);
+        if (!($classModel instanceof WordClass)) {
+            $this->dispatch('text-save-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['classId' => [__('tollerus::error.invalid_word_class')]]);
+        }
         if ($propName === 'name' || $propName === 'name_brief') {
             try {
                 $classModel[$propName] = $propVal;
@@ -496,13 +484,11 @@ class LanguageEditor extends Component
     }
     public function createFeature(string $groupId): void
     {
-        $groupModel = $this->findInCache('grammar-feature-add-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => WordClassGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
-            ],
-        ]);
+        $groupModel = WordClassGroup::find($groupId);
+        if (!($groupModel instanceof WordClassGroup)) {
+            $this->dispatch('grammar-feature-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['groupId' => [__('tollerus::error.invalid_word_class_group')]]);
+        }
         try {
             $feature = CreateWithUniqueName::handle(
                 startNum: $groupModel->features()->count(),
@@ -518,19 +504,11 @@ class LanguageEditor extends Component
     }
     public function updateFeature(string $groupId, string $featureId, string $propName, string $propVal, ?string $domId = ''): void
     {
-        $featureModel = $this->findInCache('text-save-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => WordClassGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
-                'relation' => 'features',
-            ],
-            [
-                'id' => $featureId,
-                'objectType' => Feature::class,
-                'failMessage' => ['featureId' => [__('tollerus::error.invalid_feature')]],
-            ],
-        ], $domId);
+        $featureModel = Feature::find($featureId);
+        if (!($featureModel instanceof Feature)) {
+            $this->dispatch('text-save-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['featureId' => [__('tollerus::error.invalid_feature')]]);
+        }
         if ($propName === 'name' || $propName === 'name_brief') {
             try {
                 $featureModel[$propName] = $propVal;
@@ -554,19 +532,11 @@ class LanguageEditor extends Component
     }
     public function createFeatureValue(string $groupId, string $featureId): void
     {
-        $featureModel = $this->findInCache('grammar-value-add-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => WordClassGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
-                'relation' => 'features',
-            ],
-            [
-                'id' => $featureId,
-                'objectType' => Feature::class,
-                'failMessage' => ['featureId' => [__('tollerus::error.invalid_feature')]],
-            ],
-        ]);
+        $featureModel = Feature::find($featureId);
+        if (!($featureModel instanceof Feature)) {
+            $this->dispatch('grammar-value-add-failure');
+            throw \Illuminate\Validation\ValidationException::withMessages(['featureId' => [__('tollerus::error.invalid_feature')]]);
+        }
         try {
             $featureValue = CreateWithUniqueName::handle(
                 startNum: $featureModel->featureValues()->count(),
@@ -582,25 +552,11 @@ class LanguageEditor extends Component
     }
     public function updateFeatureValue(string $groupId, string $featureId, string $featureValueId, string $propName, string $propVal, ?string $domId = ''): void
     {
-        $featureValueModel = $this->findInCache('text-save-failure', [
-            [
-                'id' => $groupId,
-                'objectType' => WordClassGroup::class,
-                'failMessage' => ['groupId' => [__('tollerus::error.invalid_word_class_group')]],
-                'relation' => 'features',
-            ],
-            [
-                'id' => $featureId,
-                'objectType' => Feature::class,
-                'failMessage' => ['featureId' => [__('tollerus::error.invalid_feature')]],
-                'relation' => 'featureValues',
-            ],
-            [
-                'id' => $featureValueId,
-                'objectType' => FeatureValue::class,
-                'failMessage' => ['featureValueId' => [__('tollerus::error.invalid_feature_value')]],
-            ],
-        ], $domId);
+        $featureValueModel = FeatureValue::find($featureValueId);
+        if (!($featureValueModel instanceof FeatureValue)) {
+            $this->dispatch('text-save-failure', id: $domId);
+            throw \Illuminate\Validation\ValidationException::withMessages(['featureValueId' => [__('tollerus::error.invalid_feature_value')]]);
+        }
         if ($propName === 'name' || $propName === 'name_brief') {
             try {
                 $featureValueModel[$propName] = $propVal;

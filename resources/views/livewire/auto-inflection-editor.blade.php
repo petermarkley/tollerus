@@ -8,12 +8,7 @@
         tabTarget: $wire.entangle('tabTarget'),
         tabPattern: $wire.entangle('tabPattern'),
         tabNeography: $wire.entangle('tabNeography'),
-        ruleForm: $wire.entangle('ruleForm'),
-        moveRule(ruleList, ruleElem, tabTarget, tabPattern, tabNeography, ruleId, dir) {
-            let neighborId = $store.reorderFunctions.getNeighborId(ruleList, ruleId, dir);
-            if (neighborId === null) {
-                return;
-            }
+        moveRule(ruleElem, tabTarget, tabPattern, tabNeography, ruleId, neighborId) {
             let neighborElem = document.getElementById('rule_' + neighborId);
             $store.reorderFunctions.swapItems(ruleElem, neighborElem);
             const onDone = (event) => {
@@ -24,10 +19,15 @@
             };
             ruleElem.addEventListener('transitionend', onDone);
         },
+        deleteItem(id) {
+            let e = document.getElementById(id);
+            if (e) {
+                e.remove();
+            }
+        },
     }"
     @tab-target-switch.window="tabTarget = $event.detail.tabTarget;"
-    x-init="$store.reorderFunctions.positionProp = 'order';"
-    @rule-delete.window="$wire.deleteRule($event.detail.ruleId);"
+    @rule-delete.window="deleteItem('rule_'+$event.detail.ruleId); $wire.deleteRule($event.detail.ruleId);"
 >
     <div id="non-modal-content" class="flex flex-col gap-4">
         <h1 class="font-bold text-2xl px-6 xl:px-0">
@@ -66,7 +66,6 @@
                     <x-tollerus::inputs.text-saveable
                         idExpression="'src_particle'"
                         model="ruleForm.row.srcParticle.globalId"
-                        modelIsAlpine="true"
                         fieldName="srcParticle"
                         saveEvent="$wire.updateRow('srcParticle', document.getElementById(id).value, id);"
                     />
@@ -83,7 +82,6 @@
                 <x-tollerus::inputs.text-saveable
                     idExpression="'morph_template'"
                     model="ruleForm.row.morphTemplate"
-                    modelIsAlpine="true"
                     fieldName="morphTemplate"
                     saveEvent="$wire.updateRow('morphTemplate', document.getElementById(id).value, id);"
                 />
@@ -209,7 +207,9 @@
         </div>
     </div>
     <x-tollerus::modal/>
-    <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
+    @if (count($nativeKeyboards) > 0)
+        <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
+    @endif
     <x-tollerus::keyboards.phonemic :phonemicKeyboard="$ipaKeyboard"/>
 </div>
 <x-tollerus::reorder-script/>

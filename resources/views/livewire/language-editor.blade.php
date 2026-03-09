@@ -42,17 +42,22 @@
         get nativeSpellingsMsg() {
             return this.nativeSpellingsMsgSrc.replaceAll(':#', this.nativeSpellingsToDelete.toLocaleString());
         },
-        grammarForm: $wire.entangle('grammarForm'),
+        deleteItem(id) {
+            let e = document.getElementById(id);
+            if (e) {
+                e.remove();
+            }
+        },
     }"
     @tab-switch.window="tab = $event.detail.tab; $store.tabFunctions.updateAddress($event.detail.tab);"
     @popstate.window="updateTabFromUrl();"
     @modal-discard.window="$wire.refreshForm(tab); dirty=false;"
     @modal-save.window="if (typeof $event.detail.tab === 'undefined') {$wire.save(tab, '', {});} else {$wire.save(tab, 'tab-switch', {tab: $event.detail.tab});}"
     @tollerus-wysiwyg-input.window="btn = 'save'; dirty = true;"
-    @grammar-group-delete.window="$wire.deleteGroup($event.detail.groupId);"
-    @grammar-class-delete.window="$wire.deleteWordClass($event.detail.wordClassId);"
-    @grammar-feature-delete.window="$wire.deleteFeature($event.detail.featureId);"
-    @grammar-value-delete.window="$wire.deleteFeatureValue($event.detail.featureValueId);"
+    @grammar-group-delete.window="deleteItem('group_'+$event.detail.groupId); $wire.deleteGroup($event.detail.groupId);"
+    @grammar-class-delete.window="deleteItem('class_'+$event.detail.wordClassId); $wire.deleteWordClass($event.detail.wordClassId);"
+    @grammar-feature-delete.window="deleteItem('feature_'+$event.detail.featureId); $wire.deleteFeature($event.detail.featureId);"
+    @grammar-value-delete.window="deleteItem('value_'+$event.detail.featureValueId); $wire.deleteFeatureValue($event.detail.featureValueId);"
 >
     <div id="non-modal-content">
         <h1 class="font-bold text-2xl mb-4 px-6 xl:px-0">
@@ -128,7 +133,9 @@
 
     </div>
     <x-tollerus::modal/>
-    <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
+    @if (count($nativeKeyboards) > 0)
+        <x-tollerus::keyboards.native :nativeKeyboards="$nativeKeyboards"/>
+    @endif
     <x-tollerus::keyboards.phonemic :phonemicKeyboard="$ipaKeyboard"/>
 </div>
 @once
