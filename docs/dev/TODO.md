@@ -1,7 +1,6 @@
 # TODO
 
 ## Tollerus Features
-- [ ] Better form ID selector on auto-inflection page
 - [ ] Allow selecting an input word for auto-inflection preview
 - [ ] (Language emblems/artwork?)
 - [ ] Console command to generate grammar preset from current config?

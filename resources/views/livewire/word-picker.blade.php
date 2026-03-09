@@ -59,7 +59,7 @@
             <span class="sr-only">{{ __('tollerus::ui.edit_word') }}</span>
         </x-tollerus::button>
     @endif
-    <div x-show="open" class="max-w-60 lg:max-w-100 w-[100vw] min-h-30 max-h-[70vh] absolute left-0 top-11 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-lg shadow p-2 flex flex-col gap-2 items-start">
+    <div x-show="open" x-cloak class="max-w-60 lg:max-w-100 w-[100vw] min-h-30 max-h-[70vh] absolute left-0 top-11 z-10 border-2 border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800 rounded-lg shadow p-2 flex flex-col gap-2 items-start">
         <form
             wire:submit="search"
             class="w-full flex flex-row gap-1 items-center"

@@ -82,9 +82,9 @@ class WordPicker extends Component
         $this->langIsStrict = $langIsStrict;
         $this->particleClassIds = collect($this->particleClasses)->pluck('id')->toArray();
         if ($selectedWordId === null) {
-            $this->deselectWord();
+            $this->deselectWord(false);
         } else {
-            $this->selectWord($selectedWordId);
+            $this->selectWord($selectedWordId, false);
         }
         $this->refreshForm();
     }
@@ -209,7 +209,7 @@ class WordPicker extends Component
     /**
      * Page interactions
      */
-    public function deselectWord()
+    public function deselectWord(bool $emitEvent = true)
     {
         $this->selectedWordId = '';
         $this->selectedWordKind = null;
@@ -218,6 +218,15 @@ class WordPicker extends Component
         $this->selectedWordNative = '';
         $this->selectedWordNativeNeography = null;
         $this->selectedWordEditUrl = null;
+        if ($emitEvent) {
+            $this->dispatch(
+                'word-picker-select-id',
+                wordId: '',
+                href: '#',
+                lang: '',
+                transliterated: '',
+            );
+        }
     }
     public function selectWord(string $selectedWordId, bool $emitEvent = true)
     {
@@ -230,7 +239,7 @@ class WordPicker extends Component
             $globalId->kind == GlobalIdKind::Entry ||
             $globalId->kind == GlobalIdKind::Form
         )) {
-            $this->deselectWord();
+            $this->deselectWord($emitEvent);
             return;
         }
         $obj = $globalId->resolve();

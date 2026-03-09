@@ -275,12 +275,16 @@ class AutoInflectionEditor extends Component
         }
         // Assign appropriately
         if ($propName == 'srcParticle') {
-            try {
-                $srcParticle = GlobalId::resolveId($propVal);
-                $this->row->src_particle = $srcParticle->id;
-            } catch (\Throwable $e) {
-                $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages(['ruleForm.row.srcParticle.globalId' => [__('tollerus::error.invalid_src_particle')]]);
+            if (empty($propVal)) {
+                $this->row->src_particle = null;
+            } else {
+                try {
+                    $srcParticle = GlobalId::resolveId($propVal);
+                    $this->row->src_particle = $srcParticle->id;
+                } catch (\Throwable $e) {
+                    $this->dispatch('text-save-failure', id: $domId);
+                    throw \Illuminate\Validation\ValidationException::withMessages(['ruleForm.row.srcParticle.globalId' => [__('tollerus::error.invalid_src_particle')]]);
+                }
             }
         } else {
             $this->row[$allowedPropData[$propName]['column']] = $propVal;

@@ -63,12 +63,15 @@
                             <span>{{ __('tollerus::ui.particle') }}</span>
                         </label>
                     </h3>
-                    <x-tollerus::inputs.text-saveable
-                        idExpression="'src_particle'"
-                        model="ruleForm.row.srcParticle.globalId"
-                        fieldName="srcParticle"
-                        saveEvent="$wire.updateRow('srcParticle', document.getElementById(id).value, id);"
-                    />
+                    <div @word-picker-select-id="$wire.updateRow('srcParticle', $event.detail.wordId);">
+                        <livewire:tollerus.word-picker
+                            :language="$language"
+                            :langIsStrict="true"
+                            :requireForm="true"
+                            :softLimitToParticles="true"
+                            :selectedWordId="$ruleForm['row']['srcParticle']['globalId']"
+                        />
+                    </div>
                     <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.particle_description', ['row' => $row->label]) }}</legend></div>
                 </fieldset>
             </div>
