@@ -1,4 +1,4 @@
-![Tollerus Logo](docs/logo/logo-color-light.png)
+![Tollerus Logo](docs/logo/logo-color-light-bordered.png)
 
 _A conlang dictionary Laravel package - the luxurious way to build, track, and browse your conlang's lexical data_
 
