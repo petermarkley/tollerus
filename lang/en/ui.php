@@ -432,6 +432,9 @@ return [
     'configure_auto_inflection' => 'Configure auto-inflection',
     'auto_inflect' => 'Auto-inflect', // i.e. perform the action of auto-inflection, used on a button label
     'no_base_row_notice' => 'This inflection row has no input base row. These settings will have no effect.',
+    'auto_inflection_preview' => 'Auto-inflection preview',
+    'example_word' => 'Example word',
+    'example_word_description' => 'Select an example word to see how it will auto-inflect.',
     /**
      * TRANSLATOR NOTE:
      *

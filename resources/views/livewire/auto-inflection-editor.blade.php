@@ -92,6 +92,36 @@
                 <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.morph_template_description') }}</legend></div>
             </fieldset>
         </x-tollerus::panel>
+        <x-tollerus::drawer open="true" rootClass="w-full" class="flex flex-col gap-4 w-full">
+            <x-slot:heading-button>
+                <div class="flex flex-row gap-2 px-2 py-1 justify-start items-center rounded-t-xl rounded-bl bg-zinc-500 dark:bg-zinc-400 group-has-hover:bg-zinc-400 group-has-hover:dark:bg-zinc-300 text-white dark:text-zinc-800">
+                    <x-tollerus::icons.eye-slash x-show="!drawerOpen" x-cloak />
+                    <x-tollerus::icons.eye x-show="drawerOpen" />
+                    <span>{{ __('tollerus::ui.auto_inflection_preview') }}</span>
+                </div>
+            </x-slot:heading-button>
+            <x-slot:heading>
+                <div class="flex-grow border-b-2 border-zinc-500 dark:border-zinc-400"></div>
+            </x-slot:heading>
+            <div class="w-full flex flex-col gap-4">
+                <div class="w-full flex flex-row gap-4 justify-start items-center">
+                    <label>{{ __('tollerus::ui.example_word') }}</label>
+                    <div @word-picker-select-id="$wire.updatePreviewWord($event.detail.wordId);">
+                        <livewire:tollerus.word-picker
+                            :language="$language"
+                            :langIsStrict="true"
+                            :requireForm="true"
+                            :handleDrawerOverride="true"
+                        />
+                    </div>
+                </div>
+                @if (empty($previewWordId))
+                    <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.example_word_description') }}</legend></div>
+                @else
+                    <div class="font-mono">{{ $previewWordId }}</div>
+                @endif
+            </div>
+        </x-tollerus::drawer>
         <h1 class="font-bold text-2xl px-6 xl:px-0">{{ __('tollerus::ui.morph_rules') }}</h1>
         <div>
             <ul class="px-4 flex flex-row gap-4 justify-start items-end" role="tablist">

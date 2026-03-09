@@ -41,6 +41,7 @@ class WordPicker extends Component
     #[Locked] public array $results = [];
     #[Locked] public array $globalIdResults = [];
     #[Locked] public array $languages = [];
+    #[Locked] public bool $handleDrawerOverride = false;
 
     /**
      * Internal search query params
@@ -62,6 +63,7 @@ class WordPicker extends Component
         ?Language $language = null,
         bool $langIsStrict = false,
         ?string $selectedWordId = null,
+        bool $handleDrawerOverride = false,
     ): void
     {
         $this->softLimitToParticles = $softLimitToParticles;
@@ -86,6 +88,7 @@ class WordPicker extends Component
         } else {
             $this->selectWord($selectedWordId, false);
         }
+        $this->handleDrawerOverride = $handleDrawerOverride;
         $this->refreshForm();
     }
 

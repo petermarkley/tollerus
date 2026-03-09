@@ -39,6 +39,7 @@ class AutoInflectionEditor extends Component
     #[Locked] public array $rules;
     // UI input layer
     public array $ruleForm = [];
+    public string $previewWordId = '';
     // UI display properties
     #[Locked] public array $nativeKeyboards = [];
     #[Locked] public array $ipaKeyboard = [];
@@ -297,6 +298,10 @@ class AutoInflectionEditor extends Component
             $this->dispatch('row-update-failure');
             throw $e;
         }
+    }
+    public function updatePreviewWord(string $wordId): void
+    {
+        $this->previewWordId = $wordId;
     }
     public function createRule(string $tabTarget, string $tabPattern, ?string $tabNeography = ''): void
     {
