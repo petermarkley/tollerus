@@ -13,7 +13,7 @@
   },
   "name": "tollerus",
   "version": "1.0.0",
-  "description": "![Tollerus Logo](docs/logo/logo-color-light.png)",
+  "description": "A conlang dictionary Laravel package - the luxurious way to build, track, and browse your conlang's lexical data",
   "main": "index.js",
   "directories": {
     "doc": "docs"
