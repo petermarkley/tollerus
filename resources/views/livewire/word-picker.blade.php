@@ -55,7 +55,7 @@
             title="{{ __('tollerus::ui.edit_word') }}"
             href="{{ $selectedWordEditUrl }}"
         >
-            <x-tollerus::icons.edit class="m-2" />
+            <x-tollerus::icons.external-link class="m-1" />
             <span class="sr-only">{{ __('tollerus::ui.edit_word') }}</span>
         </x-tollerus::button>
     @endif
