@@ -3,7 +3,13 @@
 	'rootClass' => '',
 	'isPublic' => false,
 ])
-<div class="{{ (empty($rootClass) ? '' : $rootClass) }}" x-id="['drawer']" x-data="{ drawerOpen: {{ $open }} }">
+<div
+	class="{{ (empty($rootClass) ? '' : $rootClass) }}"
+	x-id="['drawer']"
+	x-data="{ drawerOpen: {{ $open }}, overflowOverride: false }"
+	@drawer-override-enable="overflowOverride=true"
+	@drawer-override-disable="overflowOverride=false"
+>
 	<h2 class="font-bold text-xl flex flex-row items-end w-full mb-4">
 		<button
 			x-bind:aria-controls="$id('drawer')"
@@ -28,7 +34,7 @@
 		</button>
 		{{ $heading }}
 	</h2>
-	<div class="overflow-hidden">
+	<div x-bind:class="{'w-full': true, 'overflow-hidden': (!drawerOpen || !overflowOverride)}">
 		<div
 			x-bind:id="$id('drawer')"
 			role="region"

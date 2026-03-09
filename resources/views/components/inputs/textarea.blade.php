@@ -120,7 +120,7 @@
                                 title="{{ __('tollerus::ui.link') }}"
                                 x-bind:disabled="rawMode || isExcluded('link')"
                                 class="relative"
-                                @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'link' });"
+                                @click="open=true; $dispatch('drawer-override-enable'); $dispatch('tollerus-wysiwyg-toolbar', { action: 'link' });"
                             >
                                 <x-tollerus::icons.micro.link class="sm:h-6" />
                                 <span class="sr-only">{{ __('tollerus::ui.link') }}</span>
@@ -132,7 +132,7 @@
                                 title="{{ __('tollerus::ui.link') }}"
                                 x-bind:disabled="rawMode || isExcluded('link')"
                                 class="relative"
-                                @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'link' });"
+                                @click="open=true; $dispatch('drawer-override-enable'); $dispatch('tollerus-wysiwyg-toolbar', { action: 'link' });"
                             >
                                 <x-tollerus::icons.micro.link class="sm:h-6" />
                                 <span class="sr-only">{{ __('tollerus::ui.link') }}</span>
@@ -174,7 +174,7 @@
                                     size="small"
                                     title="{{ __('tollerus::ui.remove') }}"
                                     x-bind:disabled="!existingLink"
-                                    @click="open=false; $dispatch('tollerus-wysiwyg-link-remove', {editorId: editorId});"
+                                    @click="open=false; $dispatch('drawer-override-disable'); $dispatch('tollerus-wysiwyg-link-remove', {editorId: editorId});"
                                 >
                                     <span>{{ __('tollerus::ui.remove') }}</span>
                                 </x-tollerus::inputs.button>
@@ -182,7 +182,7 @@
                                     type="primary"
                                     size="small"
                                     title="{{ __('tollerus::ui.apply') }}"
-                                    @click="open=false; $dispatch('tollerus-wysiwyg-link-apply', {
+                                    @click="open=false;  $dispatch('drawer-override-disable'); $dispatch('tollerus-wysiwyg-link-apply', {
                                         editorId: editorId,
                                         href: linkUrl,
                                         text: linkText,
@@ -256,7 +256,7 @@
                                 title="{{ __('tollerus::ui.conlang_word') }}"
                                 x-bind:disabled="rawMode || isExcluded('tollerusWord')"
                                 class="relative"
-                                @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'word' })"
+                                @click="open=true; $dispatch('drawer-override-enable'); $dispatch('tollerus-wysiwyg-toolbar', { action: 'word' })"
                             >
                                 <x-tollerus::icons.micro.language class="sm:h-6" />
                                 <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
@@ -268,7 +268,7 @@
                                 title="{{ __('tollerus::ui.conlang_word') }}"
                                 x-bind:disabled="rawMode || isExcluded('tollerusWord')"
                                 class="relative"
-                                @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'word' })"
+                                @click="open=true; $dispatch('drawer-override-enable'); $dispatch('tollerus-wysiwyg-toolbar', { action: 'word' })"
                             >
                                 <x-tollerus::icons.micro.language class="sm:h-6" />
                                 <span class="sr-only">{{ __('tollerus::ui.conlang_word') }}</span>
@@ -303,7 +303,7 @@
                                     type="primary"
                                     size="small"
                                     title="{{ __('tollerus::ui.insert') }}"
-                                    @click="open=false; $dispatch('tollerus-wysiwyg-word-apply', {
+                                    @click="open=false; $dispatch('drawer-override-disable'); $dispatch('tollerus-wysiwyg-word-apply', {
                                         editorId: editorId,
                                         wordId: selectedWordId,
                                         href: href,
@@ -345,7 +345,12 @@
                         </x-slot:button>
                         <div
                             x-data="{ phonemicText: '' }"
-                            @tollerus-wysiwyg-phonemic-dialog-open.window="if($event.detail.editorId!==editorId) {return;} open=true; phonemicText = '';"
+                            @tollerus-wysiwyg-phonemic-dialog-open.window="
+                                if($event.detail.editorId!==editorId) {return;}
+                                open=true;
+                                $dispatch('drawer-override-enable');
+                                phonemicText = '';
+                            "
                             class="w-full flex flex-col gap-2 items-stretch"
                         >
                             <div data-keyboard-elem="territory" class="w-full flex flex-col gap-1 items-start">
@@ -400,7 +405,7 @@
                                     type="primary"
                                     size="small"
                                     title="{{ __('tollerus::ui.insert') }}"
-                                    @click="open=false; $dispatch('tollerus-wysiwyg-phonemic-apply', { editorId: editorId, text: phonemicText });"
+                                    @click="open=false; $dispatch('drawer-override-disable'); $dispatch('tollerus-wysiwyg-phonemic-apply', { editorId: editorId, text: phonemicText });"
                                 >
                                     <span>{{ __('tollerus::ui.insert') }}</span>
                                 </x-tollerus::inputs.button>
@@ -417,7 +422,7 @@
                                     title="{{ __('tollerus::ui.neography_letters') }}"
                                     x-bind:disabled="rawMode || isExcluded('tollerusNative')"
                                     class="relative"
-                                    @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'native' });"
+                                    @click="open=true; $dispatch('drawer-override-enable'); $dispatch('tollerus-wysiwyg-toolbar', { action: 'native' });"
                                 >
                                     <x-tollerus::icons.micro.neography class="sm:h-6" />
                                     <span class="sr-only">{{ __('tollerus::ui.neography_letters') }}</span>
@@ -429,7 +434,7 @@
                                     title="{{ __('tollerus::ui.neography_letters') }}"
                                     x-bind:disabled="rawMode || isExcluded('tollerusNative')"
                                     class="relative"
-                                    @click="open=true; $dispatch('tollerus-wysiwyg-toolbar', { action: 'native' });"
+                                    @click="open=true; $dispatch('drawer-override-enable'); $dispatch('tollerus-wysiwyg-toolbar', { action: 'native' });"
                                 >
                                     <x-tollerus::icons.micro.neography class="sm:h-6" />
                                     <span class="sr-only">{{ __('tollerus::ui.neography_letters') }}</span>
@@ -520,7 +525,7 @@
                                         type="primary"
                                         size="small"
                                         title="{{ __('tollerus::ui.apply') }}"
-                                        @click="open=false; $dispatch('tollerus-wysiwyg-native-apply', {
+                                        @click="open=false; $dispatch('drawer-override-disable'); $dispatch('tollerus-wysiwyg-native-apply', {
                                             editorId: editorId,
                                             neographyId: neographyId,
                                             neography: neographyMachineName,

@@ -318,7 +318,7 @@
                                                                     size="small"
                                                                     class="align-middle"
                                                                     title="{{ __('tollerus::ui.auto_inflect') }}"
-                                                                    @click="$wire.autoInflect({{ $lexemeId }}, {{ $formId }}, {{ $form['matchingRowId'] }}, {{ $lexeme['forms'][$form['srcForm']]['transliterated'] }}, 'transliterated', null, id);"
+                                                                    @click="$wire.autoInflect({{ $lexemeId }}, {{ $formId }}, {{ $form['matchingRowId'] }}, '{{ $lexeme['forms'][$form['srcForm']]['transliterated'] }}', 'transliterated', null, id);"
                                                                     wire:loading.attr="disabled"
                                                                     wire:target="autoInflect"
                                                                 >
@@ -357,7 +357,7 @@
                                                                     size="small"
                                                                     class="align-middle"
                                                                     title="{{ __('tollerus::ui.auto_inflect') }}"
-                                                                    @click="$wire.autoInflect({{ $lexemeId }}, {{ $formId }}, {{ $form['matchingRowId'] }}, {{ $lexeme['forms'][$form['srcForm']]['phonemic'] }}, 'phonemic', null, id);"
+                                                                    @click="$wire.autoInflect({{ $lexemeId }}, {{ $formId }}, {{ $form['matchingRowId'] }}, '{{ $lexeme['forms'][$form['srcForm']]['phonemic'] }}', 'phonemic', null, id);"
                                                                     wire:loading.attr="disabled"
                                                                     wire:target="autoInflect"
                                                                 >
@@ -452,7 +452,7 @@
                                                                                 size="small"
                                                                                 class="align-middle"
                                                                                 title="{{ __('tollerus::ui.auto_inflect') }}"
-                                                                                @click="$wire.autoInflect({{ $lexemeId }}, {{ $formId }}, {{ $form['matchingRowId'] }}, {{ $srcSpelling['spelling'] }}, 'native', {{ $nativeSpelling['neographyId'] }}, id);"
+                                                                                @click="$wire.autoInflect({{ $lexemeId }}, {{ $formId }}, {{ $form['matchingRowId'] }}, '{{ $srcSpelling['spelling'] }}', 'native', '{{ $nativeSpelling['neographyId'] }}', id);"
                                                                                 wire:loading.attr="disabled"
                                                                                 wire:target="autoInflect"
                                                                             >
@@ -755,8 +755,8 @@
                                                             x-bind:disabled="!dirty"
                                                             wire:loading.attr="disabled"
                                                             wire:target="updateSense"
-                                                            @sense-update-success.window="btn = 'saved'; dirty=false;"
-                                                            @sense-update-failure.window="btn = 'save';"
+                                                            @sense-update-success.window="if ($event.detail.id != id) {return;} btn = 'saved'; dirty=false;"
+                                                            @sense-update-failure.window="if ($event.detail.id != id) {return;} btn = 'save';"
                                                             x-text="msgs[btn]" />
                                                     </div>
                                                     <x-tollerus::drawer open="false" rootClass="w-full" class="flex flex-col gap-4 w-full">
@@ -855,8 +855,8 @@
                                                                                 x-bind:disabled="!dirty"
                                                                                 wire:loading.attr="disabled"
                                                                                 wire:target="updateSubsense"
-                                                                                @subsense-update-success.window="btn = 'saved'; dirty=false;"
-                                                                                @subsense-update-failure.window="btn = 'save';"
+                                                                                @subsense-update-success.window="if ($event.detail.id != id) {return;} btn = 'saved'; dirty=false;"
+                                                                                @subsense-update-failure.window="if ($event.detail.id != id) {return;} btn = 'save';"
                                                                                 x-text="msgs[btn]" />
                                                                         </div>
                                                                     </div>
