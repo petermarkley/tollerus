@@ -103,7 +103,7 @@
             <x-slot:heading>
                 <div class="flex-grow border-b-2 border-zinc-500 dark:border-zinc-400"></div>
             </x-slot:heading>
-            <div class="w-full flex flex-col gap-4">
+            <div class="w-full flex flex-col gap-4 items-start">
                 <div class="w-full flex flex-row gap-4 justify-start items-center">
                     <label>{{ __('tollerus::ui.example_word') }}</label>
                     <div @word-picker-select-id="$wire.updatePreviewWord($event.detail.wordId);">
@@ -118,7 +118,44 @@
                 @if (empty($previewWordId))
                     <div><legend class="font-normal italic text-zinc-500 dark:text-zinc-500">{{ __('tollerus::ui.example_word_description') }}</legend></div>
                 @else
-                    <div class="font-mono">{{ $previewWordId }}</div>
+                    <div class="mb-4 overflow-hidden rounded-lg border border-zinc-500 dark:border-zinc-500">
+                        <table class="w-full">
+                            <tbody>
+                                <tr>
+                                    <th scope="row" class="py-1 px-2 flex flex-row gap-1 justify-center items-center font-normal">
+                                        <x-tollerus::icons.micro.world />
+                                        <span>{{ config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated')) }}</span>
+                                    </th>
+                                    <td class="py-1 px-2">{{ $this->previewWordInfo['transliterated'] }}</td>
+                                    <td class="py-1 px-2">&rarr;</td>
+                                    <td class="py-1 px-2">&hellip;</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="py-1 px-2 flex flex-row gap-1 justify-center items-center font-normal">
+                                        <x-tollerus::icons.micro.speech />
+                                        <span>{{ __('tollerus::ui.phonemic') }}</span>
+                                    </th>
+                                    <td class="py-1 px-2 italic">/{{ $this->previewWordInfo['phonemic'] }}/</td>
+                                    <td class="py-1 px-2">&rarr;</td>
+                                    <td class="py-1 px-2">&hellip;</td>
+                                </tr>
+                                @foreach ($language->neographies as $neography)
+                                    @php
+                                        $nativeSpelling = collect($this->previewWordInfo['native'])->firstWhere('neographyId', $neography->id);
+                                    @endphp
+                                    <tr>
+                                        <th scope="row" class="py-1 px-2 flex flex-row gap-1 justify-center items-center font-normal">
+                                            <x-tollerus::icons.micro.neography />
+                                            <span>{{ $neography->name }}</span>
+                                        </th>
+                                        <td class="py-1 px-2 tollerus_{{ $neography->machine_name }}">{{ $nativeSpelling['spelling'] }}</td>
+                                        <td class="py-1 px-2">&rarr;</td>
+                                        <td class="py-1 px-2 tollerus_{{ $neography->machine_name }}">&hellip;</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @endif
             </div>
         </x-tollerus::drawer>

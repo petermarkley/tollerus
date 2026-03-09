@@ -43,6 +43,7 @@ class AutoInflectionEditor extends Component
     // UI display properties
     #[Locked] public array $nativeKeyboards = [];
     #[Locked] public array $ipaKeyboard = [];
+    #[Locked] public array $previewWordInfo = [];
 
     /**
      * Livewire hooks
@@ -257,6 +258,32 @@ class AutoInflectionEditor extends Component
                 ],
             ],
         ];
+        $this->refreshPreview();
+    }
+    public function refreshPreview(): void
+    {
+        if (empty($this->previewWordId)) {
+            $this->previewWordInfo = [];
+            return;
+        }
+        try {
+            $form = GlobalId::resolveId($this->previewWordId);
+        } catch (\Throwable $e) {
+            $this->previewWordInfo = [];
+            return;
+        }
+        $this->previewWordInfo = [
+            'transliterated' => $form->transliterated,
+            'phonemic' => $form->phonemic,
+            'native' => $this->language->neographies->mapWithKeys(function ($neography) use ($form) {
+                $nativeSpelling = $form->nativeSpellings->firstWhere('neography_id', $neography->id);
+                return [$neography->id => [
+                    'neographyId' => $neography->id,
+                    'nativeSpellingId' => $nativeSpelling?->id,
+                    'spelling' => $nativeSpelling?->spelling,
+                ]];
+            })->toArray(),
+        ];
     }
 
     /**
@@ -302,6 +329,7 @@ class AutoInflectionEditor extends Component
     public function updatePreviewWord(string $wordId): void
     {
         $this->previewWordId = $wordId;
+        $this->refreshPreview();
     }
     public function createRule(string $tabTarget, string $tabPattern, ?string $tabNeography = ''): void
     {
