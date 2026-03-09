@@ -420,11 +420,11 @@
                                         <table>
                                             <tbody>
                                                 @foreach ($form['nativeSpellings'] as $i => $nativeSpelling)
-                                                    <tr wire:key="nativespelling-{{ $nativeSpelling['nativeSpellingId'] }}">
+                                                    <tr wire:key="form-{{ $formId }}-native-spelling-{{ $nativeSpelling['neographyId'] }}">
                                                         <th scope="row" class="font-normal text-right pr-2 py-1">{{ $nativeSpelling['neographyName'] }}</th>
-                                                        <td class="text-left pr-2 py-1 w-60" data-keyboard-elem="territory">
+                                                        <td class="text-left pr-2 py-1 w-120" data-keyboard-elem="territory">
                                                             <x-tollerus::inputs.text-saveable
-                                                                idExpression="'native_spelling_{{ $nativeSpelling['neographyId'] }}'"
+                                                                idExpression="'form_{{ $formId }}_native_spelling_{{ $nativeSpelling['neographyId'] }}'"
                                                                 model="infoForm.lexemes.{{ $lexemeId }}.forms.{{ $formId }}.nativeSpellings.{{ $i }}.spelling"
                                                                 fieldName="{{ __('tollerus::ui.native_spelling') }}"
                                                                 saveEvent="$wire.updateNativeSpelling({{ $lexemeId }}, {{ $formId }}, {{ $nativeSpelling['neographyId'] }}, prop, id);"
@@ -703,13 +703,24 @@
                                                 </x-tollerus::panel>
                                                 <x-tollerus::panel class="flex flex-col gap-4 items-start rounded-l-none flex-grow">
                                                     <div class="flex flex-row gap-4 justify-between items-start w-full">
-                                                        <h4 class="font-bold text-lg">
-                                                            <span>{{ $sense['num'] }}.</span>
-                                                        </h4>
+                                                        <div class="flex-grow flex flex-row gap-4 justify-start items-center">
+                                                            <h4 class="font-bold text-lg">
+                                                                <span>{{ $sense['num'] }}.</span>
+                                                            </h4>
+                                                            <div>
+                                                                <x-tollerus::inputs.text-saveable
+                                                                    idExpression="'sense_{{ $senseId }}_usage'"
+                                                                    model="infoForm.lexemes.{{ $lexemeId }}.senses.{{ $senseId }}.usage"
+                                                                    fieldName="{{ __('tollerus::ui.usage_note') }}"
+                                                                    showLabel="true"
+                                                                    saveEvent="$wire.updateSense({{ $lexemeId }}, {{ $senseId }}, 'usage', prop, id);"
+                                                                />
+                                                            </div>
+                                                        </div>
                                                         <x-tollerus::inputs.button
                                                             type="inverse"
                                                             size="small"
-                                                            class="align-middle"
+                                                            class="align-middle shrink-0"
                                                             title="{{ __('tollerus::ui.delete_word_sense') }}"
                                                             @click="$dispatch('open-modal', {
                                                                 message: msgs['delete_sense_confirmation'],
@@ -722,15 +733,6 @@
                                                             <x-tollerus::icons.delete/>
                                                             <label class="sr-only">{{ __('tollerus::ui.delete_word_sense') }}</label>
                                                         </x-tollerus::inputs.button>
-                                                    </div>
-                                                    <div>
-                                                        <x-tollerus::inputs.text-saveable
-                                                            idExpression="'sense_{{ $senseId }}_usage'"
-                                                            model="infoForm.lexemes.{{ $lexemeId }}.senses.{{ $senseId }}.usage"
-                                                            fieldName="{{ __('tollerus::ui.usage_note') }}"
-                                                            showLabel="true"
-                                                            saveEvent="$wire.updateSense({{ $lexemeId }}, {{ $senseId }}, 'usage', prop, id);"
-                                                        />
                                                     </div>
                                                     <div
                                                         data-obj="textarea-div"
@@ -812,11 +814,20 @@
                                                                             x-data="{ dirty: false, btn: 'saved', id: 'subsense_{{ $subsenseId }}_body' }"
                                                                             @tollerus-wysiwyg-input="btn = 'save'; dirty = true;"
                                                                         >
-                                                                            <div class="flex flex-row justify-end w-full">
+                                                                            <div class="flex flex-row justify-between items-center w-full">
+                                                                                <div class="flex-grow flex flex-row justify-start items-center">
+                                                                                    <x-tollerus::inputs.text-saveable
+                                                                                        idExpression="'subsense_{{ $subsenseId }}_usage'"
+                                                                                        model="infoForm.lexemes.{{ $lexemeId }}.senses.{{ $senseId }}.subsenses.{{ $subsenseId }}.usage"
+                                                                                        fieldName="{{ __('tollerus::ui.usage_note') }}"
+                                                                                        showLabel="true"
+                                                                                        saveEvent="$wire.updateSubsense({{ $lexemeId }}, {{ $senseId }}, {{ $subsenseId }}, 'usage', prop, id);"
+                                                                                    />
+                                                                                </div>
                                                                                 <x-tollerus::inputs.button
                                                                                     type="inverse"
                                                                                     size="small"
-                                                                                    class="align-middle"
+                                                                                    class="align-middle shrink-0"
                                                                                     title="{{ __('tollerus::ui.delete_subsense') }}"
                                                                                     @click="$dispatch('open-modal', {
                                                                                         message: msgs['delete_subsense_confirmation'],
@@ -830,13 +841,6 @@
                                                                                     <label class="sr-only">{{ __('tollerus::ui.delete_subsense') }}</label>
                                                                                 </x-tollerus::inputs.button>
                                                                             </div>
-                                                                            <x-tollerus::inputs.text-saveable
-                                                                                idExpression="'subsense_{{ $subsenseId }}_usage'"
-                                                                                model="infoForm.lexemes.{{ $lexemeId }}.senses.{{ $senseId }}.subsenses.{{ $subsenseId }}.usage"
-                                                                                fieldName="{{ __('tollerus::ui.usage_note') }}"
-                                                                                showLabel="true"
-                                                                                saveEvent="$wire.updateSubsense({{ $lexemeId }}, {{ $senseId }}, {{ $subsenseId }}, 'usage', prop, id);"
-                                                                            />
                                                                             <x-tollerus::inputs.textarea
                                                                                 id="subsense_{{ $subsenseId }}_body"
                                                                                 wysiwyg="true"
