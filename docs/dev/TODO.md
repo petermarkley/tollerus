@@ -13,6 +13,7 @@
 ## Code health
 - [ ] Audit for uses of `->sortBy()->map()->toArray()` that need to be `->sortBy()->map()->values()->toArray()`?
 - [ ] Why does filename conflict cause server error when uploading TTF?
+- [ ] On EntryEditor page, if you edit multiple WYSIWYGs at once and save one, you lose changes on the other(s). Warn user with modal?
 
 ## PublicWordLookup page
 - [ ] Offer native keyboard(s)??? (Do not base on primary neography of currently displayed entry!)
