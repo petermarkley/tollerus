@@ -34,7 +34,7 @@ This will copy to your host app some files that Tollerus needs to run:
 php artisan tollerus:install
 ```
 
-> [!Note]
+> [!Tip]
 > After you run this, take a look inside `config/tollerus.php` for any options that you want to change--especially database options that may be difficult to change later on!
 
 ## 4. Database migration
@@ -46,3 +46,20 @@ php artisan migrate
 ## 5. All done!
 
 You can now start your web server and visit `/tollerus/admin` in your host app (or whatever your `admin_route_prefix` config key is set to), and start conlanging!
+
+## Troubleshooting
+
+Tollerus assumes you want only logged-in users to access admin pages. If you get a `Route [login] not defined` error, that means there's no login page, and therefore no way for a user to log in.
+
+(If you hit a `Base table or view not found: 1146 Table 'sessions' doesn't exist` error, that means you haven't run a migration and there's no database table for Laravel to even check if the current user is logged in or not.)
+
+If you don't mind your admin interface being exposed to unauthenticated users, you can find this config key in `config/tollerus.php`:
+```
+'admin_middleware' => ['web','auth'],
+```
+and remove the `auth` middleware:
+```
+'admin_middleware' => ['web'],
+```
+> [!Caution]
+> Removing `auth` from admin routes is not recommended in a production environment or anywhere that's accessible to the open web.
