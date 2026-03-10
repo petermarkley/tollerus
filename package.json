@@ -12,7 +12,7 @@
     "vite": "^7.2.2"
   },
   "name": "tollerus",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A conlang dictionary Laravel package - the luxurious way to build, track, and browse your conlang's lexical data",
   "main": "index.js",
   "directories": {
