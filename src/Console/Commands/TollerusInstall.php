@@ -14,6 +14,12 @@ class TollerusInstall extends Command
         // 1. Run vendor:publish
         $this->call('vendor:publish', [
             '--provider' => "PeterMarkley\\Tollerus\\Providers\\TollerusServiceProvider",
+            '--tag'      => 'tollerus-config',
+            '--force'    => $this->option('force'),
+        ]);
+        $this->call('vendor:publish', [
+            '--provider' => "PeterMarkley\\Tollerus\\Providers\\TollerusServiceProvider",
+            '--tag'      => 'tollerus-assets',
             '--force'    => $this->option('force'),
         ]);
 
