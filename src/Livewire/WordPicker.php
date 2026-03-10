@@ -77,6 +77,8 @@ class WordPicker extends Component
              */
             $this->languageId = $language->id;
             $this->particleClasses = $language->wordClasses()->whereIn('name', config('tollerus.particle_word_classes'))->get()->all();
+        } else if (count($this->languages) == 0) {
+            $this->languageId = null;
         } else {
             $this->languageId = $this->languages[0]?->id;
             $this->particleClasses = WordClass::whereIn('name', config('tollerus.particle_word_classes'))->get()->all();
