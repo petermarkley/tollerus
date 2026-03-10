@@ -179,7 +179,7 @@ class NeographySectionEditor extends Component
             //     ],
             // ]);
             // Save to database
-            $html = app(BodyTextSanitizer::class)->sanitze($this->infoForm['intro']);
+            $html = app(BodyTextSanitizer::class)->sanitize($this->infoForm['intro']);
             $this->sect->intro = app(BodyTextNormalizer::class)->normalizeForSave($html);
             $this->sect->save();
             // Refresh front-end state
