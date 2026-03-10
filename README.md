@@ -45,4 +45,4 @@ php artisan migrate
 
 ## 5. All done!
 
-You can now visit `/tollerus/admin` in your host app (or whatever your `admin_route_prefix` config key is set to), and start conlanging!
+You can now start your web server and visit `/tollerus/admin` in your host app (or whatever your `admin_route_prefix` config key is set to), and start conlanging!
