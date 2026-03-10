@@ -11,6 +11,7 @@
 - [ ] Audit for uses of `->sortBy()->map()->toArray()` that need to be `->sortBy()->map()->values()->toArray()`?
 - [ ] Why does filename conflict cause server error when uploading TTF?
 - [ ] On EntryEditor page, if you edit multiple WYSIWYGs at once and save one, you lose changes on the other(s). Warn user with modal? Or put WYSIWYG behind "edit" button that locks others until "save"?
+- [ ] On initial install, if auto inflection is not set up, `EntryEditor` page still offers the "auto-inflect" buttons which crash if you click them
 
 ## PublicWordLookup page
 - [ ] Offer native keyboard(s)??? (Do not base on primary neography of currently displayed entry!)
