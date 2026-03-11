@@ -178,6 +178,7 @@ class EntryEditor extends Component
                             'rowId' => $row->id,
                             'rowLabel' => $column->label." \u{2192} ".$row->label,
                             'srcBase' => $row->src_base,
+                            'srcParticle' => $row->src_particle,
                             'matchingForms' => $lexeme?->forms->filter(
                                 fn ($form) => $filters->reduce(
                                     fn ($carry, $filter) => $carry && $form->inflectionValues->contains($filter),
@@ -206,6 +207,7 @@ class EntryEditor extends Component
          *           'rowId' => <int>,
          *           'rowLabel' => <string>,
          *           'srcBase' => <int>,
+         *           'srcParticle' => <int>,
          *           'matchingForms' => [
          *             0 => <Form::class>,
          *             . . .
@@ -297,6 +299,7 @@ class EntryEditor extends Component
                         $srcRow           = $matchingRow['srcBase'] ?? null;
                         $srcRowForms = $inflectionMatches['rows']->get($srcRow)['matchingForms'] ?? null;
                         $srcForm     = $srcRowForms?->first()?->id;
+                        $srcParticle = $matchingRow['srcParticle'] ?? null;
                         $matchingRowHasOthers = ($matchingRow ? ($matchingRow['matchingForms']->count() > 1) : false);
                         $canAutoInflect = (
                             // We can auto-inflect if ...
@@ -307,6 +310,8 @@ class EntryEditor extends Component
                             $matchingRow['matchingForms']->count() == 1 // It's the only one in that row's match results, AND
                             &&
                             $srcForm !== null // We have a valid base form to inflect from
+                            &&
+                            $srcParticle !== null // We have a valid particle form to inflect with
                         );
                         return [$form->id => [
                             'globalId' => $form->global_id,
