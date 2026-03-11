@@ -172,7 +172,7 @@ class AutoInflectionEditor extends Component
                         ->sourceParticle
                         ->nativeSpellings
                         ->firstWhere('neography_id', $primaryNeographyId)
-                        ->spelling
+                        ?->spelling
                     ),
                 ]),
             ],
