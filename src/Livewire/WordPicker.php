@@ -195,7 +195,7 @@ class WordPicker extends Component
                 $word['neographyMachineName'] = $word['neography']?->machine_name;
                 $word['transliterated'] = $obj->transliterated;
                 $nativeSpelling = $obj->nativeSpellings()
-                    ->where('neography_id', $word['neography']->id)
+                    ->where('neography_id', $word['neography']?->id)
                     ->first();
                 if ($nativeSpelling instanceof NativeSpelling) {
                     $word['native'] = $nativeSpelling->spelling;

@@ -52,7 +52,7 @@
                     @break
                 @endswitch
                 <span class="font-bold whitespace-nowrap shrink-0">{{ $selectedWordTransliterated }}</span>
-                <span class="whitespace-nowrap shrink-1 tollerus_custom_{{ $selectedWordNativeNeography->machine_name }}">{{ $selectedWordNative }}</span>
+                <span class="whitespace-nowrap shrink-1 tollerus_custom_{{ $selectedWordNativeNeography?->machine_name }}">{{ $selectedWordNative }}</span>
                 <span class="font-mono shrink-0">{{ $selectedWordId }}</span>
             </p>
             <x-tollerus::inputs.button
