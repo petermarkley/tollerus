@@ -7,6 +7,17 @@
             @livewireStyles
         @endif
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta property="og:title"        content="Tollerus - {{ $title }}"/>
+        <meta property="og:description"  content="The conlang dictionary Laravel package - the luxurious way to build, track, and browse your conlang's lexical data"/>
+        <meta property="og:image"        content="{{ asset('/vendor/tollerus/share_preview.jpg') }}"/>
+        <meta property="og:image:width"  content="3840"/>
+        <meta property="og:image:height" content="2160"/>
+        <link rel="icon" type="image/png" href="{{ asset('/vendor/tollerus/favicon/favicon-96x96.png') }}" sizes="96x96" />
+        <link rel="icon" type="image/svg+xml" href="{{ asset('/vendor/tollerus/favicon/favicon.svg') }}" />
+        <link rel="shortcut icon" href="{{ asset('/vendor/tollerus/favicon/favicon.ico') }}" />
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/vendor/tollerus/favicon/apple-touch-icon.png') }}" />
+        <meta name="apple-mobile-web-app-title" content="Tollerus" />
+        <link rel="manifest" href="{{ asset('/vendor/tollerus/favicon/site.webmanifest') }}" />
         @if(!empty($tollerusNeographyFontCss))
             <style>{!! $tollerusNeographyFontCss !!}</style>
         @endif
