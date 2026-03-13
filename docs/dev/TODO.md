@@ -5,7 +5,6 @@
 - [ ] Console command to generate grammar preset from current config?
 - [ ] Console command for creating/restoring DB backups? (There may already be tools for this!)
 - [ ] Web documentation (driven by `.md` files in Tollerus repo, inside `docs/user`)?
-- [ ] Dockerfile for easier hosting? (Maybe also publishable--or would that be circular...?)
 
 ## Code health
 - [ ] Audit for uses of `->sortBy()->map()->toArray()` that need to be `->sortBy()->map()->values()->toArray()`?
