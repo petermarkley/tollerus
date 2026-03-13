@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html class="w-full h-full min-h-screen bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-300 font-[Baskerville]">
+<html
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    class="w-full h-full min-h-screen bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-300 font-[Baskerville]"
+>
 {{--
 
     This is an example template which the host app can use as a custom layout for Tollerus pages.

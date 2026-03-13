@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html id="tollerus_root" data-layout="admin">
+<html
+    id="tollerus_root"
+    data-layout="admin"
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+>
     <head>
         <title>{{ $title }}</title>
         <link rel="stylesheet" href="{{ asset('vendor/tollerus/tollerus.css') }}">
