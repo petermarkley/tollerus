@@ -1,4 +1,7 @@
-<div class="w-full overflow-x-scroll">
+<div
+    class="w-full overflow-x-scroll"
+    style="scrollbar-color: rgb(var(--tollerus-text)) rgb(var(--tollerus-surface));"
+>
     <div class="w-fit xl:w-max p-2 flex flex-col gap-4 items-start xl:items-center text-sm bg-tollerus-bg/30 rounded-lg">
         @foreach ($lexeme['tables'] as $table)
             <div class="flex flex-row flex-wrap xl:flex-nowrap gap-x-4 gap-y-6 items-start justify-start xl:justify-center">

@@ -127,7 +127,10 @@
                 wire:change="search"
             />
         @endif
-        <div class="w-full flex-grow overflow-y-scroll overflow-x-hidden flex flex-col gap-2 items-stretch">
+        <div
+            class="w-full flex-grow overflow-y-scroll overflow-x-hidden flex flex-col gap-2 items-stretch"
+            style="scrollbar-color: rgb(var(--tollerus-text)) rgb(var(--tollerus-surface));"
+        >
             @if (!empty($searchKey) && count($results) == 0 && count($globalIdResults) == 0)
                 <span class="italic text-zinc-700 dark:text-zinc-400">{{ __('tollerus::ui.no_results') }}</span>
             @endif
