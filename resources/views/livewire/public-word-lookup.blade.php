@@ -26,7 +26,7 @@
                             <option value="{{ $thisSearchType->value }}">{{ mb_ucfirst($thisSearchType->localize()) }}</option>
                         @endforeach
                     </select>
-                    <x-tollerus::icons.triangle class="absolute pointer-events-none right-2 top-1/2 scale-[80%] rotate-90 -translate-y-1/2" />
+                    <x-tollerus::icons.micro.chevron-down class="absolute pointer-events-none h-5 right-[0.3rem] top-1/2 -translate-y-1/2" />
                 </div>
                 <div class="flex-grow flex justify-center items-center">
                     <div class="relative flex flex-col gap-1 items-start flex-grow">
