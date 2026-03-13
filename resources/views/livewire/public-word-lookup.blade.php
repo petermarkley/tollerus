@@ -89,17 +89,20 @@
                                 >{{ $language->name }}</a>
                             </div>
                             @if ($multipleNeographies)
-                                <div class="flex flex-row gap-2 items-center">
-                                    <label for="writing_system">{{ __('tollerus::ui.writing_system') }}</label>
-                                    <select
-                                        id="writing_system"
-                                        x-model="currentNeography"
-                                        class="bg-tollerus-surface hover:bg-tollerus-surface-hover border-2 border-tollerus-bg hover:border-tollerus-bg/50 cursor-pointer rounded-lg py-2 px-4 h-11 flex justify-center items-center shadow-lg"
-                                    >
-                                        @foreach ($languageNeographies as $neography)
-                                            <option value="{{ $neography->id }}">{{ $neography->name }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="flex">
+                                    <div class="relative flex flex-row gap-2 items-center">
+                                        <label for="writing_system">{{ __('tollerus::ui.writing_system') }}</label>
+                                        <select
+                                            id="writing_system"
+                                            x-model="currentNeography"
+                                            class="appearance-none pr-6 bg-tollerus-surface hover:bg-tollerus-surface-hover border-2 border-tollerus-bg hover:border-tollerus-bg/50 cursor-pointer rounded-lg py-2 px-4 h-11 flex justify-center items-center shadow-lg"
+                                        >
+                                            @foreach ($languageNeographies as $neography)
+                                                <option value="{{ $neography->id }}">{{ $neography->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-tollerus::icons.micro.chevron-down class="absolute pointer-events-none right-1 top-1/2 -translate-y-1/2" />
+                                    </div>
                                 </div>
                             @endif
                         </div>
