@@ -20,11 +20,12 @@ use PeterMarkley\Tollerus\Models\Neography;
  */
 class BodyTextRenderer
 {
-    public function render(string $html): string
+    public function render(string $html, bool $allowLinks = true): string
     {
         $html5 = new HTML5();
         $dom = $html5->loadHTMLFragment($html);
         $xp  = new \DOMXPath($dom->ownerDocument);
+        $xp->registerNamespace('h', 'http://www.w3.org/1999/xhtml');
 
         $tags = iterator_to_array($xp->query('*[@data-tollerus]|.//*[@data-tollerus]', $dom));
         foreach ($tags as $tag) {
@@ -33,6 +34,10 @@ class BodyTextRenderer
                     // Nothing to do, already styled correctly in `tollerus.css`
                 break;
                 case 'word':
+                    if (!$allowLinks) {
+                        $text = $dom->ownerDocument->createTextNode($tag->textContent);
+                        $tag->parentNode->replaceChild($text, $tag);
+                    }
                     // Check for required data attrs
                     if (!$tag->hasAttribute('data-id')) {
                         continue 2;
@@ -125,6 +130,14 @@ class BodyTextRenderer
                 case 'phonemic':
                     // Nothing to do, already styled correctly in `tollerus.css`
                 break;
+            }
+        }
+
+        if (!$allowLinks) {
+            $tags = iterator_to_array($xp->query('h:a|.//h:a', $dom));
+            foreach ($tags as $tag) {
+                $text = $dom->ownerDocument->createTextNode($tag->textContent);
+                $tag->parentNode->replaceChild($text, $tag);
             }
         }
 

@@ -190,7 +190,7 @@ class NeographyEditor extends Component
             return [$sect->id => [
                 'type' => ($sect->type === null ? null : $sect->type->value),
                 'name' => $sect->name,
-                'intro' => app(BodyTextRenderer::class)->render($sect->intro),
+                'intro' => app(BodyTextRenderer::class)->render($sect->intro, false),
                 'position' => $sect->position,
                 'editUrl' => route('tollerus.admin.neographies.glyphs.edit', ['neography' => $neography, 'section' => $sect]),
                 'editUrlText' => __('tollerus::ui.edit_thing', ['thing' => $sect->name]),
