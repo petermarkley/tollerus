@@ -335,13 +335,13 @@ class NeographySectionEditor extends Component
         ]);
         $this->refreshForm();
     }
-    public function updateGlyph(string $groupId, string $glyphId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateGlyph(string $groupId, string $glyphId, string $propName, string $propVal, string $fieldKey, ?string $domId = ''): void
     {
         // Find model
         $glyphModel = NeographyGlyph::find($glyphId);
         if (!($glyphModel instanceof NeographyGlyph)) {
             $this->dispatch('glyph-update-failure', id: $domId);
-            throw \Illuminate\Validation\ValidationException::withMessages(['glyphId' => [__('tollerus::error.invalid_glyph')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_glyph')]]);
         }
         // $propName whitelist
         $allowedPropData = [
@@ -358,7 +358,7 @@ class NeographySectionEditor extends Component
         $allowedPropNames = array_keys($allowedPropData);
         if (!in_array($propName, $allowedPropNames, true)) {
             $this->dispatch('glyph-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_prop_name')]]);
         }
         // Assign appropriately by type
         switch ($allowedPropData[$propName]['type']) {
@@ -387,7 +387,7 @@ class NeographySectionEditor extends Component
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages(['glyph.'.$propName => [__('tollerus::error.duplicate_of_glyph')]]);
+                throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.duplicate_of_glyph')]]);
             } else {
                 $this->dispatch('glyph-update-failure');
                 throw $e;

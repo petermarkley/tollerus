@@ -253,7 +253,7 @@
                                                                     idExpression="'glyph_{{ $glyphId }}_unicode'"
                                                                     model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.glyph"
                                                                     fieldName="{{ __('tollerus::ui.unicode') }}"
-                                                                    saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'glyph', prop, id);"
+                                                                    saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'glyph', prop, fieldKey, id);"
                                                                     height="67px"
                                                                     class="text-6xl tollerus_{{ $neography->machine_name }}"
                                                                 />
@@ -262,7 +262,7 @@
                                                                     idExpression="'glyph_{{ $glyphId }}_hex'"
                                                                     model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.glyphHex"
                                                                     fieldName="{{ __('tollerus::ui.hexadecimal') }}"
-                                                                    saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'glyphHex', prop, id);"
+                                                                    saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'glyphHex', prop, fieldKey, id);"
                                                                 />
                                                             </div>
                                                             <x-tollerus::inputs.button
@@ -298,7 +298,7 @@
                                                                             model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.renderBase"
                                                                             modelIsAlpine="false"
                                                                             label="{{ __('tollerus::ui.render_on_base') }}"
-                                                                            @change="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'renderBase', $el.checked, id);"
+                                                                            @change="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'renderBase', $el.checked, 'groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.renderBase', id);"
                                                                         />
                                                                     </div>
                                                                     <div>
@@ -307,7 +307,7 @@
                                                                             idExpression="'glyph_{{ $glyphId }}_transliterated'"
                                                                             model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.transliterated"
                                                                             fieldName="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
-                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'transliterated', prop, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'transliterated', prop, fieldKey, id);"
                                                                         />
                                                                     </div>
                                                                     <div data-keyboard-elem="territory">
@@ -316,7 +316,7 @@
                                                                             idExpression="'glyph_{{ $glyphId }}_phonemic'"
                                                                             model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.phonemic"
                                                                             fieldName="{{ __('tollerus::ui.phonemic') }}"
-                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'phonemic', prop, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'phonemic', prop, fieldKey, id);"
                                                                         >
                                                                             <x-slot:before>
                                                                                 <div
@@ -366,7 +366,7 @@
                                                                             idExpression="'glyph_{{ $glyphId }}_note'"
                                                                             model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.note"
                                                                             fieldName="{{ __('tollerus::ui.note') }}"
-                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'note', prop, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'note', prop, fieldKey, id);"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -380,7 +380,7 @@
                                                                             idExpression="'glyph_{{ $glyphId }}_pronunciation_transliterated'"
                                                                             model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.pronunciationTransliterated"
                                                                             fieldName="{{ mb_ucfirst(config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated'))) }}"
-                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'pronunciationTransliterated', prop, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'pronunciationTransliterated', prop, fieldKey, id);"
                                                                         />
                                                                     </div>
                                                                     <div data-keyboard-elem="territory">
@@ -389,7 +389,7 @@
                                                                             idExpression="'glyph_{{ $glyphId }}_pronunciation_phonemic'"
                                                                             model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.pronunciationPhonemic"
                                                                             fieldName="{{ __('tollerus::ui.phonemic') }}"
-                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'pronunciationPhonemic', prop, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'pronunciationPhonemic', prop, fieldKey, id);"
                                                                         >
                                                                             <x-slot:before>
                                                                                 <div
@@ -439,7 +439,7 @@
                                                                             idExpression="'glyph_{{ $glyphId }}_pronunciation_native'"
                                                                             model="groupsForm.{{ $groupId }}.glyphs.{{ $glyphId }}.pronunciationNative"
                                                                             fieldName="{{ __('tollerus::ui.native') }}"
-                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'pronunciationNative', prop, id);"
+                                                                            saveEvent="$wire.updateGlyph({{ $groupId }}, {{ $glyphId }}, 'pronunciationNative', prop, fieldKey, id);"
                                                                             class="tollerus_{{ $neography->machine_name }}"
                                                                         >
                                                                             <x-slot:before>

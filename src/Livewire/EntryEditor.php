@@ -548,13 +548,13 @@ class EntryEditor extends Component
         ]);
         $this->refreshForm();
     }
-    public function updateForm(string $lexemeId, string $formId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateForm(string $lexemeId, string $formId, string $propName, string $propVal, string $fieldKey, ?string $domId = ''): void
     {
         // Find model
         $formModel = Form::find($formId);
         if (!($formModel instanceof Form)) {
             $this->dispatch('form-update-failure', id: $domId);
-            throw \Illuminate\Validation\ValidationException::withMessages(['formId' => [__('tollerus::error.invalid_form')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_form')]]);
         }
         // $propName whitelist
         $allowedPropData = [
@@ -565,7 +565,7 @@ class EntryEditor extends Component
         $allowedPropNames = array_keys($allowedPropData);
         if (!in_array($propName, $allowedPropNames, true)) {
             $this->dispatch('form-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_prop_name')]]);
         }
         // Assign appropriately by type
         switch ($allowedPropData[$propName]['type']) {

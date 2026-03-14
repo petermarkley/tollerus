@@ -117,14 +117,14 @@
                                                 idExpression="'class_{{ $wordClassId }}_name'"
                                                 model="grammarForm.{{ $groupId }}.classes.{{ $wordClassId }}.name"
                                                 fieldName="{{ __('tollerus::ui.name') }}"
-                                                saveEvent="$wire.updateClass({{ $groupId }}, {{ $wordClassId }}, 'name', prop, id);" />
+                                                saveEvent="$wire.updateClass({{ $groupId }}, {{ $wordClassId }}, 'name', prop, fieldKey, id);" />
                                         </td>
                                         <td class="text-left px-2 py-1 w-60">
                                             <x-tollerus::inputs.text-saveable
                                                 idExpression="'class_{{ $wordClassId }}_name_brief'"
                                                 model="grammarForm.{{ $groupId }}.classes.{{ $wordClassId }}.nameBrief"
                                                 fieldName="{{ __('tollerus::ui.abbreviation') }}"
-                                                saveEvent="$wire.updateClass({{ $groupId }}, {{ $wordClassId }}, 'name_brief', prop, id);" />
+                                                saveEvent="$wire.updateClass({{ $groupId }}, {{ $wordClassId }}, 'name_brief', prop, fieldKey, id);" />
                                         </td>
                                         <td class="text-center px-2 py-1 min-w-24">
                                             <label class="relative inline-block align-middle w-6 h-6 group">
@@ -139,7 +139,7 @@
                                                     title="{{ __('tollerus::ui.set_this_as_primary') }}"
                                                     wire:model="grammarForm.{{ $groupId }}.primaryClass"
                                                     class="absolute w-full h-full inset-0 opacity-0 z-10 cursor-pointer disabled:cursor-not-allowed"
-                                                    @change.once="$wire.updateGroupPrimaryClass({{ $groupId }});"
+                                                    @change.once="$wire.updateGroupPrimaryClass({{ $groupId }}, 'grammarForm.{{ $groupId }}.primaryClass');"
                                                 />
                                                 <span class="sr-only">{{ __('tollerus::ui.set_this_as_primary') }}</span>
                                             </label>
@@ -199,7 +199,7 @@
                                                 model="grammarForm.{{ $groupId }}.features.{{ $featureId }}.name"
                                                 fieldName="{{ __('tollerus::ui.name') }}"
                                                 showLabel="true"
-                                                saveEvent="$wire.updateFeature({{ $groupId }}, {{ $featureId }}, 'name', prop, id);" />
+                                                saveEvent="$wire.updateFeature({{ $groupId }}, {{ $featureId }}, 'name', prop, fieldKey, id);" />
                                         </div>
                                         <div class="w-80">
                                             <x-tollerus::inputs.text-saveable
@@ -207,7 +207,7 @@
                                                 model="grammarForm.{{ $groupId }}.features.{{ $featureId }}.nameBrief"
                                                 fieldName="{{ __('tollerus::ui.abbreviation') }}"
                                                 showLabel="true"
-                                                saveEvent="$wire.updateFeature({{ $groupId }}, {{ $featureId }}, 'name_brief', prop, id);" />
+                                                saveEvent="$wire.updateFeature({{ $groupId }}, {{ $featureId }}, 'name_brief', prop, fieldKey, id);" />
                                         </div>
                                         <div class="min-w-24 text-right">
                                             <x-tollerus::inputs.button
@@ -252,14 +252,14 @@
                                                                     idExpression="'value_{{ $featureValueId }}_name'"
                                                                     model="grammarForm.{{ $groupId }}.features.{{ $featureId }}.featureValues.{{ $featureValueId }}.name"
                                                                     fieldName="{{ __('tollerus::ui.name') }}"
-                                                                    saveEvent="$wire.updateFeatureValue({{ $groupId }}, {{ $featureId }}, {{ $featureValueId }}, 'name', prop, id);" />
+                                                                    saveEvent="$wire.updateFeatureValue({{ $groupId }}, {{ $featureId }}, {{ $featureValueId }}, 'name', prop, fieldKey, id);" />
                                                             </td>
                                                             <td class="text-left px-2 py-1 w-60">
                                                                 <x-tollerus::inputs.text-saveable
                                                                     idExpression="'value_{{ $featureValueId }}_name_brief'"
                                                                     model="grammarForm.{{ $groupId }}.features.{{ $featureId }}.featureValues.{{ $featureValueId }}.nameBrief"
                                                                     fieldName="{{ __('tollerus::ui.abbreviation') }}"
-                                                                    saveEvent="$wire.updateFeatureValue({{ $groupId }}, {{ $featureId }}, {{ $featureValueId }}, 'name_brief', prop, id);" />
+                                                                    saveEvent="$wire.updateFeatureValue({{ $groupId }}, {{ $featureId }}, {{ $featureValueId }}, 'name_brief', prop, fieldKey, id);" />
                                                             </td>
                                                             <td class="text-center px-2 py-1 min-w-24">
                                                                 <x-tollerus::inputs.button

@@ -91,7 +91,7 @@
                                         model="{{ $ruleListPath }}.{{ $ruleId }}.pattern"
                                         fieldName="{{ __('tollerus::ui.regex_pattern') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'pattern', prop, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'pattern', prop, fieldKey, id);"
                                         class="{{ $inputStyle }}"
                                     >
                                         <x-slot:before>
@@ -142,7 +142,7 @@
                                         model="{{ $ruleListPath }}.{{ $ruleId }}.replacement"
                                         fieldName="{{ __('tollerus::ui.replace_with') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'replacement', prop, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'replacement', prop, fieldKey, id);"
                                         class="{{ $inputStyle }}"
                                     >
                                         <x-slot:before>
@@ -195,7 +195,7 @@
                                         model="{{ $ruleListPath }}.{{ $ruleId }}.pattern"
                                         fieldName="{{ __('tollerus::ui.regex_pattern') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'pattern', prop, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'pattern', prop, fieldKey, id);"
                                         class="{{ $inputStyle }}"
                                     >
                                         <x-slot:before>
@@ -249,7 +249,7 @@
                                         model="{{ $ruleListPath }}.{{ $ruleId }}.replacement"
                                         fieldName="{{ __('tollerus::ui.replace_with') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'replacement', prop, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'replacement', prop, fieldKey, id);"
                                         class="{{ $inputStyle }}"
                                     >
                                         <x-slot:before>
@@ -305,7 +305,7 @@
                                         model="{{ $ruleListPath }}.{{ $ruleId }}.pattern"
                                         fieldName="{{ __('tollerus::ui.regex_pattern') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'pattern', prop, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'pattern', prop, fieldKey, id);"
                                         class="{{ $inputStyle }}"
                                     />
                                 </div>
@@ -315,7 +315,7 @@
                                         model="{{ $ruleListPath }}.{{ $ruleId }}.replacement"
                                         fieldName="{{ __('tollerus::ui.replace_with') }}"
                                         showLabel="true"
-                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'replacement', prop, id);"
+                                        saveEvent="$wire.updateRule({{ $ruleId }}, 'replacement', prop, fieldKey, id);"
                                         class="{{ $inputStyle }}"
                                     />
                                 </div>

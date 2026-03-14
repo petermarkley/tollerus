@@ -13,6 +13,7 @@
         prop: $wire.entangle('{{ $model }}'),
         editing: false,
         originalValue: '',
+        fieldKey: '{{ $model }}',
     }"
     x-init="originalValue = prop;"
     @text-save-failure.window="if ($event.detail.id==id) {editing=true;}"
@@ -34,6 +35,7 @@
                 x-bind:id="id"
                 model="prop"
                 :modelIsAlpine="true"
+                :fieldKey="$model"
                 :type="$type"
                 {{ $attributes }}
             />
@@ -42,6 +44,7 @@
                 x-bind:id="id"
                 model="prop"
                 :modelIsAlpine="true"
+                :fieldKey="$model"
                 :type="$type"
                 {{ $attributes }}
                 style="height:{{ $height }};"

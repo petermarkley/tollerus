@@ -447,13 +447,13 @@ class NeographyEditor extends Component
         ]);
         $this->refreshKeyboardsForm();
     }
-    public function updateKey(string $keyboardId, string $keyId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateKey(string $keyboardId, string $keyId, string $propName, string $propVal, string $fieldKey, ?string $domId = ''): void
     {
         // Find model
         $keyModel = NeographyInputKey::find($keyId);
         if (!($keyModel instanceof NeographyInputKey)) {
             $this->dispatch('key-update-failure', id: $domId);
-            throw \Illuminate\Validation\ValidationException::withMessages(['keyId' => [__('tollerus::error.invalid_key')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_key')]]);
         }
         // $propName whitelist
         $allowedPropData = [
@@ -465,7 +465,7 @@ class NeographyEditor extends Component
         $allowedPropNames = array_keys($allowedPropData);
         if (!in_array($propName, $allowedPropNames, true)) {
             $this->dispatch('key-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_prop_name')]]);
         }
         // Assign appropriately by type
         switch ($allowedPropData[$propName]['type']) {
@@ -494,7 +494,7 @@ class NeographyEditor extends Component
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages(['key.'.$propName => [__('tollerus::error.duplicate_of_key')]]);
+                throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.duplicate_of_key')]]);
             } else {
                 $this->dispatch('key-update-failure');
                 throw $e;

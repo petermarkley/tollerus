@@ -362,13 +362,13 @@ class AutoInflectionEditor extends Component
         }
         $this->refreshRuleForm();
     }
-    public function updateRule(string $ruleId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateRule(string $ruleId, string $propName, string $propVal, string $fieldKey, ?string $domId = ''): void
     {
         // Find model
         $ruleModel = MorphRule::find($ruleId);
         if (!($ruleModel instanceof MorphRule)) {
             $this->dispatch('row-update-failure', id: $domId);
-            throw \Illuminate\Validation\ValidationException::withMessages(['ruleId' => [__('tollerus::error.invalid_morph_rule')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_morph_rule')]]);
         }
         // $propName whitelist
         $allowedPropNames = [
@@ -377,7 +377,7 @@ class AutoInflectionEditor extends Component
         ];
         if (!in_array($propName, $allowedPropNames, true)) {
             $this->dispatch('rule-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_prop_name')]]);
         }
         // Assign value
         $ruleModel[$propName] = $propVal;

@@ -297,7 +297,7 @@
                                                     model="infoForm.lexemes.{{ $lexemeId }}.forms.{{ $formId }}.transliterated"
                                                     fieldName="{{ config('tollerus.local_transliteration_target', __('tollerus::ui.transliterated')) }}"
                                                     showLabel="true"
-                                                    saveEvent="$wire.updateForm({{ $lexemeId }}, {{ $formId }}, 'transliterated', prop, id);"
+                                                    saveEvent="$wire.updateForm({{ $lexemeId }}, {{ $formId }}, 'transliterated', prop, fieldKey, id);"
                                                 >
                                                     <x-slot:before>
                                                         @if ($form['canAutoInflect'])
@@ -336,7 +336,7 @@
                                                     model="infoForm.lexemes.{{ $lexemeId }}.forms.{{ $formId }}.phonemic"
                                                     fieldName="{{ __('tollerus::ui.phonemic') }}"
                                                     showLabel="true"
-                                                    saveEvent="$wire.updateForm({{ $lexemeId }}, {{ $formId }}, 'phonemic', prop, id);"
+                                                    saveEvent="$wire.updateForm({{ $lexemeId }}, {{ $formId }}, 'phonemic', prop, fieldKey, id);"
                                                 >
                                                     <x-slot:before>
                                                         @if ($form['canAutoInflect'])
@@ -413,7 +413,7 @@
                                                     model="infoForm.lexemes.{{ $lexemeId }}.forms.{{ $formId }}.irregular"
                                                     modelIsAlpine="false"
                                                     label="{{ __('tollerus::ui.irregular') }}"
-                                                    @change="$wire.updateForm({{ $lexemeId }}, {{ $formId }}, 'irregular', $el.checked, id);"
+                                                    @change="$wire.updateForm({{ $lexemeId }}, {{ $formId }}, 'irregular', $el.checked, 'infoForm.lexemes.{{ $lexemeId }}.forms.{{ $formId }}.irregular', id);"
                                                 />
                                             </div>
                                         </div>

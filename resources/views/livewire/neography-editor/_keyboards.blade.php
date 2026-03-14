@@ -185,7 +185,7 @@
                                 idExpression="'keyboard_{{ $keyboardId }}_width'"
                                 model="keysForm.{{ $keyboardId }}.width"
                                 fieldName="{{ __('tollerus::ui.width') }}"
-                                saveEvent="$wire.updateKeyboard({{ $keyboardId }}, 'width', prop, id);"
+                                saveEvent="$wire.updateKeyboard({{ $keyboardId }}, 'width', prop, fieldKey, id);"
                             />
                         </div>
                         <x-tollerus::pane class="flex flex-col gap-4 items-start">
@@ -235,7 +235,7 @@
                                                             idExpression="'key_{{ $keyId }}_unicode'"
                                                             model="keysForm.{{ $keyboardId }}.keys.{{ $keyId }}.glyph"
                                                             fieldName="{{ __('tollerus::ui.unicode') }}"
-                                                            saveEvent="$wire.updateKey({{ $keyboardId }}, {{ $keyId }}, 'glyph', prop, id);"
+                                                            saveEvent="$wire.updateKey({{ $keyboardId }}, {{ $keyId }}, 'glyph', prop, fieldKey, id);"
                                                             height="67px"
                                                             class="text-6xl tollerus_{{ $neography->machine_name }}"
                                                         />
@@ -244,7 +244,7 @@
                                                             idExpression="'key_{{ $keyId }}_hex'"
                                                             model="keysForm.{{ $keyboardId }}.keys.{{ $keyId }}.glyphHex"
                                                             fieldName="{{ __('tollerus::ui.hexadecimal') }}"
-                                                            saveEvent="$wire.updateKey({{ $keyboardId }}, {{ $keyId }}, 'glyphHex', prop, id);"
+                                                            saveEvent="$wire.updateKey({{ $keyboardId }}, {{ $keyId }}, 'glyphHex', prop, fieldKey, id);"
                                                         />
                                                     </div>
                                                     <x-tollerus::inputs.button
@@ -270,7 +270,7 @@
                                                         idExpression="'key_{{ $keyId }}_label'"
                                                         model="keysForm.{{ $keyboardId }}.keys.{{ $keyId }}.label"
                                                         fieldName="{{ __('tollerus::ui.label') }}"
-                                                        saveEvent="$wire.updateKey({{ $keyboardId }}, {{ $keyId }}, 'label', prop, id);"
+                                                        saveEvent="$wire.updateKey({{ $keyboardId }}, {{ $keyId }}, 'label', prop, fieldKey, id);"
                                                     />
                                                     <div class="flex flex-row justify-start items-center">
                                                         <x-tollerus::inputs.checkbox
@@ -278,7 +278,7 @@
                                                             model="keysForm.{{ $keyboardId }}.keys.{{ $keyId }}.renderBase"
                                                             modelIsAlpine="false"
                                                             label="{{ __('tollerus::ui.render_on_base') }}"
-                                                            @change="$wire.updateKey({{ $keyboardId }}, {{ $keyId }}, 'renderBase', $el.checked, id);"
+                                                            @change="$wire.updateKey({{ $keyboardId }}, {{ $keyId }}, 'renderBase', $el.checked, 'keysForm.{{ $keyboardId }}.keys.{{ $keyId }}.renderBase', id);"
                                                         />
                                                     </div>
                                                 </div>

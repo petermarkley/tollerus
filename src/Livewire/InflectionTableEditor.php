@@ -256,13 +256,9 @@ class InflectionTableEditor extends Component
             $columnModel->save();
             $this->dispatch('text-save-success', id: $domId);
         } catch (\Throwable $e) {
-            if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
-                $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages(['column.'.$propName => [__('tollerus::error.duplicate_of_unique_per_group')]]);
-            } else {
-                $this->dispatch('column-update-failure');
-                throw $e;
-            }
+            $this->dispatch('text-save-failure', id: $domId);
+            $this->dispatch('column-update-failure');
+            throw $e;
         }
     }
     public function deleteColumn(string $columnId): void
@@ -360,13 +356,13 @@ class InflectionTableEditor extends Component
         }
         $this->refreshTableForm();
     }
-    public function updateRow(string $columnId, string $rowId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateRow(string $columnId, string $rowId, string $propName, string $propVal, string $fieldKey, ?string $domId = ''): void
     {
         // Find model
         $rowModel = InflectionRow::find($rowId);
         if (!($rowModel instanceof InflectionRow)) {
             $this->dispatch('row-update-failure', id: $domId);
-            throw \Illuminate\Validation\ValidationException::withMessages(['rowId' => [__('tollerus::error.invalid_inflection_row')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_inflection_row')]]);
         }
         // $propName whitelist
         $allowedPropData = [
@@ -379,7 +375,7 @@ class InflectionTableEditor extends Component
         $allowedPropNames = array_keys($allowedPropData);
         if (!in_array($propName, $allowedPropNames, true)) {
             $this->dispatch('row-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages([$propName => [__('tollerus::error.invalid_prop_name')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_prop_name')]]);
         }
         // Assign appropriately by type
         switch ($allowedPropData[$propName]['type']) {
@@ -401,7 +397,7 @@ class InflectionTableEditor extends Component
         } catch (\Throwable $e) {
             if ($e instanceof \Illuminate\Database\UniqueConstraintViolationException) {
                 $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages(['row.'.$propName => [__('tollerus::error.duplicate_of_row')]]);
+                throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.duplicate_of_row')]]);
             } else {
                 $this->dispatch('row-update-failure');
                 throw $e;

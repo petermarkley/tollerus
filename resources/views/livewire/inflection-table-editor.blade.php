@@ -305,7 +305,7 @@
                                                                     model="tableForm.columns.{{ $columnId }}.rows.{{ $rowId }}.label"
                                                                     fieldName="{{ __('tollerus::ui.label') }}"
                                                                     showLabel="true"
-                                                                    saveEvent="$wire.updateRow({{ $columnId }}, {{ $rowId }}, 'label', prop, id);"
+                                                                    saveEvent="$wire.updateRow({{ $columnId }}, {{ $rowId }}, 'label', prop, fieldKey, id);"
                                                                 />
                                                             </div>
                                                             <div class="lg:w-80">
@@ -314,7 +314,7 @@
                                                                     model="tableForm.columns.{{ $columnId }}.rows.{{ $rowId }}.labelBrief"
                                                                     fieldName="{{ __('tollerus::ui.abbreviation') }}"
                                                                     showLabel="true"
-                                                                    saveEvent="$wire.updateRow({{ $columnId }}, {{ $rowId }}, 'labelBrief', prop, id);"
+                                                                    saveEvent="$wire.updateRow({{ $columnId }}, {{ $rowId }}, 'labelBrief', prop, fieldKey, id);"
                                                                 />
                                                             </div>
                                                         </div>
@@ -341,7 +341,7 @@
                                                             model="tableForm.columns.{{ $columnId }}.rows.{{ $rowId }}.labelLong"
                                                             fieldName="{{ __('tollerus::ui.label_long') }}"
                                                             showLabel="true"
-                                                            saveEvent="$wire.updateRow({{ $columnId }}, {{ $rowId }}, 'labelLong', prop, id);"
+                                                            saveEvent="$wire.updateRow({{ $columnId }}, {{ $rowId }}, 'labelLong', prop, fieldKey, id);"
                                                         />
                                                     </div>
                                                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
@@ -351,7 +351,7 @@
                                                                 model="tableForm.columns.{{ $columnId }}.rows.{{ $rowId }}.visible"
                                                                 modelIsAlpine="false"
                                                                 label="{{ __('tollerus::ui.visible') }}"
-                                                                @change="$wire.updateRow({{ $columnId }}, {{ $rowId }}, 'visible', $el.checked, id);"
+                                                                @change="$wire.updateRow({{ $columnId }}, {{ $rowId }}, 'visible', $el.checked, 'tableForm.columns.{{ $columnId }}.rows.{{ $rowId }}.visible', id);"
                                                             />
                                                         </div>
                                                         <div class="flex flex-row justify-start">
@@ -360,7 +360,7 @@
                                                                 model="tableForm.columns.{{ $columnId }}.rows.{{ $rowId }}.showLabel"
                                                                 modelIsAlpine="false"
                                                                 label="{{ __('tollerus::ui.show_label') }}"
-                                                                @change="$wire.updateRow({{ $columnId }}, {{ $rowId }}, 'showLabel', $el.checked, id);"
+                                                                @change="$wire.updateRow({{ $columnId }}, {{ $rowId }}, 'showLabel', $el.checked, 'tableForm.columns.{{ $columnId }}.rows.{{ $rowId }}.showLabel', id);"
                                                             />
                                                         </div>
                                                     </div>

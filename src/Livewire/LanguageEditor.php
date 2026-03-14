@@ -400,12 +400,12 @@ class LanguageEditor extends Component
             $this->createWordClass($group, true);
         });
     }
-    public function updateGroupPrimaryClass(string $groupId): void
+    public function updateGroupPrimaryClass(string $groupId, string $fieldKey): void
     {
         $groupModel = WordClassGroup::find($groupId);
         if (!($groupModel instanceof WordClassGroup)) {
             $this->dispatch('grammar-group-update-failure');
-            throw \Illuminate\Validation\ValidationException::withMessages(['groupId' => [__('tollerus::error.invalid_word_class_group')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_word_class_group')]]);
         }
         $groupModel->primary_class = $this->grammarForm[$groupId]['primaryClass'];
         $groupModel->save();
@@ -453,12 +453,12 @@ class LanguageEditor extends Component
         }
         $this->refreshGrammarForm();
     }
-    public function updateClass(string $groupId, string $classId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateClass(string $groupId, string $classId, string $propName, string $propVal, string $fieldKey, ?string $domId = ''): void
     {
         $classModel = WordClass::find($classId);
         if (!($classModel instanceof WordClass)) {
             $this->dispatch('text-save-failure', id: $domId);
-            throw \Illuminate\Validation\ValidationException::withMessages(['classId' => [__('tollerus::error.invalid_word_class')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_word_class')]]);
         }
         if ($propName === 'name' || $propName === 'name_brief') {
             try {
@@ -467,12 +467,8 @@ class LanguageEditor extends Component
                 $this->refreshGrammarForm();
                 $this->dispatch('text-save-success', id: $domId);
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
-                $error = match ($propName) {
-                    'name' => ['wordClass.name' => [__('tollerus::error.duplicate_of_unique_per_group')]],
-                    'name_brief' => ['wordClass.nameBrief' => [__('tollerus::error.duplicate_of_unique_per_group')]],
-                };
                 $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages($error);
+                throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.duplicate_of_unique_per_group')]]);
             }
         }
     }
@@ -502,12 +498,12 @@ class LanguageEditor extends Component
         }
         $this->refreshGrammarForm();
     }
-    public function updateFeature(string $groupId, string $featureId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateFeature(string $groupId, string $featureId, string $propName, string $propVal, string $fieldKey, ?string $domId = ''): void
     {
         $featureModel = Feature::find($featureId);
         if (!($featureModel instanceof Feature)) {
             $this->dispatch('text-save-failure', id: $domId);
-            throw \Illuminate\Validation\ValidationException::withMessages(['featureId' => [__('tollerus::error.invalid_feature')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_feature')]]);
         }
         if ($propName === 'name' || $propName === 'name_brief') {
             try {
@@ -516,12 +512,8 @@ class LanguageEditor extends Component
                 $this->refreshGrammarForm();
                 $this->dispatch('text-save-success', id: $domId);
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
-                $error = match ($propName) {
-                    'name' => ['feature.name' => [__('tollerus::error.duplicate_of_unique_per_group')]],
-                    'name_brief' => ['feature.nameBrief' => [__('tollerus::error.duplicate_of_unique_per_group')]],
-                };
                 $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages($error);
+                throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.duplicate_of_unique_per_group')]]);
             }
         }
     }
@@ -550,12 +542,12 @@ class LanguageEditor extends Component
         }
         $this->refreshGrammarForm();
     }
-    public function updateFeatureValue(string $groupId, string $featureId, string $featureValueId, string $propName, string $propVal, ?string $domId = ''): void
+    public function updateFeatureValue(string $groupId, string $featureId, string $featureValueId, string $propName, string $propVal, string $fieldKey, ?string $domId = ''): void
     {
         $featureValueModel = FeatureValue::find($featureValueId);
         if (!($featureValueModel instanceof FeatureValue)) {
             $this->dispatch('text-save-failure', id: $domId);
-            throw \Illuminate\Validation\ValidationException::withMessages(['featureValueId' => [__('tollerus::error.invalid_feature_value')]]);
+            throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.invalid_feature_value')]]);
         }
         if ($propName === 'name' || $propName === 'name_brief') {
             try {
@@ -564,12 +556,8 @@ class LanguageEditor extends Component
                 $this->refreshGrammarForm();
                 $this->dispatch('text-save-success', id: $domId);
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
-                $error = match ($propName) {
-                    'name' => ['featureValue.name' => [__('tollerus::error.duplicate_of_unique_per_group')]],
-                    'name_brief' => ['featureValue.nameBrief' => [__('tollerus::error.duplicate_of_unique_per_group')]],
-                };
                 $this->dispatch('text-save-failure', id: $domId);
-                throw \Illuminate\Validation\ValidationException::withMessages($error);
+                throw \Illuminate\Validation\ValidationException::withMessages([$fieldKey => [__('tollerus::error.duplicate_of_unique_per_group')]]);
             }
         }
     }
