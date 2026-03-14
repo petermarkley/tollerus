@@ -559,7 +559,7 @@
                                                                         <span class="italic opacity-50">{{ $column['label'] }}</span>
                                                                         @foreach ($column['rows'] as $row)
                                                                             <x-tollerus::inputs.button
-                                                                                wire:key="match-form-row-{{ $rowId }}"
+                                                                                wire:key="match-form-row-{{ $row['id'] }}"
                                                                                 type="inverse"
                                                                                 size="small"
                                                                                 @click="open=false; $wire.matchFormToRow({{ $lexemeId }}, {{ $formId }}, {{ $column['id'] }}, {{ $row['id'] }});"
