@@ -8,8 +8,8 @@
         <div class="px-6 xl:px-0 text-xl flex flex-col gap-4 items-center">
             <p class="text-center">{{ __('tollerus::ui.tollerus_welcome') }}<br>{{ __('tollerus::ui.tollerus_description') }}</p>
             <ul class="list-disc text-left pl-8 flex flex-col gap-2">
-                <li><del class="text-zinc-700 dark:text-zinc-400">{{ __('tollerus::ui.how_to_use') }}</del> <span class="text-base italic">{{ __('tollerus::ui.coming_soon') }}</span></li>
-                <li><a href="https://github.com/petermarkley/tollerus">{{ __('tollerus::ui.tollerus_on_github') }}</a></li>
+                <li><a href="https://tollerus.tools">{{ __('tollerus::ui.official_website') }}</a></li>
+                <li><a href="https://tollerus.tools/docs">{{ __('tollerus::ui.how_to_use') }}</a></li>
                 <li><a href="https://petermarkley.com/">{{ __('tollerus::ui.peter_markleys_portfolio') }}</a></li>
             </ul>
         </div>

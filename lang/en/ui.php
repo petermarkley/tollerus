@@ -13,8 +13,7 @@ return [
     'tollerus_admin_area' => 'Tollerus Admin Area',
     'admin_area' => 'Admin Area',
     'how_to_use' => 'How to use',
-    'coming_soon' => '(This is coming soon!)',
-    'tollerus_on_github' => 'Tollerus on GitHub',
+    'official_website' => 'Official website',
     /**
      * TRANSLATOR NOTE:
      *
@@ -635,7 +634,7 @@ return [
      * the link in parentheses ().
      *
      * The links are passed as variables:
-     *   - github_url
+     *   - tollerus_url
      *   - lgpl_url
      *
      * The final English text that the browser will show says:
@@ -643,7 +642,7 @@ return [
      *     "The Tollerus software is copyright © 2026 by
      *     Peter Markley. Licensed via LGPL v2.1"
      */
-    'copyright_footer' => 'The [Tollerus software](:github_url) is copyright &copy; :year by Peter Markley.<br>Licensed via [LGPL v2.1](:lgpl_url)',
+    'copyright_footer' => 'The [Tollerus software](:tollerus_url) is copyright &copy; :year by Peter Markley.<br>Licensed via [LGPL v2.1](:lgpl_url)',
 
     /**
      * TRANSLATOR NOTE:
