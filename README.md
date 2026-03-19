@@ -2,12 +2,14 @@
 
 _A conlang dictionary Laravel package - the luxurious way to build, track, and browse your conlang's lexical data. [Official website](https://tollerus.tools)_
 
-[![YouTube Demo](docs/img/youtube-thumb.jpg)](https://youtu.be/DiMnB7XbTs8)
-
-I'm a one-man dev team. If you like this software, please consider [supporting me](https://paypal.me/petermarkley)!
+| YouTube Demo |
+|---|
+| [<img src="docs/img/youtube-thumb.jpg" alt="YouTube Demo" width="640" height="360"/>](https://youtu.be/DiMnB7XbTs8) |
 
 > [!Note]
 > Made for use on [https://eithalica.world](https://eithalica.world/lore/dictionary/?lang=chetnum). Named after good ol' "Tollers," the 20th-century conlanger legend.
+
+I'm a one-man dev team. If you like this software, please consider [supporting me](https://paypal.me/petermarkley)!
 
 # Installation
 
