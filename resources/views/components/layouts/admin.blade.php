@@ -31,11 +31,20 @@
         <div class="w-full h-full absolute -z-5 pointer-events-none bg-white dark:bg-zinc-950 opacity-20 dark:opacity-10" role="none" aria-hidden="true"></div>
         <div class="flex flex-col gap-4 w-full items-stretch h-full min-h-screen">
             <header class="w-full py-2 bg-white dark:bg-zinc-800 shadow">
-                <div class="md:max-w-[1200px] mx-auto px-6 xl:px-0">
+                <div class="md:max-w-[1200px] mx-auto px-6 xl:px-0 flex flex-row justify-between items-center">
                     <a href="{{ route('tollerus.admin.index') }}" class="text-zinc-900 dark:text-zinc-300 hover:text-zinc-900 hover:dark:text-zinc-300">
                         <x-tollerus::logo.mono class="h-6 block dark:hidden text-zinc-700"/>
                         <x-tollerus::logo.mono light class="h-6 hidden dark:block"/>
                     </a>
+                    <x-tollerus::button
+                        size="small"
+                        type="inverse"
+                        href="https://tollerus.tools/docs"
+                        title="{{ __('tollerus::ui.help') }}"
+                    >
+                        <x-tollerus::icons.help class="h-8" />
+                        <span class="sr-only">{{ __('tollerus::ui.help') }}</span>
+                    </x-tollerus::button>
                 </div>
             </header>
             @if (isset($breadcrumbs))

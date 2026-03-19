@@ -14,6 +14,7 @@ return [
     'admin_area' => 'Admin Area',
     'how_to_use' => 'How to use',
     'official_website' => 'Official website',
+    'help' => 'Help',
     /**
      * TRANSLATOR NOTE:
      *
