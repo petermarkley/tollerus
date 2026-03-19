@@ -1,6 +1,8 @@
 ![Tollerus Logo](docs/logo/logo-color-light-bordered.png)
 
-_A conlang dictionary Laravel package - the luxurious way to build, track, and browse your conlang's lexical data_
+_A conlang dictionary Laravel package - the luxurious way to build, track, and browse your conlang's lexical data. [Official website](https://tollerus.tools)_
+
+[![YouTube Demo](docs/img/youtube-thumb.jpg)](https://youtu.be/DiMnB7XbTs8)
 
 I'm a one-man dev team. If you like this software, please consider [supporting me](https://paypal.me/petermarkley)!
 
