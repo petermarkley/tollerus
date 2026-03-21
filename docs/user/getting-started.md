@@ -4,8 +4,6 @@ nav_title: Getting Started
 ---
 # Getting Started
 
-_(More info coming soon...)_
+If you haven't seen it, consider watching the [10-minute demo video](https://youtu.be/DiMnB7XbTs8).
 
-| YouTube Demo |
-|---|
-| [<img src="/docs/img/youtube-thumb.jpg" alt="YouTube Demo" width="640" height="360"/>](https://youtu.be/DiMnB7XbTs8) |
+_(More info coming soon...)_
