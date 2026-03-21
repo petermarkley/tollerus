@@ -5,7 +5,7 @@ order: 0
 ---
 # Install with Example App
 
-These instructions are for installing Tollerus using the [example app](https://github.com/petermarkley/tollerus-example-app). If you already have a host app or want to customize the installation, see [here](custom).
+These instructions are for installing Tollerus using the [example app](https://github.com/petermarkley/tollerus-example-app). If you already have a host app or want to customize the installation, see [here](/docs/user/installation/custom).
 
 All you need is [Git](https://git-scm.com/) and [Docker](https://docs.docker.com/desktop/), then:
 ```
@@ -26,4 +26,4 @@ Log in with:
 - Email `test@example.com`
 - Password `password`
 
-Now see [Getting Started](../getting-started) for a guide on how to use Tollerus.
+Now see [Getting Started](/docs/user/getting-started) for a guide on how to use Tollerus.
