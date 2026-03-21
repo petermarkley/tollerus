@@ -1,8 +1,9 @@
 ---
-title: Docs
-nav_title: Docs
+title: Documentation
+nav_title: Documentation
+order: 0
 ---
-# Tollerus Docs
+# How to use Tollerus
 
 Install Tollerus using the instructions [here](installation/example-app).
 

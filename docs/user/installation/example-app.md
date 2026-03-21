@@ -1,6 +1,7 @@
 ---
 title: Example App
 nav_title: Example App
+order: 0
 ---
 # Install with Example App
 

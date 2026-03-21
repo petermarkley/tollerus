@@ -1,6 +1,7 @@
 ---
 title: Custom Installation
 nav_title: Custom Installation
+order: 10
 ---
 # Custom Installation
 

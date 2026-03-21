@@ -1,6 +1,7 @@
 ---
 title: Getting Started
 nav_title: Getting Started
+order: 10
 ---
 # Getting Started
 
