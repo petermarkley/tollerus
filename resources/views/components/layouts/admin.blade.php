@@ -12,7 +12,7 @@
         @endif
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta property="og:title"        content="Tollerus - {{ $title }}"/>
-        <meta property="og:description"  content="The conlang dictionary Laravel package - the luxurious way to build, track, and browse your conlang's lexical data"/>
+        <meta property="og:description"  content="The conlang dictionary Laravel package - build, browse, and publish your conlang's lexical data online"/>
         <meta property="og:image"        content="{{ asset('/vendor/tollerus/share_preview.jpg') }}"/>
         <meta property="og:image:width"  content="3840"/>
         <meta property="og:image:height" content="2160"/>

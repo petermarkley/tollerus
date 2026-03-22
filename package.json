@@ -13,7 +13,7 @@
   },
   "name": "tollerus",
   "version": "1.0.10",
-  "description": "A conlang dictionary Laravel package - the luxurious way to build, track, and browse your conlang's lexical data",
+  "description": "A conlang dictionary Laravel package - build, browse, and publish your conlang's lexical data online",
   "main": "index.js",
   "directories": {
     "doc": "docs"

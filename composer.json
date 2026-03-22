@@ -1,6 +1,6 @@
 {
     "name": "petermarkley/tollerus",
-    "description": "A conlang dictionary Laravel package - the luxurious way to build, track, and browse your conlang's lexical data",
+    "description": "A conlang dictionary Laravel package - build, browse, and publish your conlang's lexical data online",
     "license": "LGPL-3.0-or-later",
     "authors": [
         {

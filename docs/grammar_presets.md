@@ -1,6 +1,6 @@
 # Tollerus Grammar Presets
 
-Tollerus is a Laravel package that lets a user build, track, and browse a dictionary for their own conlang, or fictional language. As part of the Tollerus software, we offer grammar presets based on a selection of real-life languages or well-known conlangs.
+Tollerus is a Laravel package that lets a user build, browse, and publish an online dictionary for their own conlang, or fictional language. As part of the Tollerus software, we offer grammar presets based on a selection of real-life languages or well-known conlangs.
 
 The existing grammar presets can be found in `resources/data/grammar_presets/`, and their localization files in `lang/[lang_code]/grammar_presets/`. These serve as examples to imitate when creating new presets.
 

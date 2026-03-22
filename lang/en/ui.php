@@ -9,7 +9,7 @@ return [
      * name of this software package.
      */
     'tollerus_welcome' => 'Welcome to Tollerus, the Laravel system for conlang dictionaries!',
-    'tollerus_description' => 'The luxurious way to build, track, and browse your conlang\'s lexical data.',
+    'tollerus_description' => 'Build, browse, and publish your conlang\'s lexical data online.',
     'tollerus_admin_area' => 'Tollerus Admin Area',
     'admin_area' => 'Admin Area',
     'how_to_use' => 'How to use',

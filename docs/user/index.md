@@ -5,6 +5,8 @@ order: 0
 ---
 # How to use Tollerus
 
+Tollerus is a [Laravel](https://laravel.com/) package that lets you build, browse, and publish an online dictionary for your own conlang, or fictional language.
+
 Install Tollerus using the instructions [here](/docs/user/installation/example-app.md).
 
 After installation, see [Getting Started](/docs/user/getting-started.md).
