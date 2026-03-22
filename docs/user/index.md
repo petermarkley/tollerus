@@ -9,6 +9,10 @@ Tollerus is a [Laravel](https://laravel.com/) package that lets you build, brows
 
 Although you certainly can run Tollerus offline for private use, it differs from PolyGlot and most other conlanging tools because Tollerus is a web app that can offer a public online browsing interface.
 
+| The public browsing interface of Tollerus |
+|---|
+| <img src="/docs/img/screenshot-002-public_browse.png" alt="Screenshot of the Tollerus public browsing interface" width="640" height="407" /> |
+
 Install Tollerus using the instructions [here](/docs/user/installation/example-app.md).
 
 After installation, see [Getting Started](/docs/user/getting-started.md).

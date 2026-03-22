@@ -67,6 +67,10 @@ Obviously you would not want (or need) to perform both functions to populate Key
 > [!Important]
 > After any automatic populate function, you should check the results to see if they need cleanup or editing. It's meant to be convenient, not definitive.
 
+| Post-extraction glyph cleanup |
+|---|
+| <img src="screenshot-003-glyph_cleanup-callout.png" alt="Screenshot showing post-extraction glyph cleanup" width="640" height="287" /> |
+
 #### 3. Grammar
 
 #### 4. Inflection Tables
