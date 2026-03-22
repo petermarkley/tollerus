@@ -15,7 +15,7 @@ There's a certain sequence that's recommended for initial setup with Tollerus:
 
 1. [SVG Font](/docs/user/initial-setup/svg-font.md)
 2. [Glyphs & Keyboards](/docs/user/initial-setup/glyphs-and-keyboards.md)
-3. Grammar
+3. [Grammar](/docs/user/initial-setup/grammar.md)
 4. Inflection Tables
 5. Combining Forms & Auto-Inflection (if applicable)
 6. More Word Entries
