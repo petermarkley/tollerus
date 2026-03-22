@@ -58,7 +58,9 @@ You can add the data manually, but Tollerus offers some functions to automatical
 - If you have an SVG font, there's an "Extract from SVG" button on each tab.
 - If you've populated the glyph data, there's an "Import from glyphs" button on the Keyboards tab.
 
-<img src="/docs/img/illus-001-neography_auto_flow.png" alt="Illustration of Neography automation flow" width="600" height="450" />
+<img src="/docs/img/illus-001-neography_auto_flow.png" alt="Illustration of Neography automation options" width="600" height="450" />
+
+Obviously you would not want (or need) to perform both functions to populate Keyboards. SVG extraction is preferred if available. Importing from Glyphs is provided mainly for cases where (for some reason) you can't add an SVG version of your font.
 
 #### 3. Grammar
 
