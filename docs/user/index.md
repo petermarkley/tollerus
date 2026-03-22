@@ -5,9 +5,9 @@ order: 0
 ---
 # How to use Tollerus
 
-Install Tollerus using the instructions [here](/docs/user/installation/example-app).
+Install Tollerus using the instructions [here](/docs/user/installation/example-app.md).
 
-After installation, see [Getting Started](/docs/user/getting-started).
+After installation, see [Getting Started](/docs/user/getting-started.md).
 
 ## YouTube Videos
 

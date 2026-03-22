@@ -5,7 +5,7 @@ order: 10
 ---
 # Custom Installation
 
-These instructions are for if you want to [create your own Laravel app](https://laravel.com/docs/12.x/installation#creating-a-laravel-project) instead of [use the example app](example-app).
+These instructions are for if you want to [create your own Laravel app](https://laravel.com/docs/12.x/installation#creating-a-laravel-project) instead of [use the example app](/docs/user/installation/example-app.md).
 
 ## Option A: With Laravel Sail (easier)
 If you don't want to install a full web stack on your host, you can just install [Docker Desktop](https://docs.docker.com/desktop/) and then run these commands to create a containerized app using [Laravel Sail](https://laravel.com/docs/12.x/sail):
