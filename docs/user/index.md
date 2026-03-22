@@ -7,7 +7,7 @@ order: 0
 
 Tollerus is a [Laravel](https://laravel.com/) package that lets you build, browse, and publish an online dictionary for your own conlang, or fictional language.
 
-Although you certainly can run Tollerus offline for private use, it differs from PolyGlot and most other conlanging tools because Tollerus is a web app with a public online browsing interface.
+Although you certainly can run Tollerus offline for private use, it differs from PolyGlot and most other conlanging tools because Tollerus is a web app that can offer a public online browsing interface.
 
 Install Tollerus using the instructions [here](/docs/user/installation/example-app.md).
 
