@@ -64,6 +64,9 @@ You can add the data manually, but Tollerus offers some functions to automatical
 
 Obviously you would not want (or need) to perform both functions to populate Keyboards. SVG extraction is preferred if available. Importing from Glyphs is provided mainly for cases where (for some reason) you can't add an SVG version of your font.
 
+> [!Important]
+> After any automatic populate function, you should check the results to see if they need cleanup or editing. It's meant to be convenient, not definitive.
+
 #### 3. Grammar
 
 #### 4. Inflection Tables
