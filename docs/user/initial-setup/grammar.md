@@ -14,7 +14,7 @@ You will probably want to modify the setup after loading a preset. They are mean
 > [!Note]
 > If you'd like to help me add more grammar presets to Tollerus, this is a **strongly invited** type of contribution. See [`contributing.md`](https://github.com/petermarkley/tollerus/blob/main/docs/dev/contributing.md) on GitHub.
 
-## Concepts
+## Topic Scope
 
 Tollerus is mainly a dictionary app. This means that some aspects of grammar are out of scope.
 
