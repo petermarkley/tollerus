@@ -14,6 +14,9 @@ Currently Tollerus expects two formats: SVG and TTF.
 - SVG is needed because it's an XML-based format that Tollerus can easily decode and use for automatically populating other data.
 - TTF is needed because SVG is not supported by modern browsers, so a web-friendly font is needed for display.
 
+> [!Tip]
+> If there seems to be a demand for more font formats, more can be added with minimal development in the code. See [`contributing.md`](https://github.com/petermarkley/tollerus/blob/main/docs/dev/contributing.md) on GitHub.
+
 Once you have a font, from the Tollerus Admin page click "Neographies" and create a new Neography. Fill out the "Info" tab, then drag-and-drop your font file(s) into the "Font" tab.
 
 <img src="/docs/img/screenshot-001-font_drag.jpg" alt="Screenshot of dragging SVG font into Tollerus" width="640" height="403"/>

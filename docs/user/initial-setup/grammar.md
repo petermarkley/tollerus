@@ -5,6 +5,15 @@ order: 20
 ---
 # Grammar
 
+You can configure the grammar manually from scratch. However Tollerus offers some **grammar presets** to help jumpstart your process.
+
+<img src="/docs/img/screenshot-005-grammar_preset.jpg" alt="Screenshot of a Tollerus grammar preset" width="640" height="407" />
+
+You will probably want to modify the setup after loading a preset. They are meant to be convenient, not definitive.
+
+> [!Note]
+> If you'd like to help me add more grammar presets to Tollerus, this is a **strongly invited** type of contribution. See [`contributing.md`](https://github.com/petermarkley/tollerus/blob/main/docs/dev/contributing.md) on GitHub.
+
 ## Concepts
 
 Tollerus is mainly a dictionary app. This means that some aspects of grammar are out of scope.
@@ -31,4 +40,42 @@ This means that, as you choose what word classes to build for your conlang, you 
 
 Sometimes, word class headings may be used for distinctions that don't matter in your Tollerus grammar configuration. For example, a dictionary might show separate word class headings for "noun" vs. "proper noun" (or as in the screenshot above, "verb" vs. "auxiliary verb"). Although nouns and proper nouns are different in some ways, they are identical in terms of grammar and (more importantly for Tollerus) *morphology.* That is, proper nouns pluralize just like common nouns.
 
-Any time two word class headings share identical inflection rules, you can place them in the same **grammar group.** Inflection rules are defined at the group level, not the word class level.
+Any time two word class headings share identical inflection rules, you can place them in the same **grammar group.** Inflection rules are defined at the group level, not the word class level. They apply uniformly to all word classes in the group.
+
+| "Verb" grammar group with two word classes |
+|---|
+| <img src="/docs/img/screenshot-006-grammar_group.jpg" alt="Screenshot of a Tollerus grammar group with two word classes inside it" width="640" height="249" /> |
+
+Not all grammar groups are inflected (for example English prepositions). But if your grammar group is inflected, you should add inflection features.
+
+The example below shows English verb inflections. On the left side, each top-level bullet point shows an **inflection feature** with the possible **values** for that feature listed under it.
+
+| outline format | Tollerus interface |
+|---|---|
+| <ul><li>aspect<ul><li>perfect</li><li>simple</li><li>progressive</li></ul></li><li>number<ul><li>singular</li><li>plural</li></ul></li><li>person<ul><li>first</li><li>second</li><li>third</li></ul></li><li>role<ul><li>infinitive</li><li>finite</li><li>participle</li></ul></li><li>tense<ul><li>past</li><li>present</li></ul></li></ul> | <img src="/docs/img/screenshot-007-verb_features.jpg" alt="Screenshot of English verb features in Tollerus" width="300" height="586" /> |
+
+Not every word form needs to have a value assigned in every axis. For example, in English only finite verbs encode a value in the "tense" axis; this axis is empty for infinitives and participles.
+
+For more guidance, see [Grammar Modeling Princples](/docs/user/grammar-modeling-principles.md).
+
+### Inflection Tables
+
+If your conlang's word class inflections are at all complex, the recommended workflow starts with choosing an example word and writing an **exhaustive list of every synthetic form.** If you can assign feature values to each one, even better.
+
+This serves as an intermediate stage in the drafting process for inflection tables. Once you have this, you'll be able to more easily see any homographs that should (ideally) be combined, and eventually reshape it into an optimally compacted set of inflection tables for your example word.
+
+| Example: list of Spanish verb forms |
+|---|
+| <img src="/docs/img/screenshot-008-synthetic_form_list.png" alt="List of synthetic verb forms in Spanish" width="640" height="527" /> |
+
+| Draft of Spanish verb inflection tables |
+|---|
+| <img src="/docs/img/screenshot-009-inflection_table_plan.png" alt="Draft of inflection tables for Spanish verb" width="640" height="527" /> |
+
+By default, if there are more than 30 inflection rows on a lexeme, Tollerus will put them all inside a collapsible section so the reader must click to see them. This helps avoid overwhelming them. (To adjust this threshold, see the `public_inflections_max_rows` key in your `config/tollerus.php` file.)
+
+You can also hide tables/columns/rows entirely if you prefer, but you're encouraged to at least make the internal configuration exhaustive. This is for two reasons:
+1. It makes it easier for you to capture complete data when adding word entries, and
+2. Hidden word forms are still searchable to readers. (So in the above example, even if *hablaríamos* was hidden and inaccessible to a reader, they could still find *hablar* by searching `hablaríamos`.)
+
+Again, for more guidance see [Grammar Modeling Princples](/docs/user/grammar-modeling-principles.md).
