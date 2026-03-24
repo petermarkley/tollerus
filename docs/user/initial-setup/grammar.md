@@ -26,7 +26,7 @@ Keep this in mind when building your conlang dictionary in Tollerus.
 |---|
 | <img src="/docs/img/illus-002-domain_venn_diagram.png" alt="Abstracted venn diagram of Tollerus scope" width="600" height="375" /> |
 
-### Word Classes
+## Word Classes
 
 In Tollerus, **word classes** (or [parts of speech](https://en.wikipedia.org/wiki/Part_of_speech)) are used as **section headings** when displaying a word entry to the reader of your dictionary.
 
@@ -36,7 +36,7 @@ In Tollerus, **word classes** (or [parts of speech](https://en.wikipedia.org/wik
 
 This means that, as you choose what word classes to build for your conlang, you should consider what headings you want to appear in word entries to readers.
 
-### Grammar Groups
+## Grammar Groups
 
 Sometimes, word class headings may be used for distinctions that don't matter in your Tollerus grammar configuration. For example, a dictionary might show separate word class headings for "noun" vs. "proper noun" (or as in the screenshot above, "verb" vs. "auxiliary verb"). Although nouns and proper nouns are different in some ways, they are identical in terms of grammar and (more importantly for Tollerus) *morphology.* That is, proper nouns pluralize just like common nouns.
 
