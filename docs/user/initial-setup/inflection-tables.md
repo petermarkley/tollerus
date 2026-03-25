@@ -61,4 +61,4 @@ For more guidance see [Grammar Modeling Princples](/docs/user/grammar-modeling-p
 
 ---
 
-Next: [Combining Forms & Auto-Inflection](/docs/user/initial-setup/auto-inflection.md)
+Next: [Auto-Inflection](/docs/user/initial-setup/auto-inflection.md)
