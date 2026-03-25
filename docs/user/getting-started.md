@@ -46,3 +46,6 @@ Besides translating these, if your locale does not use the Latin alphabet then y
 | `particle_word_classes` |
 
 This array of word class names is used for UI hinting when configuring auto-inflection. For more information, see [Auto-Inflection](/docs/user/initial-setup/auto-inflection.md).
+
+> [!Note]
+> If your locale is not supported by Tollerus, you can help add it! See [`contributing.md`](https://github.com/petermarkley/tollerus/blob/main/docs/dev/contributing.md) on GitHub.
