@@ -29,3 +29,20 @@ This sequence saves work and avoids some pain points or incomplete data. For exa
 - If you do almost anything with your neography before adding a font, then you won't benefit from proper glyph rendering onscreen. (At best, you'll have to identify the glyphs by hexidecimal or some other indirect means; at worst, your browser will show a blank square for each glyph and you'll be editing blind.)
 - If you try to add word entries before setting up the grammar, you won't be able to create any lexemes.
 - If you try to add word entries before setting up inflection tables, Tollerus can't guide and support adding the proper word forms. (And auto-inflection obviously can't work either.)
+
+## Note on localization
+
+If you are using Tollerus in a non-English locale, there are a few keys you may want to change in your `config/tollerus.php` file.
+
+| Config key | default value | purpose |
+|---|---|---|
+| `local_transliteration_word` | "romanization" | Word for the **process** of transliteration |
+| `local_transliteration_target` | "Roman" | Word for the **product** of transliteration |
+
+Besides translating these, if your locale does not use the Latin alphabet then you may instead want them to say "transliteration"  and "transliterated", or some term specific to your locale's writing system.
+
+| Config key |
+|---|
+| `particle_word_classes` |
+
+This array of word class names is used for UI hinting when configuring auto-inflection. For more information, see [Auto-Inflection](/docs/user/initial-setup/auto-inflection.md).
