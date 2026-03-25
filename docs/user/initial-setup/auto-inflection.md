@@ -1,6 +1,6 @@
 ---
-title: Combining Forms & Auto-Inflection
-nav_title: Combining Forms & Auto-Inflection
+title: Auto-Inflection
+nav_title: Auto-Inflection
 order: 40
 ---
 # Auto-Inflection
@@ -36,4 +36,62 @@ Repeat this process for each combining form, suffix, prefix, etc. that you will 
 
 ## Configure auto-inflection
 
-Lorem ipsum
+Go to your Language > Grammar tab > Inflection tables, and edit a specific table. It should be one that contains an inflection row that's not your base row (because auto-inflection can't be configured on the base row itself). Find one of these non-base rows and click "Configure auto-inflection."
+
+This brings you to the **auto-inflection editor.**
+
+| The auto-inflection editor |
+|---|
+| <img src="/docs/img/screenshot-017-auto_inflection_editor.jpg" alt="Screenshot of the auto-inflection editor page" width="640" height="436" /> |
+
+The base row is shown in the top left.
+
+### Select particle
+
+Use the word picker under "Particle" (in the top right) to select the combining form that you created above. Make sure to select the one that matches the inflection row whose auto-inflection you are editing.
+
+<img src="/docs/img/screenshot-018-auto_inflection_particle.jpg" alt="Screenshot of picking the particle form for auto-inflection" width="640" height="423" />
+
+> [!Tip]
+> If you are using Tollerus in a non-English locale, or if your conlang has an unusual word class name for this particle, the word picker may be a little less intelligent about helping you find it.
+> 
+> You can fix this by adjusting the `particle_word_classes` key in your `config/tollerus.php` file to include the proper word class name.
+
+### Morph template
+
+The base row and the particle will be run through the morph rules you define (see below), and then combined according to the morph template on this page. It uses substitution tokens:
+* `{B}` = base
+* `{P}` = particle
+
+You will want to change this for example if you are using a prefix instead of a suffix, to swap the order of base vs. particle.
+
+### Auto-inflection preview
+
+Here, you can set an example word to help you see the result of auto-inflection while you make edits.
+
+<img src="/docs/img/screenshot-019-auto_inflection_preview.jpg" alt="Screenshot of auto-inflection preview" width="640" height="400" />
+
+### Morph rules
+
+At the bottom of the page, you'll find a "Rules" section with a series of tabs.
+
+Normally, each word form contains at least 3 representations:
+* transliterated,
+* phonemic, and
+* one native spelling for each neography that's enabled on the conlang
+
+There is a space here to define morph rules on each individual representation of _both the base row and the particle._ The morph rules use [Regular Expressions](https://en.wikipedia.org/wiki/Regular_expression), which are highly technical but offer a lot of power and flexibility for programming your conlang's morphosyntactics.
+
+Teaching Regular Expressions is out of scope for this documentation, but here are a few extremely basic ones that you might find useful:
+
+| RegEx pattern | "Replace with" string | Purpose | Example use case |
+|---|---|---|---|
+| `^.` | *none* | Removes one character from the **beginning** of the source string | Hyphen at beginning of suffix |
+| `.$` | *none* | Removes one character from the **end** of the source string | Hyphen at end of prefix |
+| `(?<=.).$` | *none* | Removes one character from the end **only if** the source string is longer than 1 character | Avoids zero-length output |
+
+You can also directly insert phonemic or native characters into the RegEx pattern if you want the match to depend on specific characters. This system should be theoretically capable of representing almost any conceivable morphosyntactic rules in a conlang.
+
+### Repeat for each inflection row
+
+Once you have configured auto-inflection for an inflection row, go to the next and repeat the process for any remaining non-base rows.
