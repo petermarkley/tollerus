@@ -17,7 +17,7 @@ There's a certain sequence that's recommended for initial setup with Tollerus:
 2. [Glyphs & Keyboards](/docs/user/initial-setup/glyphs-and-keyboards.md)
 3. [Grammar](/docs/user/initial-setup/grammar.md)
 4. [Inflection Tables](/docs/user/initial-setup/inflection-tables.md)
-5. Combining Forms & Auto-Inflection (if applicable)
+5. [Combining Forms & Auto-Inflection](/docs/user/initial-setup/auto-inflection.md) (if applicable)
 6. More Word Entries
 
 ### Why this setup sequence?

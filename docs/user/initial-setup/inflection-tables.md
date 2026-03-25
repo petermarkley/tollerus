@@ -58,3 +58,5 @@ However, you're encouraged to at least make the internal configuration exhaustiv
 So in the above example, even if *habléis* was hidden and inaccessible to a reader, they could still find *hablar* by searching `habléis` as shown.
 
 For more guidance see [Grammar Modeling Princples](/docs/user/grammar-modeling-principles.md).
+
+Next: [Combining Forms & Auto-Inflection](/docs/user/initial-setup/auto-inflection.md)
