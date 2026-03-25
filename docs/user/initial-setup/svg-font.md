@@ -21,4 +21,6 @@ Once you have a font, from the Tollerus Admin page click "Neographies" and creat
 
 <img src="/docs/img/screenshot-001-font_drag.jpg" alt="Screenshot of dragging SVG font into Tollerus" width="640" height="403"/>
 
+---
+
 Next: [Glyphs & Keyboards](/docs/user/initial-setup/glyphs-and-keyboards.md)

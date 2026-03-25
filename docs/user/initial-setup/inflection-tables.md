@@ -59,4 +59,6 @@ So in the above example, even if *habléis* was hidden and inaccessible to a rea
 
 For more guidance see [Grammar Modeling Princples](/docs/user/grammar-modeling-principles.md).
 
+---
+
 Next: [Combining Forms & Auto-Inflection](/docs/user/initial-setup/auto-inflection.md)

@@ -28,4 +28,6 @@ Obviously you would not want (or need) to perform both functions to populate Key
 |---|
 | <img src="/docs/img/screenshot-003-glyph_cleanup-callout.png" alt="Screenshot showing post-extraction glyph cleanup" width="640" height="287" /> |
 
+---
+
 Next: [Grammar](/docs/user/initial-setup/grammar.md)

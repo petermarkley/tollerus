@@ -5,9 +5,9 @@ order: 40
 ---
 # Auto-Inflection
 
-If your conlang is inflected, you very likely have some type of particles or combining forms, like prefixes or suffixes, that are used to (at least _sometimes_) produce inflected word forms by a predictable pattern. Tollerus has a feature that can help you automate this process, called **auto-inflection.**
+If your conlang is inflected, you very likely have some type of particles or combining forms (like prefixes or suffixes) that are used (at least _sometimes_) to produce inflected word forms by a predictable pattern. Tollerus has a feature that can help you automate this process, called **auto-inflection.**
 
-This feature is completely optional, so if you don't think you will benefit then you can certainly skip it. You can also come back and set it up any time later. There is _no accumulating consequence_ to going without it.
+This feature is completely optional, so if you don't think you will benefit then you can certainly skip to [writing word entries](/docs/user/initial-setup/word-entries.md). You can also come back and set it up any time later. There is _no accumulating consequence_ to going without it.
 
 ## Set a base row
 
@@ -95,3 +95,7 @@ You can also directly insert phonemic or native characters into the RegEx patter
 ### Repeat for each inflection row
 
 Once you have configured auto-inflection for an inflection row, go to the next and repeat the process for any remaining non-base rows.
+
+---
+
+Next: [Word Entries](/docs/user/initial-setup/word-entries.md)

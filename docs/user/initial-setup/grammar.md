@@ -58,4 +58,6 @@ Not every word form needs to have a value assigned in every axis. For example, i
 
 For more guidance, see [Grammar Modeling Princples](/docs/user/grammar-modeling-principles.md).
 
+---
+
 Next: [Inflection Tables](/docs/user/initial-setup/inflection-tables.md)

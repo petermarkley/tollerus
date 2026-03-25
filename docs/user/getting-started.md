@@ -7,7 +7,8 @@ order: 20
 
 If you haven't seen it, consider watching the [10-minute demo video](https://youtu.be/DiMnB7XbTs8).
 
-If by some slim chance you have data in the 2023-era Tollerus XML format, you can import this using the `tollerus:import` Artisan command (see `php artisan help tollerus:import`). Otherwise, see the instructions below.
+> [!Note]
+> If by some slim chance you have data in the 2023-era Tollerus XML format, you can import this using the `tollerus:import` Artisan command (see `php artisan help tollerus:import`). Otherwise, see the instructions below.
 
 ## Best Setup Sequence
 
@@ -18,7 +19,7 @@ There's a certain sequence that's recommended for initial setup with Tollerus:
 3. [Grammar](/docs/user/initial-setup/grammar.md)
 4. [Inflection Tables](/docs/user/initial-setup/inflection-tables.md)
 5. [Auto-Inflection](/docs/user/initial-setup/auto-inflection.md) (if applicable)
-6. More Word Entries
+6. [Word Entries](/docs/user/initial-setup/word-entries.md)
 
 ### Why this setup sequence?
 
@@ -45,7 +46,7 @@ Besides translating these, if your locale does not use the Latin alphabet then y
 |---|
 | `particle_word_classes` |
 
-This array of word class names is used for UI hinting when configuring auto-inflection. For more information, see [Auto-Inflection](/docs/user/initial-setup/auto-inflection.md).
+This array of word class names is used for UI hinting when configuring auto-inflection. For more information, see [Auto-Inflection](/docs/user/initial-setup/auto-inflection.md) under the heading "Select particle."
 
 > [!Note]
 > If your locale is not supported by Tollerus, you can help add it! See [`contributing.md`](https://github.com/petermarkley/tollerus/blob/main/docs/dev/contributing.md) on GitHub.
