@@ -90,7 +90,7 @@ Teaching Regular Expressions is out of scope for this documentation, but here ar
 | `.$` | *none* | Removes one character from the **end** of the source string | Hyphen at end of prefix |
 | `(?<=.).$` | *none* | Removes one character from the end **only if** the source string is longer than 1 character | Avoids zero-length output |
 
-You can also directly insert phonemic or native characters into the RegEx pattern if you want the match to depend on specific characters. This system should be theoretically capable of representing almost any conceivable morphosyntactic rules in a conlang.
+You can also directly insert phonemic or native characters into the RegEx pattern if you want the match to depend on specific characters. This system should be theoretically capable of representing a large majority of conceivable morphosyntactic rules in a conlang. (Some notable exceptions are [infixes](https://en.wikipedia.org/wiki/Infix) and [circumfixes](https://en.wikipedia.org/wiki/Circumfix).)
 
 ### Repeat for each inflection row
 
