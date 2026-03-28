@@ -523,6 +523,7 @@ class PublicWordLookup extends Component
                         'class' => $lexeme->wordClass,
                         'group' => $group,
                         'tables' => $tables,
+                        'hasForms' => $lexeme->forms->isNotEmpty(),
                         'collapse' => $group->inflectionTables->flatMap(
                             fn ($t) => $t->columns->flatMap(fn ($c) => $c->rows)
                         )->count() > config('tollerus.public_inflections_max_rows'),

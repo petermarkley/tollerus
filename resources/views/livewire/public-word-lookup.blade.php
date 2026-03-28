@@ -152,7 +152,7 @@
                                         <span class="text-tollerus-text font-mono font-bold opacity-50 tracking-widest">{{ $lexeme['class']->name }}</span>
                                         <x-tollerus::public.highlight :globalId="$lexeme['model']->global_id"/>
                                     </a>
-                                    @if ($lexeme['tables']->count() > 0)
+                                    @if ($lexeme['tables']->count() > 0 && $lexeme['hasForms'])
                                         @if ($lexeme['collapse'])
                                             <x-tollerus::drawer open="false" rootClass="w-full" class="flex flex-col gap-4 w-full" isPublic="true">
                                                 <x-slot:heading-button>
