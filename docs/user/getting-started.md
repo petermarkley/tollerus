@@ -10,6 +10,8 @@ If you haven't seen it, consider watching the [10-minute demo video](https://you
 > [!Note]
 > If by some slim chance you have data in the 2023-era Tollerus XML format, you can import this using the `tollerus:import` Artisan command (see `php artisan help tollerus:import`). Otherwise, see the instructions below.
 
+After installing, take a look at [Customization](/docs/user/customization.md) to make Tollerus your own.
+
 ## Best Setup Sequence
 
 There's a certain sequence that's recommended for initial setup with Tollerus:
