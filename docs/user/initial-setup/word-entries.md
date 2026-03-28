@@ -39,10 +39,18 @@ The rich text toolbar includes typical options like bold, italics, and hyperlink
 
 Each entry must have at least one word form on one of its word classes, or the entry cannot be displayed to readers. This form, used to represent and display the entry, is called the entry's **primary form.** Beyond this, non-inflected word classes do not need any word forms.
 
-Inflected word classes should have word forms listed for at least one word class in that group. For example if you have a grammar group that contains both verbs and auxiliary verbs, and you write a word entry that has both of these, only one needs the word forms listed and the other can be empty. (Presumably you'll want the word forms on the class that appears first, but Tollerus is not picky about that.)
+Inflected word classes should have word forms listed for at least one word class in that group. For example if you have a grammar group that contains both verbs and auxiliary verbs, and you write a word entry that has both of these, only one needs the word forms listed and the other can be empty.
 
-Word forms are added here in a flat list, but if they're inflected then each one needs to have grammatical features assigned to it which correlate it to a row in the inflection tables.
+Word forms are added here in a flat list, but if they're inflected then each one needs to have grammatical features assigned to it which correlate it to a row in the [inflection tables](/docs/user/initial-setup/inflection-tables.md).
 
-This is one of the most complicated parts of the Tollerus interface. The good news is that if you have already configured your conlang's [inflection tables](/docs/user/initial-setup/inflection-tables.md), then the interface does a good job of guiding you by various prompts and automated functions.
+This part of Tollerus can be complicated. However, if you've already configured your conlang's inflection tables, then it does a good job of guiding you by various prompts and automated functions.
 
-...
+This is also where setting up [auto-inflection](/docs/user/initial-setup/auto-inflection.md) significantly pays off, because it will offer little lightning-bolt buttons. Clicking one of these will auto-inflect the adjacent field.
+
+| Word forms in admin config | Word forms in entry display |
+|---|---|
+| <img src="/docs/img/screenshot-021-word_forms_config.png" alt="Screenshot of word forms in admin config" width="640" height="1677" /> | <img src="/docs/img/screenshot-022-word_forms_display.png" alt="Screenshot of word forms in entry display" width="640" height="314" /> |
+
+---
+
+Next: [Customization](/docs/user/customization.md)
