@@ -5,19 +5,19 @@
 
 @layer base {
     #tollerus_root[data-layout="admin"] {
-        @apply w-full h-full min-h-screen bg-zinc-300 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-300
+        @apply w-full h-full min-h-screen bg-zinc-300 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-300;
     }
     #tollerus_root[data-layout="admin"] body a {
-        @apply text-cyan-700 hover:text-cyan-600 dark:text-cyan-500 hover:dark:text-cyan-400 dark:saturate-50
+        @apply text-cyan-700 hover:text-cyan-600 dark:text-cyan-500 hover:dark:text-cyan-400 dark:saturate-50;
     }
     #tollerus_root[data-layout="admin"] body footer a {
-        @apply text-cyan-800 hover:text-cyan-800 dark:text-cyan-500 hover:dark:text-cyan-500 saturate-80 dark:saturate-20
+        @apply text-cyan-800 hover:text-cyan-800 dark:text-cyan-500 hover:dark:text-cyan-500 saturate-80 dark:saturate-20;
     }
     #tollerus_root[data-layout="admin"] [data-component="alert"] a {
-        @apply saturate-100 underline font-bold
+        @apply saturate-100 underline font-bold;
     }
     #tollerus_root[data-layout="admin"] [data-route="public"] a {
-        @apply saturate-100
+        @apply saturate-100;
     }
     #tollerus_root div.drawer-content {
         margin-top: 0%;
