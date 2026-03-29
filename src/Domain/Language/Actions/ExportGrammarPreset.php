@@ -75,16 +75,23 @@ final class ExportGrammarPreset
                 ];
                 if ($group->features->isNotEmpty()) {
                     $obj['features'] = $group->features->sortBy('name')->values()->map(function ($feature) use (&$allFeatures) {
-                        $allFeatures[] = [
-                            'key' => ExportGrammarPreset::snakeCase($feature->name),
-                            '_name' => $feature->name,
-                            '_name_brief' => $feature->name_brief,
-                            'values' => $feature->featureValues->map(fn ($v) => [
-                                'key' => ExportGrammarPreset::snakeCase($v->name),
-                                'name' => $v->name,
-                                'name_brief' => $v->name_brief,
-                            ])->toArray(),
-                        ];
+                        $key = ExportGrammarPreset::snakeCase($feature->name);
+                        if (!isset($allFeatures[$key])) {
+                            $allFeatures[$key] = [
+                                '_name' => $feature->name,
+                                '_name_brief' => $feature->name_brief,
+                                'values' => [],
+                            ];
+                        }
+                        foreach ($feature->featureValues as $v) {
+                            $subkey = ExportGrammarPreset::snakeCase($v->name);
+                            if (!isset($allFeatures[$key]['values'][$subkey])) {
+                                $allFeatures[$key]['values'][$subkey] = [
+                                    'name' => $v->name,
+                                    'name_brief' => $v->name_brief,
+                                ];
+                            }
+                        }
                         return [
                             'i18n_key' => ExportGrammarPreset::snakeCase($feature->name),
                             'values' => $feature->featureValues->pluck('name')->toArray(),
@@ -176,20 +183,20 @@ final class ExportGrammarPreset
             ],
 
         PHP;
-        foreach ($allFeatures as $feature) {
+        foreach ($allFeatures as $key => $feature) {
             $name = self::escapeForPhpStr($feature["_name"] ?? '');
             $nameBrief = self::escapeForPhpStr($feature["_name_brief"] ?? '');
             $langFile .= <<<PHP
-                '{$feature["key"]}' => [
+                '{$key}' => [
                     '_name' => "{$name}",
                     '_name_brief' => "{$nameBrief}",
 
             PHP;
-            foreach ($feature['values'] as $value) {
+            foreach ($feature['values'] as $subkey => $value) {
                 $name = self::escapeForPhpStr($value["name"] ?? '');
                 $nameBrief = self::escapeForPhpStr($value["name_brief"] ?? '');
                 $langFile .= <<<PHP
-                        '{$value["key"]}' => [
+                        '{$subkey}' => [
                             'name' => "{$name}",
                             'name_brief' => "{$nameBrief}",
                         ],
