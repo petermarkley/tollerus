@@ -3,6 +3,7 @@
 namespace PeterMarkley\Tollerus\Domain\Language\Actions;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 use PeterMarkley\Tollerus\Models\Language;
 
@@ -19,14 +20,29 @@ final class ExportGrammarPreset
      * These are placed inside the host app's
      * `storage/app/tollerus/grammar-presets` folder.
      */
-    public function __invoke(Language $language, string $preset): void
+    public function __invoke(
+        Language $language,
+        string $preset,
+        ?string $presetName = null,
+        ?string $presetDesc = null,
+    ): void
     {
+        $locale = app()->getLocale();
+        $preset = self::snakeCase($preset);
+        if (empty($presetName)) {
+            $presetName = $language->name;
+        }
+        if (empty($presetDesc)) {
+            $presetDesc = "This preset scaffolds a conlang grammar that resembles {$language->name}.";
+        }
+
         /**
          * JSON data
          */
+        $wordClasses = [];
         $data = [
             'i18n_file' => $preset,
-            'groups' => $language->wordClassGroups->map(function ($group) {
+            'groups' => $language->wordClassGroups->map(function ($group) use (&$wordClasses) {
                 // Determine base row
                 $nullRows = $group->inflectionTables
                     ->flatMap->columns
@@ -44,14 +60,21 @@ final class ExportGrammarPreset
                 }
                 // Build output
                 $obj = [
-                    'classes' => $group->wordClasses->sortBy('name')->values()->map(fn ($class) => [
-                        'i18n_key' => $class->name,
-                        'primary' => $class->id === $group->primary_class,
-                    ])->toArray(),
+                    'classes' => $group->wordClasses->sortBy('name')->values()->map(function ($class) use ($group, &$wordClasses) {
+                        $wordClasses[] = [
+                            'key' => ExportGrammarPreset::snakeCase($class->name),
+                            'name' => $class->name,
+                            'name_brief' => $class->name_brief,
+                        ];
+                        return [
+                            'i18n_key' => ExportGrammarPreset::snakeCase($class->name),
+                            'primary' => $class->id === $group->primary_class,
+                        ];
+                    })->toArray(),
                 ];
                 if ($group->features->isNotEmpty()) {
                     $obj['features'] = $group->features->sortBy('name')->values()->map(fn ($feature) => [
-                        'i18n_key' => $feature->name,
+                        'i18n_key' => ExportGrammarPreset::snakeCase($feature->name),
                         'values' => $feature->featureValues->pluck('name')->toArray(),
                     ])->toArray();
                 }
@@ -62,7 +85,7 @@ final class ExportGrammarPreset
                         'cols_fold' => (bool)$table->cols_fold,
                         'rows_fold' => (bool)$table->rows_fold,
                         'columns' => $table->columns->sortBy('position')->values()->map(fn ($column) => [
-                            'i18n_key' => $column->label,
+                            'i18n_key' => ExportGrammarPreset::snakeCase($column->label),
                             'visible' => (bool)$column->visible,
                             'show_label' => (bool)$column->show_label,
                             'filters' => $column->filterValues->map(fn ($filter) => [
@@ -71,7 +94,7 @@ final class ExportGrammarPreset
                             ])->toArray(),
                             'rows' => $column->rows->sortBy('position')->values()->map(function ($row) use ($baseRow) {
                                 $obj = [
-                                    'i18n_key' => $row->label,
+                                    'i18n_key' => ExportGrammarPreset::snakeCase($row->label),
                                     'filters' => $row->filterValues->map(fn ($filter) => [
                                         'feature' => $filter->feature->name,
                                         'value' => $filter->name,
@@ -89,9 +112,6 @@ final class ExportGrammarPreset
             })->toArray(),
         ];
         $json = json_encode($data, JSON_PRETTY_PRINT);
-        $dataFolder = storage_path(self::OUT_DIR.'/data');
-        File::ensureDirectoryExists($dataFolder);
-        file_put_contents($dataFolder.'/'.$preset.'.json', $json);
 
         /**
          * Lang file
@@ -108,16 +128,60 @@ final class ExportGrammarPreset
          * past tense verbs.
          */
         return [
+            'preset_name' => '{$presetName}',
+            'preset_description' => '{$presetDesc}',
+
+            /**
+             * ===========================================================
+             *                 TECHNICAL/ADMIN LABELS
+             * ===========================================================
+             *
+             * TRANSLATOR NOTE:
+             *
+             * This first portion is mostly a list of technical terms. It
+             * will display to admins who are configuring the conlang
+             * grammar, not to general users who are viewing/browsing the
+             * dictionary.
+             *
+             * Later on, there are other labels for display to lay people.
+             */
+            'word_classes' => [
 
         PHP;
+        foreach ($wordClasses as $class) {
+            $langFile .= <<<PHP
+                    '{$class["key"]}' => [
+                        'name' => '{$class["name"]}',
+                        'name_brief' => '{$class["name_brief"]}',
+                    ],
+
+            PHP;
+        }
+        $langFile .= <<<PHP
+            ],
+
+        PHP;
+
+        // ...
 
         $langFile .= <<<PHP
         ];
 
         PHP;
-        $locale = app()->getLocale();
+
+        /**
+         * Dump output to files
+         */
+        $dataFolder = storage_path(self::OUT_DIR.'/data');
+        File::ensureDirectoryExists($dataFolder);
+        file_put_contents($dataFolder.'/'.$preset.'.json', $json);
         $langFolder = storage_path(self::OUT_DIR.'/lang/'.$locale);
         File::ensureDirectoryExists($langFolder);
         file_put_contents($langFolder.'/'.$preset.'.php', $langFile);
+    }
+
+    public function snakeCase(string $value): string
+    {
+        return str_replace('-', '_', Str::slug($value));
     }
 }
