@@ -40,9 +40,10 @@ final class ExportGrammarPreset
          * JSON data
          */
         $wordClasses = [];
+        $allFeatures = [];
         $data = [
             'i18n_file' => $preset,
-            'groups' => $language->wordClassGroups->map(function ($group) use (&$wordClasses) {
+            'groups' => $language->wordClassGroups->map(function ($group) use (&$wordClasses, &$allFeatures) {
                 // Determine base row
                 $nullRows = $group->inflectionTables
                     ->flatMap->columns
@@ -73,10 +74,22 @@ final class ExportGrammarPreset
                     })->toArray(),
                 ];
                 if ($group->features->isNotEmpty()) {
-                    $obj['features'] = $group->features->sortBy('name')->values()->map(fn ($feature) => [
-                        'i18n_key' => ExportGrammarPreset::snakeCase($feature->name),
-                        'values' => $feature->featureValues->pluck('name')->toArray(),
-                    ])->toArray();
+                    $obj['features'] = $group->features->sortBy('name')->values()->map(function ($feature) use (&$allFeatures) {
+                        $allFeatures[] = [
+                            'key' => ExportGrammarPreset::snakeCase($feature->name),
+                            '_name' => $feature->name,
+                            '_name_brief' => $feature->name_brief,
+                            'values' => $feature->featureValues->map(fn ($v) => [
+                                'key' => ExportGrammarPreset::snakeCase($v->name),
+                                'name' => $v->name,
+                                'name_brief' => $v->name_brief,
+                            ])->toArray(),
+                        ];
+                        return [
+                            'i18n_key' => ExportGrammarPreset::snakeCase($feature->name),
+                            'values' => $feature->featureValues->pluck('name')->toArray(),
+                        ];
+                    })->toArray();
                 }
                 if ($group->inflectionTables->isNotEmpty()) {
                     $obj['inflection_tables'] = $group->inflectionTables->sortBy('position')->values()->map(fn ($table) => [
@@ -149,10 +162,12 @@ final class ExportGrammarPreset
 
         PHP;
         foreach ($wordClasses as $class) {
+            $name = self::escapeForPhpStr($class["name"]);
+            $nameBrief = self::escapeForPhpStr($class["name_brief"]);
             $langFile .= <<<PHP
                     '{$class["key"]}' => [
-                        'name' => '{$class["name"]}',
-                        'name_brief' => '{$class["name_brief"]}',
+                        'name' => "{$name}",
+                        'name_brief' => "{$nameBrief}",
                     ],
 
             PHP;
@@ -161,6 +176,31 @@ final class ExportGrammarPreset
             ],
 
         PHP;
+        foreach ($allFeatures as $feature) {
+            $name = self::escapeForPhpStr($feature["_name"] ?? '');
+            $nameBrief = self::escapeForPhpStr($feature["_name_brief"] ?? '');
+            $langFile .= <<<PHP
+                '{$feature["key"]}' => [
+                    '_name' => "{$name}",
+                    '_name_brief' => "{$nameBrief}",
+
+            PHP;
+            foreach ($feature['values'] as $value) {
+                $name = self::escapeForPhpStr($value["name"] ?? '');
+                $nameBrief = self::escapeForPhpStr($value["name_brief"] ?? '');
+                $langFile .= <<<PHP
+                        '{$value["key"]}' => [
+                            'name' => "{$name}",
+                            'name_brief' => "{$nameBrief}",
+                        ],
+
+                PHP;
+            }
+            $langFile .= <<<PHP
+                ],
+
+            PHP;
+        }
 
         // ...
 
@@ -183,5 +223,9 @@ final class ExportGrammarPreset
     public function snakeCase(string $value): string
     {
         return str_replace('-', '_', Str::slug($value));
+    }
+    private function escapeForPhpStr(string $value): string
+    {
+        return $value;
     }
 }
