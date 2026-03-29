@@ -41,9 +41,10 @@ final class ExportGrammarPreset
          */
         $wordClasses = [];
         $allFeatures = [];
+        $inflectionTables = [];
         $data = [
             'i18n_file' => $preset,
-            'groups' => $language->wordClassGroups->map(function ($group) use (&$wordClasses, &$allFeatures) {
+            'groups' => $language->wordClassGroups->map(function ($group) use (&$wordClasses, &$allFeatures, &$inflectionTables) {
                 // Determine base row
                 $nullRows = $group->inflectionTables
                     ->flatMap->columns
@@ -93,40 +94,57 @@ final class ExportGrammarPreset
                             }
                         }
                         return [
-                            'i18n_key' => ExportGrammarPreset::snakeCase($feature->name),
-                            'values' => $feature->featureValues->pluck('name')->toArray(),
+                            'i18n_key' => $key,
+                            'values' => $feature->featureValues
+                                ->map(fn ($v) => ExportGrammarPreset::snakeCase($v->name))
+                                ->toArray(),
                         ];
                     })->toArray();
                 }
                 if ($group->inflectionTables->isNotEmpty()) {
-                    $obj['inflection_tables'] = $group->inflectionTables->sortBy('position')->values()->map(fn ($table) => [
-                        'visible' => (bool)$table->visible,
-                        'align_on_stack' => (bool)$table->align_on_stack,
-                        'cols_fold' => (bool)$table->cols_fold,
-                        'rows_fold' => (bool)$table->rows_fold,
-                        'columns' => $table->columns->sortBy('position')->values()->map(fn ($column) => [
-                            'i18n_key' => ExportGrammarPreset::snakeCase($column->label),
-                            'visible' => (bool)$column->visible,
-                            'show_label' => (bool)$column->show_label,
-                            'filters' => $column->filterValues->map(fn ($filter) => [
-                                'feature' => $filter->feature->name,
-                                'value' => $filter->name,
-                            ])->toArray(),
-                            'rows' => $column->rows->sortBy('position')->values()->map(function ($row) use ($baseRow) {
-                                $obj = [
-                                    'i18n_key' => ExportGrammarPreset::snakeCase($row->label),
-                                    'filters' => $row->filterValues->map(fn ($filter) => [
+                    $obj['inflection_tables'] = $group->inflectionTables->sortBy('position')->values()->map(function ($table) use ($baseRow, &$inflectionTables) {
+                        return [
+                            'visible' => (bool)$table->visible,
+                            'align_on_stack' => (bool)$table->align_on_stack,
+                            'cols_fold' => (bool)$table->cols_fold,
+                            'rows_fold' => (bool)$table->rows_fold,
+                            'columns' => $table->columns->sortBy('position')->values()->map(function ($column) use ($baseRow, &$inflectionTables, $table) {
+                                $colkey = ExportGrammarPreset::snakeCase($table->position.' '.$column->position.' '.$column->label);
+                                $inflectionTables[$colkey] = [
+                                    '_label' => $column->label,
+                                    'rows' => [],
+                                ];
+                                return [
+                                    'i18n_key' => $colkey,
+                                    'visible' => (bool)$column->visible,
+                                    'show_label' => (bool)$column->show_label,
+                                    'filters' => $column->filterValues->map(fn ($filter) => [
                                         'feature' => $filter->feature->name,
                                         'value' => $filter->name,
                                     ])->toArray(),
+                                    'rows' => $column->rows->sortBy('position')->values()->map(function ($row) use ($baseRow, &$inflectionTables, $colkey) {
+                                        $rowkey = ExportGrammarPreset::snakeCase($row->label);
+                                        $inflectionTables[$colkey]['rows'][$rowkey] = [
+                                            'label' => $row->label,
+                                            'label_brief' => $row->label_brief,
+                                            'label_long' => $row->label_long,
+                                        ];
+                                        $obj = [
+                                            'i18n_key' => $colkey.'.'.$rowkey,
+                                            'filters' => $row->filterValues->map(fn ($filter) => [
+                                                'feature' => $filter->feature->name,
+                                                'value' => $filter->name,
+                                            ])->toArray(),
+                                        ];
+                                        if ($row->id === $baseRow) {
+                                            $obj['base'] = true;
+                                        }
+                                        return $obj;
+                                    })->toArray(),
                                 ];
-                                if ($row->id === $baseRow) {
-                                    $obj['base'] = true;
-                                }
-                                return $obj;
                             })->toArray(),
-                        ])->toArray(),
-                    ])->toArray();
+                        ];
+                    })->toArray();
                 }
                 return $obj;
             })->toArray(),
@@ -136,6 +154,8 @@ final class ExportGrammarPreset
         /**
          * Lang file
          */
+        $name = var_export($presetName, true);
+        $description = var_export($presetDesc, true);
         $langFile = <<<PHP
         <?php
 
@@ -148,8 +168,8 @@ final class ExportGrammarPreset
          * past tense verbs.
          */
         return [
-            'preset_name' => '{$presetName}',
-            'preset_description' => '{$presetDesc}',
+            'preset_name' => {$name},
+            'preset_description' => {$description},
 
             /**
              * ===========================================================
@@ -208,10 +228,54 @@ final class ExportGrammarPreset
 
             PHP;
         }
-
-        // ...
-
         $langFile .= <<<PHP
+
+            /**
+             * ============================================================
+             *                 CASUAL / END-USER LABELS
+             * ============================================================
+             *
+             * TRANSLATOR NOTE:
+             *
+             * These labels are shown when view/browsing entries in the
+             * dictionary. Some may be the same as strings above, but the
+             * viewing context is less technical so there's a need to be
+             * layman-friendly.
+             *
+             * As before, an empty string for a '_brief' or '_long' field is
+             * purposeful and signifies that no value is needed.
+             */
+            'inflection_tables' => [
+
+        PHP;
+        foreach ($inflectionTables as $colkey => $column) {
+            $label = var_export($column['_label'] ?? '', true);
+            $langFile .= <<< PHP
+                    '{$colkey}' => [
+                        '_label' => {$label},
+
+            PHP;
+            foreach ($column['rows'] as $rowkey => $row) {
+                $label = var_export($row['label'] ?? '', true);
+                $labelBrief = var_export($row['label_brief'] ?? '', true);
+                $labelLong = var_export($row['label_long'] ?? '', true);
+                $langFile .= <<<PHP
+                            '{$rowkey}' => [
+                                'label' => {$label},
+                                'label_brief' => {$labelBrief},
+                                'label_long' => {$labelLong},
+                            ],
+
+                PHP;
+            }
+            $langFile .= <<<PHP
+                    ],
+
+            PHP;
+        }
+        $langFile .= <<<PHP
+            ],
+
         ];
 
         PHP;
