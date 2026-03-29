@@ -169,12 +169,12 @@ final class ExportGrammarPreset
 
         PHP;
         foreach ($wordClasses as $class) {
-            $name = self::escapeForPhpStr($class["name"]);
-            $nameBrief = self::escapeForPhpStr($class["name_brief"]);
+            $name = var_export($class["name"], true);
+            $nameBrief = var_export($class["name_brief"], true);
             $langFile .= <<<PHP
                     '{$class["key"]}' => [
-                        'name' => "{$name}",
-                        'name_brief' => "{$nameBrief}",
+                        'name' => {$name},
+                        'name_brief' => {$nameBrief},
                     ],
 
             PHP;
@@ -184,21 +184,21 @@ final class ExportGrammarPreset
 
         PHP;
         foreach ($allFeatures as $key => $feature) {
-            $name = self::escapeForPhpStr($feature["_name"] ?? '');
-            $nameBrief = self::escapeForPhpStr($feature["_name_brief"] ?? '');
+            $name = var_export($feature["_name"] ?? '', true);
+            $nameBrief = var_export($feature["_name_brief"] ?? '', true);
             $langFile .= <<<PHP
                 '{$key}' => [
-                    '_name' => "{$name}",
-                    '_name_brief' => "{$nameBrief}",
+                    '_name' => {$name},
+                    '_name_brief' => {$nameBrief},
 
             PHP;
             foreach ($feature['values'] as $subkey => $value) {
-                $name = self::escapeForPhpStr($value["name"] ?? '');
-                $nameBrief = self::escapeForPhpStr($value["name_brief"] ?? '');
+                $name = var_export($value["name"] ?? '', true);
+                $nameBrief = var_export($value["name_brief"] ?? '', true);
                 $langFile .= <<<PHP
                         '{$subkey}' => [
-                            'name' => "{$name}",
-                            'name_brief' => "{$nameBrief}",
+                            'name' => {$name},
+                            'name_brief' => {$nameBrief},
                         ],
 
                 PHP;
@@ -230,9 +230,5 @@ final class ExportGrammarPreset
     public function snakeCase(string $value): string
     {
         return str_replace('-', '_', Str::slug($value));
-    }
-    private function escapeForPhpStr(string $value): string
-    {
-        return $value;
     }
 }
