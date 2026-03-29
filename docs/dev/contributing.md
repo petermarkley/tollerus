@@ -6,6 +6,11 @@ I don't have formal contribution guidelines (yet?) but here are some notes on kn
 - New language localizations
 - New [grammar presets](/docs/grammar_presets.md)
 
+> [!Tip]
+> You can create a grammar preset by building it in Tollerus and exporting with `php artisan tollerus:export-grammar-preset <myconlang>`.
+> 
+> Then copy the output files as instructed, commit to a fork, and open a PR!
+
 ## These are welcome if there's a demand for them
 - Support for more web font formats in [`src/Enums/FontFormat.php`](/src/Enums/FontFormat.php) (will also require DB migration to add columns)
 
