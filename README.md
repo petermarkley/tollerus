@@ -30,7 +30,7 @@ docker run --rm -v $(pwd):/app -w /app composer install
 ./vendor/bin/sail npm run build
 ```
 
-That's it! You can now visit `localhost/tollerus/admin` in your browser.
+That's it! You can now visit `localhost:8080/tollerus/admin` in your browser (or whatever port is set by `APP_PORT` in your `.env` file).
 
 Log in with:
 - Email `test@example.com`
