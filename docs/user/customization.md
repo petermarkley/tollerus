@@ -62,7 +62,7 @@ then when you visit "Language info", the page title will be `MySite Language inf
 ## Public page theme
 
 > [!Warning]
-> If your host app is using [Tailwind CSS](https://tailwindcss.com/), then this feature **requires Tailwind v4 or later.** Earlier Tailwind versions cause conflicts and with Tollerus page styles.
+> If your host app is using [Tailwind CSS](https://tailwindcss.com/), then this feature **requires Tailwind v4 or later.** Earlier Tailwind versions cause conflicts with Tollerus page styles.
 
 These config keys let you set a custom [Blade layout](https://laravel.com/docs/13.x/blade#building-layouts) for the reading/browsing pages.
 
