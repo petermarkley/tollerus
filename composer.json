@@ -24,5 +24,18 @@
                 "PeterMarkley\\Tollerus\\Providers\\TollerusServiceProvider"
             ]
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "orchestra/pest-plugin-testbench": "^4.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
