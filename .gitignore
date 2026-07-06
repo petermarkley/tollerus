@@ -2,3 +2,4 @@
 /.idea
 composer.lock
 node_modules
+phpunit.xml
