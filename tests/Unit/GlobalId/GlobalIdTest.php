@@ -4,7 +4,7 @@
  * The GlobalIDs use RFC 4648 §5, Base64 URL-safe format
  * https://datatracker.ietf.org/doc/html/rfc4648#section-5
  */
-it('correctly encodes a base64 ID', function () {
+it('correctly encodes a URL-safe base64 global ID', function () {
     config(['tollerus.global_id_digits' => 4]); // Explicitly define what config we are testing
     $model = new \PeterMarkley\Tollerus\Models\GlobalId();
     $model->setRawAttributes(['global_id_raw' => 1]);
@@ -14,7 +14,7 @@ it('correctly encodes a base64 ID', function () {
     $model->setRawAttributes(['global_id_raw' => 8908351]);
     expect($model->global_id)->toBe("h-4_");
 });
-it('correctly decodes a base64 ID', function () {
+it('correctly decodes a URL-safe base64 global ID', function () {
     config(['tollerus.global_id_digits' => 4]); // Explicitly define what config we are testing
     $model = new \PeterMarkley\Tollerus\Models\GlobalId();
     $model->global_id = "AAAB";
