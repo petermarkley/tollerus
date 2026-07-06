@@ -15,4 +15,10 @@ abstract class TestCase extends Orchestra
             TollerusServiceProvider::class,
         ];
     }
+
+    protected function defineEnvironment($app): void
+    {
+        $app['config']->set('tollerus.admin_middleware', ['web']);
+        $app['config']->set('tollerus.enable_queue', false);
+    }
 }
