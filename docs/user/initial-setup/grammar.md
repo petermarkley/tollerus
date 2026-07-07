@@ -56,7 +56,7 @@ The example below shows English verb inflections. On the left side, each top-lev
 
 Not every word form needs to have a value assigned in every axis. For example, in English only finite verbs encode a value in the "tense" axis; this axis is empty for infinitives and participles.
 
-For more guidance, see [Grammar Modeling Princples](/docs/user/grammar-modeling-principles.md).
+For more guidance, see [Grammar Modeling Principles](/docs/user/grammar-modeling-principles.md).
 
 ---
 
