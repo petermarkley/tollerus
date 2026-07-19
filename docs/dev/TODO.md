@@ -19,7 +19,7 @@
 |  | Functionality | Code location |
 |--|---------------|---------------|
 | <input type="checkbox" checked/> | ~~ID encoding/decoding accessor behavior~~ | `src/Traits/HasGlobalId.php` |
-| <input type="checkbox" /> | Body text normalize/sanitize | `src/Support/Markup/*` |
+| <input type="checkbox" checked/> | ~~Body text normalize/sanitize~~ | `src/Support/Markup/*` |
 | <input type="checkbox" /> | pure markup rendering cases (`allowLinks=false`) | `src/Support/Markup/BodyTextRenderer.php` |
 | <input type="checkbox" /> | AutoInflector string transformation behavior | `src/Domain/Morphology/*` |
 | <input type="checkbox" /> | HasOrderedObjects array ordering behavior | `src/Traits/HasOrderedObjects.php` |
