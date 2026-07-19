@@ -48,8 +48,8 @@ it('correctly normalizes HTML for editing', function () {
 });
 it('correctly normalizes inline HTML for storage', function () {
     $normalizer = new BodyTextNormalizer;
-    $inputHtml = "<p>Lorem ipsum dolor sit amet.</p>";
-    $expectedHtmlRaw = "Lorem ipsum dolor sit amet.";
+    $inputHtml = "<p>Lorem ipsum <strong>dolor</strong> sit amet.</p>";
+    $expectedHtmlRaw = "Lorem ipsum <strong>dolor</strong> sit amet.";
     $outputHtmlRaw = $normalizer->normalizeInlineForSave($inputHtml);
     $expectedHtml = trim(preg_replace('/>\s+</', '><', $expectedHtmlRaw));
     $outputHtml = trim(preg_replace('/>\s+</', '><', $outputHtmlRaw));
@@ -57,8 +57,8 @@ it('correctly normalizes inline HTML for storage', function () {
 });
 it('correctly normalizes inline HTML for editing', function () {
     $normalizer = new BodyTextNormalizer;
-    $inputHtml = "Lorem ipsum dolor sit amet.";
-    $expectedHtmlRaw = "<p>Lorem ipsum dolor sit amet.</p>";
+    $inputHtml = "Lorem ipsum <strong>dolor</strong> sit amet.";
+    $expectedHtmlRaw = "<p>Lorem ipsum <strong>dolor</strong> sit amet.</p>";
     $outputHtmlRaw = $normalizer->normalizeInlineForWysiwyg($inputHtml);
     $expectedHtml = trim(preg_replace('/>\s+</', '><', $expectedHtmlRaw));
     $outputHtml = trim(preg_replace('/>\s+</', '><', $outputHtmlRaw));
