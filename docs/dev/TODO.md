@@ -20,7 +20,6 @@
 |--|---------------|---------------|
 | <input type="checkbox" checked/> | ~~ID encoding/decoding accessor behavior~~ | `src/Traits/HasGlobalId.php` |
 | <input type="checkbox" checked/> | ~~Body text normalize/sanitize~~ | `src/Support/Markup/*` |
-| <input type="checkbox" /> | pure markup rendering cases (`allowLinks=false`) | `src/Support/Markup/BodyTextRenderer.php` |
 | <input type="checkbox" /> | AutoInflector string transformation behavior | `src/Domain/Morphology/*` |
 | <input type="checkbox" /> | HasOrderedObjects array ordering behavior | `src/Traits/HasOrderedObjects.php` |
 
@@ -33,4 +32,4 @@
 | <input type="checkbox" /> | model relationships/scopes/observers | `src/*` |
 | <input type="checkbox" /> | commands | `src/Console/Commands/*` |
 | <input type="checkbox" /> | import/export workflows | `src/Domain/Language/Actions/*` |
-| <input type="checkbox" /> | BodyTextRenderer behavior that resolves real GlobalIds / Neographies | `src/Support/Markup/BodyTextRenderer.php` |
+| <input type="checkbox" checked/> | ~~BodyTextRenderer~~ | `src/Support/Markup/BodyTextRenderer.php` |
