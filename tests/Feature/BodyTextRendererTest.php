@@ -4,10 +4,25 @@ use PeterMarkley\Tollerus\Database\Seeders\FileImportSeeder;
 use PeterMarkley\Tollerus\Models\Neography;
 use PeterMarkley\Tollerus\Support\Markup\BodyTextRenderer;
 
+/**
+ * NOTE:
+ * These tests are brittle with respect to the order of HTML attributes
+ * within each tag. A fully correct approach would involve DOM traversal,
+ * not string comparison. However at the moment, that's a bit overblown for
+ * the size and stability of the code that we're testing. For now, string
+ * comparison is adequate.
+ */
+
 it('correctly renders HTML for no-hyperlink display', function () {
     // Set up database context
     (new FileImportSeeder())->run();
+    /**
+     * After each test, the database changes are rolled back. This doesn't
+     * necessarily reset the MySQL auto-increment counters, which means our
+     * test should not rely on magically knowing the database keys.
+     */
     $neography = Neography::where('machine_name', 'myneography')->firstOrFail();
+
     // Perform test
     $sanitizer = new BodyTextRenderer;
     $inputHtml = <<<HTM
@@ -37,10 +52,17 @@ it('correctly renders HTML for no-hyperlink display', function () {
     $outputHtml = trim(preg_replace('/>\s+</', '><', $outputHtmlRaw));
     expect($outputHtml)->toBe($expectedHtml);
 });
+
 it('correctly renders HTML for default display', function () {
     // Set up database context
     (new FileImportSeeder())->run();
+    /**
+     * After each test, the database changes are rolled back. This doesn't
+     * necessarily reset the MySQL auto-increment counters, which means our
+     * test should not rely on magically knowing the database keys.
+     */
     $neography = Neography::where('machine_name', 'myneography')->firstOrFail();
+
     // Perform test
     $sanitizer = new BodyTextRenderer;
     $inputHtml = <<<HTM
