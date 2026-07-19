@@ -19,7 +19,7 @@ pest()->extend(TestCase::class)
     ->in('Feature');
 
 pest()->extend(TestCase::class)
-    ->in('Unit/GlobalId');
+    ->in('Unit/Models/GlobalIdTest.php');
 
 /*
 |--------------------------------------------------------------------------
