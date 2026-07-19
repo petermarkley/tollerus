@@ -37,6 +37,7 @@ class BodyTextRenderer
                     if (!$allowLinks) {
                         $text = $dom->ownerDocument->createTextNode($tag->textContent);
                         $tag->parentNode->replaceChild($text, $tag);
+                        continue 2;
                     }
                     // Check for required data attrs
                     if (!$tag->hasAttribute('data-id')) {
@@ -115,7 +116,7 @@ class BodyTextRenderer
                         // Ensure presence of neography style class
                         if (!in_array($className, $classList)) {
                             $classList[] = $className;
-                            $tag->setAttribute('class', implode(' ', $classList));
+                            $tag->setAttribute('class', trim(implode(' ', $classList)));
                         }
                     } else {
                         // Neography should be invisible; demote this to just a regular `<span>` or whatever
@@ -123,7 +124,7 @@ class BodyTextRenderer
                         $tag->removeAttribute('data-neography');
                         if (in_array($className, $classList)) {
                             $classList = array_filter($classList, fn ($c) => $c !== $className);
-                            $tag->setAttribute('class', implode(' ', $classList));
+                            $tag->setAttribute('class', trim(implode(' ', $classList)));
                         }
                     }
                 break;

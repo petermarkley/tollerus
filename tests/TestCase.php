@@ -8,6 +8,11 @@ use PeterMarkley\Tollerus\Providers\TollerusServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
+    protected array $connectionsToTransact = [
+        'mysql',
+        'tollerus',
+    ];
+
     protected function getPackageProviders($app): array
     {
         return [
