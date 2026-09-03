@@ -48,3 +48,28 @@ composer require petermarkley/tollerus
 php artisan tollerus:install
 php artisan migrate
 ```
+
+# Running Tests
+
+Tollerus was written for MariaDB/MySQL and is not compatible with SQLite. Consequently, to run tests you must provide a working MySQL instance for Testbench to connect to.
+
+First, copy the example `phpunit.xml`:
+```
+cp phpunit.xml.dist phpunit.xml
+```
+Then put your SQL connection details in the appropriate lines of `phpunit.xml`:
+```
+<env name="DB_DATABASE" value="tollerus_test"/>
+<env name="DB_USERNAME" value="your_user"/>
+<env name="DB_PASSWORD" value="your_password"/>
+```
+
+> [!Important]
+> The `tollerus_test` database (or whatever you enter) must exist, and **should be disposable because Pest may delete/overwrite its contents.**
+
+Once the connection is configured, install dependencies and run the tests.
+```
+composer install
+./vendor/bin/pest
+```
+Since Tollerus is a Laravel package, there is no `php artisan`. You must call the Pest binary directly, as shown here.

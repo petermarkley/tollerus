@@ -13,3 +13,23 @@
 
 ## PublicWordLookup page
 - [ ] Offer native keyboard(s)??? (Do not base on primary neography of currently displayed entry!)
+
+## Automated testing
+### Unit
+|  | Functionality | Code location |
+|--|---------------|---------------|
+| <input type="checkbox" checked/> | ~~ID encoding/decoding accessor behavior~~ | `src/Traits/HasGlobalId.php` |
+| <input type="checkbox" checked/> | ~~Body text normalize/sanitize~~ | `src/Support/Markup/*` |
+| <input type="checkbox" /> | HasOrderedObjects array ordering behavior | `src/Traits/HasOrderedObjects.php` |
+
+### Feature
+|  | Functionality | Code location |
+|--|---------------|---------------|
+| <input type="checkbox" checked/> | ~~AutoInflector~~ | `src/Domain/Morphology/*` |
+| <input type="checkbox" /> | anything involving DB persistence | `src/*` |
+| <input type="checkbox" /> | package routes/middleware |  |
+| <input type="checkbox" /> | Livewire components | `src/Livewire/*` |
+| <input type="checkbox" /> | model relationships/scopes/observers | `src/*` |
+| <input type="checkbox" /> | commands | `src/Console/Commands/*` |
+| <input type="checkbox" /> | import/export workflows | `src/Domain/Language/Actions/*` |
+| <input type="checkbox" checked/> | ~~BodyTextRenderer~~ | `src/Support/Markup/BodyTextRenderer.php` |
